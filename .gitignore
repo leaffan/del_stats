@@ -102,3 +102,7 @@ venv.bak/
 
 # mypy
 .mypy_cache/
+
+# user-defined stuff
+data/*
+sandbox/*
