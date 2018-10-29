@@ -13,7 +13,7 @@ AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 
 TO_COLLECT = [
     'no', 'position', 'first_name', 'last_name', 'full_name', 'country',
-    'shoots',
+    'shoots', 'date_of_birth', 'weight', 'height', 'country_long',
 ]
 TO_AGGREGATE_INTS = [
     'game_played', 'goals', 'assists', 'primary_assists', 'secondary_assists',
@@ -26,6 +26,19 @@ TO_AGGREGATE_TIMES = [
     'time_on_ice', 'time_on_ice_pp', 'time_on_ice_sh',
 ]
 
+PER_GAME_ATTRS = [
+    'goals', 'assists', 'primary_assists', 'secondary_assists', 'points',
+    'pim', 'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked',
+    'blocked_shots', 'shifts', 'time_on_ice', 'time_on_ice_pp',
+    'time_on_ice_sh',
+]
+
+PER_60_ATTRS = [
+    'goals', 'assists', 'primary_assists', 'secondary_assists', 'points',
+    'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked', 'blocked_shots',
+    'pp_goals', 'pp_assists', 'pp_primary_assists', 'pp_secondary_assists',
+    'pp_points', 'sh_goals',
+]
 
 if __name__ == '__main__':
 
@@ -85,6 +98,8 @@ if __name__ == '__main__':
         basic_values['player_id'] = player_id
         basic_values['team'] = team
 
+        # TODO: calculate age
+
         for attr in TO_COLLECT:
             basic_values[attr] = list(player_data[key][attr])[-1]
 
@@ -93,6 +108,38 @@ if __name__ == '__main__':
             **aggregated_stats[key], **aggregate_time_stats[key]
         }
         aggregated_stats_as_list.append(all_values)
+
+    for item in aggregated_stats_as_list:
+
+        if item['shots_on_goal']:
+            item['shot_pctg'] = (
+                item['goals'] / float(item['shots_on_goal']) * 100.)
+        else:
+            item['shot_pctg'] = 0.
+
+        if item['faceoffs']:
+            item['faceoff_pctg'] = (
+                item['faceoffs_won'] / float(item['faceoffs']) * 100.)
+        else:
+            item['faceoff_pctg'] = 0.
+
+        for attr in PER_GAME_ATTRS:
+            item["%s_per_game" % attr] = (
+                item[attr] / float(item['game_played']))
+
+        for attr in PER_60_ATTRS:
+
+            if attr.startswith('pp_'):
+                time_attr = 'time_on_ice_pp'
+            elif attr.startswith('sh_'):
+                time_attr = 'time_on_ice_sh'
+            else:
+                time_attr = 'time_on_ice'
+
+            if item[time_attr]:
+                item["%s_per_60" % attr] = (
+                    item[attr] / (item[time_attr].total_seconds() / 60) * 60
+                )
 
     open(tgt_path, 'w').write(
         json.dumps(aggregated_stats_as_list, indent=2, default=str))
