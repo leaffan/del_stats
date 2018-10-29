@@ -85,6 +85,10 @@ def retrieve_single_player_game_stats(data_dict, game_id, key):
     single_player_game['full_name'] = data_dict['name']
     single_player_game['country'] = data_dict['nationalityShort']
     single_player_game['shoots'] = data_dict['stick']
+    single_player_game['date_of_birth'] = data_dict['dateOfBirth']
+    single_player_game['weight'] = data_dict['weight']
+    single_player_game['height'] = data_dict['height']
+    single_player_game['country_long'] = data_dict['nationality']
 
     stat_dict = data_dict['statistics']
 
