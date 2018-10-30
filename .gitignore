@@ -106,3 +106,4 @@ venv.bak/
 # user-defined stuff
 data/*
 sandbox/*
+web/*
