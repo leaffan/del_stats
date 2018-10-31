@@ -107,7 +107,7 @@ if __name__ == '__main__':
     tgt_path = os.path.join('data', AGGREGATED_PLAYER_STATS_TGT)
 
     # loading collected single-game player data
-    player_game_stats = json.loads(open(src_path).read())
+    last_modified, player_game_stats = json.loads(open(src_path).read())
 
     print("+ %d player-in-game items collected" % len(player_game_stats))
 
@@ -228,6 +228,7 @@ if __name__ == '__main__':
                     item[attr] / (item[time_attr].total_seconds() / 60) * 60
                 )
 
+    output = [last_modified, aggregated_stats_as_list]
+
     open(tgt_path, 'w').write(
-        json.dumps(
-            aggregated_stats_as_list, indent=2, default=convert_to_minutes))
+        json.dumps(output, indent=2, default=convert_to_minutes))
