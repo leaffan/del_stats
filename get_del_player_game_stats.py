@@ -3,7 +3,7 @@
 
 import os
 import json
-from datetime import timedelta
+from datetime import timedelta, datetime
 from collections import defaultdict
 
 import requests
@@ -167,7 +167,7 @@ if __name__ == '__main__':
 
     # loading existing player game stats
     if os.path.isfile(tgt_path):
-        player_game_stats = json.loads(open(tgt_path).read())
+        player_game_stats = json.loads(open(tgt_path).read())[-1]
     else:
         player_game_stats = list()
 
@@ -186,5 +186,9 @@ if __name__ == '__main__':
         single_player_game_stats = get_single_game_player_data(game['game_id'])
         player_game_stats.extend(single_player_game_stats)
 
+    # retrieving current timestamp to indicate last modification of dataset
+    current_datetime = datetime.now().timestamp() * 1000
+    output = [current_datetime, player_game_stats]
+
     open(tgt_path, 'w').write(
-        json.dumps(player_game_stats, indent=2, default=str))
+        json.dumps(output, indent=2, default=str))
