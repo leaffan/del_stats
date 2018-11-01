@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import csv
 import json
 from datetime import timedelta, date
 
@@ -105,6 +106,8 @@ if __name__ == '__main__':
 
     src_path = os.path.join('data', PLAYER_GAME_STATS_SRC)
     tgt_path = os.path.join('data', AGGREGATED_PLAYER_STATS_TGT)
+    tgt_csv_path = os.path.join(
+        'data', AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -232,3 +235,12 @@ if __name__ == '__main__':
 
     open(tgt_path, 'w').write(
         json.dumps(output, indent=2, default=convert_to_minutes))
+
+    keys = aggregated_stats_as_list[0].keys()
+
+    with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
+        output_file.write('\ufeff')
+        dict_writer = csv.DictWriter(
+            output_file, keys, delimiter=';', lineterminator='\n')
+        dict_writer.writeheader()
+        dict_writer.writerows(aggregated_stats_as_list)
