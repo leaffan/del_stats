@@ -104,6 +104,11 @@ venv.bak/
 .mypy_cache/
 
 # user-defined stuff
-data/*
+backend/data/*
+backend/*.sh
+frontend/.htaccess
+frontend/.htpasswd
+frontend/*.csv
+frontend/*.json
+frontend/index.php
 sandbox/*
-web/*
