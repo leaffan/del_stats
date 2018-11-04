@@ -26,6 +26,8 @@ TO_AGGREGATE_INTS = [
     'pp_primary_assists', 'pp_secondary_assists', 'pp_points', 'sh_goals',
     'gw_goals', 'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked',
     'faceoffs', 'faceoffs_won', 'faceoffs_lost', 'blocked_shots', 'shifts',
+    'penalties', 'pim_from_events', 'penalty_shots', '_2min', '_5min',
+    '_10min', '_20min', 'lazy', 'roughing', 'reckless', 'other',
 ]
 # attributes from single-game player statistics to aggregate as timedeltas
 TO_AGGREGATE_TIMES = [
@@ -200,14 +202,17 @@ if __name__ == '__main__':
             item['shot_pctg'] = 0.
         # calculating faceoff percentage
         if item['faceoffs']:
-            item['faceoff_pctg'] = (
-                item['faceoffs_won'] / float(item['faceoffs']) * 100.)
+            item['faceoff_pctg'] = round(
+                item['faceoffs_won'] / float(item['faceoffs']) * 100., 4)
         else:
             item['faceoff_pctg'] = 0.
         # calculating per-game relative values
         for attr in PER_GAME_ATTRS:
-            item["%s_per_game" % attr] = (
-                item[attr] / float(item['game_played']))
+            per_game_attr = item[attr] / float(item['game_played'])
+            try:
+                item["%s_per_game" % attr] = round(per_game_attr, 4)
+            except TypeError as e:
+                item["%s_per_game" % attr] = per_game_attr
 
         item['time_on_ice_per_game_seconds'] = item[
             'time_on_ice_per_game'].total_seconds()
@@ -227,9 +232,9 @@ if __name__ == '__main__':
                 time_attr = 'time_on_ice'
             # calculating per-60-minute relative values
             if item[time_attr]:
-                item["%s_per_60" % attr] = (
-                    item[attr] / (item[time_attr].total_seconds() / 60) * 60
-                )
+                item["%s_per_60" % attr] = round(
+                    item[attr] /
+                    (item[time_attr].total_seconds() / 60) * 60, 4)
 
     output = [last_modified, aggregated_stats_as_list]
 
