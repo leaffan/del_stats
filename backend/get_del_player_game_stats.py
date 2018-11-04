@@ -20,6 +20,18 @@ HOME_STATS_SUFFIX = 'player-stats-home.json'
 ROAD_STATS_SUFFIX = 'player-stats-guest.json'
 PERIOD_EVENTS_SUFFIX = 'period-events.json'
 
+PENALTY_CATEGORIES = {
+    'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
+    'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
+    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE'],
+    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M'],
+}
+
+REVERSE_PENALTY_CATEGORIES = dict()
+for key, values in PENALTY_CATEGORIES.items():
+    for value in values:
+        REVERSE_PENALTY_CATEGORIES[value] = key
+
 
 def get_single_game_player_data(game_id):
     """
@@ -57,6 +69,7 @@ def get_single_game_player_data(game_id):
             game_stat_lines.append(player_game)
 
     assistants = retrieve_assistants_from_event_data(period_events)
+    penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
         if gsl['player_id'] in assistants:
@@ -67,6 +80,18 @@ def get_single_game_player_data(game_id):
             gsl['pp_primary_assists'] = single_assist_dict.get('PPA1', 0)
             gsl['pp_secondary_assists'] = single_assist_dict.get('PPA2', 0)
             gsl['pp_points'] += gsl['pp_assists']
+
+    for gsl in game_stat_lines:
+        if gsl['player_id'] in penalties:
+            single_penalty_dict = penalties[gsl['player_id']]
+            gsl['penalties'] = single_penalty_dict.get('penalties', 0)
+            gsl['pim_from_events'] = single_penalty_dict.get('pim', 0)
+            for l in [2, 5, 10, 20]:
+                gsl["_%dmin" % l] = single_penalty_dict['durations'].get(l, 0)
+            gsl['penalty_shots'] = single_penalty_dict.get('penalty_shots')
+            for category in PENALTY_CATEGORIES:
+                gsl[category] = single_penalty_dict['categories'].get(
+                    category, 0)
 
     return game_stat_lines
 
@@ -128,6 +153,13 @@ def retrieve_single_player_game_stats(data_dict, game_id, key):
     single_player_game['time_on_ice_sh'] = timedelta(
         seconds=stat_dict['timeOnIceSH'])
     single_player_game['shifts'] = stat_dict['shifts']
+    single_player_game['penalties'] = 0
+    single_player_game['pim_from_events'] = 0
+    single_player_game['penalty_shots'] = 0
+    for l in [2, 5, 10, 20]:
+        single_player_game["_%dmin" % l] = 0
+    for category in PENALTY_CATEGORIES:
+        single_player_game[category] = 0
 
     return single_player_game
 
@@ -141,19 +173,64 @@ def retrieve_assistants_from_event_data(period_events):
     for period in period_events:
         events = period_events[period]
         for event in events:
-            if event['type'] == 'goal':
-                assist_cnt = 0
-                for assistant in event['data']['assistants']:
-                    assist_cnt += 1
-                    assist_plr_id = assistant['playerId']
-                    if assist_plr_id not in assists_dict:
-                        assists_dict[assist_plr_id] = defaultdict(int)
-                    assists_dict[assist_plr_id]["A%d" % assist_cnt] += 1
-                    if 'PP' in event['data']['balance']:
-                        assists_dict[assist_plr_id]["PPA"] += 1
-                        assists_dict[assist_plr_id]["PPA%d" % assist_cnt] += 1
+            if event['type'] != 'goal':
+                continue
+            assist_cnt = 0
+            for assistant in event['data']['assistants']:
+                assist_cnt += 1
+                assist_plr_id = assistant['playerId']
+                if assist_plr_id not in assists_dict:
+                    assists_dict[assist_plr_id] = defaultdict(int)
+                assists_dict[assist_plr_id]["A%d" % assist_cnt] += 1
+                if 'PP' in event['data']['balance']:
+                    assists_dict[assist_plr_id]["PPA"] += 1
+                    assists_dict[assist_plr_id]["PPA%d" % assist_cnt] += 1
 
     return assists_dict
+
+
+def retrieve_penalties_from_event_data(period_events):
+    """
+    Retrieves penalty information from game event data.
+    """
+    penalties_dict = dict()
+
+    for period in period_events:
+        events = period_events[period]
+        for event in events:
+            if event['type'] != 'penalty':
+                continue
+
+            player = event['data']['disciplinedPlayer']
+            # skipping penalties w/o a disciplined player
+            if player is None:
+                continue
+            plr_id = player['playerId']
+
+            if plr_id not in penalties_dict:
+                penalties_dict[plr_id] = dict()
+                penalties_dict[plr_id]['penalties'] = 0
+                penalties_dict[plr_id]['infractions'] = defaultdict(int)
+                penalties_dict[plr_id]['penalty_shots'] = 0
+                penalties_dict[plr_id]['pim'] = 0
+                penalties_dict[plr_id]['durations'] = defaultdict(int)
+                penalties_dict[plr_id]['categories'] = defaultdict(int)
+
+            duration = event['data']['duration']
+            infraction = event['data']['codename']
+            pim = int(duration / 60)
+
+            penalties_dict[plr_id]['penalties'] += 1
+            penalties_dict[plr_id]['infractions'][infraction] += 1
+            penalties_dict[plr_id]['pim'] += pim
+            penalties_dict[plr_id]['durations'][pim] += 1
+            penalties_dict[plr_id]['categories'][
+                REVERSE_PENALTY_CATEGORIES[infraction]] += 1
+
+            if event['data']['shooting']:
+                penalties_dict[plr_id]['penalty_shots'] += 1
+
+    return penalties_dict
 
 
 if __name__ == '__main__':
