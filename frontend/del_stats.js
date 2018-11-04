@@ -27,6 +27,9 @@ angular.module('delStatsApp', [])
             } else if ($scope.tableSelect === 'power_play_stats') {
                 $scope.sortCriterion = 'time_on_ice_pp_seconds';
                 $scope.statsSortDescending = true;
+            } else if ($scope.tableSelect === 'penalty_stats') {
+                $scope.sortCriterion = 'pim_from_events';
+                $scope.statsSortDescending = true;
             } else if ($scope.tableSelect === 'additional_stats') {
                 $scope.sortCriterion = 'faceoff_pctg';
                 $scope.statsSortDescending = true;
@@ -60,7 +63,9 @@ angular.module('delStatsApp', [])
                         'pp_goals_per_60', 'pp_assists_per_60', 'pp_points_per_60',
                         'shots', 'shots_missed', 'shots_blocked', 'faceoffs',
                         'faceoffs_lost', 'faceoffs_won', 'faceoff_pctg',
-                        'blocked_shots'
+                        'blocked_shots', 'penalties', '_2min', '_5min',
+                        '_10min', '_20min', 'lazy', 'roughing', 'reckless',
+                        'other', 'pim_from_events'
                     ].indexOf(sortCriterion) !== -1) {
                     return true;
                 } else {
