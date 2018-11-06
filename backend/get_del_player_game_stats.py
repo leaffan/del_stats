@@ -32,6 +32,9 @@ for key, values in PENALTY_CATEGORIES.items():
     for value in values:
         REVERSE_PENALTY_CATEGORIES[value] = key
 
+TGT_DIR = 'data'
+PER_PLAYER_TGT_DIR = 'per_player'
+
 
 def get_single_game_player_data(game):
     """
@@ -246,9 +249,14 @@ def retrieve_penalties_from_event_data(period_events):
 
 if __name__ == '__main__':
 
+    if not os.path.isdir(TGT_DIR):
+        os.makedirs(TGT_DIR)
+    if not os.path.isdir(os.path.join(TGT_DIR, PER_PLAYER_TGT_DIR)):
+        os.makedirs(os.path.join(TGT_DIR, PER_PLAYER_TGT_DIR))
+
     # setting up source and target paths
-    src_path = os.path.join('data', GAME_SRC)
-    tgt_path = os.path.join('data', PLAYER_GAME_STATS_TGT)
+    src_path = os.path.join(TGT_DIR, GAME_SRC)
+    tgt_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -259,7 +267,9 @@ if __name__ == '__main__':
     else:
         player_game_stats = list()
 
-    # retrieving set of games already having retrieved player stats for
+    per_player_game_stats = defaultdict(list)
+
+    # retrieving set of games we already have retrieved player stats for
     registered_games = set([pg['game_id'] for pg in player_game_stats])
 
     for game in games[:]:
@@ -272,9 +282,28 @@ if __name__ == '__main__':
         single_player_game_stats = get_single_game_player_data(game)
         player_game_stats.extend(single_player_game_stats)
 
+        # collecting stat lines on a per-player basis
+        for stat_line in single_player_game_stats:
+            per_player_game_stats[
+                (stat_line['player_id'], stat_line['team'])].append(stat_line)
+
     # retrieving current timestamp to indicate last modification of dataset
     current_datetime = datetime.now().timestamp() * 1000
     output = [current_datetime, player_game_stats]
 
     open(tgt_path, 'w').write(
         json.dumps(output, indent=2, default=str))
+
+    for player_id, team in per_player_game_stats:
+        tgt_path = os.path.join(
+            TGT_DIR, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
+
+        output = per_player_game_stats[(player_id, team)]
+
+        # adding output to already existing data
+        if os.path.isfile(tgt_path):
+            existing_data = json.loads(open(tgt_path).read())
+            existing_data.extend(output)
+            output = existing_data
+
+        open(tgt_path, 'w').write(json.dumps(output, indent=2, default=str))
