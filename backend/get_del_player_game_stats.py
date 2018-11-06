@@ -33,11 +33,13 @@ for key, values in PENALTY_CATEGORIES.items():
         REVERSE_PENALTY_CATEGORIES[value] = key
 
 
-def get_single_game_player_data(game_id):
+def get_single_game_player_data(game):
     """
     Retrieves statistics for all players participating in specified game.
     """
     game_stat_lines = list()
+
+    game_id = game['game_id']
 
     home_stats_url = "%s/%s/%d/%s" % (
         BASE_URL, MATCHES_INSERT, game_id, HOME_STATS_SUFFIX)
@@ -56,15 +58,15 @@ def get_single_game_player_data(game_id):
     r = requests.get(events_url)
     period_events = r.json()
 
-    for home_stat in home_stats:
+    for home_stat_line in home_stats:
         player_game = retrieve_single_player_game_stats(
-            home_stat, game_id, 'home')
+            home_stat_line, game, 'home')
         if player_game['game_played']:
             game_stat_lines.append(player_game)
 
-    for road_stat in road_stats:
+    for road_stat_line in road_stats:
         player_game = retrieve_single_player_game_stats(
-            road_stat, game_id, 'away')
+            road_stat_line, game, 'away')
         if player_game['game_played']:
             game_stat_lines.append(player_game)
 
@@ -96,10 +98,13 @@ def get_single_game_player_data(game_id):
     return game_stat_lines
 
 
-def retrieve_single_player_game_stats(data_dict, game_id, key):
+def retrieve_single_player_game_stats(data_dict, game, key):
     """
     Retrieves single player's statistics in specified game.
     """
+
+    game_id = game['game_id']
+
     single_player_game = dict()
     single_player_game['game_id'] = game_id
     single_player_game['player_id'] = data_dict['id']
@@ -117,9 +122,15 @@ def retrieve_single_player_game_stats(data_dict, game_id, key):
 
     stat_dict = data_dict['statistics']
 
-    single_player_game['team'] = stat_dict['teamShortcut']
-    single_player_game['game_played'] = stat_dict['games']
     single_player_game['game_type'] = key
+    single_player_game['date'] = game['date']
+    single_player_game['round'] = game['round']
+    single_player_game['team'] = stat_dict['teamShortcut']
+    if key == 'home':
+        single_player_game['opp_team'] = game['road_abbr']
+    else:
+        single_player_game['opp_team'] = game['home_abbr']
+    single_player_game['game_played'] = stat_dict['games']
     single_player_game['goals'] = stat_dict['goals'][key]
     single_player_game['assists'] = stat_dict['assists'][key]
     single_player_game['primary_assists'] = 0
@@ -252,15 +263,13 @@ if __name__ == '__main__':
     registered_games = set([pg['game_id'] for pg in player_game_stats])
 
     for game in games[:]:
-
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
-
         print("+ Retrieving player stats for %s (%d) vs. %s (%d) [%d]" % (
             game['home_team'], game['home_score'],
             game['road_team'], game['road_score'], game['game_id']))
-        single_player_game_stats = get_single_game_player_data(game['game_id'])
+        single_player_game_stats = get_single_game_player_data(game)
         player_game_stats.extend(single_player_game_stats)
 
     # retrieving current timestamp to indicate last modification of dataset
