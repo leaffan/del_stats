@@ -1,6 +1,6 @@
-angular.module('delStatsApp', [])
+var app = angular.module('delStatsApp', [])
 
-    .controller('mainController', function ($scope, $http) {
+app.controller('mainController', function ($scope, $http) {
         // default table selection and sort criterion for skater page
         $scope.tableSelect = 'basic_stats';
         $scope.sortCriterion = 'points';
@@ -105,23 +105,9 @@ angular.module('delStatsApp', [])
             }
         }
 
-        // $scope.countryFilter = function (a) {
-        //     if ($scope.countrySelect) {
-        //         if (a.country == $scope.country) {
-        //             return false;
-        //         } else {
-        //             return true;
-        //         }
-        //     } else {
-        //         return true;
-        //     }
-        // }
-
         // loading stats from external json file
-        $http.get('del_player_game_stats_aggregated.json').then(function (res) {
+        $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
             $scope.last_modified = res.data[0];
             $scope.stats = res.data[1];
         });
-
-
-    });
+});
