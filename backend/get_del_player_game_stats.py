@@ -110,6 +110,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
 
     single_player_game = dict()
     single_player_game['game_id'] = game_id
+    single_player_game['schedule_game_id'] = game['schedule_game_id']
     single_player_game['player_id'] = data_dict['id']
     single_player_game['no'] = data_dict['jersey']
     single_player_game['position'] = data_dict['position']
@@ -133,6 +134,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
         single_player_game['opp_team'] = game['road_abbr']
     else:
         single_player_game['opp_team'] = game['home_abbr']
+    single_player_game['home_team'] = game['home_abbr']
+    single_player_game['road_team'] = game['road_abbr']
     single_player_game['game_played'] = stat_dict['games']
     single_player_game['goals'] = stat_dict['goals'][key]
     single_player_game['assists'] = stat_dict['assists'][key]
