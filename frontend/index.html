@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="de" ng-app="delStatsApp">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Inoffizielle DEL-Statistiken</title>
+
+    <!-- css -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.2/css/all.css" />
+    <link rel="stylesheet" href="./css/flag-icon.css" />
+    <style>
+        body { padding-top: 40px;}
+
+        .inline { display: inline-block; }
+
+        .inline-headers h2, .inline-headers span {
+            display: inline-block;
+            vertical-align: baseline;
+        }
+
+        thead td.text-center a { font-size: 80%; font-weight: bold; }
+
+        p { margin-bottom: 15px; }
+
+        ul {margin: 10px;}
+
+        li { width: 30%; }
+
+        li i.fa, li i.fab { margin-right: 5px; }
+
+        label { padding-left: 5px;}
+
+    </style>
+
+    <!-- javascript -->
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular.min.js"></script>
+    <script src="http://ajax.googleapis.com/ajax/libs/angularjs/1.7.2/angular-route.min.js"></script>
+    <script src="i18n/angular-locale_de-de.js"></script>
+    <script src="del_stats.js"></script>
+
+</head>
+
+<body>
+
+    <main ng-view></main>
+
+</body>
+
+</html>
