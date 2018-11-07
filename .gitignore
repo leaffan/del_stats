@@ -111,4 +111,5 @@ frontend/.htpasswd
 frontend/*.csv
 frontend/*.json
 frontend/index.php
+frontend/data/*
 sandbox/*
