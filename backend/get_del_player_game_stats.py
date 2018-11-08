@@ -3,6 +3,7 @@
 
 import os
 import json
+import argparse
 from datetime import timedelta, datetime
 from collections import defaultdict
 
@@ -64,13 +65,13 @@ def get_single_game_player_data(game):
     for home_stat_line in home_stats:
         player_game = retrieve_single_player_game_stats(
             home_stat_line, game, 'home')
-        if player_game['game_played']:
+        if player_game['games_played']:
             game_stat_lines.append(player_game)
 
     for road_stat_line in road_stats:
         player_game = retrieve_single_player_game_stats(
             road_stat_line, game, 'away')
-        if player_game['game_played']:
+        if player_game['games_played']:
             game_stat_lines.append(player_game)
 
     assistants = retrieve_assistants_from_event_data(period_events)
@@ -122,21 +123,28 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['date_of_birth'] = data_dict['dateOfBirth']
     single_player_game['weight'] = data_dict['weight']
     single_player_game['height'] = data_dict['height']
-    single_player_game['country_long'] = data_dict['nationality']
 
     stat_dict = data_dict['statistics']
 
-    single_player_game['game_type'] = key
-    single_player_game['date'] = game['date']
+    single_player_game['home_away'] = key
+    single_player_game['game_date'] = game['date']
     single_player_game['round'] = game['round']
     single_player_game['team'] = stat_dict['teamShortcut']
     if key == 'home':
+        single_player_game['score'] = game['home_score']
         single_player_game['opp_team'] = game['road_abbr']
+        single_player_game['opp_score'] = game['road_score']
     else:
+        single_player_game['score'] = game['road_score']
         single_player_game['opp_team'] = game['home_abbr']
-    single_player_game['home_team'] = game['home_abbr']
-    single_player_game['road_team'] = game['road_abbr']
-    single_player_game['game_played'] = stat_dict['games']
+        single_player_game['opp_score'] = game['home_score']
+    if game['shootout_game']:
+        single_player_game['game_type'] = 'SO'
+    elif game['overtime_game']:
+        single_player_game['game_type'] = 'OT'
+    else:
+        single_player_game['game_type'] = ''
+    single_player_game['games_played'] = stat_dict['games']
     single_player_game['goals'] = stat_dict['goals'][key]
     single_player_game['assists'] = stat_dict['assists'][key]
     single_player_game['primary_assists'] = 0
@@ -250,7 +258,30 @@ def retrieve_penalties_from_event_data(period_events):
     return penalties_dict
 
 
+def total_seconds(timedelta):
+    return timedelta.total_seconds()
+
+
+def seconds(timedelta):
+    return timedelta.seconds
+
+
 if __name__ == '__main__':
+
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Download DEL player game statistics.')
+    parser.add_argument(
+        '--initial', dest='initial', required=False,
+        action='store_true', help='Re-create list of player games')
+    parser.add_argument(
+        '--limit', dest='limit', required=False, type=int, default=0,
+        help='Number of maximum games to be processed')
+
+    args = parser.parse_args()
+
+    initial = args.initial
+    limit = int(args.limit)
 
     if not os.path.isdir(TGT_DIR):
         os.makedirs(TGT_DIR)
@@ -265,7 +296,7 @@ if __name__ == '__main__':
     games = json.loads(open(src_path).read())
 
     # loading existing player game stats
-    if os.path.isfile(tgt_path):
+    if not initial and os.path.isfile(tgt_path):
         player_game_stats = json.loads(open(tgt_path).read())[-1]
     else:
         player_game_stats = list()
@@ -275,7 +306,10 @@ if __name__ == '__main__':
     # retrieving set of games we already have retrieved player stats for
     registered_games = set([pg['game_id'] for pg in player_game_stats])
 
+    cnt = 0
+
     for game in games[:]:
+        cnt += 1
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
@@ -289,13 +323,15 @@ if __name__ == '__main__':
         for stat_line in single_player_game_stats:
             per_player_game_stats[
                 (stat_line['player_id'], stat_line['team'])].append(stat_line)
+        if limit and cnt >= limit:
+            break
 
     # retrieving current timestamp to indicate last modification of dataset
     current_datetime = datetime.now().timestamp() * 1000
     output = [current_datetime, player_game_stats]
 
     open(tgt_path, 'w').write(
-        json.dumps(output, indent=2, default=str))
+        json.dumps(output, indent=2, default=seconds))
 
     for player_id, team in per_player_game_stats:
         tgt_path = os.path.join(
@@ -304,9 +340,10 @@ if __name__ == '__main__':
         output = per_player_game_stats[(player_id, team)]
 
         # adding output to already existing data
-        if os.path.isfile(tgt_path):
+        if not initial and os.path.isfile(tgt_path):
             existing_data = json.loads(open(tgt_path).read())
             existing_data.extend(output)
             output = existing_data
 
-        open(tgt_path, 'w').write(json.dumps(output, indent=2, default=str))
+        open(tgt_path, 'w').write(
+            json.dumps(output, indent=2, default=seconds))
