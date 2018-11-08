@@ -21,6 +21,7 @@ app.config(['$routeProvider', function($routeProvider){
 
 app.controller('plrController', function($scope, $http, $routeParams) {
 
+    $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
 
     // setting column sort order according to current and new sort criteria, and current sort order 
@@ -34,7 +35,8 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             if ([
                     'goals', 'assists', 'shots_on_goal', 'points',
                     'shots_on_goal', 'shots_missed', 'shots_blocked',
-                    'time_on_ice'
+                    'time_on_ice', 'shifts', 'pp_goals', 'sh_goals',
+                    'time_on_ice_pp', 'time_on_ice_sh', 'pim', 'plus_minus'
                 ].indexOf(sortCriterion) !== -1) {
                 return true;
             } else {
@@ -75,9 +77,37 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             'BHV': 'pinguins-bremerhaven'
         },
         countries: {
-            'GER': 'de', 'CAN': 'ca', 'FRA': 'fr', 'USA': 'us'
+            'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
+            'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
+            'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
         }
     }
+
+    $scope.getTotal = function(attribute) {
+        var total = 0;
+        for(var i = 0; i < $scope.player_stats.length; i++){
+            total += $scope.player_stats[i][attribute];
+        }
+        return total;
+    }
+
+    $scope.formatTime = function(time_on_ice) {
+        return Math.floor(time_on_ice / 60) + ":" + ('00' + (time_on_ice % 60)).slice(-2)
+    }
+
+    $scope.setTextColor = function (score, opp_score) {
+        if (score > opp_score) {
+            return " green";
+        }
+        else if (opp_score > score) {
+            return " red"
+        }
+        else {
+            return ""
+        }
+    };
+
+
 });
 
 app.controller('mainController', function ($scope, $http) {
