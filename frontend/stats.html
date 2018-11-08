@@ -1,6 +1,7 @@
     <div class="container" data-ng-app="delStatsApp" data-ng-controller="mainController">
-
-        <h1>DEL-Spielerstatistiken für 2018/19</h1>
+        <div class="alert alert-info">
+            <h1>DEL-Spielerstatistiken für 2018/19</h1>
+        </div>
 
         <hr />
 
@@ -9,7 +10,7 @@
 
             <ul class="list-inline">
                 <li><i class="fa fa-sync-alt" aria-hidden="true"></i><b>Aktualisierung:</b> {{ last_modified | date: 'dd.MM.yyyy, HH:mm' }}</li>
-                <li><i class="fa fa-download" aria-hidden="true"></i><b>Download:</b> <a href="del_player_game_stats_aggregated.csv">CSV-Datei</a></li>
+                <li><i class="fa fa-download" aria-hidden="true"></i><b>Download:</b> <a href="data/del_player_game_stats_aggregated.csv">CSV-Datei</a></li>
             </ul>
             <ul class="list-inline">
                 <li><i class="fa fa-at" aria-hidden="true"></i><b>Kontakt:</b> markus@leaffan.net</li>
@@ -17,6 +18,9 @@
                 <li><i class="fab fa-github" aria-hidden="true"></i><b>GitHub:</b> <a href="https://github.com/leaffan/del_stats">leaffan/del_stats</a></li>
             </ul>
         </div>
+
+        <hr />
+
         <form>
             <div class="form-group">
                 <div class="select-group">
@@ -84,20 +88,20 @@
                     <label for="countrySelect">Land:</label>
                     <select id="countrySelect" class="form-control" data-ng-model="countryFilter">
                         <option data-ng-option value selected="selected">alle</option>
-                        <option data-ng-option value="Germany">Deutschland</option>
-                        <option data-ng-option value="Canada">Kanada</option>
-                        <option data-ng-option value="USA">USA</option>
-                        <option data-ng-option value="Sweden">Schweden</option>
-                        <option data-ng-option value="Finland">Finnland</option>
-                        <option data-ng-option value="Slovakia">Slowakische Republik</option>
-                        <option data-ng-option value="Russia">Russland</option>
-                        <option data-ng-option value="Slovenia">Slowenien</option>
-                        <option data-ng-option value="Norway">Norwegen</option>
-                        <option data-ng-option value="Denmark">Dänemark</option>
-                        <option data-ng-option value="Latvia">Lettland</option>
-                        <option data-ng-option value="France">Frankreich</option>
-                        <option data-ng-option value="Italy">Italien</option>
-                        <option data-ng-option value="Hungary">Ungarn</option>
+                        <option data-ng-option value="de">Deutschland</option>
+                        <option data-ng-option value="ca">Kanada</option>
+                        <option data-ng-option value="us">USA</option>
+                        <option data-ng-option value="se">Schweden</option>
+                        <option data-ng-option value="fi">Finnland</option>
+                        <option data-ng-option value="sk">Slowakische Republik</option>
+                        <option data-ng-option value="ru">Russland</option>
+                        <option data-ng-option value="si">Slowenien</option>
+                        <option data-ng-option value="no">Norwegen</option>
+                        <option data-ng-option value="dk">Dänemark</option>
+                        <option data-ng-option value="lv">Lettland</option>
+                        <option data-ng-option value="fr">Frankreich</option>
+                        <option data-ng-option value="it">Italien</option>
+                        <option data-ng-option value="hu">Ungarn</option>
                     </select>
                 </div>
             </div>
@@ -110,61 +114,61 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pim_from_events', sortCriterion, statsSortDescending); sortCriterion = 'pim_from_events'"><abbr title="Strafminuten insgesamt">Minuten</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pim_from_events', sortCriterion, statsSortDescending); sortCriterion = 'pim_from_events'"><abbr title="Strafminuten insgesamt">Minuten</abbr>
                             <span data-ng-show="sortCriterion == 'pim_from_events' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pim_from_events' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('_2min', sortCriterion, statsSortDescending); sortCriterion = '_2min'"><abbr title="2-Minuten-Strafen">2 min</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_2min', sortCriterion, statsSortDescending); sortCriterion = '_2min'"><abbr title="2-Minuten-Strafen">2 min</abbr>
                             <span data-ng-show="sortCriterion == '_2min' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == '_2min' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('_5min', sortCriterion, statsSortDescending); sortCriterion = '_5min'"><abbr title="5-Minuten-Strafen">5 min</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_5min', sortCriterion, statsSortDescending); sortCriterion = '_5min'"><abbr title="5-Minuten-Strafen">5 min</abbr>
                             <span data-ng-show="sortCriterion == '_5min' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == '_5min' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('_10min', sortCriterion, statsSortDescending); sortCriterion = '_10min'"><abbr title="10-Minuten-Strafen">10 min</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_10min', sortCriterion, statsSortDescending); sortCriterion = '_10min'"><abbr title="10-Minuten-Strafen">10 min</abbr>
                             <span data-ng-show="sortCriterion == '_10min' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == '_10min' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('_20min', sortCriterion, statsSortDescending); sortCriterion = '_20min'"><abbr title="20-Minuten-Strafen">20 min</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_20min', sortCriterion, statsSortDescending); sortCriterion = '_20min'"><abbr title="20-Minuten-Strafen">20 min</abbr>
                             <span data-ng-show="sortCriterion == '_20min' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == '_20min' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('lazy', sortCriterion, statsSortDescending); sortCriterion = 'lazy'"><abbr title="Beinstellen, Halten, Haken, Halten des Stocks, Behinderung, Stockschlag">Faul</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('lazy', sortCriterion, statsSortDescending); sortCriterion = 'lazy'"><abbr title="Beinstellen, Halten, Haken, Halten des Stocks, Behinderung, Stockschlag">Faul</abbr>
                             <span data-ng-show="sortCriterion == 'lazy' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'lazy' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('roughing', sortCriterion, statsSortDescending); sortCriterion = 'roughing'"><abbr title="Übertriebene Härte, Unkorrekter Körperangriff, Bandencheck, Stockcheck, FIST?">Härte</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('roughing', sortCriterion, statsSortDescending); sortCriterion = 'roughing'"><abbr title="Übertriebene Härte, Unkorrekter Körperangriff, Bandencheck, Stockcheck, FIST?">Härte</abbr>
                             <span data-ng-show="sortCriterion == 'roughing' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'roughing' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('reckless', sortCriterion, statsSortDescending); sortCriterion = 'reckless'"><abbr title="High-Sticking, Ellbogencheck, L-HIT?, Check gegen den Kopf, Kniecheck">Fahrlässig</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('reckless', sortCriterion, statsSortDescending); sortCriterion = 'reckless'"><abbr title="High-Sticking, Ellbogencheck, L-HIT?, Check gegen den Kopf, Kniecheck">Fahrlässig</abbr>
                             <span data-ng-show="sortCriterion == 'reckless' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'reckless' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('other', sortCriterion, statsSortDescending); sortCriterion = 'other'"><abbr title="Werfen des Stocks, Unsportliches Verhalten, Spielverzögerung, Beschimpfung von Offiziellen">Andere</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('other', sortCriterion, statsSortDescending); sortCriterion = 'other'"><abbr title="Werfen des Stocks, Unsportliches Verhalten, Spielverzögerung, Beschimpfung von Offiziellen">Andere</abbr>
                             <span data-ng-show="sortCriterion == 'other' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'other' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -172,7 +176,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.pim_from_events }}</td>
@@ -193,67 +197,67 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'"><abbr title="Teamkürzel">Team</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'"><abbr title="Teamkürzel">Team</abbr>
                             <span data-ng-show="sortCriterion == 'team' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'team' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots', sortCriterion, statsSortDescending); sortCriterion = 'shots'"><abbr title="Schüsse insgesamt">Schüsse</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots', sortCriterion, statsSortDescending); sortCriterion = 'shots'"><abbr title="Schüsse insgesamt">Schüsse</abbr>
                             <span data-ng-show="sortCriterion == 'shots' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'"><abbr title="Torschüsse">Torschüsse</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'"><abbr title="Torschüsse">Torschüsse</abbr>
                             <span data-ng-show="sortCriterion == 'shots_on_goal' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_on_goal' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_missed', sortCriterion, statsSortDescending); sortCriterion = 'shots_missed'"><abbr title="Schüsse am Tor vorbei">Schüsse vorbei</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_missed', sortCriterion, statsSortDescending); sortCriterion = 'shots_missed'"><abbr title="Schüsse am Tor vorbei">Schüsse vorbei</abbr>
                             <span data-ng-show="sortCriterion == 'shots_missed' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_missed' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_blocked', sortCriterion, statsSortDescending); sortCriterion = 'shots_blocked'"><abbr title="Geblockte Schüsse">Schüsse geblockt</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_blocked', sortCriterion, statsSortDescending); sortCriterion = 'shots_blocked'"><abbr title="Geblockte Schüsse">Schüsse geblockt</abbr>
                             <span data-ng-show="sortCriterion == 'shots_blocked' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_blocked' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('faceoffs', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs'"><abbr title="Bullies insgesamt">FAC</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('faceoffs', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs'"><abbr title="Bullies insgesamt">FAC</abbr>
                             <span data-ng-show="sortCriterion == 'faceoffs' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'faceoffs' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('faceoffs_won', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs_won'"><abbr title="Gewonnene Bullies">FAC+</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('faceoffs_won', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs_won'"><abbr title="Gewonnene Bullies">FAC+</abbr>
                             <span data-ng-show="sortCriterion == 'faceoffs_won' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'faceoffs_won' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('faceoffs_lost', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs_lost'"><abbr title="Verlorene Bullies">FAC-</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('faceoffs_lost', sortCriterion, statsSortDescending); sortCriterion = 'faceoffs_lost'"><abbr title="Verlorene Bullies">FAC-</abbr>
                             <span data-ng-show="sortCriterion == 'faceoffs_lost' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'faceoffs_lost' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('faceoff_pctg', sortCriterion, statsSortDescending); sortCriterion = 'faceoff_pctg'"><abbr title="Gewonnene Bullies [%]">FAC%</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('faceoff_pctg', sortCriterion, statsSortDescending); sortCriterion = 'faceoff_pctg'"><abbr title="Gewonnene Bullies [%]">FAC%</abbr>
                             <span data-ng-show="sortCriterion == 'faceoff_pctg' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'faceoff_pctg' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('blocked_shots', sortCriterion, statsSortDescending); sortCriterion = 'blocked_shots'"><abbr title="Aktiv geblockte Schüsse">Blocks</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('blocked_shots', sortCriterion, statsSortDescending); sortCriterion = 'blocked_shots'"><abbr title="Aktiv geblockte Schüsse">Blocks</abbr>
                             <span data-ng-show="sortCriterion == 'blocked_shots' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'blocked_shots' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -261,7 +265,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1">{{ stat.team }}</td>
@@ -284,67 +288,67 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_seconds'"><abbr title="Eiszeit im Powerplay">PP-Eiszeit</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_seconds'"><abbr title="Eiszeit im Powerplay">PP-Eiszeit</abbr>
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'"><abbr title="Tore insgesamt">Tore</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'"><abbr title="Tore insgesamt">Tore</abbr>
                             <span data-ng-show="sortCriterion == 'goals' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'goals' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_goals', sortCriterion, statsSortDescending); sortCriterion = 'pp_goals'"><abbr title="Powerplay-Tore">PPT</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_goals', sortCriterion, statsSortDescending); sortCriterion = 'pp_goals'"><abbr title="Powerplay-Tore">PPT</abbr>
                             <span data-ng-show="sortCriterion == 'pp_goals' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_goals' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_goals_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_goals_per_60'"><abbr title="Powerplay-Tore pro 60 Minuten Powerplay-Eiszeit">PPT/60</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_goals_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_goals_per_60'"><abbr title="Powerplay-Tore pro 60 Minuten Powerplay-Eiszeit">PPT/60</abbr>
                             <span data-ng-show="sortCriterion == 'pp_goals_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_goals_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'"><abbr title="Vorlagen insgesamt">Vorlagen</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'"><abbr title="Vorlagen insgesamt">Vorlagen</abbr>
                             <span data-ng-show="sortCriterion == 'assists' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'assists' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_assists', sortCriterion, statsSortDescending); sortCriterion = 'pp_assists'"><abbr title="Powerplay-Vorlagen">PPV</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_assists', sortCriterion, statsSortDescending); sortCriterion = 'pp_assists'"><abbr title="Powerplay-Vorlagen">PPV</abbr>
                             <span data-ng-show="sortCriterion == 'pp_assists' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_assists' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_assists_per_60'"><abbr title="Powerplay-Vorlagen pro 60 Minuten Powerplay-Eiszeit">PPV/60</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_assists_per_60'"><abbr title="Powerplay-Vorlagen pro 60 Minuten Powerplay-Eiszeit">PPV/60</abbr>
                             <span data-ng-show="sortCriterion == 'pp_assists_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_assists_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'"><abbr title="Punkte insgesamt">Punkte</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'"><abbr title="Punkte insgesamt">Punkte</abbr>
                             <span data-ng-show="sortCriterion == 'points' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'points' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_points', sortCriterion, statsSortDescending); sortCriterion = 'pp_points'"><abbr title="Powerplay-Punkte">PPP</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_points', sortCriterion, statsSortDescending); sortCriterion = 'pp_points'"><abbr title="Powerplay-Punkte">PPP</abbr>
                             <span data-ng-show="sortCriterion == 'pp_points' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_points' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('pp_points_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_points_per_60'"><abbr title="Powerplay-Punkte pro 60 Minuten Powerplay-Eiszeit">PPP/60</abbr>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_points_per_60', sortCriterion, statsSortDescending); sortCriterion = 'pp_points_per_60'"><abbr title="Powerplay-Punkte pro 60 Minuten Powerplay-Eiszeit">PPP/60</abbr>
                             <span data-ng-show="sortCriterion == 'pp_points_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'pp_points_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -352,7 +356,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.time_on_ice_pp }}</td>
@@ -375,54 +379,54 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_seconds'">Eiszeit
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_seconds'">Eiszeit
                             <span data-ng-show="sortCriterion == 'time_on_ice_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_seconds'">Überzahl
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_seconds'">Überzahl
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_sh_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_sh_seconds'">Unterzahl
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_sh_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_sh_seconds'">Unterzahl
                             <span data-ng-show="sortCriterion == 'time_on_ice_sh_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_sh_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shifts', sortCriterion, statsSortDescending); sortCriterion = 'shifts'">Wechsel
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shifts', sortCriterion, statsSortDescending); sortCriterion = 'shifts'">Wechsel
                             <span data-ng-show="sortCriterion == 'shifts' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shifts' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_per_game_seconds'">Eisz./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_per_game_seconds'">Eisz./Sp.
                             <span data-ng-show="sortCriterion == 'time_on_ice_per_game_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_per_game_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_per_game_seconds'">Überz./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp_per_game_seconds'">Überz./Sp.
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_per_game_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_pp_per_game_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_sh_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_sh_per_game_seconds'">Unterz./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_sh_per_game_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_sh_per_game_seconds'">Unterz./Sp.
                             <span data-ng-show="sortCriterion == 'time_on_ice_sh_per_game_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_sh_per_game_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shifts_per_game', sortCriterion, statsSortDescending); sortCriterion = 'shifts_per_game'">Wechsel/Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shifts_per_game', sortCriterion, statsSortDescending); sortCriterion = 'shifts_per_game'">Wechsel/Sp.
                             <span data-ng-show="sortCriterion == 'shifts_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shifts_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -430,7 +434,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.time_on_ice }}</td>
@@ -451,55 +455,55 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
                             <span data-ng-show="sortCriterion == 'team' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'team' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
                             <span data-ng-show="sortCriterion == 'game_played' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'game_played' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('goals_per_game', sortCriterion, statsSortDescending); sortCriterion = 'goals_per_game'">Tore/Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('goals_per_game', sortCriterion, statsSortDescending); sortCriterion = 'goals_per_game'">Tore/Sp.
                             <span data-ng-show="sortCriterion == 'goals_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'goals_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'assists_per_game'">Vorlagen/Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'assists_per_game'">Vorlagen/Sp.
                             <span data-ng-show="sortCriterion == 'assists_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'assists_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('primary_assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'primary_assists_per_game'">1. Vorl./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('primary_assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'primary_assists_per_game'">1. Vorl./Sp.
                             <span data-ng-show="sortCriterion == 'primary_assists_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'primary_assists_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('secondary_assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'secondary_assists_per_game'">2. Vorl./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('secondary_assists_per_game', sortCriterion, statsSortDescending); sortCriterion = 'secondary_assists_per_game'">2. Vorl./Sp.
                             <span data-ng-show="sortCriterion == 'secondary_assists_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'secondary_assists_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('points_per_game', sortCriterion, statsSortDescending); sortCriterion = 'points_per_game'">Pkte./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points_per_game', sortCriterion, statsSortDescending); sortCriterion = 'points_per_game'">Pkte./Sp.
                             <span data-ng-show="sortCriterion == 'points_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'points_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal_per_game', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal_per_game'">Torsch./Sp.
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal_per_game', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal_per_game'">Torsch./Sp.
                             <span data-ng-show="sortCriterion == 'shots_on_goal_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_on_goal_per_game' && !statsSortDescending"
                                 class="fa fa-caret-up"></span>
@@ -508,7 +512,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -528,55 +532,55 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
                             <span data-ng-show="sortCriterion == 'team' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'team' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_seconds'">Eiszeit
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_seconds', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_seconds'">Eiszeit
                             <span data-ng-show="sortCriterion == 'time_on_ice_seconds' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'time_on_ice_seconds' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('goals_per_60', sortCriterion, statsSortDescending); sortCriterion = 'goals_per_60'">Tore/60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('goals_per_60', sortCriterion, statsSortDescending); sortCriterion = 'goals_per_60'">Tore/60
                             <span data-ng-show="sortCriterion == 'goals_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'goals_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'assists_per_60'">Vorlagen/60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'assists_per_60'">Vorlagen/60
                             <span data-ng-show="sortCriterion == 'assists_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'assists_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('primary_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'primary_assists_per_60'">1. Vorl./60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('primary_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'primary_assists_per_60'">1. Vorl./60
                             <span data-ng-show="sortCriterion == 'primary_assists_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'primary_assists_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('secondary_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'secondary_assists_per_60'">2. Vorl./60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('secondary_assists_per_60', sortCriterion, statsSortDescending); sortCriterion = 'secondary_assists_per_60'">2. Vorl./60
                             <span data-ng-show="sortCriterion == 'secondary_assists_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'secondary_assists_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('points_per_60', sortCriterion, statsSortDescending); sortCriterion = 'points_per_60'">Pkte./60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points_per_60', sortCriterion, statsSortDescending); sortCriterion = 'points_per_60'">Pkte./60
                             <span data-ng-show="sortCriterion == 'points_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'points_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal_per_60', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal_per_60'">Torsch./60
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal_per_60', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal_per_60'">Torsch./60
                             <span data-ng-show="sortCriterion == 'shots_on_goal_per_60' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_on_goal_per_60' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -584,7 +588,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -604,55 +608,55 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
                             <span data-ng-show="sortCriterion == 'team' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'team' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
                             <span data-ng-show="sortCriterion == 'game_played' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'game_played' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'">Tore
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'">Tore
                             <span data-ng-show="sortCriterion == 'goals' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'goals' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'">Vorlagen
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'">Vorlagen
                             <span data-ng-show="sortCriterion == 'assists' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'assists' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'">Punkte
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'">Punkte
                             <span data-ng-show="sortCriterion == 'points' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'points' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'">Torschüsse
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'">Torschüsse
                             <span data-ng-show="sortCriterion == 'shots_on_goal' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shots_on_goal' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shot_pctg', sortCriterion, statsSortDescending); sortCriterion = 'shot_pctg'">Schussquote
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shot_pctg', sortCriterion, statsSortDescending); sortCriterion = 'shot_pctg'">Schussquote
                             <span data-ng-show="sortCriterion == 'shot_pctg' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shot_pctg' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('points_per_game', sortCriterion, statsSortDescending); sortCriterion = 'points_per_game'">Punkte/Spiel
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points_per_game', sortCriterion, statsSortDescending); sortCriterion = 'points_per_game'">Punkte/Spiel
                             <span data-ng-show="sortCriterion == 'points_per_game' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'points_per_game' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -660,7 +664,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -669,7 +673,7 @@
                     <td class="col-md-1 text-right">{{ stat.assists }}</td>
                     <td class="col-md-1 text-right">{{ stat.points }}</td>
                     <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.shot_pctg.toFixed(2) }}</td>
+                    <td class="col-md-1 text-right">{{ stat.shot_pctg.toFixed(2) }} %</td>
                     <td class="col-md-1 text-right">{{ stat.points_per_game.toFixed(2) }}</td>
                 </tr>
             </tbody>
@@ -681,55 +685,55 @@
                 <tr>
                     <td class="text-center">Rang</td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('team', sortCriterion, statsSortDescending); sortCriterion = 'team'">Team
                             <span data-ng-show="sortCriterion == 'team' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'team' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('position', sortCriterion, statsSortDescending); sortCriterion = 'position'">Position
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('position', sortCriterion, statsSortDescending); sortCriterion = 'position'">Position
                             <span data-ng-show="sortCriterion == 'position' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'position' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('shoots', sortCriterion, statsSortDescending); sortCriterion = 'shoots'">Stockhand
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shoots', sortCriterion, statsSortDescending); sortCriterion = 'shoots'">Stockhand
                             <span data-ng-show="sortCriterion == 'shoots' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'shoots' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('height', sortCriterion, statsSortDescending); sortCriterion = 'height'">Größe
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('height', sortCriterion, statsSortDescending); sortCriterion = 'height'">Größe
                             <span data-ng-show="sortCriterion == 'height' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'height' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('weight', sortCriterion, statsSortDescending); sortCriterion = 'weight'">Gewicht
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('weight', sortCriterion, statsSortDescending); sortCriterion = 'weight'">Gewicht
                             <span data-ng-show="sortCriterion == 'weight' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'weight' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('date_of_birth', sortCriterion, statsSortDescending); sortCriterion = 'date_of_birth'">Geburtsdatum
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('date_of_birth', sortCriterion, statsSortDescending); sortCriterion = 'date_of_birth'">Geburtsdatum
                             <span data-ng-show="sortCriterion == 'date_of_birth' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'date_of_birth' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('age', sortCriterion, statsSortDescending); sortCriterion = 'age'">Alter
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('age', sortCriterion, statsSortDescending); sortCriterion = 'age'">Alter
                             <span data-ng-show="sortCriterion == 'age' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'age' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="#" data-ng-click="statsSortDescending = setSortOrder('iso_country', sortCriterion, statsSortDescending); sortCriterion = 'iso_country'">Internationalität
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('iso_country', sortCriterion, statsSortDescending); sortCriterion = 'iso_country'">Internationalität
                             <span data-ng-show="sortCriterion == 'iso_country' && statsSortDescending" class="fa fa-caret-down"></span>
                             <span data-ng-show="sortCriterion == 'iso_country' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
@@ -737,7 +741,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {country_long: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
