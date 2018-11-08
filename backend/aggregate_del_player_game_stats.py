@@ -17,11 +17,11 @@ AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 # attributes to simply collect from single-game player statistics
 TO_COLLECT = [
     'no', 'position', 'first_name', 'last_name', 'full_name', 'country',
-    'shoots', 'date_of_birth', 'weight', 'height', 'country_long',
+    'shoots', 'date_of_birth', 'weight', 'height',
 ]
 # attributes from single-game player statistics to aggregate as integers
 TO_AGGREGATE_INTS = [
-    'game_played', 'goals', 'assists', 'primary_assists', 'secondary_assists',
+    'games_played', 'goals', 'assists', 'primary_assists', 'secondary_assists',
     'points', 'pim', 'plus', 'minus', 'plus_minus', 'pp_goals', 'pp_assists',
     'pp_primary_assists', 'pp_secondary_assists', 'pp_points', 'sh_goals',
     'gw_goals', 'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked',
@@ -208,7 +208,7 @@ if __name__ == '__main__':
             item['faceoff_pctg'] = 0.
         # calculating per-game relative values
         for attr in PER_GAME_ATTRS:
-            per_game_attr = item[attr] / float(item['game_played'])
+            per_game_attr = item[attr] / float(item['games_played'])
             try:
                 item["%s_per_game" % attr] = round(per_game_attr, 4)
             except TypeError as e:
