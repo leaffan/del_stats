@@ -23,7 +23,18 @@
 
     <hr />
 
-    <table class="table table-bordered table-striped">
+    <form>
+        <div class="form-group">
+            <div class="select-group">
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
+                    <option data-ng-option value="basic_game_by_game">Spielverlauf (Basisdaten)</option>
+                    <option data-ng-option value="additional_game_by_game">Spielverlauf (zusätzliche Daten)</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
+    <table id="additional_game_by_game" class="table table-bordered table-striped" data-ng-if="tableSelect == 'additional_game_by_game'">
         <thead>
             <tr>
                 <td class="text-center">
@@ -45,61 +56,172 @@
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'">Tore
-                            <span data-ng-show="sortCriterion == 'goals' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'goals' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shifts', sortCriterion, statsSortDescending); sortCriterion = 'shifts'">Wechsel
+                            <span data-ng-show="sortCriterion == 'shifts' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'shifts' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'">Vorlagen
-                            <span data-ng-show="sortCriterion == 'assists' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'assists' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_pp', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_pp'">PP-Eiszeit
+                            <span data-ng-show="sortCriterion == 'time_on_ice_pp' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'time_on_ice_pp' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'">Punkte
-                            <span data-ng-show="sortCriterion == 'points' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'points' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice_sh', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice_sh'">SH-Eiszeit
+                            <span data-ng-show="sortCriterion == 'time_on_ice_sh' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'time_on_ice_sh' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'">Torschüsse
-                            <span data-ng-show="sortCriterion == 'shots_on_goal' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'shots_on_goal' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pim', sortCriterion, statsSortDescending); sortCriterion = 'pim'">Strafminuten
+                            <span data-ng-show="sortCriterion == 'pim' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'pim' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_missed', sortCriterion, statsSortDescending); sortCriterion = 'shots_missed'">Schüsse vorbei
-                            <span data-ng-show="sortCriterion == 'shots_missed' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'shots_missed' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pp_goals', sortCriterion, statsSortDescending); sortCriterion = 'pp_goals'">PP-Tore
+                            <span data-ng-show="sortCriterion == 'pp_goals' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'pp_goals' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_blocked', sortCriterion, statsSortDescending); sortCriterion = 'shots_blocked'">Schüsse geblockt
-                            <span data-ng-show="sortCriterion == 'shots_blocked' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'shots_blocked' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('sh_goals', sortCriterion, statsSortDescending); sortCriterion = 'sh_goals'">SH-Tore
+                            <span data-ng-show="sortCriterion == 'sh_goals' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'sh_goals' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
                 <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice'">Eiszeit
-                            <span data-ng-show="sortCriterion == 'time_on_ice' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'time_on_ice' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('plus_minus', sortCriterion, statsSortDescending); sortCriterion = 'plus_minus'">+/-
+                            <span data-ng-show="sortCriterion == 'plus_minus' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'plus_minus' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                 </td>
             </tr>
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in player_stats | orderBy:sortCriterion:statsSortDescending">
-                <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.date}}#schedule">{{ stat.date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 5%">{{ stat.round }}</td>
-                <td class="col-md-1" style="width: 5%"><a href="https://www.del.org/event/{{model.teams[stat.home_team]}}-{{model.teams[stat.road_team]}}/{{stat.schedule_game_id}}">{{stat.game_type === 'home'? 'vs.' : '@'}} {{ stat.opp_team }}</a></td>
+                <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.shifts }}</td>
+                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_pp) }}</td>
+                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_sh) }}</td>
+                <td class="col-md-1 text-right">{{ stat.pim }}</td>
+                <td class="col-md-1 text-right">{{ stat.pp_goals }}</td>
+                <td class="col-md-1 text-right">{{ stat.sh_goals }}</td>
+                <td class="col-md-1 text-right">{{ stat.plus_minus }}</td>
+            </tr>
+            <tr>
+                <td class="col-md-1"></td>
+                <td class="col-md-1">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ player_stats.length }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('shifts') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice_pp')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice_sh')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('pim') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('pp_goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('sh_goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('plus_minus') }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="basic_game_by_game" class="table table-bordered table-striped" data-ng-if="tableSelect == 'basic_game_by_game'">
+        <thead>
+            <tr>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('date', sortCriterion, statsSortDescending); sortCriterion = 'date'">Datum
+                        <span data-ng-show="sortCriterion == 'date' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'date' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('round', sortCriterion, statsSortDescending); sortCriterion = 'round'">Spieltag
+                        <span data-ng-show="sortCriterion == 'round' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'round' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('opp_team', sortCriterion, statsSortDescending); sortCriterion = 'opp_team'">Gegner
+                        <span data-ng-show="sortCriterion == 'opp_team' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'opp_team' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('goals', sortCriterion, statsSortDescending); sortCriterion = 'goals'">Tore
+                        <span data-ng-show="sortCriterion == 'goals' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'goals' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('assists', sortCriterion, statsSortDescending); sortCriterion = 'assists'">Vorlagen
+                        <span data-ng-show="sortCriterion == 'assists' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'assists' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('points', sortCriterion, statsSortDescending); sortCriterion = 'points'">Punkte
+                        <span data-ng-show="sortCriterion == 'points' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'points' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_on_goal', sortCriterion, statsSortDescending); sortCriterion = 'shots_on_goal'">Torschüsse
+                        <span data-ng-show="sortCriterion == 'shots_on_goal' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'shots_on_goal' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_missed', sortCriterion, statsSortDescending); sortCriterion = 'shots_missed'">Sch.
+                        vorbei
+                        <span data-ng-show="sortCriterion == 'shots_missed' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'shots_missed' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('shots_blocked', sortCriterion, statsSortDescending); sortCriterion = 'shots_blocked'">Sch.
+                        geblockt
+                        <span data-ng-show="sortCriterion == 'shots_blocked' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'shots_blocked' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+                <td class="text-center">
+                    <a href="" data-ng-click="statsSortDescending = setSortOrder('time_on_ice', sortCriterion, statsSortDescending); sortCriterion = 'time_on_ice'">Eiszeit
+                        <span data-ng-show="sortCriterion == 'time_on_ice' && statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="sortCriterion == 'time_on_ice' && !statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in player_stats | orderBy:sortCriterion:statsSortDescending">
+                <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
                 <td class="col-md-1 text-right">{{ stat.assists }}</td>
                 <td class="col-md-1 text-right">{{ stat.points }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_missed }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
-                <td class="col-md-1 text-right">{{ stat.time_on_ice }}</td>
+                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice) }}</td>
+            </tr>
+            <tr>
+                <td class="col-md-1"></td>
+                <td class="col-md-1">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ player_stats.length }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('assists') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('points') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('shots_on_goal') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('shots_missed') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getTotal('shots_blocked') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice')) }}</b></td>
             </tr>
         </tbody>
     </table>
