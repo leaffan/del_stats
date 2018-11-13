@@ -151,17 +151,17 @@ def get_single_game_details(game_id):
     single_game_data['road_score'] = game_details[
         'results']['score']['final']['score_guest']
 
-    single_game_data['home_goals_1st'] = game_details[
+    single_game_data['home_goals_1'] = game_details[
         'results']['score']['first_period']['score_home']
-    single_game_data['road_goals_1st'] = game_details[
+    single_game_data['road_goals_1'] = game_details[
         'results']['score']['first_period']['score_guest']
-    single_game_data['home_goals_2nd'] = game_details[
+    single_game_data['home_goals_2'] = game_details[
         'results']['score']['second_period']['score_home']
-    single_game_data['road_goals_2nd'] = game_details[
+    single_game_data['road_goals_2'] = game_details[
         'results']['score']['second_period']['score_guest']
-    single_game_data['home_goals_3rd'] = game_details[
+    single_game_data['home_goals_3'] = game_details[
         'results']['score']['third_period']['score_home']
-    single_game_data['road_goals_3rd'] = game_details[
+    single_game_data['road_goals_3'] = game_details[
         'results']['score']['third_period']['score_guest']
 
     single_game_data['overtime_game'] = False
