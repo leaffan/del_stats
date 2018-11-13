@@ -1,4 +1,4 @@
-var app = angular.module('delStatsApp', ['ngRoute'])
+var app = angular.module('delStatsApp', ['ngRoute', 'moment-picker'])
 
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider
@@ -12,14 +12,27 @@ app.config(['$routeProvider', function($routeProvider){
         .when('/player_profile/:team/:player_id',
         {
             templateUrl: 'player_profile.html',
-            controller: 'plrController'
+            controller: 'plrController as ctrl'
         })
         .otherwise({
             redirectTo: '/del_stats'
         })
 }]);
 
+app.config(['momentPickerProvider', function(momentPickerProvider){
+    momentPickerProvider.options({
+        locale: 'de',
+        format: 'L LTS',
+        minView: 'decade',
+        maxView: 'day',
+        startView: 'month',
+        autoclose: true
+    })
+}]);
+
 app.controller('plrController', function($scope, $http, $routeParams) {
+
+    var ctrl = this;
 
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
@@ -51,9 +64,6 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
         $scope.player_name = res.data[0].full_name;
-        //$scope.country = res.data[0].iso_country;
-        // $scope.last_modified = res.data[0];
-        // $scope.stats = res.data[1];
     });
 
 
@@ -61,20 +71,13 @@ app.controller('plrController', function($scope, $http, $routeParams) {
         team: $routeParams.team,
         player_id: $routeParams.player_id,
         teams: {
-            'AEV': 'augsburger-panther',
-            'KEC': 'koelner-haie',
-            'RBM': 'ehc-red-bull-muenchen',
-            'IEC': 'iserlohn-roosters',
-            'DEG': 'duesseldorfer-eg',
-            'SWW': 'schwenninger-wild-wings',
-            'KEV': 'krefeld-pinguine',
-            'ING': 'erc-ingolstadt',
-            'MAN': 'adler-mannheim',
-            'STR': 'straubing-tigers',
-            'EBB': 'eisbaeren-berlin',
-            'NIT': 'thomas-sabo-ice-tigers',
-            'WOB': 'grizzlys-wolfsburg',
-            'BHV': 'pinguins-bremerhaven'
+            'AEV': 'augsburger-panther', 'KEC': 'koelner-haie',
+            'RBM': 'ehc-red-bull-muenchen', 'IEC': 'iserlohn-roosters',
+            'DEG': 'duesseldorfer-eg', 'SWW': 'schwenninger-wild-wings',
+            'KEV': 'krefeld-pinguine', 'ING': 'erc-ingolstadt',
+            'MAN': 'adler-mannheim', 'STR': 'straubing-tigers',
+            'EBB': 'eisbaeren-berlin', 'NIT': 'thomas-sabo-ice-tigers',
+            'WOB': 'grizzlys-wolfsburg', 'BHV': 'pinguins-bremerhaven'
         },
         countries: {
             'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
@@ -84,9 +87,23 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     }
 
     $scope.getTotal = function(attribute) {
+        if ($scope.player_stats === undefined) {
+            return;
+        }
         var total = 0;
         for(var i = 0; i < $scope.player_stats.length; i++){
             total += $scope.player_stats[i][attribute];
+        }
+        return total;
+    }
+
+    $scope.getFilteredTotal = function(list, attribute) {
+        if ($scope.player_stats === undefined) {
+            return;
+        }
+        var total = 0;
+        for(var i = 0; i < list.length; i++){
+            total += list[i][attribute];
         }
         return total;
     }
@@ -95,7 +112,34 @@ app.controller('plrController', function($scope, $http, $routeParams) {
         return Math.floor(time_on_ice / 60) + ":" + ('00' + (time_on_ice % 60)).slice(-2)
     }
 
-    $scope.setTextColor = function (score, opp_score) {
+
+    $scope.dayFilter = function (a) {
+        date_to_test = moment(a.game_date);
+        if (ctrl.fromDate && ctrl.toDate) {
+            if ((date_to_test > ctrl.fromDate) && (date_to_test < ctrl.toDate)) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (ctrl.fromDate) {
+            if (date_to_test > ctrl.fromDate) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (ctrl.toDate) {
+            if (date_to_test < ctrl.toDate) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+
+    $scope.setTextColor = function(score, opp_score) {
         if (score > opp_score) {
             return " green";
         }
@@ -106,7 +150,6 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             return ""
         }
     };
-
 
 });
 
