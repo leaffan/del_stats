@@ -34,6 +34,21 @@
         </div>
     </form>
 
+    <div class="form-group">
+        <div class="input-group">
+            <span class="input-group-addon">
+                <i class="far fa-calendar-alt"></i>
+            </span>
+            <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
+            <span class="input-group-addon">
+                <i class="far fa-calendar-alt"></i>
+            </span>
+            <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
+        </div>
+    </div>
+
+    <br />
+
     <table id="additional_game_by_game" class="table table-bordered table-striped" data-ng-if="tableSelect == 'additional_game_by_game'">
         <thead>
             <tr>
@@ -100,7 +115,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in player_stats | orderBy:sortCriterion:statsSortDescending">
+            <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
                 <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
@@ -115,14 +130,14 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ player_stats.length }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('shifts') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice_pp')) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice_sh')) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('pim') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('pp_goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('sh_goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('plus_minus') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiele</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shifts') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_pp')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_sh')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pim') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pp_goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'sh_goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'plus_minus') }}</b></td>
             </tr>
         </tbody>
     </table>
@@ -195,7 +210,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in player_stats | orderBy:sortCriterion:statsSortDescending">
+            <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
                         stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
@@ -214,14 +229,14 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ player_stats.length }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('assists') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('points') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('shots_on_goal') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('shots_missed') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getTotal('shots_blocked') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getTotal('time_on_ice')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiele</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'goals') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'assists') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'points') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_on_goal') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_missed') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_blocked') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice')) }}</b></td>
             </tr>
         </tbody>
     </table>
