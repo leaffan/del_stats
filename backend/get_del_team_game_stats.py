@@ -19,7 +19,7 @@ ROAD_STATS_SUFFIX = 'team-stats-guest.json'
 GAME_SRC = 'del_games.json'
 TEAM_GAME_STATS_TGT = 'del_team_game_stats.json'
 
-TGT_DIR = 'data'
+TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 def get_single_game_team_data(game):

@@ -133,10 +133,13 @@ def convert_to_minutes(td):
 
 if __name__ == '__main__':
 
-    src_path = os.path.join('data', PLAYER_GAME_STATS_SRC)
-    tgt_path = os.path.join('data', AGGREGATED_PLAYER_STATS_TGT)
-    tgt_csv_path = os.path.join(
-        'data', AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
+    src_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data', PLAYER_GAME_STATS_SRC)
+    tgt_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data', AGGREGATED_PLAYER_STATS_TGT)
+    tgt_csv_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data',
+        AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
