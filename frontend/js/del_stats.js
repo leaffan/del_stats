@@ -22,11 +22,12 @@ app.config(['$routeProvider', function($routeProvider){
 app.config(['momentPickerProvider', function(momentPickerProvider){
     momentPickerProvider.options({
         locale: 'de',
-        format: 'L LTS',
+        format: 'L',
         minView: 'decade',
         maxView: 'day',
         startView: 'month',
-        autoclose: true
+        autoclose: true,
+        keyboard: true
     })
 }]);
 
@@ -111,19 +112,19 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     $scope.dayFilter = function (a) {
         date_to_test = moment(a.game_date);
         if (ctrl.fromDate && ctrl.toDate) {
-            if ((date_to_test > ctrl.fromDate) && (date_to_test < ctrl.toDate)) {
+            if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
                 return true;
             } else {
                 return false;
             }
         } else if (ctrl.fromDate) {
-            if (date_to_test > ctrl.fromDate) {
+            if (date_to_test >= ctrl.fromDate.startOf('day')) {
                 return true;
             } else {
                 return false;
             }
         } else if (ctrl.toDate) {
-            if (date_to_test < ctrl.toDate) {
+            if (date_to_test <= ctrl.toDate.startOf('day')) {
                 return true;
             } else {
                 return false;
