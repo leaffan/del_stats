@@ -467,9 +467,9 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
-                            <span data-ng-show="sortCriterion == 'game_played' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'game_played' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('games_played', sortCriterion, statsSortDescending); sortCriterion = 'games_played'">Spiele
+                            <span data-ng-show="sortCriterion == 'games_played' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'games_played' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
@@ -516,7 +516,7 @@
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
-                    <td class="col-md-1 text-right">{{ stat.game_played }}</td>
+                    <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                     <td class="col-md-1 text-right">{{ stat.goals_per_game.toFixed(2) }}</td>
                     <td class="col-md-1 text-right">{{ stat.assists_per_game.toFixed(2) }}</td>
                     <td class="col-md-1 text-right">{{ stat.primary_assists_per_game.toFixed(2) }}</td>
@@ -620,9 +620,9 @@
                         </a>
                     </td>
                     <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('game_played', sortCriterion, statsSortDescending); sortCriterion = 'game_played'">Spiele
-                            <span data-ng-show="sortCriterion == 'game_played' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'game_played' && !statsSortDescending" class="fa fa-caret-up"></span>
+                        <a href="" data-ng-click="statsSortDescending = setSortOrder('games_played', sortCriterion, statsSortDescending); sortCriterion = 'games_played'">Spiele
+                            <span data-ng-show="sortCriterion == 'games_played' && statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="sortCriterion == 'games_played' && !statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
                     <td class="text-center">
@@ -668,7 +668,7 @@
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
-                    <td class="col-md-1 text-right">{{ stat.game_played }}</td>
+                    <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                     <td class="col-md-1 text-right">{{ stat.goals }}</td>
                     <td class="col-md-1 text-right">{{ stat.assists }}</td>
                     <td class="col-md-1 text-right">{{ stat.points }}</td>
