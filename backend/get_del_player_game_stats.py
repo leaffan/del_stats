@@ -33,7 +33,7 @@ for key, values in PENALTY_CATEGORIES.items():
     for value in values:
         REVERSE_PENALTY_CATEGORIES[value] = key
 
-TGT_DIR = 'data'
+TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 PER_PLAYER_TGT_DIR = 'per_player'
 
 

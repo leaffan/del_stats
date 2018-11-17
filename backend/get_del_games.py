@@ -259,7 +259,8 @@ if __name__ == '__main__':
     game_dates = list(rrule(DAILY, dtstart=from_date, until=to_date))
 
     tgt_file = "del_games.json"
-    tgt_path = os.path.join('data', tgt_file)
+    tgt_path = os.path.join(
+        os.path.dirname(os.path.abspath(__file__)), 'data', tgt_file)
 
     if initial:
         games = list()
