@@ -66,6 +66,33 @@ ISO_COUNTRY_CODES = {
     'SLO': 'si',
 }
 
+OUT_FIELDS = [
+    'player_id', 'team', 'no', 'position', 'first_name', 'last_name',
+    'full_name', 'country', 'shoots', 'date_of_birth', 'age', 'height',
+    'weight', 'games_played', 'goals', 'assists', 'primary_assists',
+    'secondary_assists', 'points', 'plus', 'minus', 'plus_minus',
+    'pp_goals', 'pp_assists', 'pp_primary_assists', 'pp_secondary_assists',
+    'pp_points', 'sh_goals', 'gw_goals', 'shots', 'shots_on_goal',
+    'shots_missed', 'shots_blocked', 'shot_pctg', 'faceoffs', 'faceoffs_won',
+    'faceoffs_lost', 'faceoff_pctg', 'blocked_shots', 'shifts', 'penalties',
+    'pim', '_2min', '_5min', '_10min', '_20min', 'lazy', 'roughing',
+    'reckless', 'other', 'time_on_ice', 'time_on_ice_pp', 'time_on_ice_sh',
+    'time_on_ice_seconds', 'time_on_ice_pp_seconds', 'time_on_ice_sh_seconds',
+    'goals_per_game', 'assists_per_game', 'primary_assists_per_game',
+    'secondary_assists_per_game', 'points_per_game', 'pim_per_game',
+    'shots_per_game', 'shots_on_goal_per_game', 'shots_missed_per_game',
+    'shots_blocked_per_game', 'blocked_shots_per_game', 'shifts_per_game',
+    'time_on_ice_per_game', 'time_on_ice_pp_per_game',
+    'time_on_ice_sh_per_game', 'time_on_ice_per_game_seconds',
+    'time_on_ice_pp_per_game_seconds', 'time_on_ice_sh_per_game_seconds',
+    'goals_per_60', 'assists_per_60', 'primary_assists_per_60',
+    'secondary_assists_per_60', 'points_per_60', 'shots_per_60',
+    'shots_on_goal_per_60', 'shots_missed_per_60', 'shots_blocked_per_60',
+    'blocked_shots_per_60', 'pp_goals_per_60', 'pp_assists_per_60',
+    'pp_primary_assists_per_60', 'pp_secondary_assists_per_60',
+    'pp_points_per_60', 'sh_goals_per_60',
+]
+
 
 def calculate_player_age(player_dob):
     """
@@ -242,6 +269,7 @@ if __name__ == '__main__':
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
         dict_writer = csv.DictWriter(
-            output_file, keys, delimiter=';', lineterminator='\n')
+            output_file, OUT_FIELDS, delimiter=';', lineterminator='\n',
+            extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(aggregated_stats_as_list)
