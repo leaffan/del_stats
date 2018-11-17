@@ -35,6 +35,12 @@ app.controller('plrController', function($scope, $http, $routeParams) {
 
     var ctrl = this;
 
+    // loading stats from external json file
+    $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
+        $scope.player_stats = res.data;
+        $scope.player_name = res.data[0].full_name;
+    });
+
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
 
@@ -54,14 +60,6 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             }
         }
     };
-
-
-    // loading stats from external json file
-    $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
-        $scope.player_stats = res.data;
-        $scope.player_name = res.data[0].full_name;
-    });
-
 
     $scope.model = {
         team: $routeParams.team,
@@ -108,7 +106,6 @@ app.controller('plrController', function($scope, $http, $routeParams) {
         return Math.floor(time_on_ice / 60) + ":" + ('00' + (time_on_ice % 60)).slice(-2)
     }
 
-
     $scope.dayFilter = function (a) {
         date_to_test = moment(a.game_date);
         if (ctrl.fromDate && ctrl.toDate) {
@@ -150,6 +147,13 @@ app.controller('plrController', function($scope, $http, $routeParams) {
 });
 
 app.controller('mainController', function ($scope, $http) {
+
+        // loading stats from external json file
+        $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
+            $scope.last_modified = res.data[0];
+            $scope.stats = res.data[1];
+        });
+
         // default table selection and sort criterion for skater page
         $scope.tableSelect = 'basic_stats';
         $scope.sortCriterion = 'points';
@@ -237,10 +241,4 @@ app.controller('mainController', function ($scope, $http) {
                 return true;
             }
         }
-
-        // loading stats from external json file
-        $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
-            $scope.last_modified = res.data[0];
-            $scope.stats = res.data[1];
-        });
 });
