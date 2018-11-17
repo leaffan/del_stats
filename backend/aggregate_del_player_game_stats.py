@@ -139,11 +139,7 @@ if __name__ == '__main__':
         # aggregating timedelta attributes
         for attr in TO_AGGREGATE_TIMES:
             aggregate_time_stats[player_team_key][attr] += timedelta(
-                seconds=sum([x * y for x, y in zip(
-                    [60, 60, 1],
-                    [int(token) for token in game_stat_line[attr].split(":")]
-                )])
-            )
+                seconds=game_stat_line[attr])
 
     # post-processing aggregated attributes
     aggregated_stats_as_list = list()
