@@ -45,16 +45,11 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             return !oldStatsSortDescending;
         } else {
             // ascending for a few columns
-            if ([
-                    'goals', 'assists', 'shots_on_goal', 'points',
-                    'shots_on_goal', 'shots_missed', 'shots_blocked',
-                    'time_on_ice', 'shifts', 'pp_goals', 'sh_goals',
-                    'time_on_ice_pp', 'time_on_ice_sh', 'pim', 'plus_minus'
-                ].indexOf(sortCriterion) !== -1) {
-                return true;
+            if (['date', 'round', 'opp_team'].indexOf(sortCriterion) !== -1) {
+                return false;
             } else {
                 // otherwise descending sort order
-                return false;
+                return true;
             }
         }
     };
@@ -201,29 +196,13 @@ app.controller('mainController', function ($scope, $http) {
             } else {
                 // ascending for a few columns
                 if ([
-                        'goals', 'assists', 'shots_on_goal', 'shot_pctg',
-                        'points', 'game_played', 'points_per_game', 'goals_per_game',
-                        'assists_per_game', 'primary_assists_per_game',
-                        'secondary_assists_per_game', 'shots_on_goal_per_game',
-                        'shots_on_goal_per_60', 'points_per_60', 'goals_per_60',
-                        'primary_assists_per_60', 'secondary_assists_per_60',
-                        'assists_per_60', 'time_on_ice_seconds',
-                        'time_on_ice_pp_seconds', 'time_on_ice_sh_seconds', 'shifts',
-                        'time_on_ice_per_game_seconds', 'shifts_per_game',
-                        'time_on_ice_pp_per_game_seconds',
-                        'time_on_ice_sh_per_game_seconds',
-                        'pp_goals', 'pp_assists', 'pp_points',
-                        'pp_goals_per_60', 'pp_assists_per_60', 'pp_points_per_60',
-                        'shots', 'shots_missed', 'shots_blocked', 'faceoffs',
-                        'faceoffs_lost', 'faceoffs_won', 'faceoff_pctg',
-                        'blocked_shots', 'penalties', '_2min', '_5min',
-                        '_10min', '_20min', 'lazy', 'roughing', 'reckless',
-                        'other', 'pim_from_events'
-                    ].indexOf(sortCriterion) !== -1) {
-                    return true;
+                    'last_name', 'team', 'position', 'shoots',
+                    'date_of_birth', 'iso_country'
+                ].indexOf(sortCriterion) !== -1) {
+                    return false;
                 } else {
                     // otherwise descending sort order
-                    return false;
+                    return true;
                 }
             }
         };
