@@ -25,7 +25,7 @@ PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
     'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE'],
-    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M'],
+    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH'],
 }
 
 REVERSE_PENALTY_CATEGORIES = dict()
@@ -249,8 +249,15 @@ def retrieve_penalties_from_event_data(period_events):
             penalties_dict[plr_id]['infractions'][infraction] += 1
             penalties_dict[plr_id]['pim'] += pim
             penalties_dict[plr_id]['durations'][pim] += 1
-            penalties_dict[plr_id]['categories'][
-                REVERSE_PENALTY_CATEGORIES[infraction]] += 1
+
+            if infraction not in REVERSE_PENALTY_CATEGORIES:
+                print(
+                    "Previously unknown infraction '%s' " % infraction +
+                    "discovered. Added to 'other' category.")
+                penalties_dict[plr_id]['categories']['other'] += 1
+            else:
+                penalties_dict[plr_id]['categories'][
+                    REVERSE_PENALTY_CATEGORIES[infraction]] += 1
 
             if event['data']['shooting']:
                 penalties_dict[plr_id]['penalty_shots'] += 1
