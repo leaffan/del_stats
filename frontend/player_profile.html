@@ -32,20 +32,19 @@
                 </select>
             </div>
         </div>
-    </form>
-
-    <div class="form-group">
-        <div class="input-group">
-            <span class="input-group-addon">
-                <i class="far fa-calendar-alt"></i>
-            </span>
-            <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
-            <span class="input-group-addon">
-                <i class="far fa-calendar-alt"></i>
-            </span>
-            <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
+        <div class="form-group">
+            <div class="input-group">
+                <span class="input-group-addon">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
+                <span class="input-group-addon">
+                    <i class="far fa-calendar-alt"></i>
+                </span>
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
+            </div>
         </div>
-    </div>
+    </form>
 
     <br />
 
@@ -130,7 +129,7 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiele</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length > 1 ? 'e' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shifts') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_pp')) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_sh')) }}</b></td>
@@ -229,7 +228,7 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiele</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length > 1 ? 'e' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'goals') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'assists') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'points') }}</b></td>
