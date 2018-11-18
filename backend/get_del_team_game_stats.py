@@ -47,6 +47,7 @@ def get_single_game_team_data(game):
         game_stat_line['game_date'] = game['date']
         game_stat_line['round'] = game['round']
         game_stat_line['game_id'] = game_id
+        game_stat_line['games_played'] = 1
         game_stat_line['team_id'] = game["%s_id" % key]
         game_stat_line['team'] = game["%s_abbr" % key]
         game_stat_line['score'] = game["%s_score" % key]
