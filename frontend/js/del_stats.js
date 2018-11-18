@@ -41,6 +41,25 @@ app.controller('plrController', function($scope, $http, $routeParams) {
         $scope.player_name = res.data[0].full_name;
     });
 
+    $scope.model = {
+        team: $routeParams.team,
+        player_id: $routeParams.player_id,
+        teams: {
+            'AEV': 'augsburger-panther', 'KEC': 'koelner-haie',
+            'RBM': 'ehc-red-bull-muenchen', 'IEC': 'iserlohn-roosters',
+            'DEG': 'duesseldorfer-eg', 'SWW': 'schwenninger-wild-wings',
+            'KEV': 'krefeld-pinguine', 'ING': 'erc-ingolstadt',
+            'MAN': 'adler-mannheim', 'STR': 'straubing-tigers',
+            'EBB': 'eisbaeren-berlin', 'NIT': 'thomas-sabo-ice-tigers',
+            'WOB': 'grizzlys-wolfsburg', 'BHV': 'pinguins-bremerhaven'
+        },
+        countries: {
+            'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
+            'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
+            'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
+        }
+    }
+
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
 
@@ -60,25 +79,6 @@ app.controller('plrController', function($scope, $http, $routeParams) {
             }
         }
     };
-
-    $scope.model = {
-        team: $routeParams.team,
-        player_id: $routeParams.player_id,
-        teams: {
-            'AEV': 'augsburger-panther', 'KEC': 'koelner-haie',
-            'RBM': 'ehc-red-bull-muenchen', 'IEC': 'iserlohn-roosters',
-            'DEG': 'duesseldorfer-eg', 'SWW': 'schwenninger-wild-wings',
-            'KEV': 'krefeld-pinguine', 'ING': 'erc-ingolstadt',
-            'MAN': 'adler-mannheim', 'STR': 'straubing-tigers',
-            'EBB': 'eisbaeren-berlin', 'NIT': 'thomas-sabo-ice-tigers',
-            'WOB': 'grizzlys-wolfsburg', 'BHV': 'pinguins-bremerhaven'
-        },
-        countries: {
-            'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
-            'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
-            'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
-        }
-    }
 
     $scope.getTotal = function(attribute) {
         if ($scope.player_stats === undefined) {
@@ -148,17 +148,18 @@ app.controller('plrController', function($scope, $http, $routeParams) {
 
 app.controller('mainController', function ($scope, $http) {
 
+        // default table selection and sort criterion for skater page
+        $scope.tableSelect = 'basic_stats';
+        $scope.sortCriterion = 'points';
+        // default sort order is descending
+        $scope.statsSortDescending = true;
+    
         // loading stats from external json file
         $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
             $scope.last_modified = res.data[0];
             $scope.stats = res.data[1];
         });
 
-        // default table selection and sort criterion for skater page
-        $scope.tableSelect = 'basic_stats';
-        $scope.sortCriterion = 'points';
-        // default sort order is descending
-        $scope.statsSortDescending = true;
 
         // default filter values
         $scope.nameFilter = ''; // empty name filter
