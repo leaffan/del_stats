@@ -115,9 +115,9 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
-                <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
-                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
                 <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_sh) }}</td>
@@ -210,11 +210,11 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
-                <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
                         stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
                 <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score
-                        }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
                         === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
                         === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
