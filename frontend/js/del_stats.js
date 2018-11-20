@@ -6,7 +6,7 @@ app.config(['$routeProvider', function($routeProvider){
             templateUrl: 'home.html',
         })
         .when('/del_stats', {
-            templateUrl: 'stats.html',
+            templateUrl: 'player_stats.html',
             controller: 'mainController'
         })
         .when('/team_stats', {
@@ -19,7 +19,7 @@ app.config(['$routeProvider', function($routeProvider){
             controller: 'plrController as ctrl'
         })
         .otherwise({
-            redirectTo: '/del_stats'
+            redirectTo: '/home'
         })
 }]);
 
@@ -124,26 +124,71 @@ app.controller('teamController', function($scope, $http) {
             element['goals_diff_2'] = element['goals_2'] - element['opp_goals_2'];
             element['goals_diff_3'] = element['goals_3'] - element['opp_goals_3'];
             if (element['games_played']) {
-                element['win_pctg'] = (element['points'] / (element['games_played'] * 3.) * 100).toFixed(2);
+                element['pt_pctg'] = parseFloat((element['points'] / (element['games_played'] * 3.) * 100).toFixed(2));
             } else {
-                element['win_pctg'] = (0).toFixed(2);
+                element['pt_pctg'] = parseFloat((0).toFixed(2));
             }
             if (element['shots_on_goal']) {
-                element['shot_pctg'] = ((element['goals'] / element['shots_on_goal']) * 100).toFixed(2);
-                element['opp_save_pctg'] = ((element['opp_saves'] / element['shots_on_goal']) * 100).toFixed(2);
+                element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
+                element['opp_save_pctg'] = parseFloat(((element['opp_saves'] / element['shots_on_goal']) * 100).toFixed(2));
             } else {
-                element['shot_pct'] = (0).toFixed(2);
-                element['opp_save_pct'] = (0).toFixed(2);
+                element['shot_pct'] = parseFloat((0).toFixed(2));
+                element['opp_save_pct'] = parseFloat((0).toFixed(2));
             }
             if (element['opp_shots_on_goal']) {
-                element['opp_shot_pctg'] = ((element['opp_goals'] / element['opp_shots_on_goal']) * 100).toFixed(2);
-                element['save_pctg'] = ((element['saves'] / element['opp_shots_on_goal']) * 100).toFixed(2);
+                element['opp_shot_pctg'] = parseFloat(((element['opp_goals'] / element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['save_pctg'] = parseFloat(((element['saves'] / element['opp_shots_on_goal']) * 100).toFixed(2));
             } else {
-                element['opp_shot_pct'] = (0).toFixed(2);
-                element['save_pct'] = (0).toFixed(2);
+                element['opp_shot_pct'] = parseFloat((0).toFixed(2));
+                element['save_pct'] = parseFloat((0).toFixed(2));
             }
-            element['pdo'] = (parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(1);
-            element['opp_pdo'] = (parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(1);
+            element['pdo'] = parseFloat((parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(2));
+            element['opp_pdo'] = parseFloat((parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(2));
+            if (element['shots_on_goal'] + element['opp_shots_on_goal']) {
+                element['shot_for_pctg'] = parseFloat((element['shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['opp_shot_for_pctg'] = parseFloat((element['opp_shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
+            } else {
+                element['shot_for_pctg'] = parseFloat((0).toFixed(2));
+                element['opp_shot_for_pctg'] = parseFloat((0).toFixed(2));
+            }
+            element['fenwick_events'] = element['shots_on_goal'] + element['shots_missed']; 
+            element['opp_fenwick_events'] = element['opp_shots_on_goal'] + element['opp_shots_missed']; 
+            if (element['fenwick_events'] + element['opp_fenwick_events']) {
+                element['fenwick_for_pctg'] = parseFloat(((element['fenwick_events']) / (element['fenwick_events' ]+ element['opp_fenwick_events']) * 100).toFixed(2));
+                element['opp_fenwick_for_pctg'] = parseFloat(((element['opp_fenwick_events']) / (element['fenwick_events' ]+ element['opp_fenwick_events']) * 100).toFixed(2));
+            } else {
+                element['fenwick_for_pctg'] = parseFloat((0).toFixed(2));
+                element['opp_fenwick_for_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['shots'] + element['opp_shots']) {
+                element['corsi_for_pctg'] = parseFloat((element['shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
+                element['opp_corsi_for_pctg'] = parseFloat((element['opp_shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
+            } else {
+                element['corsi_for_pctg'] = parseFloat((0).toFixed(2));
+                element['opp_corsi_for_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['pp_opps']) {
+                element['pp_pctg'] = parseFloat(((element['pp_goals'] / element['pp_opps']) * 100).toFixed(2));
+            } else {
+                element['pp_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['sh_opps']) {
+                element['pk_pctg'] = parseFloat((100 - (element['opp_pp_goals'] / element['sh_opps']) * 100).toFixed(2));
+            } else {
+                element['pk_pctg'] = parseFloat((0).toFixed(2));
+            }
+            element['pp_pk_gdiff'] = element['pp_goals'] + element['sh_goals'] - element['opp_pp_goals'] - element['opp_sh_goals']; 
+            element['pp_pk_comb_pctg'] = element['pp_pctg'] + element['pk_pctg'];
+            if (element['faceoffs']) {
+                element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
+            } else {
+                element['faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['games_played']) {
+                element['pim_per_game'] = parseFloat((element['pim'] / element['games_played']).toFixed(2));
+            } else {
+                element['pim_per_game'] = parseFloat((0).toFixed(2));
+            }
         });
         
         console.log(filtered_team_stats);
@@ -155,10 +200,21 @@ app.controller('teamController', function($scope, $http) {
         if ($scope.tableSelect === 'standings') {
             $scope.sortCriterion = 'points';
             $scope.statsSortDescending = true;
-        } else if ($scope.tableSelect === 'goal_statistics') {
+        } else if ($scope.tableSelect === 'goal_stats') {
             $scope.sortCriterion = 'goals_diff';
             $scope.statsSortDescending = true;
-            console.log("from change: " + $scope.sortCriterion);
+        } else if ($scope.tableSelect === 'shot_stats') {
+            $scope.sortCriterion = 'shots_on_goal';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'shot_shares') {
+            $scope.sortCriterion = 'corsi_for_pctg';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'special_team_stats') {
+            $scope.sortCriterion = 'pp_pctg';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'additional_stats') {
+            $scope.sortCriterion = 'faceoff_pctg';
+            $scope.statsSortDescending = true;
         }
     };
 
