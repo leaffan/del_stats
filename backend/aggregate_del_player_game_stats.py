@@ -12,6 +12,7 @@ from dateutil.parser import parse
 
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
+U23_CUTOFF_DATE = parse("1996-01-01")
 
 
 # attributes to simply collect from single-game player statistics
@@ -199,6 +200,14 @@ if __name__ == '__main__':
         # calculating player age
         basic_values['age'] = calculate_player_age(
             basic_values['date_of_birth'])
+
+        if (
+            basic_values['country'] == 'GER' and
+            parse(basic_values['date_of_birth']) > U23_CUTOFF_DATE
+        ):
+            basic_values['u23'] = True
+        else:
+            basic_values['u23'] = False
 
         if basic_values['country'] in ISO_COUNTRY_CODES:
             basic_values[
