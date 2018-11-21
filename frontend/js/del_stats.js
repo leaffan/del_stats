@@ -371,6 +371,7 @@ app.controller('mainController', function ($scope, $http) {
         $scope.sortCriterion = 'points';
         // default sort order is descending
         $scope.statsSortDescending = true;
+        $scope.showOnlyU23 = false;
     
         // loading stats from external json file
         $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
@@ -436,6 +437,16 @@ app.controller('mainController', function ($scope, $http) {
                 return item[prop] > val;
             }
         }
+
+        $scope.u23Filter = function(a) {
+            if (!$scope.showOnlyU23)
+                return true;
+            if ($scope.showOnlyU23 && a.u23) {
+                return true;
+            } else {
+                return false;
+            }
+        };
 
         $scope.minimumAgeFilter = function (a) {
             if ($scope.minimumAge) {
