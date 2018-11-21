@@ -112,16 +112,15 @@
                 </div>
             </div>
 
-            <br/>
+            <br /><br />
 
             <div class="checkbox">
-                <label for="u23Check">Nur U23-Spieler anzeigen:</label>
-                <label>
-                    <input type="checkbox" id="u23Check" data-ng-model="showOnlyU23" value="Nur U-23 Spieler"/>Nur U23-Spieler
+                <label for="u23check">
+                    <input type="checkbox" id="u23check" data-ng-model="showOnlyU23" value="">
+                    <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                    Nur U23-Spieler anzeigen
                 </label>
             </div>
-    
-
         </form>
                 
         <br />
@@ -193,7 +192,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.pim_from_events }}</td>
@@ -282,7 +281,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1">{{ stat.team }}</td>
@@ -373,7 +372,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.time_on_ice_pp }}</td>
@@ -451,7 +450,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.time_on_ice }}</td>
@@ -529,7 +528,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -605,7 +604,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -685,7 +684,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
@@ -762,7 +761,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter}">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-left">{{ stat.team }}</td>
