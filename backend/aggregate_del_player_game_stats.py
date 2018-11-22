@@ -203,7 +203,7 @@ if __name__ == '__main__':
 
         if (
             basic_values['country'] == 'GER' and
-            parse(basic_values['date_of_birth']) > U23_CUTOFF_DATE
+            parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATE
         ):
             basic_values['u23'] = True
         else:
