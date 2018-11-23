@@ -43,16 +43,18 @@ app.controller('teamController', function($scope, $http) {
     $scope.statsSortDescending = true;
 
     $scope.$watch('ctrl.fromDate', function() {
-        // console.log("from fromdate watch: " + ctrl.fromDate);
-        // console.log("from fromdate watch: " + $scope.team_stats);
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
     });
 
     $scope.$watch('ctrl.toDate', function() {
-        // console.log("from todate watch: " + ctrl.toDate);
-        // console.log("from todate watch: " + $scope.team_stats);
+        if ($scope.team_stats) {
+            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+        }
+    });
+
+    $scope.$watch('homeAwaySelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
@@ -81,8 +83,6 @@ app.controller('teamController', function($scope, $http) {
         filtered_team_stats = {};
         if ($scope.team_stats === undefined)
             return filtered_team_stats;
-        // console.log("from filter:" + ctrl.fromDate);
-        // console.log("from filter:" + ctrl.toDate);
         $scope.team_stats.forEach(element => {
             date_to_test = moment(element.game_date);
             team = element['team'];
@@ -96,19 +96,39 @@ app.controller('teamController', function($scope, $http) {
             var is_filtered = false;
             if (ctrl.fromDate && ctrl.toDate) {
                 if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
-                    is_filtered = true;
+                    if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_away)
+                            is_filtered = true;
+                    } else {
+                        is_filtered = true;
+                    }
                 }
             } else if (ctrl.fromDate) {
                 if (date_to_test >= ctrl.fromDate.startOf('day')) {
-                    is_filtered = true;
+                    if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_away)
+                            is_filtered = true;
+                    } else {
+                        is_filtered = true;
+                    }
                 }
             } else if (ctrl.toDate) {
                 if (date_to_test <= ctrl.toDate.startOf('day')) {
-                    is_filtered = true;
+                    if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_away)
+                            is_filtered = true;
+                    } else {
+                        is_filtered = true;
+                    }
                 }
             } else {
-                is_filtered = true;
-            }
+                if ($scope.homeAwaySelect) {
+                    if ($scope.homeAwaySelect === element.home_away)
+                        is_filtered = true;
+                } else {
+                    is_filtered = true;
+                }
+        }
             if (is_filtered) {
                 $scope.stats_to_aggregate.forEach(category => {
                     filtered_team_stats[team][category] += element[category];
@@ -191,8 +211,6 @@ app.controller('teamController', function($scope, $http) {
             }
         });
         
-        console.log(filtered_team_stats);
-
         return filtered_team_stats;
     };
 
@@ -262,21 +280,30 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     $scope.model = {
         team: $routeParams.team,
         player_id: $routeParams.player_id,
-        teams: {
-            'AEV': 'augsburger-panther', 'KEC': 'koelner-haie',
-            'RBM': 'ehc-red-bull-muenchen', 'IEC': 'iserlohn-roosters',
-            'DEG': 'duesseldorfer-eg', 'SWW': 'schwenninger-wild-wings',
-            'KEV': 'krefeld-pinguine', 'ING': 'erc-ingolstadt',
-            'MAN': 'adler-mannheim', 'STR': 'straubing-tigers',
-            'EBB': 'eisbaeren-berlin', 'NIT': 'thomas-sabo-ice-tigers',
-            'WOB': 'grizzlys-wolfsburg', 'BHV': 'pinguins-bremerhaven'
-        },
         countries: {
             'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
             'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
             'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
-        }
+        },
+        full_teams: [
+            {'abbr': 'AEV', 'url_name': 'augsburger-panther', 'full_name': 'Augsburger Panther'},
+            {'abbr': 'EBB', 'url_name': 'eisbaeren-berlin', 'full_name': 'Eisbären Berlin'},
+            {'abbr': 'BHV', 'url_name': 'pinguins-bremerhaven', 'full_name': 'Pinguins Bremerhaven'},
+            {'abbr': 'DEG', 'url_name': 'duesseldorfer-eg', 'full_name': 'Düsseldorfer EG'},
+            {'abbr': 'ING', 'url_name': 'erc-ingolstadt', 'full_name': 'ERC Ingolstadt'},
+            {'abbr': 'IEC', 'url_name': 'iserlohn-roosters', 'full_name': 'Iserlohn Roosters'},
+            {'abbr': 'KEC', 'url_name': 'koelner-haie', 'full_name': 'Kölner Haie'},
+            {'abbr': 'KEV', 'url_name': 'krefeld-pinguine', 'full_name': 'Krefeld Pinguine'},
+            {'abbr': 'MAN', 'url_name': 'adler-mannheim', 'full_name': 'Adler Mannheim'},
+            {'abbr': 'RBM', 'url_name': 'ehc-red-bull-muenchen', 'full_name': 'EHC Reb Bull München'},
+            {'abbr': 'NIT', 'url_name': 'thomas-sabo-ice-tigers', 'full_name': 'Thomas Sabo Ice Tigers'},
+            {'abbr': 'SWW', 'url_name': 'schwenninger-wild-wings', 'full_name': 'Schwenninger Wild Wings'},
+            {'abbr': 'STR', 'url_name': 'straubing-tigers', 'full_name': 'Straubing Tigers'},
+            {'abbr': 'WOB', 'url_name': 'grizzlys-wolfsburg', 'full_name': 'Grizzlys Wolfsburg'},
+        ]
     }
+
+    $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
 
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
@@ -321,7 +348,7 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     }
 
     $scope.formatTime = function(time_on_ice) {
-        return Math.floor(time_on_ice / 60) + ":" + ('00' + (time_on_ice % 60)).slice(-2)
+        return Math.floor(time_on_ice / 60) + ":" + ('00' + (Math.floor(time_on_ice) % 60)).slice(-2)
     }
 
     $scope.dayFilter = function (a) {
