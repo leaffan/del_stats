@@ -29,7 +29,7 @@
     
         <form>
             <div class="form-group">
-                <div class="select-group">
+                <div class="input-group">
                     <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
                         <option data-ng-option value="basic_stats">Basisstatistiken</option>
                         <option data-ng-option value="per_game_stats">Spielbezogene Statistiken</option>
@@ -40,20 +40,20 @@
                         <option data-ng-option value="additional_stats">Weitere Statistiken</option>
                         <option data-ng-option value="player_information">Spielerinformationen</option>
                     </select>
-                </div>
-                <br />
-                <div class="input-group">
+                <!-- </div> -->
+                <span class="input-group-addon form_spacer"></span>
+                <!-- <div class="input-group"> -->
                     <div class="input-group-addon"><i class="fa fa-search"></i></div>
                     <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="nameFilter" />
                 </div>
             </div>
         </form>
                 
-        <form class="form-inline">
-            <div class="form-group row">
-                <div class="col-md-3" style="width: 23%">
+        <form>
+            <div class="form-group">
+                <div class="input-group">
                     <label for="teamSelect">Team:</label>
-                    <select id="teamSelect" class="form-control" data-ng-model="teamFilter">
+                    <select class="form-control" id="teamSelect" data-ng-model="teamFilter">
                         <option data-ng-option value selected="selected">alle</option>
                         <option data-ng-option value="AEV">Augsburger Panther</option>
                         <option data-ng-option value="EBB">Eisbären Berlin</option>
@@ -70,8 +70,7 @@
                         <option data-ng-option value="STR">Straubing Tigers</option>
                         <option data-ng-option value="WOB">Grizzlys Wolfsburg</option>
                     </select>
-                </div>
-                <div class="col-md-2" style="width: 12%">
+                    <span class="input-group-addon form_spacer"></span>
                     <label for="positionSelect">Position:</label>
                     <select id="positionSelect" class="form-control" data-ng-model="positionFilter">
                         <option data-ng-option value selected="selected">alle</option>
@@ -79,18 +78,7 @@
                         <option data-ng-option value="DE">Verteidiger</option>
                         <option data-ng-option value="FO">Stürmer</option>
                     </select>
-                </div>
-                <div class="col-md-3" style="width: 18%">
-                    <label for="minimumAgeInput">Untere Altersgrenze:</label>
-                    <input id="minimumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="minimumAge"
-                        data-ng-minlength="2" />
-                </div>
-                <div class="col-md-3" style="width: 18%">
-                    <label for="maximumAgeInput">Obere Altersgrenze:</label>
-                    <input id="maximumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="maximumAge"
-                        data-ng-minlength="2" />
-                </div>
-                <div class="col-md-2" style="width: 17.3%">
+                    <span class="input-group-addon form_spacer"></span>
                     <label for="countrySelect">Land:</label>
                     <select id="countrySelect" class="form-control" data-ng-model="countryFilter">
                         <option data-ng-option value selected="selected">alle</option>
@@ -109,10 +97,14 @@
                         <option data-ng-option value="it">Italien</option>
                         <option data-ng-option value="hu">Ungarn</option>
                     </select>
+                    <span class="input-group-addon form_spacer"></span>
+                    <label for="minimumAgeInput">Untere Altersgrenze:</label>
+                    <input id="minimumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="minimumAge" data-ng-minlength="2" />
+                    <span class="input-group-addon form_spacer"></span>
+                    <label for="maximumAgeInput">Obere Altersgrenze:</label>
+                    <input id="maximumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="maximumAge" data-ng-minlength="2" />
                 </div>
             </div>
-
-            <br /><br />
 
             <div class="checkbox">
                 <label for="u23check">
@@ -123,9 +115,7 @@
             </div>
         </form>
                 
-        <br />
-
-        <table id="penalty_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'penalty_stats'">
+        <table id="penalty_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'penalty_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -208,7 +198,7 @@
             </tbody>
         </table>
 
-        <table id="additional_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'additional_stats'">
+        <table id="additional_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'additional_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -299,7 +289,7 @@
         </table>
 
 
-        <table id="power_play_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'power_play_stats'">
+        <table id="power_play_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'power_play_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -390,7 +380,7 @@
         </table>
 
 
-        <table id="time_on_ice_shift_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
+        <table id="time_on_ice_shift_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -450,7 +440,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'}| filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter | filter: greaterThan('time_on_ice_seconds', 0)">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.time_on_ice }}</td>
@@ -466,7 +456,7 @@
         </table>
 
 
-        <table id="per_game_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'per_game_stats'">
+        <table id="per_game_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'per_game_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -542,7 +532,7 @@
             </tbody>
         </table>
 
-        <table id="per_60_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'per_60_stats'">
+        <table id="per_60_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'per_60_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -618,7 +608,7 @@
             </tbody>
         </table>
 
-        <table id="basic_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'basic_stats'">
+        <table id="basic_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'basic_stats'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
@@ -699,7 +689,7 @@
         </table>
 
 
-        <table id="player_information" class="table table-bordered table-striped" data-ng-if="tableSelect == 'player_information'">
+        <table id="player_information" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'player_information'">
             <thead>
                 <tr>
                     <td class="text-center">Rang</td>
