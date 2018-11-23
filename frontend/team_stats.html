@@ -39,13 +39,21 @@
             </div>
         </div>
         <div class="form-group">
+            
             <div class="input-group">
+                <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
+                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                    <option data-ng-option value="home">Heimspiele</option>
+                    <option data-ng-option value="road">Auswärtsspiele</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
                 <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                     ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
-                <span class="input-group-addon">
+                    <span class="input-group-addon form_spacer"></span>
+                    <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
