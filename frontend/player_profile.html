@@ -25,30 +25,39 @@
 
     <form>
         <div class="form-group">
-            <div class="select-group">
-                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
-                    <option data-ng-option value="basic_game_by_game">Spielverlauf (Basisdaten)</option>
-                    <option data-ng-option value="additional_game_by_game">Spielverlauf (zusätzliche Daten)</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-group">
             <div class="input-group">
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
+                    <option data-ng-option value="basic_game_by_game">Basisdaten</option>
+                    <option data-ng-option value="additional_game_by_game">zusätzliche Daten</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <select class="form-control" id="home_away_select" data-ng-model="homeAwayFilter">
+                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                    <option data-ng-option value="home">Heimspiele</option>
+                    <option data-ng-option value="away">Auswärtsspiele</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <select class="form-control" id="opp_select" data-ng-model="oppFilter">
+                    <option data-ng-option value selected="selected">alle Gegner</option>
+                    <option data-ng-option ng-repeat="full_team in model.full_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
                 <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
+                <span class="input-group-addon form_spacer"></span>
                 <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
-            </div>
-        </div>
+           </div>
+    </div>
     </form>
 
     <br />
 
-    <table id="additional_game_by_game" class="table table-bordered table-striped" data-ng-if="tableSelect == 'additional_game_by_game'">
+    <table id="additional_game_by_game" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'additional_game_by_game'">
         <thead>
             <tr>
                 <td class="text-center">
@@ -114,10 +123,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
+            <tr class="{{stat.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_away: homeAwayFilter} | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
-                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_away === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
                 <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_sh) }}</td>
@@ -129,10 +138,10 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length > 1 ? 'e' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shifts') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_pp')) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice_sh')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice_pp'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice_sh'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pim') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pp_goals') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'sh_goals') }}</b></td>
@@ -141,7 +150,7 @@
         </tbody>
     </table>
 
-    <table id="basic_game_by_game" class="table table-bordered table-striped" data-ng-if="tableSelect == 'basic_game_by_game'">
+    <table id="basic_game_by_game" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'basic_game_by_game'">
         <thead>
             <tr>
                 <td class="text-center">
@@ -209,12 +218,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter)">
+            <tr class="{{stat.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_away: homeAwayFilter} | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
                         stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
                 <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score
-                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? model.teams[stat.team] : model.teams[stat.opp_team]}}-{{stat.home_away === 'home'? model.teams[stat.opp_team] : model.teams[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_away === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
                         === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
                         === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
@@ -228,14 +237,14 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length > 1 ? 'e' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'goals') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'assists') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'points') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_on_goal') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_missed') }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_blocked') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ formatTime(getFilteredTotal(filtered_stats, 'time_on_ice')) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
             </tr>
         </tbody>
     </table>
