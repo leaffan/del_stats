@@ -3,7 +3,7 @@
 
 <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <title>Inoffizielle DEL-Statistiken</title>
 
     <!-- css -->
@@ -23,6 +23,11 @@
             vertical-align: baseline;
         }
 
+        /* to avoid shrinking of empty condensed tables */
+        table {
+            width: 100%;
+        }
+
         .form_spacer {
             background-color: white;
             width: 10px; padding-left: 0px;
@@ -30,7 +35,7 @@
             border: none;
         }
 
-        thead td.text-center a { font-size: 80%; font-weight: bold; }
+        thead td.text-center a, span { font-size: 80%; font-weight: bold; }
 
         p { margin-bottom: 15px; }
 
