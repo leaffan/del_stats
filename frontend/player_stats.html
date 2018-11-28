@@ -62,7 +62,7 @@
                         <option data-ng-option value="KEC">Kölner Haie</option>
                         <option data-ng-option value="KEV">Krefeld Pinguine</option>
                         <option data-ng-option value="MAN">Adler Mannheim</option>
-                        <option data-ng-option value="RBM">EHC Reb Bull München</option>
+                        <option data-ng-option value="RBM">EHC Red Bull München</option>
                         <option data-ng-option value="NIT">Thomas Sabo Ice Tigers</option>
                         <option data-ng-option value="SWW">Schwenninger Wild Wings</option>
                         <option data-ng-option value="STR">Straubing Tigers</option>
@@ -116,7 +116,7 @@
         <table id="penalty_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'penalty_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -199,7 +199,7 @@
         <table id="additional_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'additional_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -290,7 +290,7 @@
         <table id="power_play_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'power_play_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -381,7 +381,7 @@
         <table id="time_on_ice_shift_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -457,7 +457,7 @@
         <table id="per_game_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'per_game_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -533,7 +533,7 @@
         <table id="per_60_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'per_60_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -609,7 +609,7 @@
         <table id="basic_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'basic_stats'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
@@ -674,7 +674,7 @@
                 <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                    <td class="col-md-1 text-left">{{ stat.team }}</td>
+                    <td class="col-md-1">{{ stat.team }}</td>
                     <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                     <td class="col-md-1 text-right">{{ stat.goals }}</td>
                     <td class="col-md-1 text-right">{{ stat.assists }}</td>
@@ -690,7 +690,7 @@
         <table id="player_information" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'player_information'">
             <thead>
                 <tr>
-                    <td class="text-center">Rang</td>
+                    <td class="text-center"><span>Rang</span></td>
                     <td class="text-center">
                         <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
                             <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
