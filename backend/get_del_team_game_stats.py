@@ -9,6 +9,8 @@ from datetime import datetime
 
 import requests
 
+from utils import name_corrections
+
 BASE_URL = 'https://www.del.org/live-ticker'
 
 MATCHES_INSERT = 'matches'
@@ -44,9 +46,21 @@ def get_single_game_team_data(game):
     for key in ['home', 'road']:
         opp_key = 'road' if key == 'home' else 'home'
         game_stat_line = dict()
+        # basic game information
         game_stat_line['game_date'] = game['date']
         game_stat_line['round'] = game['round']
         game_stat_line['game_id'] = game_id
+        game_stat_line['schedule_game_id'] = game['schedule_game_id']
+        game_stat_line['arena'] = correct_name(game['arena'])
+        game_stat_line['attendance'] = game['attendance']
+        # coaches and referees
+        game_stat_line['coach'] = correct_name(game["%s_coach" % key])
+        game_stat_line['opp_coach'] = correct_name(game["%s_coach" % opp_key])
+        game_stat_line['ref_1'] = correct_name(game['referee_1'])
+        game_stat_line['ref_2'] = correct_name(game['referee_2'])
+        game_stat_line['lma_1'] = correct_name(game['linesman_1'])
+        game_stat_line['lma_2'] = correct_name(game['linesman_2'])
+        # outcomes
         game_stat_line['games_played'] = 1
         game_stat_line['home_away'] = key
         game_stat_line['team_id'] = game["%s_id" % key]
@@ -57,6 +71,12 @@ def get_single_game_team_data(game):
         game_stat_line['opp_team'] = game["%s_abbr" % opp_key]
         game_stat_line['opp_score'] = game["%s_score" % opp_key]
         game_stat_line['opp_goals'] = game["%s_score" % opp_key]
+        if game['shootout_game']:
+            game_stat_line['game_type'] = 'SO'
+        elif game['overtime_game']:
+            game_stat_line['game_type'] = 'OT'
+        else:
+            game_stat_line['game_type'] = ''
         for gsl_key in ['w', 'rw', 'ow', 'sw', 'l', 'rl', 'ol', 'sl']:
             game_stat_line[gsl_key] = 0
         if game_stat_line['score'] > game_stat_line['opp_score']:
@@ -81,11 +101,13 @@ def get_single_game_team_data(game):
             game_stat_line['rw'] * 3 + game_stat_line['ow'] * 2 +
             game_stat_line['sw'] * 2 + game_stat_line['sl'] * 1 +
             game_stat_line['ol'] * 1)
+        # per-period goals
         for period in [1, 2, 3]:
             game_stat_line["goals_%d" % period] = game[
                 "%s_goals_%d" % (key, period)]
             game_stat_line["opp_goals_%d" % period] = game[
                 "%s_goals_%d" % (opp_key, period)]
+        # shots
         game_stat_line['shots'] = raw_stats[key]['shotsAttempts']
         game_stat_line['shots_on_goal'] = raw_stats[key]['shotsOnGoal']
         game_stat_line['shots_missed'] = raw_stats[key]['shotsMissed']
@@ -101,6 +123,7 @@ def get_single_game_team_data(game):
         game_stat_line['opp_shot_pctg'] = round(
             game_stat_line['opp_goals'] /
             game_stat_line['opp_shots_on_goal'] * 100., 2)
+        # saves
         game_stat_line['saves'] = raw_stats[key]['saves']
         game_stat_line['save_pctg'] = round(
             100 - game_stat_line['opp_goals'] /
@@ -109,11 +132,13 @@ def get_single_game_team_data(game):
         game_stat_line['opp_save_pctg'] = round(
             100 - game_stat_line['goals'] /
             game_stat_line['shots_on_goal'] * 100., 2)
+        # pdo
         game_stat_line['pdo'] = round((
             game_stat_line['shot_pctg'] + game_stat_line['save_pctg']), 1)
         game_stat_line['opp_pdo'] = round((
             game_stat_line['opp_shot_pctg'] +
             game_stat_line['opp_save_pctg']), 1)
+        # penalty minutes, power play and penalty killing
         game_stat_line['pim'] = raw_stats[key]['penaltyMinutes']
         game_stat_line['pp_time'] = raw_stats[key]['powerPlaySeconds']
         game_stat_line['pp_opps'] = raw_stats[key]['ppCount']
@@ -150,6 +175,7 @@ def get_single_game_team_data(game):
                 game_stat_line['opp_sh_opps'] * 100., 1)
         else:
             game_stat_line['opp_pk_pctg'] = 0
+        # faceoffs
         game_stat_line['faceoffs_won'] = int(raw_stats[key]['faceOffsWon'])
         game_stat_line['faceoffs_lost'] = int(
             raw_stats[opp_key]['faceOffsWon'])
@@ -158,10 +184,25 @@ def get_single_game_team_data(game):
         game_stat_line['faceoff_pctg'] = round(
             game_stat_line['faceoffs_won'] /
             game_stat_line['faceoffs'] * 100., 1)
+        # best players
+        game_stat_line['best_plr_id'] = game["%s_best_player_id" % key]
+        game_stat_line['best_plr'] = game["%s_best_player" % key]
+        game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
+        game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
 
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
+
+
+def correct_name(name, corrections=name_corrections):
+    if "," in name:
+        name = " ".join([token.strip() for token in name.split(",")][::-1])
+    if name.upper() == name:
+        name = name.title()
+    if name in name_corrections:
+        name = name_corrections[name]
+    return name
 
 
 if __name__ == '__main__':
