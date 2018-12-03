@@ -40,7 +40,29 @@ app.config(['momentPickerProvider', function(momentPickerProvider){
     })
 }]);
 
-app.controller('teamProfileController', function($scope, $http, $routeParams, $location) {
+app.factory('svc', function() {
+    return {
+        // sets sorting order according to selected sort criterion
+        setSortOrder: function(sortCriterion, oldSortCriterion, oldStatsSortDescending, ascendingAttrs) {
+            // if current criterion equals the new one
+            if (oldSortCriterion === sortCriterion) {
+                // just change sort direction
+                return !oldStatsSortDescending;
+            } else {
+                // ascending for a few columns
+                if (ascendingAttrs.indexOf(sortCriterion) !== -1) {
+                    return false;
+                } else {
+                    // otherwise descending sort order
+                    return true;
+                }
+            }
+        }
+    }
+});
+
+
+app.controller('teamProfileController', function($scope, $http, $routeParams, $location, svc) {
     var ctrl = this;
     $scope.currentTeam = $routeParams.team;
     $scope.tableSelect = 'basic_game_by_game';
@@ -75,6 +97,9 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
             {'abbr': 'STR', 'url_name': 'straubing-tigers', 'full_name': 'Straubing Tigers'},
             {'abbr': 'WOB', 'url_name': 'grizzlys-wolfsburg', 'full_name': 'Grizzlys Wolfsburg'},
         ],
+        ascendingAttrs: [
+            'opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1',
+            'ref_2', 'lma_1', 'lma_2', 'round'],
         basic_game_by_game: [
             ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['arena', 'Spielstätte'], ['attendance', 'Zuschauer'],
             ['coach', 'Trainer'], ['opp_coach', 'Gegner. Trainer'], ['best_plr', 'Bester Spieler'], ['opp_best_plr', 'Bester gegner. Spieler']
@@ -102,6 +127,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
 
     $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
     $scope.team_full_name_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
+    // $scope.ascendingAttrs = ['opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1', 'ref_2', 'lma_1', 'lma_2', 'round'];
 
     $scope.changeTable = function () {
         if ($scope.tableSelect === 'basic_game_by_game') {
@@ -113,22 +139,10 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         }
     };
 
-    // setting column sort order according to current and new sort criteria, and current sort order 
-    $scope.setSortOrder = function (sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        // if current criterion equals the new one
-        if (oldSortCriterion === sortCriterion) {
-            // just change sort direction
-            return !oldStatsSortDescending;
-        } else {
-            // ascending for a few columns
-            if (['opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1', 'ref_2', 'lma_1', 'lma_2', 'round'].indexOf(sortCriterion) !== -1) {
-                return false;
-            } else {
-                // otherwise descending sort order
-                return true;
-            }
-        }
-    };
+    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.model.ascendingAttrs);
+    }
+
 
     $scope.setTextColor = function(goals, opp_goals) {
         if (goals > opp_goals) {
@@ -184,7 +198,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
 
 });
 
-app.controller('teamController', function($scope, $http) {
+app.controller('teamController', function($scope, $http, svc) {
 
     var ctrl = this;
     $scope.tableSelect = 'standings';
@@ -385,22 +399,9 @@ app.controller('teamController', function($scope, $http) {
         }
     };
 
-    // setting column sort order according to current and new sort criteria, and current sort order 
-    $scope.setSortOrder = function (sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        // if current criterion equals the new one
-        if (oldSortCriterion === sortCriterion) {
-            // just change sort direction
-            return !oldStatsSortDescending;
-        } else {
-            // ascending for a few columns
-            if (['team'].indexOf(sortCriterion) !== -1) {
-                return false;
-            } else {
-                // otherwise descending sort order
-                return true;
-            }
-        }
-    };
+    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, ['team']);
+    }
 
     $scope.setTextColor = function(goals, opp_goals) {
         if (goals > opp_goals) {
@@ -416,7 +417,7 @@ app.controller('teamController', function($scope, $http) {
 
 });
 
-app.controller('plrController', function($scope, $http, $routeParams) {
+app.controller('plrController', function($scope, $http, $routeParams, svc) {
 
     var ctrl = this;
 
@@ -457,22 +458,9 @@ app.controller('plrController', function($scope, $http, $routeParams) {
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
 
-    // setting column sort order according to current and new sort criteria, and current sort order 
-    $scope.setSortOrder = function (sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        // if current criterion equals the new one
-        if (oldSortCriterion === sortCriterion) {
-            // just change sort direction
-            return !oldStatsSortDescending;
-        } else {
-            // ascending for a few columns
-            if (['date', 'round', 'opp_team'].indexOf(sortCriterion) !== -1) {
-                return false;
-            } else {
-                // otherwise descending sort order
-                return true;
-            }
-        }
-    };
+    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, ['date', 'round', 'opp_team']);
+    }
 
     $scope.getTotal = function(attribute) {
         if ($scope.player_stats === undefined) {
@@ -540,7 +528,7 @@ app.controller('plrController', function($scope, $http, $routeParams) {
 
 });
 
-app.controller('mainController', function ($scope, $http) {
+app.controller('mainController', function ($scope, $http, svc) {
 
         // default table selection and sort criterion for skater page
         $scope.tableSelect = 'basic_stats';
@@ -549,6 +537,11 @@ app.controller('mainController', function ($scope, $http) {
         $scope.statsSortDescending = true;
         $scope.showOnlyU23 = false;
     
+        $scope.ascendingAttrs = [
+            'last_name', 'team', 'position', 'shoots',
+            'date_of_birth', 'iso_country'
+        ];
+
         // loading stats from external json file
         $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
             $scope.last_modified = res.data[0];
@@ -588,24 +581,8 @@ app.controller('mainController', function ($scope, $http) {
             }
         };
 
-        // setting column sort order according to current and new sort criteria, and current sort order 
-        $scope.setSortOrder = function (sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-            // if current criterion equals the new one
-            if (oldSortCriterion === sortCriterion) {
-                // just change sort direction
-                return !oldStatsSortDescending;
-            } else {
-                // ascending for a few columns
-                if ([
-                    'last_name', 'team', 'position', 'shoots',
-                    'date_of_birth', 'iso_country'
-                ].indexOf(sortCriterion) !== -1) {
-                    return false;
-                } else {
-                    // otherwise descending sort order
-                    return true;
-                }
-            }
+        $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+            return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.ascendingAttrs);
         };
 
         $scope.greaterThan = function (prop, val) {
