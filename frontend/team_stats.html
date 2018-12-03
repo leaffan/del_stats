@@ -51,13 +51,13 @@
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                    ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
+                    data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
                     <span class="input-group-addon form_spacer"></span>
                     <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
                 <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                    ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
+                    data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
             </div>
         </div>
     </form>

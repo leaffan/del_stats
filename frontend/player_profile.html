@@ -39,20 +39,20 @@
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle Gegner</option>
-                    <option data-ng-option ng-repeat="full_team in model.full_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    <option data-ng-option data-ng-repeat="full_team in model.full_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
-                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" ng-model="ctrl.fromDate" ng-model-options="{ updateOn: 'blur' }">
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
                 <span class="input-group-addon form_spacer"></span>
                 <span class="input-group-addon">
                     <i class="far fa-calendar-alt"></i>
                 </span>
-                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" ng-model="ctrl.toDate" ng-model-options="{ updateOn: 'blur' }">
-           </div>
-    </div>
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+            </div>
+        </div>
     </form>
 
     <br />
