@@ -167,11 +167,19 @@ def get_single_game_details(game_id):
     single_game_data['overtime_game'] = False
     single_game_data['shootout_game'] = False
 
-    if game_details['results']['extra_time']:
-        single_game_data['overtime_game'] = True
-
-    if game_details['results']['shooting']:
-        single_game_data['shootout_game'] = True
+    if (sum([
+        single_game_data['home_goals_1'],
+        single_game_data['home_goals_2'],
+        single_game_data['home_goals_3']
+    ]) != single_game_data['home_score']) or (sum([
+        single_game_data['road_goals_1'],
+        single_game_data['road_goals_2'],
+        single_game_data['road_goals_3']
+    ]) != single_game_data['road_score']):
+        if game_details['results']['extra_time']:
+            single_game_data['overtime_game'] = True
+        if game_details['results']['shooting']:
+            single_game_data['shootout_game'] = True
 
     if type(game_details['referees']['headReferee1']) is str:
         single_game_data['referee_1'] = game_details[
