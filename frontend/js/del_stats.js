@@ -18,6 +18,11 @@ app.config(['$routeProvider', function($routeProvider){
             templateUrl: 'player_profile.html',
             controller: 'plrController as ctrl'
         })
+        .when('/team_profile/:team',
+        {
+            templateUrl: 'team_profile.html',
+            controller: 'teamProfileController as ctrl'
+        })
         .otherwise({
             redirectTo: '/home'
         })
@@ -34,6 +39,150 @@ app.config(['momentPickerProvider', function(momentPickerProvider){
         keyboard: true
     })
 }]);
+
+app.controller('teamProfileController', function($scope, $http, $routeParams, $location) {
+    var ctrl = this;
+    $scope.currentTeam = $routeParams.team;
+    $scope.tableSelect = 'basic_game_by_game';
+    $scope.sortCriterion = 'date';
+    $scope.statsSortDescending = false;
+
+    // loading stats from external json file
+    $http.get('data/del_team_game_stats.json').then(function (res) {
+        $scope.last_modified = res.data[0];
+        $scope.team_stats = res.data[1];
+        $scope.game_log = $scope.team_stats.filter(function(value, index, arr) {
+            // console.log(value['team'] == $scope.currentTeam);
+            return value['team'] == $scope.currentTeam;
+        });
+    });
+
+    $scope.model = {
+        team: $routeParams.team,
+        full_teams: [
+            {'abbr': 'AEV', 'url_name': 'augsburger-panther', 'full_name': 'Augsburger Panther'},
+            {'abbr': 'EBB', 'url_name': 'eisbaeren-berlin', 'full_name': 'Eisbären Berlin'},
+            {'abbr': 'BHV', 'url_name': 'pinguins-bremerhaven', 'full_name': 'Pinguins Bremerhaven'},
+            {'abbr': 'DEG', 'url_name': 'duesseldorfer-eg', 'full_name': 'Düsseldorfer EG'},
+            {'abbr': 'ING', 'url_name': 'erc-ingolstadt', 'full_name': 'ERC Ingolstadt'},
+            {'abbr': 'IEC', 'url_name': 'iserlohn-roosters', 'full_name': 'Iserlohn Roosters'},
+            {'abbr': 'KEC', 'url_name': 'koelner-haie', 'full_name': 'Kölner Haie'},
+            {'abbr': 'KEV', 'url_name': 'krefeld-pinguine', 'full_name': 'Krefeld Pinguine'},
+            {'abbr': 'MAN', 'url_name': 'adler-mannheim', 'full_name': 'Adler Mannheim'},
+            {'abbr': 'RBM', 'url_name': 'ehc-red-bull-muenchen', 'full_name': 'EHC Reb Bull München'},
+            {'abbr': 'NIT', 'url_name': 'thomas-sabo-ice-tigers', 'full_name': 'Thomas Sabo Ice Tigers'},
+            {'abbr': 'SWW', 'url_name': 'schwenninger-wild-wings', 'full_name': 'Schwenninger Wild Wings'},
+            {'abbr': 'STR', 'url_name': 'straubing-tigers', 'full_name': 'Straubing Tigers'},
+            {'abbr': 'WOB', 'url_name': 'grizzlys-wolfsburg', 'full_name': 'Grizzlys Wolfsburg'},
+        ],
+        basic_game_by_game: [
+            ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['arena', 'Spielstätte'], ['attendance', 'Zuschauer'],
+            ['coach', 'Trainer'], ['opp_coach', 'Gegner. Trainer'], ['best_plr', 'Bester Spieler'], ['opp_best_plr', 'Bester gegner. Spieler']
+        ],
+        game_refs: [
+            ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['ref_1', 'Schiedsrichter'], ['ref_2', 'Schiedsrichter'],
+            ['lma_1', 'Linienrichter'], ['lma_2', 'Linienrichter'], ['pim', 'Strafminuten'], ['opp_pim', 'Gegner. Strafminuten']
+        ],
+        game_goals: [
+            ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['goals_1', 'GF1'], ['opp_goals_1', 'GA1'],
+            ['goals_2', 'GF2'], ['opp_goals_2', 'GA2'], ['goals_3', 'GF3'], ['opp_goals_3', 'GA3'], ['goals', 'GF'], ['opp_goals', 'GF']
+        ],
+        game_shots: [
+            ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['shots_on_goal', 'Torschüsse'],
+            ['shots_missed', 'Schüsse vorbei'], ['shots_blocked', 'Geblockte Schüsse'], ['shot_pctg', 'Schussquote'],
+            ['opp_shots_on_goal', 'Torschüsse (Gegner)'], ['opp_shots_missed', 'Schüsse vorbei (Gegner)'], ['opp_shots_blocked', 'Geblockte Schüsse (Gegner)'],
+            ['opp_shot_pctg', 'Schussquote (Gegner)']
+        ],
+        game_additional_stats: [
+            ['date', 'Datum'], ['round', 'Spieltag'], ['opp_team', 'Gegner'], ['faceoffs', 'Bullies'],
+            ['faceoffs_won', 'Bullies gewonnen'], ['faceoffs_lost', 'Bullies verloren'], ['faceoff_pctg', 'Bullyquote'],
+            ['shot_pctg', 'Schussquote'], ['save_pctg', 'Fangquote'], ['pdo', 'PDO'],
+        ]
+    }
+
+    $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
+    $scope.team_full_name_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
+
+    $scope.changeTable = function () {
+        if ($scope.tableSelect === 'basic_game_by_game') {
+            $scope.sortCriterion = 'date';
+            $scope.statsSortDescending = false;
+        } else if ($scope.tableSelect === 'game_refs') {
+            $scope.sortCriterion = 'date';
+            $scope.statsSortDescending = false;
+        }
+    };
+
+    // setting column sort order according to current and new sort criteria, and current sort order 
+    $scope.setSortOrder = function (sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+        // if current criterion equals the new one
+        if (oldSortCriterion === sortCriterion) {
+            // just change sort direction
+            return !oldStatsSortDescending;
+        } else {
+            // ascending for a few columns
+            if (['opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1', 'ref_2', 'lma_1', 'lma_2', 'round'].indexOf(sortCriterion) !== -1) {
+                return false;
+            } else {
+                // otherwise descending sort order
+                return true;
+            }
+        }
+    };
+
+    $scope.setTextColor = function(goals, opp_goals) {
+        if (goals > opp_goals) {
+            return " green";
+        }
+        else if (opp_goals > goals) {
+            return " red"
+        }
+        else {
+            return ""
+        }
+    };
+
+    $scope.dayFilter = function (a) {
+        date_to_test = moment(a.game_date);
+        if (ctrl.fromDate && ctrl.toDate) {
+            if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (ctrl.fromDate) {
+            if (date_to_test >= ctrl.fromDate.startOf('day')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else if (ctrl.toDate) {
+            if (date_to_test <= ctrl.toDate.startOf('day')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    $scope.getFilteredTotal = function(list, attribute) {
+        if ($scope.game_log === undefined) {
+            return;
+        }
+        var total = 0;
+        for(var i = 0; i < list.length; i++){
+            total += list[i][attribute];
+        }
+        return total;
+    };
+
+    $scope.changeTeam = function() {
+        $location.path('/team_profile/' + $scope.model.team);
+    };
+
+});
 
 app.controller('teamController', function($scope, $http) {
 
