@@ -128,8 +128,8 @@
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
                 <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_away === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
-                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_pp) }}</td>
-                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice_sh) }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_sh) }}</td>
                 <td class="col-md-1 text-right">{{ stat.pim }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_goals }}</td>
                 <td class="col-md-1 text-right">{{ stat.sh_goals }}</td>
@@ -139,13 +139,13 @@
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
                 <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shifts') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice_pp'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice_sh'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pim') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'pp_goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'sh_goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'plus_minus') }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shifts', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_pp', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_sh', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pim', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pp_goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'sh_goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'plus_minus', player_stats) }}</b></td>
             </tr>
         </tbody>
     </table>
@@ -232,19 +232,19 @@
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_missed }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
-                <td class="col-md-1 text-right">{{ formatTime(stat.time_on_ice) }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
             </tr>
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
                 <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'goals') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'assists') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'points') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_on_goal') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_missed') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ getFilteredTotal(filtered_stats, 'shots_blocked') }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ toi_total = getFilteredTotal(filtered_stats, 'time_on_ice'); formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'assists', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'points', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_on_goal', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_missed', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_blocked', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
             </tr>
         </tbody>
     </table>
