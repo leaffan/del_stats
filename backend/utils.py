@@ -11,6 +11,7 @@ name_corrections = {
     'MIke Stewart': 'Mike Stewart',
     'Michael Stewart': 'Mike Stewart',
     'Jodoi Clement': 'Clément Jodoin',
+    'Jodoin Clement': 'Clément Jodoin',
     'Clement Jodoin': 'Clément Jodoin',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
