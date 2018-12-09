@@ -1,14 +1,19 @@
 <div class="container">
     <div class="alert alert-info">
         <div class="inline-headers">
-                <span><img src="https://www.del.org/assets/img/teams/team_{{model.team}}.png" width="60" height="60" style="position: relative;
-                    top: 1.5rem;"/></span>
+                <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{model.team}}.png" alt="Team logo" width="40" height="40"/></span>
                 <h2 style="margin-left: .5em;">{{ team_full_name_lookup[model.team] }}</h2>
         </div>
     </div>
         
     <hr />
-        
+
+    <div class="alert alert-info">
+        <p>Zurück zur <a href="#!/team_stats">Statistikübersicht</a> | Zu den <a href="#!/del_stats">Spielerstatistiken</a></p>
+    </div>
+    
+    <hr />
+            
     <form>
         <div class="form_group">
             <div class="input-group" style="width: 100%">
@@ -30,7 +35,7 @@
                     <option data-ng-option value="game_goals">Torstatistiken</option>
                     <option data-ng-option value="game_shots">Schussstatistiken</option>
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
-                    <option data-ng-option value="game_additional_stats">Zusätzliches Statistiken</option>
+                    <option data-ng-option value="game_additional_stats">Zusätzliche Statistiken</option>
                     <option data-ng-option value="game_refs">Schieds-/Linienrichter</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
@@ -307,7 +312,7 @@
         <tbody>
             <tr class="{{game.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_away: homeAwayFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_away === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_away === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_away
+                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_away === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_away === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_away
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(game.pp_time) }}</td>
                 <td class="col-md-1 text-right">{{ game.pp_opps }}</td>
