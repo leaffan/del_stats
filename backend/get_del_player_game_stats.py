@@ -8,6 +8,7 @@ from datetime import timedelta, datetime
 from collections import defaultdict
 
 import requests
+from dateutil.parser import parse
 
 BASE_URL = 'https://www.del.org/live-ticker'
 
@@ -35,6 +36,7 @@ for key, values in PENALTY_CATEGORIES.items():
 
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 PER_PLAYER_TGT_DIR = 'per_player'
+U23_CUTOFF_DATE = parse("1996-01-01")
 
 
 def get_single_game_player_data(game):
@@ -121,6 +123,15 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['country'] = data_dict['nationalityShort']
     single_player_game['shoots'] = data_dict['stick']
     single_player_game['date_of_birth'] = data_dict['dateOfBirth']
+
+    if (
+        single_player_game['country'] == 'GER' and
+        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATE
+    ):
+        single_player_game['u23'] = True
+    else:
+        single_player_game['u23'] = False
+
     single_player_game['weight'] = data_dict['weight']
     single_player_game['height'] = data_dict['height']
 
