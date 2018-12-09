@@ -82,7 +82,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     $scope.currentTeam = $routeParams.team;
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
-    $scope.statsSortDescending = false;
+    $scope.statsSortDescending = true;
 
     // loading stats from external json file
     $http.get('data/del_team_game_stats.json').then(function (res) {
@@ -427,7 +427,7 @@ app.controller('teamController', function($scope, $http, svc) {
 
 });
 
-app.controller('plrController', function($scope, $http, $routeParams, svc) {
+app.controller('plrController', function($scope, $http, $routeParams, $location, svc) {
 
     var ctrl = this;
     $scope.svc = svc;
@@ -438,9 +438,15 @@ app.controller('plrController', function($scope, $http, $routeParams, svc) {
         $scope.player_name = res.data[0].full_name;
     });
 
+    $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
+        $scope.all_players = res.data[1];
+    });
+
     $scope.model = {
         team: $routeParams.team,
+        new_team: $routeParams.team,
         player_id: $routeParams.player_id,
+        new_player_id: $routeParams.player_id,
         countries: {
             'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
             'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
@@ -468,9 +474,10 @@ app.controller('plrController', function($scope, $http, $routeParams, svc) {
 
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
+    $scope.statsSortDescending = true;
 
     $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, ['date', 'round', 'opp_team']);
+        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, ['round', 'opp_team']);
     }
 
     $scope.getTotal = function(attribute) {
@@ -521,6 +528,15 @@ app.controller('plrController', function($scope, $http, $routeParams, svc) {
             return ""
         }
     };
+
+    $scope.changePlrTeam = function() {
+    };
+
+    $scope.changePlayer = function() {
+        $scope.model.player_id = $scope.model.new_player_id;
+        $location.path('/player_profile/' + $scope.model.new_team + '/' + $scope.model.player_id);
+    };
+
 
 });
 
