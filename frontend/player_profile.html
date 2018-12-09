@@ -1,8 +1,9 @@
 <div class="container">
     <div class="alert alert-info">
         <div class="inline-headers">
-            <h2>{{ player_name}} ({{ model.team }})&#160;</h2>
+            <h2 data-ng-if="player_name">{{ player_name}} ({{ model.team }})&#160;</h2>
             <span class="flag-icon flag-icon-{{ model.countries[player_stats[0].country] }}"></span>
+            <span data-ng-if="player_stats[0].u23"><img width="25%" height="25%" src="img/u23.png" /></span>
         </div>
         <ul class="list-inline">
             <li><b>Geburtsdatum:</b> {{ player_stats[0].date_of_birth | date: 'dd.MM.yyyy' }}</li>
@@ -10,8 +11,8 @@
             <li><b>Gewicht:</b> {{player_stats[0].weight }} kg</li>
         </ul>
         <ul class="list-inline">
-            <li><b>Position:</b> {{player_stats[0].position === 'FO'? 'Stürmer' : player_stats[0].position === 'DE' ? 'Verteidiger' : 'Torhüter'}}</li>
-            <li><b>Stockhand:</b> {{player_stats[0].shoots === 'left'? 'links' : 'rechts'}}</li>
+            <li><b>Position:</b> {{player_stats[0].position === 'FO' ? 'Stürmer' : player_stats[0].position === 'DE' ? 'Verteidiger' : player_stats[0].position === 'GK' ? 'Torhüter' : ''}}</li>
+            <li><b>Stockhand:</b> {{player_stats[0].shoots === 'left' ? 'links' : player_stats[0].shoots === 'right' ? 'rechts' : ''}}</li>
         </ul>
     </div>
 
@@ -20,6 +21,23 @@
     <div class="alert alert-info">
         <p>Zurück zur <a href="#!/del_stats">Statistikübersicht</a> | Zu den <a href="#!/team_stats">Teamstatistiken</a></p>
     </div>
+
+    <hr />
+
+    <form>
+        <div class="form_group">
+            <div class="input-group" style="width: 100%">
+                <label for="team_select">Team auswählen:</label>
+                <select class="form-control" id="team_select" data-ng-model="model.new_team" data-ng-change="">
+                    <option data-ng-option data-ng-repeat="full_team in model.full_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <label for="player_select">Spieler auswählen:</label>
+                <select class="form-control" id="player_select" data-ng-model="model.new_player_id" data-ng-change="changePlayer()">
+                    <option data-ng-option data-ng-repeat="player in filtered_players =(all_players | orderBy:'last_name' | filter:{team: model.new_team})" value="{{player.player_id}}">{{player.full_name}}</option>
+                </select>
+            </div>
+    </form>
 
     <hr />
 
@@ -234,7 +252,7 @@
                 <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
             </tr>
-            <tr>
+            <tr data-ng-if="player_name">
                 <td class="col-md-1"></td>
                 <td class="col-md-1">Gesamt:</td>
                 <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
