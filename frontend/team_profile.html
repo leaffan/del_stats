@@ -13,7 +13,15 @@
     </div>
     
     <hr />
-            
+
+    <div class="alert alert-info">
+        <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
+            <dl ng-show="toggle" class="dl-horizontal">
+                <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
+                <dd data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
+            </dl>
+    </div>
+
     <form>
         <div class="form_group">
             <div class="input-group" style="width: 100%">
@@ -68,12 +76,12 @@
     <table id="game_additional_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_additional_stats'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.game_additional_stats">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr title={{col[2]}} data-ng-if="col[2]">{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
@@ -115,12 +123,12 @@
     <table id="game_shots" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_shots'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.game_shots">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr data-ng-if="col[2]" title={{col[2]}}>{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
@@ -164,12 +172,12 @@
     <table id="game_goals" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_goals'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.game_goals">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr data-ng-if="col[2]" title={{col[2]}}>{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
@@ -213,12 +221,12 @@
     <table id="game_refs" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_refs'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.game_refs">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr data-ng-if="col[2]" title={{col[2]}}>{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
@@ -258,12 +266,12 @@
     <table id="basic_game_by_game" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'basic_game_by_game'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.basic_game_by_game">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr data-ng-if="col[2]" title={{col[2]}}>{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
@@ -299,12 +307,12 @@
     <table id="special_team_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'special_team_stats'">
         <thead>
             <tr>
-                <td class="text-center" data-ng-repeat="col in model.special_team_stats">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col[0], $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col[0]">
-                        <abbr data-ng-if="col[2]" title={{col[2]}}>{{col[1]}}</abbr>
-                        <span data-ng-if="!col[2]">{{col[1]}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col[0] && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
                 </td>
             </tr>
