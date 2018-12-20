@@ -94,6 +94,11 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         });
     });
 
+    // retrieving column headers (and abbreviations + explanations)
+    $http.get('./js/team_profile_columns.json').then(function (res) {
+        $scope.stats_cols = res.data;
+    });
+
     $scope.model = {
         team: $routeParams.team,
         full_teams: [
@@ -114,38 +119,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         ],
         ascendingAttrs: [
             'opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1',
-            'ref_2', 'lma_1', 'lma_2', 'round'],
-        basic_game_by_game: [
-            ['date', 'Datum', ''], ['round', 'Spieltag', ''], ['opp_team', 'Gegner', ''], ['arena', 'Spielstätte', ''], ['attendance', 'Zuschauer', ''],
-            ['coach', 'Trainer', ''], ['opp_coach', 'Gegner. Trainer', ''], ['best_plr', 'Bester Spieler', ''], ['opp_best_plr', 'Bester gegner. Spieler', '']
-        ],
-        game_refs: [
-            ['date', 'Datum', ''], ['round', 'Spieltag', ''], ['opp_team', 'Gegner', ''], ['ref_1', 'Schiedsrichter', ''], ['ref_2', 'Schiedsrichter', ''],
-            ['lma_1', 'Linienrichter', ''], ['lma_2', 'Linienrichter', ''], ['pim', 'Strafminuten', ''], ['opp_pim', 'Gegner. Strafminuten', '']
-        ],
-        game_goals: [
-            ['date', 'Datum', ''], ['round', 'Spieltag', ''], ['opp_team', 'Gegner', ''], ['goals_1', 'GF1', 'Tore im 1. Drittel'], ['opp_goals_1', 'GA1', 'Gegentore im 1. Drittel'],
-            ['goals_2', 'GF2', 'Tore im 2. Drittel'], ['opp_goals_2', 'GA2', 'Gegentore im 2. Drittel'], ['goals_3', 'GF3', 'Tore im 3. Drittel'], ['opp_goals_3', 'GA3', 'Gegentore im 3. Drittel'],
-            ['goals', 'GF', 'Tore (ohne Shootout)'], ['opp_goals', 'GA', 'Gegentore (ohne Shootout)']
-        ],
-        game_shots: [
-            ['date', 'Datum', ''], ['round', 'Spieltag', ''], ['opp_team', 'Gegner', ''], ['shots_on_goal', 'Torschüsse', ''],
-            ['shots_missed', 'Schüsse vorbei', ''], ['shots_blocked', 'Geblockte Schüsse', ''], ['shot_pctg', 'Schussquote', ''],
-            ['opp_shots_on_goal', 'Torschüsse (Gegner)', ''], ['opp_shots_missed', 'Schüsse vorbei (Gegner)', ''], ['opp_shots_blocked', 'Geblockte Schüsse (Gegner)', ''],
-            ['opp_shot_pctg', 'Schussquote (Gegner)', '']
-        ],
-        game_additional_stats: [
-            ['date', 'Datum', ''], ['round', 'Spieltag', ''], ['opp_team', 'Gegner', ''], ['faceoffs', 'Bullies', ''],
-            ['faceoffs_won', 'Bullies gewonnen', ''], ['faceoffs_lost', 'Bullies verloren', ''], ['faceoff_pctg', 'Bullyquote', ''],
-            ['shot_pctg', 'Schussquote', ''], ['save_pctg', 'Fangquote', ''], ['pdo', 'PDO', '']
-        ],
-        special_team_stats: [
-            ['date', 'Datum', ''], ['opp_team', 'Gegner', ''], ['pp_time', 'PP-Zeit', 'Zeit in Überzahl'],
-            ['pp_opps', 'PPO', 'Überzahlsituationen'], ['pp_goals', 'PPG', 'Überzahltore'], ['pp_pctg', 'PP%', 'Powerplayquote'],
-            ['opp_sh_goals', 'SHGA', 'Unterzahltore (Gegner)'],
-            ['opp_pp_time', 'PK-Zeit', 'Zeit in Unterzahl'],  ['sh_opps', 'TSH', 'Unterzahlsituationen'], ['opp_pp_goals', 'PPGA', 'Gegentore in Unterzahl'], ['pk_pctg', 'PK%', 'Unterzahlquote'],
-            ['sh_goals', 'SHGF', 'Unterzahltore']
-        ]
+            'ref_2', 'lma_1', 'lma_2', 'round']
     }
 
     $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
@@ -211,9 +185,15 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
 app.controller('teamController', function($scope, $http, svc) {
 
     var ctrl = this;
+    // setting default table selection and sort criterion/order
     $scope.tableSelect = 'standings';
     $scope.sortCriterion = 'points';
     $scope.statsSortDescending = true;
+
+    // retrieving column headers (and abbreviations + explanations)
+    $http.get('./js/team_stats_columns.json').then(function (res) {
+        $scope.stats_cols = res.data;
+    });
 
     $scope.$watch('ctrl.fromDate', function() {
         if ($scope.team_stats) {
