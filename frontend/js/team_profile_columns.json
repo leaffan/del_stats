@@ -1,0 +1,77 @@
+{
+    "basic_game_by_game": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "arena", "col_header": "Spielstätte", "expl_de": null, "expl_en": null},
+        {"data_key": "attendance", "col_header": "Zuschauer", "expl_de": null, "expl_en": null},
+        {"data_key": "coach", "col_header": "Trainer", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_coach", "col_header": "Gegner. Trainer", "expl_de": null, "expl_en": null},
+        {"data_key": "best_plr", "col_header": "Bester Spieler", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_best_plr", "col_header": "Bester gegner. Spieler", "expl_de": null, "expl_en": null}
+    ],
+    "game_refs": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "ref_1", "col_header": "Schiedsrichter", "expl_de": null, "expl_en": null},
+        {"data_key": "ref_2", "col_header": "Schiedsrichter", "expl_de": null, "expl_en": null},
+        {"data_key": "lma_1", "col_header": "Linienrichter", "expl_de": null, "expl_en": null},
+        {"data_key": "lma_2", "col_header": "Linienrichter", "expl_de": null, "expl_en": null},
+        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+        {"data_key": "opp_pim", "col_header": "PIMA", "expl_de": "Gegnerische Strafminuten", "expl_en": "Penalties in Minutes Against"}
+    ],
+    "game_goals": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "goals_1", "col_header": "GF1", "expl_de": "Tore im 1. Drittel", "expl_en": "Goals For in 1st Period"},
+        {"data_key": "opp_goals_1", "col_header": "GA1", "expl_de": "Gegentore im 1. Drittel", "expl_en": "Goals Against in 1st Period"},
+        {"data_key": "goals_2", "col_header": "GF2", "expl_de": "Tore im 2. Drittel", "expl_en": "Goals For in 2nd Period"},
+        {"data_key": "opp_goals_2", "col_header": "GA2", "expl_de": "Gegentore im 2. Drittel", "expl_en": "Goals Against in 2nd Period"},
+        {"data_key": "goals_3", "col_header": "GF3", "expl_de": "Tore im 3. Drittel", "expl_en": "Goals For in 3rd Period"},
+        {"data_key": "opp_goals_3", "col_header": "GA3", "expl_de": "Gegentore im 3. Drittel", "expl_en": "Goals Against in 3rd Period"},
+        {"data_key": "goals", "col_header": "GF", "expl_de": "Tore (ohne Penaltyschießen)", "expl_en": "Goals For (without Shootout)"},
+        {"data_key": "opp_goals", "col_header": "GA", "expl_de": "Gegentore (ohne Penaltyschießen)", "expl_en": "Goals Against (without Shootout)"}
+    ],
+    "game_shots": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "shots_on_goal", "col_header": "SOGF", "expl_de": "Torschüsse", "expl_en": "Shots on Goal For"},
+        {"data_key": "shots_missed", "col_header": "MSF", "expl_de": "Schüsse neben das Tor", "expl_en": "Missed Shots For"},
+        {"data_key": "shots_blocked", "col_header": "BSF", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots For"},
+        {"data_key": "shot_pctg", "col_header": "SH%F", "expl_de": "Schussquote", "expl_en": "Shooting Percentage For"},
+        {"data_key": "opp_shots_on_goal", "col_header": "SOGA", "expl_de": "Torschüsse des Gegners", "expl_en": "Shots on Goal Against"},
+        {"data_key": "opp_shots_missed", "col_header": "MSA", "expl_de": "Schüsse des Gegners neben das Tor", "expl_en": "Missed Shots Against"},
+        {"data_key": "opp_shots_blocked", "col_header": "BSA", "expl_de": "Geblockte Schüsse des Gegners", "expl_en": "Blocked Shots Against"},
+        {"data_key": "opp_shot_pctg", "col_header": "SH%A", "expl_de": "Schussquote des Gegners", "expl_en": "Shooting Percentage Against"}
+    ],
+    "game_additional_stats": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "faceoffs", "col_header": "FAC", "expl_de": "Bullies", "expl_en": "Faceoffs"},
+        {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Bullies gewonnen", "expl_en": "Faceoffs Won"},
+        {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Bullies verloren", "expl_en": "Faceoffs Lost"},
+        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies", "expl_en": "Faceoff Percentage"},
+        {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
+        {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
+        {"data_key": "pdo", "col_header": "PDO", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert)", "expl_en": "PDO"}
+    ],
+    "special_team_stats": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "pp_time", "col_header": "PPT", "expl_de": "Zeit in Überzahl", "expl_en": "Powerplay Time"},
+        {"data_key": "pp_opps", "col_header": "PPO", "expl_de": "Überzahlsituationen", "expl_en": "Powerplay Opportunities"},
+        {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Überzahltore", "expl_en": "Powerplay Goals"},
+        {"data_key": "pp_pctg", "col_header": "PP%", "expl_de": "Powerplayquote", "expl_en": "Powerplay Percentage"},
+        {"data_key": "opp_sh_goals", "col_header": "SHGA", "expl_de": "Unterzahltore (Gegner)", "expl_en": "Shorthanded Goals Against"},
+        {"data_key": "opp_pp_time", "col_header": "SHT", "expl_de": "Zeit in Unterzahl", "expl_en": "Shorthanded Time"},
+        {"data_key": "sh_opps", "col_header": "TSH", "expl_de": "Unterzahlsituationen", "expl_en": "Times Shorthanded"},
+        {"data_key": "opp_pp_goals", "col_header": "PPGA", "expl_de": "Gegentore in Unterzahl", "expl_en": "Powerplay Goals Against"},
+        {"data_key": "pk_pctg", "col_header": "PK%", "expl_de": "Unterzahlquote", "expl_en": "Penalty Killing Percentage"},
+        {"data_key": "sh_goals", "col_header": "SHGF", "expl_de": "Unterzahltore", "expl_en": "Shorthanded Goals For"}
+    ]
+
+}
