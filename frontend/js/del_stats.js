@@ -545,6 +545,10 @@ app.controller('mainController', function ($scope, $http, svc) {
             $scope.stats = res.data[1];
         });
 
+        // retrieving column headers (and abbreviations + explanations)
+        $http.get('./js/player_stats_columns.json').then(function (res) {
+            $scope.stats_cols = res.data;
+        });
 
         // default filter values
         $scope.nameFilter = ''; // empty name filter
