@@ -11,6 +11,7 @@ from collections import defaultdict
 from dateutil.parser import parse
 
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
+SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 U23_CUTOFF_DATE = parse("1996-01-01")
 
@@ -47,6 +48,20 @@ PER_60_ATTRS = [
     'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked', 'blocked_shots',
     'pp_goals', 'pp_assists', 'pp_primary_assists', 'pp_secondary_assists',
     'pp_points', 'sh_goals',
+]
+
+SHOT_STATS_ATTRS = [
+    'slot_shots', 'slot_on_goal', 'slot_missed', 'slot_blocked', 'slot_goals',
+    'slot_distance', 'left_shots', 'left_on_goal', 'left_missed',
+    'left_blocked', 'left_goals', 'left_distance', 'right_shots',
+    'right_on_goal', 'right_missed', 'right_blocked', 'right_goals',
+    'right_distance', 'blue_line_shots', 'blue_line_on_goal',
+    'blue_line_missed', 'blue_line_blocked', 'blue_line_goals',
+    'blue_line_distance', 'neutral_zone_shots', 'neutral_zone_on_goal',
+    'neutral_zone_missed', 'neutral_zone_blocked', 'neutral_zone_goals',
+    'neutral_zone_distance', 'behind_goal_shots', 'behind_goal_on_goal',
+    'behind_goal_missed', 'behind_goal_blocked', 'behind_goal_goals',
+    'behind_goal_distance'
 ]
 
 ISO_COUNTRY_CODES = {
@@ -132,10 +147,43 @@ def convert_to_minutes(td):
         td.total_seconds() // 60, round(td.total_seconds() % 60, 0))
 
 
+def get_shot_stats(player_id, team, shot_data):
+
+    shot_stats = dict()
+    for attr in SHOT_STATS_ATTRS:
+        shot_stats[attr] = 0
+
+    for shot in shot_data:
+        if shot['player_id'] != player_id:
+            continue
+        if shot['team'] != team:
+            continue
+        shot_stats["%s_shots" % shot['shot_zone'].lower()] += 1
+        shot_stats[
+            "%s_distance" % shot['shot_zone'].lower()] += shot['distance']
+        shot_zone_result = "%s_%s" % (
+            shot['shot_zone'].lower(), shot['target_type'])
+        shot_stats[shot_zone_result] += 1
+        if shot['scored']:
+            shot_stats["%s_goals" % shot['shot_zone'].lower()] += 1
+
+    for zone in [
+        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal'
+    ]:
+        if shot_stats["%s_distance" % zone]:
+            shot_stats["%s_distance" % zone] = round(
+                shot_stats["%s_distance" % zone] /
+                float(shot_stats["%s_shots" % zone]), 2)
+
+    return shot_stats
+
+
 if __name__ == '__main__':
 
     src_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data', PLAYER_GAME_STATS_SRC)
+    shot_src_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data', SHOTS_DATA_SRC)
     tgt_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data', AGGREGATED_PLAYER_STATS_TGT)
     tgt_csv_path = os.path.join(os.path.dirname(
@@ -144,6 +192,8 @@ if __name__ == '__main__':
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
+    # loading shot data
+    shot_data = json.loads(open(shot_src_path).read())
 
     print("+ %d player-in-game items collected" % len(player_game_stats))
 
@@ -215,10 +265,12 @@ if __name__ == '__main__':
         else:
             basic_values['iso_country'] = None
 
+        shot_stats = get_shot_stats(player_id, team, shot_data)
+
         # combining data dictionaries
         all_values = {
             **basic_values,
-            **aggregated_stats[key], **aggregate_time_stats[key]
+            **aggregated_stats[key], **aggregate_time_stats[key], **shot_stats
         }
         aggregated_stats_as_list.append(all_values)
 
@@ -231,8 +283,8 @@ if __name__ == '__main__':
 
         # calculating shooting percentage
         if item['shots_on_goal']:
-            item['shot_pctg'] = (
-                item['goals'] / float(item['shots_on_goal']) * 100.)
+            item['shot_pctg'] = round(
+                item['goals'] / float(item['shots_on_goal']) * 100., 2)
         else:
             item['shot_pctg'] = 0.
         # calculating faceoff percentage
