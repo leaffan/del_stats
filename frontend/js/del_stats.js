@@ -412,6 +412,11 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
     var ctrl = this;
     $scope.svc = svc;
 
+    // retrieving column headers (and abbreviations + explanations)
+    $http.get('./js/player_profile_columns.json').then(function (res) {
+        $scope.stats_cols = res.data;
+    });
+
     // loading stats from external json file
     $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
