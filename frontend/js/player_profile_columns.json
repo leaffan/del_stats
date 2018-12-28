@@ -1,0 +1,26 @@
+{
+    "basic_game_by_game": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
+        {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen", "expl_en": "Assists"},
+        {"data_key": "points", "col_header": "Pts.", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
+        {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse am Tor vorbei", "expl_en": "Missed Shots"},
+        {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots"},
+        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit", "expl_en": "Time on Ice"}
+    ],
+    "additional_game_by_game": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "shifts", "col_header": "Wechsel", "expl_de": null, "expl_en": null},
+        {"data_key": "time_on_ice_pp", "col_header": "TOI (PP)", "expl_de": "Eiszeit in Überzahl", "expl_en": "Powerplay Time on Ice"},
+        {"data_key": "time_on_ice_sh", "col_header": "TOI (SH)", "expl_de": "Eiszeit in Unterzahl", "expl_en": "Shorthanded Time on Ice"},
+        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+        {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
+        {"data_key": "sh_goals", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
+        {"data_key": "plus_minus", "col_header": "+/-", "expl_de": null, "expl_en": null}
+    ]
+}
