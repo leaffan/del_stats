@@ -25,8 +25,8 @@ PERIOD_EVENTS_SUFFIX = 'period-events.json'
 PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
-    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE'],
-    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH'],
+    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP'],
+    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE'],
 }
 
 REVERSE_PENALTY_CATEGORIES = dict()
