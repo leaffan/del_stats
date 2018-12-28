@@ -52,16 +52,20 @@ PER_60_ATTRS = [
 
 SHOT_STATS_ATTRS = [
     'slot_shots', 'slot_on_goal', 'slot_missed', 'slot_blocked', 'slot_goals',
-    'slot_distance', 'left_shots', 'left_on_goal', 'left_missed',
-    'left_blocked', 'left_goals', 'left_distance', 'right_shots',
-    'right_on_goal', 'right_missed', 'right_blocked', 'right_goals',
-    'right_distance', 'blue_line_shots', 'blue_line_on_goal',
-    'blue_line_missed', 'blue_line_blocked', 'blue_line_goals',
-    'blue_line_distance', 'neutral_zone_shots', 'neutral_zone_on_goal',
-    'neutral_zone_missed', 'neutral_zone_blocked', 'neutral_zone_goals',
-    'neutral_zone_distance', 'behind_goal_shots', 'behind_goal_on_goal',
-    'behind_goal_missed', 'behind_goal_blocked', 'behind_goal_goals',
-    'behind_goal_distance'
+    'slot_distance', 'slot_pctg', 'slot_on_goal_pctg',
+    'left_shots', 'left_on_goal', 'left_missed', 'left_blocked', 'left_goals',
+    'left_distance', 'left_pctg', 'left_on_goal_pctg',
+    'right_shots', 'right_on_goal', 'right_missed', 'right_blocked',
+    'right_goals', 'right_distance', 'right_pctg', 'right_on_goal_pctg',
+    'blue_line_shots', 'blue_line_on_goal', 'blue_line_missed',
+    'blue_line_blocked', 'blue_line_goals', 'blue_line_distance',
+    'blue_line_pctg', 'blue_line_on_goal_pctg',
+    'neutral_zone_shots', 'neutral_zone_on_goal', 'neutral_zone_missed',
+    'neutral_zone_blocked', 'neutral_zone_goals', 'neutral_zone_distance',
+    'neutral_zone_pctg', 'neutral_zone_on_goal_pctg',
+    'behind_goal_shots', 'behind_goal_on_goal', 'behind_goal_missed',
+    'behind_goal_blocked', 'behind_goal_goals', 'behind_goal_distance',
+    'behind_goal_pctg', 'behind_goal_on_goal_pctg'
 ]
 
 ISO_COUNTRY_CODES = {
@@ -148,16 +152,24 @@ def convert_to_minutes(td):
 
 
 def get_shot_stats(player_id, team, shot_data):
-
+    """
+    Compiles and aggregates shot statistics for specified player and team.
+    """
     shot_stats = dict()
     for attr in SHOT_STATS_ATTRS:
         shot_stats[attr] = 0
+
+    all_shots = 0
+    on_goal = 0
 
     for shot in shot_data:
         if shot['player_id'] != player_id:
             continue
         if shot['team'] != team:
             continue
+        all_shots += 1
+        if "goal" in shot['target_type']:
+            on_goal += 1
         shot_stats["%s_shots" % shot['shot_zone'].lower()] += 1
         shot_stats[
             "%s_distance" % shot['shot_zone'].lower()] += shot['distance']
@@ -174,6 +186,12 @@ def get_shot_stats(player_id, team, shot_data):
             shot_stats["%s_distance" % zone] = round(
                 shot_stats["%s_distance" % zone] /
                 float(shot_stats["%s_shots" % zone]), 2)
+        if shot_stats["%s_on_goal" % zone]:
+            shot_stats["%s_on_goal_pctg" % zone] = round(
+                shot_stats["%s_on_goal" % zone] / float(on_goal) * 100, 2)
+        if shot_stats["%s_shots" % zone]:
+            shot_stats["%s_pctg" % zone] = round(
+                shot_stats["%s_shots" % zone] / float(all_shots) * 100, 2)
 
     return shot_stats
 
