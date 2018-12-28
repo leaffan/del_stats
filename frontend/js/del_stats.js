@@ -71,6 +71,36 @@ app.factory('svc', function() {
                 total += list[i][attribute];
             }
             return total;
+        },
+        getFilteredAccumulatedTotal: function(list, attribute, dataSource, to) {
+            if (dataSource === undefined) {
+                return
+            }
+            var total = 0;
+            for(var i = list.length-1; i >= 0; i--){
+                total += list[i][attribute];
+                if (list[i]['round'] == to)
+                {
+                    return total;
+                }
+            }
+            return total;
+        },
+        getFilteredAverageTotal: function(list, attribute, dataSource, to) {
+            if (dataSource === undefined) {
+                return
+            }
+            var total = 0;
+            var cnt_data = 0;
+            for(var i = list.length-1; i >= 0; i--){
+                cnt_data++;
+                total += list[i][attribute];
+                if (list[i]['round'] == to)
+                {
+                    return total/cnt_data;
+                }
+            }
+            return total/cnt_data;
         }
     }
 });
