@@ -45,6 +45,7 @@
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
                     <option data-ng-option value="game_additional_stats">Zusätzliche Statistiken</option>
                     <option data-ng-option value="game_refs">Schieds-/Linienrichter</option>
+                    <option data-ng-option value="development">Team-Entwicklung</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="home_away_select" data-ng-model="homeAwayFilter">
@@ -347,6 +348,37 @@
                 <td class="col-md-1 text-right">{{ total_opp_pp_goals = svc.getFilteredTotal(filtered_game_log, 'opp_pp_goals', 'game_log') }}</td>
                 <td class="col-md-1 text-right">{{ (100 - total_opp_pp_goals / total_opp_pp_opps * 100).toFixed(1) }} %</td>
                 <td class="col-md-1 text-right">{{ svc.getFilteredTotal(filtered_game_log, 'sh_goals', 'game_log') }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="development" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'development'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_away: homeAwayFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
+                        game.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
+                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
+                        }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_away === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_away === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_away
+                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
+                        game.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ points_sum           = svc.getFilteredAccumulatedTotal(filtered_game_log, 'points', game_log, game.round) }}</td>
+                <td class="col-md-1 text-right">{{ shot_pctg            = (svc.getFilteredAverageTotal(filtered_game_log, 'shot_pctg', game_log, game.round)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ pp_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pp_pctg', game_log, game.round)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ pk_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pk_pctg', game_log, game.round)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ faceoff_pctg         = (svc.getFilteredAverageTotal(filtered_game_log, 'faceoff_pctg', game_log, game.round)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ pdo                  = (svc.getFilteredAverageTotal(filtered_game_log, 'pdo', game_log, game.round)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ goals_total_sum      = svc.getFilteredAccumulatedTotal(filtered_game_log, 'goals', game_log, game.round) }}</td>
+                <td class="col-md-1 text-right">{{ opp_goals_total_sum  = svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_goals', game_log, game.round) }}</td>
             </tr>
         </tbody>
     </table>
