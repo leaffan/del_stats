@@ -13,6 +13,7 @@ name_corrections = {
     'Jodoi Clement': 'Clément Jodoin',
     'Jodoin Clement': 'Clément Jodoin',
     'Clement Jodoin': 'Clément Jodoin',
+    'Jamie Bartmann': 'Jamie Bartman',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung'
