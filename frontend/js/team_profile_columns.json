@@ -77,14 +77,14 @@
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
         {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
-        {"data_key": "points", "col_header": "PTS", "expl_de": null, "expl_en": null},
-        {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
-        {"data_key": "pp_pctg", "col_header": "PP%", "expl_de": "Powerplayquote", "expl_en": "Powerplay Percentage"},
-        {"data_key": "pk_pctg", "col_header": "PK%", "expl_de": "Unterzahlquote", "expl_en": "Penalty Killing Percentage"},
-        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies", "expl_en": "Faceoff Percentage"},
-        {"data_key": "pdo", "col_header": "PDO", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert)", "expl_en": "PDO"},
-        {"data_key": "goals_sum", "col_header": "GF", "expl_de": "Tore (ohne Penaltyschießen) gesamt bis zu diesem Spieltag", "expl_en": "Goals For (without Shootout) total until this gameday"},
-        {"data_key": "opp_goals_sum", "col_header": "GA", "expl_de": "Gegentore (ohne Penaltyschießen) gesamt bis zu diesem Spieltag", "expl_en": "Goals Against (without Shootout) total until this gameday"}
+        {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte zu diesem Datum", "expl_en": "Points At This Date"},
+        {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote zu diesem Datum", "expl_en": "Shooting Percentage At This Date"},
+        {"data_key": "pp_pctg", "col_header": "PP%", "expl_de": "Powerplayquote zu diesem Datum", "expl_en": "Powerplay Percentage At This Date"},
+        {"data_key": "pk_pctg", "col_header": "PK%", "expl_de": "Unterzahlquote zu diesem Datum", "expl_en": "Penalty Killing Percentage At This Date"},
+        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies zu diesem Datum", "expl_en": "Faceoff Percentage At This Date"},
+        {"data_key": "pdo", "col_header": "PDO", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert) zu diesem Datum", "expl_en": "PDO At This Date"},
+        {"data_key": "goals_sum", "col_header": "GF", "expl_de": "Tore (ohne Penaltyschießen) zu diesem Datum", "expl_en": "Goals For (without Shootout) Accumulated At This Date"},
+        {"data_key": "opp_goals_sum", "col_header": "GA", "expl_de": "Gegentore (ohne Penaltyschießen) zu diesem Datum", "expl_en": "Goals Against (without Shootout) Accumulated At This Date"}
     ]
 
 }

@@ -1,15 +1,41 @@
 {
-    "basic_game_by_game": [
-        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
-        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
-        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
-        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
-        {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen", "expl_en": "Assists"},
-        {"data_key": "points", "col_header": "Pts.", "expl_de": "Punkte", "expl_en": "Points"},
+    "penalty_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "pim_from_events", "col_header": "PIM", "expl_de": "Strafminuten ingesamt", "expl_en": "Penalties in Minutes"},
+        {"data_key": "_2min", "col_header": "2 min", "expl_de": "Anzahl der 2-Minuten-Strafen", "expl_en": "Two-Minute Penalties"},
+        {"data_key": "_5min", "col_header": "5 min", "expl_de": "Anzahl der 5-Minuten-Strafen", "expl_en": "Five-Minute Penalties"},
+        {"data_key": "_10min", "col_header": "10 min", "expl_de": "Anzahl der 10-Minuten-Strafen", "expl_en": "Ten-Minute Penalties"},
+        {"data_key": "_20min", "col_header": "20 min", "expl_de": "Anzahl der 20-Minuten-Strafen", "expl_en": "Twenty-Minute Penalties"},
+        {"data_key": "lazy", "col_header": "Faul", "expl_de": "Faule Strafen (Beinstellen, Halten, Haken, Halten des Stocks, Behinderung, Stockschlag)", "expl_en": "Lazy Penalties"},
+        {"data_key": "roughing", "col_header": "Härte", "expl_de": "Strafen wegen zu großer Härte (Übertriebene Härte, Unkorrekter Körperangriff, Bandencheck, Stockcheck, Faustkampf)", "expl_en": "Rough-play Penalties"},
+        {"data_key": "reckless", "col_header": "Fahrlässig", "expl_de": "Fahrlässige Strafen (High-Sticking, Ellbogencheck, Später Hit, Check gegen den Kopf, Kniecheck, Check von hinten", "expl_en": "Reckless Penalties"},
+        {"data_key": "other", "col_header": "Andere", "expl_de": "Andere Strafen (Werfen des Stocks, Unsportliches Verhalten, Spielverzögerung, Beschimpfung von Offiziellen, Verlassen der Strafbank, Schwalbe)", "expl_en": "Other Penalties"}
+    ],
+    "on_goal_shot_zones": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
-        {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse am Tor vorbei", "expl_en": "Missed Shots"},
-        {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots"},
-        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit", "expl_en": "Time on Ice"}
+        {"data_key": "slot_on_goal", "col_header": "Slot", "expl_de": "Torschüsse aus dem Slot", "expl_en": "Shots on Goal from Slot"},
+        {"data_key": "slot_on_goal_pctg", "col_header": "Slot%", "expl_de": "Anteil der Torschüsse aus dem Slot", "expl_en": "Shots on Goal from Slot Percentage"},
+        {"data_key": "left_on_goal", "col_header": "Left", "expl_de": "Torschüsse von links", "expl_en": "Shots on Goal from Left"},
+        {"data_key": "left_on_goal_pctg", "col_header": "Left%", "expl_de": "Anteil der Torschüsse von links", "expl_en": "Shots on Goal from Left Percentage"},
+        {"data_key": "right_on_goal", "col_header": "Right", "expl_de": "Torschüsse von rechts", "expl_en": "Shots on Goal from Right"},
+        {"data_key": "right_on_goal_pctg", "col_header": "Right%", "expl_de": "Anteil der Torschüsse von rechts", "expl_en": "Shots on Goal from Right Percentage"},
+        {"data_key": "blue_line_on_goal", "col_header": "Point", "expl_de": "Torschüsse von der blauen Linie", "expl_en": "Shots on Goal from Point"},
+        {"data_key": "blue_line_on_goal_pctg", "col_header": "Point%", "expl_de": "Anteil der Torschüsse von der blauen Linie", "expl_en": "Shots on Goal from Point Percentage"},
+        {"data_key": "neutral_zone_on_goal", "col_header": "Neu. Zone", "expl_de": "Torschüsse aus der neutralen Zone", "expl_en": "Shots on Goal from Neutral Zone"}
+    ],
+    "shot_zones": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "shots", "col_header": "S", "expl_de": "Schüsse (auf das Tor, daneben, geblockt)", "expl_en": "Shots"},
+        {"data_key": "slot_shots", "col_header": "Slot", "expl_de": "Schüsse aus dem Slot", "expl_en": "Shots from Slot"},
+        {"data_key": "slot_pctg", "col_header": "Slot%", "expl_de": "Anteil der Schüsse aus dem Slot", "expl_en": "Shots from Slot Percentage"},
+        {"data_key": "left_shots", "col_header": "Left", "expl_de": "Schüsse von links", "expl_en": "Shots from Left"},
+        {"data_key": "left_pctg", "col_header": "Left%", "expl_de": "Anteil der Schüsse von links", "expl_en": "Shots from Left Percentage"},
+        {"data_key": "right_shots", "col_header": "Right", "expl_de": "Schüsse von rechts", "expl_en": "Shots from Right"},
+        {"data_key": "right_pctg", "col_header": "Right%", "expl_de": "Anteil der Schüsse von rechts", "expl_en": "Shots from Right Percentage"},
+        {"data_key": "blue_line_shots", "col_header": "Point", "expl_de": "Schüsse von der blauen Linie", "expl_en": "Shots from Point"},
+        {"data_key": "blue_line_pctg", "col_header": "Point%", "expl_de": "Anteil der Schüsse von der blauen Linie", "expl_en": "Shots from Point Percentage"},
+        {"data_key": "neutral_zone_shots", "col_header": "Neu. Zone", "expl_de": "Schüsse aus der neutralen Zone", "expl_en": "Shots from Neutral Zone"}
     ],
     "additional_game_by_game": [
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
