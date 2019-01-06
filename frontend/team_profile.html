@@ -367,14 +367,15 @@
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score}}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_away === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_away === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_away
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ points_sum           = svc.getFilteredAccumulatedTotal(filtered_game_log, 'points', game_log, game.round) }}</td>
-                <td class="col-md-1 text-right">{{ shot_pctg            = (svc.getFilteredAverageTotal(filtered_game_log, 'shot_pctg', game_log, game.round)).toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ pp_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pp_pctg', game_log, game.round)).toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ pk_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pk_pctg', game_log, game.round)).toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ faceoff_pctg         = (svc.getFilteredAverageTotal(filtered_game_log, 'faceoff_pctg', game_log, game.round)).toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ pdo                  = (svc.getFilteredAverageTotal(filtered_game_log, 'pdo', game_log, game.round)).toFixed(2) }}</td>
-                <td class="col-md-1 text-right">{{ goals_total_sum      = svc.getFilteredAccumulatedTotal(filtered_game_log, 'goals', game_log, game.round) }}</td>
-                <td class="col-md-1 text-right">{{ opp_goals_total_sum  = svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_goals', game_log, game.round) }}</td>
+                <td class="col-md-1 text-right">{{ standing             = getStanding(game.game_date) }}</td>
+                <td class="col-md-1 text-right">{{ points_sum           = svc.getFilteredAccumulatedTotal(filtered_game_log, 'points', game_log, game.game_date) }}</td>
+                <td class="col-md-1 text-right">{{ shot_pctg            = (svc.getFilteredAverageTotal(filtered_game_log, 'shot_pctg', game_log, game.game_date)).toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ pp_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pp_pctg', game_log, game.game_date)).toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ pk_pctg              = (svc.getFilteredAverageTotal(filtered_game_log, 'pk_pctg', game_log, game.game_date)).toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ faceoff_pctg         = (svc.getFilteredAverageTotal(filtered_game_log, 'faceoff_pctg', game_log, game.game_date)).toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ pdo                  = (svc.getFilteredAverageTotal(filtered_game_log, 'pdo', game_log, game.game_date)).toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ goals_total_sum      = svc.getFilteredAccumulatedTotal(filtered_game_log, 'goals', game_log, game.game_date) }}</td>
+                <td class="col-md-1 text-right">{{ opp_goals_total_sum  = svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_goals', game_log, game.game_date) }}</td>
             </tr>
         </tbody>
     </table>

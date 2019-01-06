@@ -79,7 +79,7 @@ app.factory('svc', function() {
             var total = 0;
             for(var i = list.length-1; i >= 0; i--){
                 total += list[i][attribute];
-                if (list[i]['round'] == to)
+                if (list[i]['game_date'] == to)
                 {
                     return total;
                 }
@@ -95,7 +95,7 @@ app.factory('svc', function() {
             for(var i = list.length-1; i >= 0; i--){
                 cnt_data++;
                 total += list[i][attribute];
-                if (list[i]['round'] == to)
+                if (list[i]['game_date'] == to)
                 {
                     return total/cnt_data;
                 }
@@ -123,6 +123,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
             return value['team'] == $scope.currentTeam;
         });
     });
+
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_profile_columns.json').then(function (res) {
@@ -180,6 +181,67 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
             return ""
         }
     };
+
+    $scope.getStanding = function(to) {
+        var team_table = [{'team_id' : 0, 'team' : ' '   , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 1, 'team' : 'ING' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 2, 'team' : 'MAN' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 3, 'team' : 'EBB' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 4, 'team' : 'DEG' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 5, 'team' : 'KEV' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 6, 'team' : 'STR' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 7, 'team' : 'IEC' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 8, 'team' : 'WOB' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 9, 'team' : 'BHV' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 10, 'team' : ' '  , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 11, 'team' : 'KEC', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 12, 'team' : 'RBM', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 13, 'team' : 'AEV', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 14, 'team' : 'NIT', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
+                          {'team_id' : 15, 'team' : 'SWW', 'pts' : 0, 'gdiff' : 0, 'gf' : 0}];
+
+        for (var i = 0; i <  $scope.team_stats.length; i++)
+        {
+            if($scope.team_stats[i]['game_date'] > to)
+            {
+                break;
+            }
+            team_table[$scope.team_stats[i]['team_id']]['pts'] += $scope.team_stats[i]['points'];
+            team_table[$scope.team_stats[i]['team_id']]['gdiff'] += $scope.team_stats[i]['goals'] - $scope.team_stats[i]['opp_goals'] ;
+            team_table[$scope.team_stats[i]['team_id']]['gf'] += $scope.team_stats[i]['goals'];
+        }
+
+        team_table.splice(10,1);
+        team_table.splice(0,1);
+
+        team_table.sort(function(b, a){
+            if (a.pts == b.pts)
+            {
+                if (a.gdiff == b.gdiff)
+                {
+                    return a.gf-b.gf;
+                }
+                return a.gdiff-b.gdiff;
+            }
+            else
+            {
+                return a.pts-b.pts;
+            }
+            return a.pts-b.pts;
+        })
+
+        for (var j = 0; j <  team_table.length; j++)
+        {
+            if (team_table[j]['team'] == $scope.currentTeam)
+            {
+                return j+1;
+
+            }
+        }
+
+        return 0;
+    };
+
 
     $scope.dayFilter = function (a) {
         date_to_test = moment(a.game_date);
@@ -261,6 +323,7 @@ app.controller('teamController', function($scope, $http, svc) {
         $scope.team_stats = res.data[1];
         $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
     });
+
 
     $scope.filter_stats = function (stats) {
         filtered_team_stats = {};
