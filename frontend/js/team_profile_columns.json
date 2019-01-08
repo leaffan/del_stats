@@ -77,7 +77,7 @@
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
         {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
-        {"data_key": "standing", "col_header": "POS", "expl_de": "Tabellenplatz", "expl_en": null},
+        {"data_key": "standing", "col_header": "POS", "expl_de": "Tabellenplatz", "expl_en": "Standings Position"},
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte zu diesem Datum", "expl_en": "Points At This Date"},
         {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote zu diesem Datum", "expl_en": "Shooting Percentage At This Date"},
         {"data_key": "pp_pctg", "col_header": "PP%", "expl_de": "Powerplayquote zu diesem Datum", "expl_en": "Powerplay Percentage At This Date"},
