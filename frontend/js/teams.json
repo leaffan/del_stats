@@ -1,0 +1,100 @@
+[
+    {
+        "abbr": "AEV",
+        "url_name": "augsburger-panther",
+        "full_name": "Augsburger Panther",
+        "location": "Augsburg",
+        "id": 13
+    },
+    {
+        "abbr": "EBB",
+        "url_name": "eisbaeren-berlin",
+        "full_name": "Eisbären Berlin",
+        "location": "Berlin",
+        "id": 3
+    },
+    {
+        "abbr": "BHV",
+        "url_name": "pinguins-bremerhaven",
+        "full_name": "Pinguins Bremerhaven",
+        "location": "Bremerhaven",
+        "id": 9
+    },
+    {
+        "abbr": "DEG",
+        "url_name": "duesseldorfer-eg",
+        "full_name": "Düsseldorfer EG",
+        "location": "Düsseldorf",
+        "id": 4
+    },
+    {
+        "abbr": "ING",
+        "url_name": "erc-ingolstadt",
+        "full_name": "ERC Ingolstadt",
+        "location": "Ingolstadt",
+        "id": 3
+    },
+    {
+        "abbr": "IEC",
+        "url_name": "iserlohn-roosters",
+        "full_name": "Iserlohn Roosters",
+        "location": "Iserlohn",
+        "id": 7
+    },
+    {
+        "abbr": "KEC",
+        "url_name": "koelner-haie",
+        "full_name": "Kölner Haie",
+        "location": "Köln",
+        "id": 11
+    },
+    {
+        "abbr": "KEV",
+        "url_name": "krefeld-pinguine",
+        "full_name": "Krefeld Pinguine",
+        "location": "Krefeld",
+        "id": 5
+    },
+    {
+        "abbr": "MAN",
+        "url_name": "adler-mannheim",
+        "full_name": "Adler Mannheim",
+        "location": "Mannheim",
+        "id": 2
+    },
+    {
+        "abbr": "RBM",
+        "url_name": "ehc-red-bull-muenchen",
+        "full_name": "EHC Red Bull München",
+        "location": "München",
+        "id": 12
+    },
+    {
+        "abbr": "NIT",
+        "url_name": "thomas-sabo-ice-tigers",
+        "full_name": "Thomas Sabo Ice Tigers",
+        "location": "Nürnberg",
+        "id": 14
+    },
+    {
+        "abbr": "SWW",
+        "url_name": "schwenninger-wild-wings",
+        "full_name": "Schwenninger Wild Wings",
+        "location": "Schwenningen",
+        "id": 15
+    },
+    {
+        "abbr": "STR",
+        "url_name": "straubing-tigers",
+        "full_name": "Straubing Tigers",
+        "location": "Straubing",
+        "id": 6
+    },
+    {
+        "abbr": "WOB",
+        "url_name": "grizzlys-wolfsburg",
+        "full_name": "Grizzlys Wolfsburg",
+        "location": "Wolfsburg",
+        "id": 8
+    }
+]
