@@ -40,6 +40,7 @@ app.config(['momentPickerProvider', function(momentPickerProvider){
     })
 }]);
 
+// providing functions to several controllers as services
 app.factory('svc', function() {
     return {
         // sets sorting order according to selected sort criterion
@@ -62,6 +63,7 @@ app.factory('svc', function() {
         formatTime: function(timeInSeconds) {
             return Math.floor(timeInSeconds / 60) + ":" + ('00' + (Math.floor(timeInSeconds) % 60)).slice(-2);
         },
+        // gets total sum of filtered attribute values
         getFilteredTotal: function(list, attribute, dataSource) {
             if (dataSource === undefined) {
                 return
@@ -72,12 +74,13 @@ app.factory('svc', function() {
             }
             return total;
         },
+        // gets total sum of filtered attributed values through a specified game date
         getFilteredAccumulatedTotal: function(list, attribute, dataSource, to) {
             if (dataSource === undefined) {
                 return
             }
             var total = 0;
-            for(var i = list.length-1; i >= 0; i--){
+            for (var i = list.length-1; i >= 0; i--) {
                 total += list[i][attribute];
                 if (list[i]['game_date'] == to)
                 {
@@ -86,21 +89,23 @@ app.factory('svc', function() {
             }
             return total;
         },
+        // gets average of filtered attributed values through a specified game date
         getFilteredAverageTotal: function(list, attribute, dataSource, to) {
             if (dataSource === undefined) {
                 return
             }
             var total = 0;
             var cnt_data = 0;
-            for(var i = list.length-1; i >= 0; i--){
+            for (var i = list.length-1; i >= 0; i--) {
                 cnt_data++;
                 total += list[i][attribute];
+                
                 if (list[i]['game_date'] == to)
                 {
-                    return total/cnt_data;
+                    return total / cnt_data;
                 }
             }
-            return total/cnt_data;
+            return total / cnt_data;
         }
     }
 });
@@ -119,42 +124,33 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
         $scope.game_log = $scope.team_stats.filter(function(value, index, arr) {
-            // console.log(value['team'] == $scope.currentTeam);
             return value['team'] == $scope.currentTeam;
         });
     });
-
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_profile_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
     });
+    // retrieving teams
+    $http.get('./js/teams.json').then(function (res) {
+        $scope.teams = res.data;
+        // creating lookup structures...
+        // ...for team names used in urls
+        $scope.team_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
+        // ...for full team names
+        $scope.team_full_name_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
+        // ...for team locations
+        $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
+    });
 
     $scope.model = {
         team: $routeParams.team,
-        full_teams: [
-            {'abbr': 'AEV', 'url_name': 'augsburger-panther', 'full_name': 'Augsburger Panther'},
-            {'abbr': 'EBB', 'url_name': 'eisbaeren-berlin', 'full_name': 'Eisbären Berlin'},
-            {'abbr': 'BHV', 'url_name': 'pinguins-bremerhaven', 'full_name': 'Pinguins Bremerhaven'},
-            {'abbr': 'DEG', 'url_name': 'duesseldorfer-eg', 'full_name': 'Düsseldorfer EG'},
-            {'abbr': 'ING', 'url_name': 'erc-ingolstadt', 'full_name': 'ERC Ingolstadt'},
-            {'abbr': 'IEC', 'url_name': 'iserlohn-roosters', 'full_name': 'Iserlohn Roosters'},
-            {'abbr': 'KEC', 'url_name': 'koelner-haie', 'full_name': 'Kölner Haie'},
-            {'abbr': 'KEV', 'url_name': 'krefeld-pinguine', 'full_name': 'Krefeld Pinguine'},
-            {'abbr': 'MAN', 'url_name': 'adler-mannheim', 'full_name': 'Adler Mannheim'},
-            {'abbr': 'RBM', 'url_name': 'ehc-red-bull-muenchen', 'full_name': 'EHC Red Bull München'},
-            {'abbr': 'NIT', 'url_name': 'thomas-sabo-ice-tigers', 'full_name': 'Thomas Sabo Ice Tigers'},
-            {'abbr': 'SWW', 'url_name': 'schwenninger-wild-wings', 'full_name': 'Schwenninger Wild Wings'},
-            {'abbr': 'STR', 'url_name': 'straubing-tigers', 'full_name': 'Straubing Tigers'},
-            {'abbr': 'WOB', 'url_name': 'grizzlys-wolfsburg', 'full_name': 'Grizzlys Wolfsburg'},
-        ],
+        // attributes to use ascending sort order per default 
         ascendingAttrs: [
             'opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1',
             'ref_2', 'lma_1', 'lma_2', 'round']
     }
-
-    $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
-    $scope.team_full_name_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
 
     $scope.changeTable = function () {
         if ($scope.tableSelect === 'basic_game_by_game') {
@@ -182,66 +178,58 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         }
     };
 
-    $scope.getStanding = function(to) {
-        var team_table = [{'team_id' : 0, 'team' : ' '   , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 1, 'team' : 'ING' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 2, 'team' : 'MAN' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 3, 'team' : 'EBB' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 4, 'team' : 'DEG' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 5, 'team' : 'KEV' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 6, 'team' : 'STR' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 7, 'team' : 'IEC' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 8, 'team' : 'WOB' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 9, 'team' : 'BHV' , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 10, 'team' : ' '  , 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 11, 'team' : 'KEC', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 12, 'team' : 'RBM', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 13, 'team' : 'AEV', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 14, 'team' : 'NIT', 'pts' : 0, 'gdiff' : 0, 'gf' : 0},
-                          {'team_id' : 15, 'team' : 'SWW', 'pts' : 0, 'gdiff' : 0, 'gf' : 0}];
+    // get standings position through specified game date
+    $scope.getStandingsPositionThroughDate = function(cutoff_date) {
 
-        for (var i = 0; i <  $scope.team_stats.length; i++)
+        cutoff_date = moment(cutoff_date);
+
+        // creating associative array to contain teams' points, goal difference and goals scored
+        var team_points_log = $scope.teams.reduce(
+            (o, key) => Object.assign(o, {[key.abbr]: {'team_id': key.id, 'team_abbr': key.abbr, 'pts': 0, 'gdiff': 0, 'gf': 0}}), {});
+
+        // looking at each item containing team game stats
+        for (var i = 0; i < $scope.team_stats.length; i++)
         {
-            if($scope.team_stats[i]['game_date'] > to)
+            game_date = moment($scope.team_stats[i]['game_date']);
+            // bailing out if current game date is beyond specified cutoff date
+            if (game_date > cutoff_date)
             {
                 break;
             }
-            team_table[$scope.team_stats[i]['team_id']]['pts'] += $scope.team_stats[i]['points'];
-            team_table[$scope.team_stats[i]['team_id']]['gdiff'] += $scope.team_stats[i]['goals'] - $scope.team_stats[i]['opp_goals'] ;
-            team_table[$scope.team_stats[i]['team_id']]['gf'] += $scope.team_stats[i]['goals'];
+            // TODO: check whether current game date is in date fiter interval
+            // aggregating points, goal difference and goals scored
+            team_points_log[$scope.team_stats[i]['team']]['pts'] += $scope.team_stats[i]['points'];
+            team_points_log[$scope.team_stats[i]['team']]['gf'] += $scope.team_stats[i]['goals'];
+            team_points_log[$scope.team_stats[i]['team']]['gdiff'] += ($scope.team_stats[i]['goals'] - $scope.team_stats[i]['opp_goals']);
         }
 
-        team_table.splice(10,1);
-        team_table.splice(0,1);
+        // converting team points log to an actual array
+        team_table = Object.keys(team_points_log).map(function(key) {
+            return {
+                'team_id': team_points_log[key].id,
+                'team': key,
+                'pts': team_points_log[key].pts,
+                'gdiff': team_points_log[key].gdiff,
+                'gf': team_points_log[key].gf};
+        });
 
+        // sorting team table
         team_table.sort(function(b, a){
             if (a.pts == b.pts)
             {
                 if (a.gdiff == b.gdiff)
                 {
-                    return a.gf-b.gf;
+                    return a.gf - b.gf;
                 }
-                return a.gdiff-b.gdiff;
+                return a.gdiff - b.gdiff;
             }
-            else
-            {
-                return a.pts-b.pts;
-            }
-            return a.pts-b.pts;
-        })
 
-        for (var j = 0; j <  team_table.length; j++)
-        {
-            if (team_table[j]['team'] == $scope.currentTeam)
-            {
-                return j+1;
+            return a.pts - b.pts;
+        });
 
-            }
-        }
-
-        return 0;
+        // returning actual table position of current team in sorted rankings
+        return team_table.map(function(e) { return e.team}).indexOf($scope.currentTeam) + 1;
     };
-
 
     $scope.dayFilter = function (a) {
         date_to_test = moment(a.game_date);
@@ -285,6 +273,13 @@ app.controller('teamController', function($scope, $http, svc) {
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_stats_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
+    });
+    // retrieving teams
+    $http.get('./js/teams.json').then(function (res) {
+        $scope.teams = res.data;
+        // creating lookup structures...
+        // ...for team locations
+        $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
     });
 
     $scope.$watch('ctrl.fromDate', function() {
