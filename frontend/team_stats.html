@@ -87,7 +87,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.rw }}</td>
                 <td class="col-md-1 text-right">{{ stat.ow }}</td>
@@ -119,7 +119,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right {{ setTextColor(stat.goals, stat.opp_goals) }}">{{ stat.goals_diff }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals_1 }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_goals_1 }}</td>
@@ -151,7 +151,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
@@ -181,7 +181,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_shots }}</td>
@@ -213,7 +213,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_opps }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_goals }}</td>
@@ -246,7 +246,7 @@
             <tbody>
                 <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                    <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ stat.team }}</a></td>
+                    <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                     <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                     <td class="col-md-1 text-right">{{ stat.points }}</td>
                     <td class="col-md-1 text-right">{{ stat.pt_pctg.toFixed(2) }} %</td>
