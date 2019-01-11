@@ -106,6 +106,9 @@ app.factory('svc', function() {
                 }
             }
             return total / cnt_data;
+        },
+        parseFloat: function(floatAsString) {
+            return parseFloat(floatAsString);
         }
     }
 });
