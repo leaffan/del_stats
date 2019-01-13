@@ -19,12 +19,86 @@ HOME_STATS_SUFFIX = 'team-stats-home.json'
 ROAD_STATS_SUFFIX = 'team-stats-guest.json'
 
 GAME_SRC = 'del_games.json'
+SHOT_SRC = 'del_shots.json'
 TEAM_GAME_STATS_TGT = 'del_team_game_stats.json'
 
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
+SHOT_ZONE_CATEGORIES = [
+    'slot_shots', 'slot_on_goal', 'slot_missed', 'slot_blocked', 'slot_goals',
+    'slot_distance', 'slot_pctg', 'slot_on_goal_pctg',
+    'left_shots', 'left_on_goal', 'left_missed', 'left_blocked', 'left_goals',
+    'left_distance', 'left_pctg', 'left_on_goal_pctg',
+    'right_shots', 'right_on_goal', 'right_missed', 'right_blocked',
+    'right_goals', 'right_distance', 'right_pctg', 'right_on_goal_pctg',
+    'blue_line_shots', 'blue_line_on_goal', 'blue_line_missed',
+    'blue_line_blocked', 'blue_line_goals', 'blue_line_distance',
+    'blue_line_pctg', 'blue_line_on_goal_pctg',
+    'neutral_zone_shots', 'neutral_zone_on_goal', 'neutral_zone_missed',
+    'neutral_zone_blocked', 'neutral_zone_goals', 'neutral_zone_distance',
+    'neutral_zone_pctg', 'neutral_zone_on_goal_pctg',
+    'behind_goal_shots', 'behind_goal_on_goal', 'behind_goal_missed',
+    'behind_goal_blocked', 'behind_goal_goals', 'behind_goal_distance',
+    'behind_goal_pctg', 'behind_goal_on_goal_pctg',
+]
 
-def get_single_game_team_data(game):
+
+def group_shot_data_by_game_team(shots):
+    """
+    Groups shot data by game and team using the globally defined shot zones
+    and target types.
+    """
+    grouped_shot_data = dict()
+
+    zones = [
+        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
+
+    for shot in shots[:]:
+        game_team_key = (shot['game_id'], shot['team'])
+        if game_team_key not in grouped_shot_data:
+            grouped_shot_data[game_team_key] = dict()
+            for shot_zone_cat in SHOT_ZONE_CATEGORIES:
+                grouped_shot_data[game_team_key][shot_zone_cat] = 0
+                if 'distance' in shot_zone_cat:
+                    grouped_shot_data[game_team_key][shot_zone_cat] = list()
+        zone = shot['shot_zone'].lower()
+        zone_tgt_type = "%s_%s" % (zone, shot['target_type'])
+        zone_distance = "%s_distance" % zone
+        grouped_shot_data[game_team_key]["%s_shots" % zone] += 1
+        grouped_shot_data[game_team_key][zone_tgt_type] += 1
+        grouped_shot_data[game_team_key][zone_distance].append(
+            shot['distance'])
+        if shot['scored']:
+            grouped_shot_data[game_team_key]["%s_goals" % zone] += 1
+    else:
+        for key in grouped_shot_data:
+            all_shots = 0
+            all_on_goal = 0
+            for zone in zones:
+                all_shots += grouped_shot_data[key]["%s_shots" % zone]
+                all_on_goal += grouped_shot_data[key]["%s_on_goal" % zone]
+                if grouped_shot_data[key]["%s_shots" % zone]:
+                    grouped_shot_data[key]["%s_distance" % zone] = round(
+                        sum(grouped_shot_data[key]["%s_distance" % zone]) /
+                        grouped_shot_data[key]["%s_shots" % zone], 2
+                    )
+                else:
+                    grouped_shot_data[key]["%s_distance" % zone] = 0
+            for zone in zones:
+                if not all_shots:
+                    print(key)
+
+                grouped_shot_data[key]["%s_pctg" % zone] = round((
+                    grouped_shot_data[key]["%s_shots" % zone] / all_shots
+                ) * 100., 2)
+                grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
+                    grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
+                ) * 100., 2)
+
+    return grouped_shot_data
+
+
+def get_single_game_team_data(game, grouped_shot_data):
     """
     Retrieves statistics for both teams participating in specified game.
     """
@@ -54,8 +128,15 @@ def get_single_game_team_data(game):
         game_stat_line['arena'] = correct_name(game['arena'])
         game_stat_line['attendance'] = game['attendance']
         # coaches and referees
-        game_stat_line['coach'] = correct_name(game["%s_coach" % key])
-        game_stat_line['opp_coach'] = correct_name(game["%s_coach" % opp_key])
+        if "%s_coach" % key in game:
+            game_stat_line['coach'] = correct_name(game["%s_coach" % key])
+        else:
+            game_stat_line['coach'] = None
+        if "%s_coach" % opp_key in game:
+            game_stat_line['opp_coach'] = correct_name(
+                game["%s_coach" % opp_key])
+        else:
+            game_stat_line['opp_coach'] = None
         game_stat_line['ref_1'] = correct_name(game['referee_1'])
         game_stat_line['ref_2'] = correct_name(game['referee_2'])
         game_stat_line['lma_1'] = correct_name(game['linesman_1'])
@@ -190,6 +271,11 @@ def get_single_game_team_data(game):
         game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
         game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
 
+        shot_data = grouped_shot_data[(game_id, game_stat_line['team'])]
+
+        for item in shot_data:
+            game_stat_line[item] = shot_data[item]
+
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
@@ -227,10 +313,14 @@ if __name__ == '__main__':
 
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
+    shots_src_path = os.path.join(TGT_DIR, SHOT_SRC)
     tgt_path = os.path.join(TGT_DIR, TEAM_GAME_STATS_TGT)
 
-    # loading games
+    # loading games and shots
     games = json.loads(open(src_path).read())
+    shots = json.loads(open(shots_src_path).read())
+    # grouping shot data by game and team
+    grouped_shot_data = group_shot_data_by_game_team(shots)
 
     # loading existing player game stats
     if not initial and os.path.isfile(tgt_path):
@@ -250,7 +340,8 @@ if __name__ == '__main__':
         print("+ Retrieving team stats for %s (%d) vs. %s (%d) [%d]" % (
             game['home_team'], game['home_score'],
             game['road_team'], game['road_score'], game['game_id']))
-        single_team_game_stats = get_single_game_team_data(game)
+        single_team_game_stats = get_single_game_team_data(
+            game, grouped_shot_data)
         team_game_stats.extend(single_team_game_stats)
 
         if limit and cnt >= limit:
