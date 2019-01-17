@@ -9,7 +9,7 @@ from datetime import datetime
 
 import requests
 
-from utils import name_corrections
+from utils import name_corrections, get_game_info
 
 BASE_URL = 'https://www.del.org/live-ticker'
 
@@ -337,9 +337,7 @@ if __name__ == '__main__':
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
-        print("+ Retrieving team stats for %s (%d) vs. %s (%d) [%d]" % (
-            game['home_team'], game['home_score'],
-            game['road_team'], game['road_score'], game['game_id']))
+        print("+ Retrieving team stats for game %s" % get_game_info(game))
         single_team_game_stats = get_single_game_team_data(
             game, grouped_shot_data)
         team_game_stats.extend(single_team_game_stats)

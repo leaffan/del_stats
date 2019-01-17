@@ -18,3 +18,12 @@ name_corrections = {
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung'
 }
+
+
+def get_game_info(game):
+    return (
+        "%d (%s: %s [%d] vs. %s [%d])" % (
+            game['game_id'], game['date'],
+            game['home_team'], game['home_score'],
+            game['road_team'], game['road_score'],
+        ))
