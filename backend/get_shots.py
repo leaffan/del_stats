@@ -3,11 +3,13 @@
 
 import os
 import json
+import argparse
 
 import requests
 from shapely.geometry import Point
 
 import rink_dimensions as rd
+from utils import get_game_info
 
 
 BASE_URL = 'https://www.del.org/live-ticker'
@@ -22,6 +24,21 @@ SHOT_RESULTS = {
 
 if __name__ == '__main__':
 
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Download DEL shots.')
+    parser.add_argument(
+        '--initial', dest='initial', required=False,
+        action='store_true', help='Re-create list of shots')
+    parser.add_argument(
+        '--limit', dest='limit', required=False, type=int, default=0,
+        help='Number of maximum games to be processed')
+
+    args = parser.parse_args()
+
+    initial = args.initial
+    limit = int(args.limit)
+
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
     tgt_path = os.path.join(TGT_DIR, SHOTS_DATA_TGT)
@@ -30,7 +47,7 @@ if __name__ == '__main__':
     games = json.loads(open(src_path).read())
 
     # loading existing shots
-    if os.path.isfile(tgt_path):
+    if not initial and os.path.isfile(tgt_path):
         all_shots = json.loads(open(tgt_path).read())
     # or preparing empty container for all shots
     else:
@@ -39,11 +56,13 @@ if __name__ == '__main__':
     # retrieving set of games we already have retrieved player stats for
     registered_games = set([shot['game_id'] for shot in all_shots])
 
+    cnt = 0
     for game in games[:]:
+        cnt += 1
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
-        print("+ Working on game %d" % game['game_id'])
+        print("+ Retrieving shots for game %s " % get_game_info(game))
 
         # retrieving raw shot data
         shots_path = SHOTS_SUFFIX % game['game_id']
@@ -89,5 +108,8 @@ if __name__ == '__main__':
             shot['schedule_game_id'] = game['schedule_game_id']
 
             all_shots.append(shot)
+
+        if limit and cnt >= limit:
+            break
 
     open(tgt_path, 'w').write(json.dumps(all_shots, indent=2, default=str))
