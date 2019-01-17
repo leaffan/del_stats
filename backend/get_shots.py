@@ -29,10 +29,20 @@ if __name__ == '__main__':
     # loading games
     games = json.loads(open(src_path).read())
 
-    # preparing container for all shots
-    all_shots = list()
+    # loading existing shots
+    if os.path.isfile(tgt_path):
+        all_shots = json.loads(open(tgt_path).read())
+    # or preparing empty container for all shots
+    else:
+        all_shots = list()
+
+    # retrieving set of games we already have retrieved player stats for
+    registered_games = set([shot['game_id'] for shot in all_shots])
 
     for game in games[:]:
+        # skipping already processed games
+        if game['game_id'] in registered_games:
+            continue
         print("+ Working on game %d" % game['game_id'])
 
         # retrieving raw shot data
@@ -42,7 +52,6 @@ if __name__ == '__main__':
         match_data = r.json()
 
         for shot in match_data['match']['shots'][:]:
-
             # converting arbitrary coordinates to actual coordinates in meters
             x = rd.X_TO_M * shot['coordinate_x']
             y = rd.Y_TO_M * shot['coordinate_y']
