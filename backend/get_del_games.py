@@ -6,6 +6,7 @@ import re
 import json
 import datetime
 import argparse
+from collections import defaultdict
 
 import requests
 
@@ -19,9 +20,14 @@ from dateutil.relativedelta import relativedelta
 BASE_URL = "https://www.del.org"
 SCHEDULE_URL_SUFFIX = "spielplan"
 GAME_DETAILS_SUFFIX = "live-ticker/matches/%d/game-header.json"
+GAME_ROSTERS_SUFFIX = "live-ticker/matches/%d/roster.json"
 
 MATCH_ID_REGEX = re.compile(
     "livetickerParams\.matchId\s+=\s+(\d+)")
+POS_KEYS = {'1': 'G', '2': 'D', '3': 'F'}
+
+TGT_FILE = "del_games.json"
+TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
 def get_games_for_date(date, existing_games=None):
@@ -70,7 +76,11 @@ def get_games_for_date(date, existing_games=None):
                 print(game_id)
                 continue
 
-        single_game_data = {**single_game_data, **single_game_details}
+        # retrieving game rosters
+        single_game_rosters = get_game_rosters(game_id)
+
+        single_game_data = {
+            **single_game_data, **single_game_details, **single_game_rosters}
         print("\t+ %s (%d) vs. %s (%d)" % (
             single_game_data['home_team'], single_game_data['home_score'],
             single_game_data['road_team'], single_game_data['road_score']
@@ -104,7 +114,7 @@ def get_game_ids_via_ticker(url):
 
 def get_single_game_details(game_id):
     """
-    Gets game details for a single game with specified id.
+    Gets game details for a single game with the specified id.
     """
     # setting up url to json file with game details
     game_details_url = "/".join((BASE_URL, GAME_DETAILS_SUFFIX % game_id))
@@ -227,6 +237,50 @@ def get_single_game_details(game_id):
     return single_game_data
 
 
+def get_game_rosters(game_id):
+    """
+    Retrieves rosters for all teams in game with the specified game id.
+    """
+    # setting up url to json file with game rosters
+    game_rosters_url = "/".join((BASE_URL, GAME_ROSTERS_SUFFIX % game_id))
+    # retrieving game rosters
+    r = requests.get(game_rosters_url)
+    game_rosters = r.json()
+
+    roster_data = defaultdict(list)
+    collected_tgt_keys = set()
+
+    for home_road_key in ['home', 'visitor']:
+        roster = game_rosters[home_road_key]
+        for roster_key in sorted(roster.keys()):
+            # splitting key into single string digits
+            pos, line, clr = list(str(roster_key))
+            # converting coded position into actual position
+            pos = POS_KEYS[pos]
+            # goaltender's starting status is coded in third, not second digit
+            if pos == 'G':
+                line = clr
+            # setting up target key
+            tgt_key = ("%s_%s%s" % (
+                home_road_key.replace('visitor', 'road'), pos, line)).lower()
+            collected_tgt_keys.add(tgt_key)
+            # appending a dummy player id if necessary, e.g. for fourth
+            # defensive pairs only consisting of a right defenseman
+            if pos != 'G' and int(clr) > len(roster_data[tgt_key]) + 1:
+                roster_data[tgt_key].append(0)
+            roster_data[tgt_key].append(roster[roster_key]['playerId'])
+        else:
+            for tgt_key in collected_tgt_keys:
+                if '_d' in tgt_key:
+                    while len(roster_data[tgt_key]) < 2:
+                        roster_data[tgt_key].append(0)
+                if '_f' in tgt_key:
+                    while len(roster_data[tgt_key]) < 3:
+                        roster_data[tgt_key].append(0)
+
+    return roster_data
+
+
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -266,15 +320,15 @@ if __name__ == '__main__':
     # setting up list of all game dates
     game_dates = list(rrule(DAILY, dtstart=from_date, until=to_date))
 
-    tgt_file = "del_games.json"
-    tgt_path = os.path.join(
-        os.path.dirname(os.path.abspath(__file__)), 'data', tgt_file)
+    # setting up target path
+    tgt_path = os.path.join(TGT_DIR, TGT_FILE)
 
     if initial:
         games = list()
     else:
         games = json.loads(open(tgt_path).read())
 
+    # retrieving games for each game date
     for game_date in game_dates:
         games = get_games_for_date(game_date.date(), games)
 
