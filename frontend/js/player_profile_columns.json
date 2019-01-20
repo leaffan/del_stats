@@ -22,5 +22,16 @@
         {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
         {"data_key": "sh_goals", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
         {"data_key": "plus_minus", "col_header": "+/-", "expl_de": null, "expl_en": null}
+    ],
+    "lines": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "line", "col_header": "LINE", "expl_de": "Reihe", "expl_en": "Line"},
+        {"data_key": "defense[0]", "col_header": "LD", "expl_de": "linker Verteidiger", "expl_en": "Left Defenseman"},
+        {"data_key": "defense[1]", "col_header": "RD", "expl_de": "rechter Verteidiger", "expl_en": "Right Defenseman"},
+        {"data_key": "forwards[0]", "col_header": "LW", "expl_de": "linker Flügel", "expl_en": "Left Wing"},
+        {"data_key": "forwards[1]", "col_header": "C", "expl_de": "Center", "expl_en": "Center"},
+        {"data_key": "forwards[2]", "col_header": "RW", "expl_de": "rechter Flügel", "expl_en": "Right Wing"}
     ]
 }
