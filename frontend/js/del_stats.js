@@ -508,6 +508,11 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
         $scope.stats_cols = res.data;
     });
 
+    // retrieving players
+    $http.get('./data/del_players.json').then(function (res) {
+        $scope.players = res.data;
+    });
+
     // loading stats from external json file
     $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
