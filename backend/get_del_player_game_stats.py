@@ -4,6 +4,7 @@
 import os
 import json
 import argparse
+import itertools
 from datetime import timedelta, datetime
 from collections import defaultdict
 
@@ -18,6 +19,7 @@ MATCHES_INSERT = 'matches'
 VISUALIZATION_INSERT = 'visualization/shots'
 
 GAME_SRC = 'del_games.json'
+PLAYER_TGT = 'del_players.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 
 HOME_STATS_SUFFIX = 'player-stats-home.json'
@@ -39,6 +41,12 @@ for key, values in PENALTY_CATEGORIES.items():
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 PER_PLAYER_TGT_DIR = 'per_player'
 U23_CUTOFF_DATE = parse("1996-01-01")
+EMPTY_LINE = [0, 0, 0]
+
+LINES = ['1', '2', '3', '4']
+POSITIONS = ['d', 'f']
+POS_LINES = list(
+    map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
 
 
 def get_single_game_player_data(game):
@@ -82,6 +90,7 @@ def get_single_game_player_data(game):
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
+        # adding assistant information to player's game stat line
         if gsl['player_id'] in assistants:
             single_assist_dict = assistants[gsl['player_id']]
             gsl['primary_assists'] = single_assist_dict.get('A1', 0)
@@ -90,8 +99,7 @@ def get_single_game_player_data(game):
             gsl['pp_primary_assists'] = single_assist_dict.get('PPA1', 0)
             gsl['pp_secondary_assists'] = single_assist_dict.get('PPA2', 0)
             gsl['pp_points'] += gsl['pp_assists']
-
-    for gsl in game_stat_lines:
+        # adding penalty information to player's game stat line
         if gsl['player_id'] in penalties:
             single_penalty_dict = penalties[gsl['player_id']]
             gsl['penalties'] = single_penalty_dict.get('penalties', 0)
@@ -102,8 +110,52 @@ def get_single_game_player_data(game):
             for category in PENALTY_CATEGORIES:
                 gsl[category] = single_penalty_dict['categories'].get(
                     category, 0)
+        # adding linemate information to player's game stat line
+        defense_linemates, forward_linemates, line = get_linemates(gsl, game)
+        gsl['line'] = line
+        gsl['defense'] = defense_linemates
+        gsl['forwards'] = forward_linemates
 
     return game_stat_lines
+
+
+def get_linemates(game_stat_line, game):
+    """
+    Retrieving line mates in specified game for player with with given stat
+    line.
+    """
+    # per default, linemates are non-existing
+    defense = EMPTY_LINE[:2]
+    forwards = EMPTY_LINE
+    line = 0
+
+    if game_stat_line['position'] != 'GK':
+        player_id = game_stat_line['player_id']
+        # iterating over all possible four lines/two positions
+        for pos_line in POS_LINES:
+                full_key = "%s_%s" % (game_stat_line['home_road'], pos_line)
+                if full_key in game and player_id in game[full_key]:
+                    break
+
+        # retrieving line number for current player
+        if full_key:
+            line = int(list(full_key)[-1])
+
+        # complementing line information with players at different positions
+        if "_f" in full_key:
+            forwards = game[full_key]
+            try:
+                defense = game[full_key.replace("_f", "_d")]
+            except KeyError as e:
+                pass
+        elif '_d' in full_key:
+            defense = game[full_key]
+            try:
+                forwards = game[full_key.replace("_d", "_f")]
+            except KeyError as e:
+                pass
+
+    return defense, forwards, line
 
 
 def retrieve_single_player_game_stats(data_dict, game, key):
@@ -139,7 +191,10 @@ def retrieve_single_player_game_stats(data_dict, game, key):
 
     stat_dict = data_dict['statistics']
 
-    single_player_game['home_away'] = key
+    if key == 'home':
+        single_player_game['home_road'] = key
+    else:
+        single_player_game['home_road'] = "road"
     single_player_game['game_date'] = game['date']
     single_player_game['round'] = game['round']
     single_player_game['team'] = stat_dict['teamShortcut']
@@ -311,6 +366,7 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
     tgt_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_TGT)
+    plr_tgt_path = os.path.join(TGT_DIR, PLAYER_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -320,6 +376,12 @@ if __name__ == '__main__':
         player_game_stats = json.loads(open(tgt_path).read())[-1]
     else:
         player_game_stats = list()
+
+    if not initial and os.path.isfile(plr_tgt_path):
+        all_players = json.loads(open(plr_tgt_path).read())
+    else:
+        all_players = dict()
+        all_players[0] = {'first_name': '', 'last_name': ''}
 
     per_player_game_stats = defaultdict(list)
 
@@ -333,6 +395,7 @@ if __name__ == '__main__':
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
+
         print("+ Retrieving player stats for game %s" % get_game_info(game))
         single_player_game_stats = get_single_game_player_data(game)
         player_game_stats.extend(single_player_game_stats)
@@ -352,6 +415,15 @@ if __name__ == '__main__':
         json.dumps(output, indent=2, default=seconds))
 
     for player_id, team in per_player_game_stats:
+
+        if player_id not in all_players:
+            all_players[int(player_id)] = {
+                'first_name': per_player_game_stats[
+                    (player_id, team)][0]['first_name'],
+                'last_name': per_player_game_stats[
+                    (player_id, team)][0]['last_name']
+            }
+
         tgt_path = os.path.join(
             TGT_DIR, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
 
@@ -365,3 +437,6 @@ if __name__ == '__main__':
 
         open(tgt_path, 'w').write(
             json.dumps(output, indent=2, default=seconds))
+
+    else:
+        open(plr_tgt_path, 'w').write(json.dumps(all_players, indent=2))
