@@ -188,6 +188,26 @@ def get_single_game_team_data(game, grouped_shot_data):
                 "%s_goals_%d" % (key, period)]
             game_stat_line["opp_goals_%d" % period] = game[
                 "%s_goals_%d" % (opp_key, period)]
+        # situation after 20 and 40 minutes respectively
+        for situation in [
+            'tied20', 'lead20', 'trail20', 'tied40', 'lead40', 'trail40'
+        ]:
+            game_stat_line[situation] = False
+        if game_stat_line['goals_1'] == game_stat_line['opp_goals_1']:
+            game_stat_line['tied20'] = True
+        elif game_stat_line['goals_1'] > game_stat_line['opp_goals_1']:
+            game_stat_line['lead20'] = True
+        else:
+            game_stat_line['trail20'] = True
+        goals40 = game_stat_line['goals_1'] + game_stat_line['goals_2']
+        opp_goals40 = (
+            game_stat_line['opp_goals_1'] + game_stat_line['opp_goals_2'])
+        if goals40 == opp_goals40:
+            game_stat_line['tied40'] = True
+        elif goals40 > opp_goals40:
+            game_stat_line['lead40'] = True
+        else:
+            game_stat_line['trail40'] = True
         # shots
         game_stat_line['shots'] = raw_stats[key]['shotsAttempts']
         game_stat_line['shots_on_goal'] = raw_stats[key]['shotsOnGoal']
