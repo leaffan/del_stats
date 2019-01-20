@@ -55,12 +55,13 @@
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
                     <option data-ng-option value="additional_game_by_game">zusätzliche Daten</option>
+                    <option data-ng-option value="lines">Reihenpartner</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" id="home_away_select" data-ng-model="homeAwayFilter">
+                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
-                    <option data-ng-option value="away">Auswärtsspiele</option>
+                    <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
@@ -97,10 +98,10 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{stat.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_away: homeAwayFilter} | filter: {opp_team: oppFilter})">
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
-                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_away === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_sh) }}</td>
@@ -138,12 +139,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{stat.home_away === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_away: homeAwayFilter} | filter: {opp_team: oppFilter})">
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
                         stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
                 <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score
-                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_away === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_away === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_away
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
                         === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
                         === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
@@ -168,5 +169,38 @@
             </tr>
         </tbody>
     </table>
+
+    <table id="lines" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'lines'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center" style="width: 5%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 7%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right" style="width: 2%">{{ stat.line }}</td>
+                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[0]}}">{{ players[stat.defense[0]]['first_name'].length > 10 ? players[stat.defense[0]]['first_name'].charAt(0) + '.' : players[stat.defense[0]]['first_name'] }} {{ players[stat.defense[0]]['last_name'] }}</a></td>
+                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[1]}}">{{ players[stat.defense[1]]['first_name'].length > 10 ? players[stat.defense[1]]['first_name'].charAt(0) + '.' : players[stat.defense[1]]['first_name'] }} {{ players[stat.defense[1]]['last_name'] }}</a></td>
+                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[0]}}">{{ players[stat.forwards[0]]['first_name'].length > 10 ? players[stat.forwards[0]]['first_name'].charAt(0) + '.' : players[stat.forwards[0]]['first_name'] }} {{ players[stat.forwards[0]]['last_name'] }}</a></td>
+                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[1]}}">{{ players[stat.forwards[1]]['first_name'].length > 10 ? players[stat.forwards[1]]['first_name'].charAt(0) + '.' : players[stat.forwards[1]]['first_name'] }} {{ players[stat.forwards[1]]['last_name'] }}</a></td>
+                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[2]}}">{{ players[stat.forwards[2]]['first_name'].length > 10 ? players[stat.forwards[2]]['first_name'].charAt(0) + '.' : players[stat.forwards[2]]['first_name'] }} {{ players[stat.forwards[2]]['last_name'] }}</a></td>
+            </tr>
+        </tbody>
+    </table>
+
 
 </div>
