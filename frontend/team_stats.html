@@ -35,7 +35,7 @@
 
     <form>
         <div class="form-group">
-            <div class="select-group">
+            <div class="input-group" style="width: 100%">
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
                     <option data-ng-option value="standings">Standardtabelle</option>
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
@@ -44,10 +44,22 @@
                     <option data-ng-option value="shot_shares">Schussanteile</option>
                     <option data-ng-option value="additional_stats">Zusätzliche Statistiken</option>
                 </select>
+                <span data-ng-show="isStandingsView" class="input-group-addon form_spacer"></span>
+                <select data-ng-show="isStandingsView" class="form-control" data-ng-model="situationSelect" data-ng-change="changeTable(sortCriterion)">
+                    <option data-ng-option value selected="selected">Nach voller Spielzeit</option>
+                    <option data-ng-option value="lead40">Bei Führung nach 40 Minuten</option>
+                    <option data-ng-option value="tied40">Bei Unentschieden nach 40 Minuten</option>
+                    <option data-ng-option value="trail40">Bei Rückstand nach 40 Minuten</option>
+                    <option data-ng-option value="lead20">Bei Führung nach 20 Minuten</option>
+                    <option data-ng-option value="tied20">Bei Unentschieden nach 20 Minuten</option>
+                    <option data-ng-option value="trail20">Bei Rückstand nach 20 Minuten</option>
+                    <option data-ng-option value="scored_first">Nach 1:0-Führung</option>
+                    <option data-ng-option value="trailed_first">Nach 0:1-Rückstand</option>
+                </select>
             </div>
         </div>
+
         <div class="form-group">
-            
             <div class="input-group">
                 <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
@@ -88,16 +100,17 @@
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
-                <td class="col-md-1 text-right">{{ stat.rw }}</td>
-                <td class="col-md-1 text-right">{{ stat.ow }}</td>
-                <td class="col-md-1 text-right">{{ stat.sw }}</td>
-                <td class="col-md-1 text-right">{{ stat.ol }}</td>
-                <td class="col-md-1 text-right">{{ stat.sl }}</td>
-                <td class="col-md-1 text-right">{{ stat.rl }}</td>
-                <td class="col-md-1 text-right">{{ stat.points }}</td>
-                <td class="col-md-1 text-right">{{ stat.score }}</td>
-                <td class="col-md-1 text-right">{{ stat.opp_score }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ow }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ol }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.points }}</td>
+                <td class="col-md-1 text-right" style="width: 8%">{{ stat.pt_pctg.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.score }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_score }}</td>
             </tr>
         </tbody>
     </table>
