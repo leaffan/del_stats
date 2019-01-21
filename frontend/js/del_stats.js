@@ -270,6 +270,7 @@ app.controller('teamController', function($scope, $http, svc) {
     var ctrl = this;
     // setting default table selection and sort criterion/order
     $scope.tableSelect = 'standings';
+    $scope.isStandingsView = true;
     $scope.sortCriterion = 'points';
     $scope.statsSortDescending = true;
 
@@ -292,6 +293,12 @@ app.controller('teamController', function($scope, $http, svc) {
     });
 
     $scope.$watch('ctrl.toDate', function() {
+        if ($scope.team_stats) {
+            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+        }
+    });
+
+    $scope.$watch('situationSelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
@@ -340,8 +347,14 @@ app.controller('teamController', function($scope, $http, svc) {
             var is_filtered = false;
             if (ctrl.fromDate && ctrl.toDate) {
                 if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
-                    if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_away)
+                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
+                            is_filtered = true;
+                    } else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    } else if ($scope.situationSelect) {
+                        if (element[$scope.situationSelect])
                             is_filtered = true;
                     } else {
                         is_filtered = true;
@@ -349,8 +362,14 @@ app.controller('teamController', function($scope, $http, svc) {
                 }
             } else if (ctrl.fromDate) {
                 if (date_to_test >= ctrl.fromDate.startOf('day')) {
-                    if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_away)
+                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
+                            is_filtered = true;
+                    } else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    } else if ($scope.situationSelect) {
+                        if (element[$scope.situationSelect])
                             is_filtered = true;
                     } else {
                         is_filtered = true;
@@ -358,16 +377,31 @@ app.controller('teamController', function($scope, $http, svc) {
                 }
             } else if (ctrl.toDate) {
                 if (date_to_test <= ctrl.toDate.startOf('day')) {
-                    if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_away)
+                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
+                            is_filtered = true;
+                    } else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    } else if ($scope.situationSelect) {
+                        if (element[$scope.situationSelect])
                             is_filtered = true;
                     } else {
                         is_filtered = true;
                     }
                 }
             } else {
-                if ($scope.homeAwaySelect) {
-                    if ($scope.homeAwaySelect === element.home_away)
+                if ($scope.homeAwaySelect && $scope.situationSelect) {
+                    if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
+                        is_filtered = true;
+                }
+                else if ($scope.situationSelect) {
+                    if (element[$scope.situationSelect])
+                        is_filtered = true;
+                }
+                else if ($scope.homeAwaySelect) {
+                    console.log($scope.situationSelect);
+                    if ($scope.homeAwaySelect === element.home_road)
                         is_filtered = true;
                 } else {
                     is_filtered = true;
@@ -460,23 +494,38 @@ app.controller('teamController', function($scope, $http, svc) {
 
     $scope.changeTable = function () {
         if ($scope.tableSelect === 'standings') {
-            $scope.sortCriterion = 'points';
+            if ($scope.situationSelect) {
+                $scope.sortCriterion = 'pt_pctg';
+            } else {
+                $scope.sortCriterion = 'points';
+            }
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = true;
         } else if ($scope.tableSelect === 'goal_stats') {
             $scope.sortCriterion = 'goals_diff';
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_stats') {
             $scope.sortCriterion = 'shots_on_goal';
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_shares') {
             $scope.sortCriterion = 'corsi_for_pctg';
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'special_team_stats') {
             $scope.sortCriterion = 'pp_pctg';
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'additional_stats') {
             $scope.sortCriterion = 'faceoff_pctg';
             $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         }
     };
 
