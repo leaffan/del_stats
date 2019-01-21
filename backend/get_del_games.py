@@ -21,6 +21,7 @@ BASE_URL = "https://www.del.org"
 SCHEDULE_URL_SUFFIX = "spielplan"
 GAME_DETAILS_SUFFIX = "live-ticker/matches/%d/game-header.json"
 GAME_ROSTERS_SUFFIX = "live-ticker/matches/%d/roster.json"
+GAME_EVENTS_SUFFIX = "live-ticker/matches/%d/period-events.json"
 
 MATCH_ID_REGEX = re.compile(
     "livetickerParams\.matchId\s+=\s+(\d+)")
@@ -78,9 +79,13 @@ def get_games_for_date(date, existing_games=None):
 
         # retrieving game rosters
         single_game_rosters = get_game_rosters(game_id)
+        # retrieving game events
+        single_game_events = get_game_events(game_id)
 
         single_game_data = {
-            **single_game_data, **single_game_details, **single_game_rosters}
+            **single_game_data, **single_game_details,
+            **single_game_rosters, **single_game_events
+        }
         print("\t+ %s (%d) vs. %s (%d)" % (
             single_game_data['home_team'], single_game_data['home_score'],
             single_game_data['road_team'], single_game_data['road_score']
@@ -235,6 +240,31 @@ def get_single_game_details(game_id):
             'bestPlayers']['visitor']['name']
 
     return single_game_data
+
+
+def get_game_events(game_id):
+    """
+    Register game events for current game from separate data source.
+    """
+    # setting up url to json file with game events
+    game_events_url = "/".join((BASE_URL, GAME_EVENTS_SUFFIX % game_id))
+    # retrieving game events
+    r = requests.get(game_events_url)
+    game_events = r.json()
+
+    single_game_events = dict()
+
+    for period in game_events:
+        for event in game_events[period]:
+            # retrieving team that scored the first goal of the game
+            if (
+                event['type'] == 'goal' and
+                'first_goal' not in single_game_events
+            ):
+                single_game_events['first_goal'] = event[
+                    'data']['team'].replace('visitor', 'road')
+
+    return single_game_events
 
 
 def get_game_rosters(game_id):
