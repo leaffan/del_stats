@@ -143,7 +143,7 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['lma_2'] = correct_name(game['linesman_2'])
         # outcomes
         game_stat_line['games_played'] = 1
-        game_stat_line['home_away'] = key
+        game_stat_line['home_road'] = key
         game_stat_line['team_id'] = game["%s_id" % key]
         game_stat_line['team'] = game["%s_abbr" % key]
         game_stat_line['score'] = game["%s_score" % key]
@@ -208,6 +208,13 @@ def get_single_game_team_data(game, grouped_shot_data):
             game_stat_line['lead40'] = True
         else:
             game_stat_line['trail40'] = True
+        # scored first?
+        if game['first_goal'] == game_stat_line['home_road']:
+            game_stat_line['scored_first'] = True
+            game_stat_line['trailed_first'] = False
+        else:
+            game_stat_line['scored_first'] = False
+            game_stat_line['trailed_first'] = True
         # shots
         game_stat_line['shots'] = raw_stats[key]['shotsAttempts']
         game_stat_line['shots_on_goal'] = raw_stats[key]['shotsOnGoal']
