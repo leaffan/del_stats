@@ -31,24 +31,38 @@ TGT_FILE = "del_games.json"
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 
-def get_games_for_date(date, existing_games=None):
-    print("+ Retrieving games played on %s" % date)
-
-    if not existing_games:
-        games = list()
-    else:
-        games = existing_games
-
-    registered_game_ids = [g['game_id'] for g in games]
-
+def get_game_ticker_urls_rounds(date):
+    """
+    Retrieves game ticker urls and round information for all games played on
+    specific date.
+    """
+    # preparing url to schedule page
     schedule_url = "/".join((BASE_URL, SCHEDULE_URL_SUFFIX, str(date)))
     r = requests.get(schedule_url)
     doc = html.fromstring(r.text)
     # collecting urls to game ticker pages
     ticker_urls = doc.xpath(
         "//div[@class='game post']/div/div[@class='link-icons']/a[1]/@href")
-    # colleting round information
+    # collecting round information
     rounds = doc.xpath("//span[@class='phase']/strong/text()")
+
+    return ticker_urls, rounds
+
+
+def get_games_for_date(date, existing_games=None):
+    print("+ Retrieving games played on %s" % date)
+
+    # loading games that may have been registered earlier
+    if not existing_games:
+        games = list()
+    else:
+        games = existing_games
+    # collecting already registered game ids
+    registered_game_ids = [g['game_id'] for g in games]
+
+    # retrieving ticker urls and round information for current date
+    ticker_urls, rounds = get_game_ticker_urls_rounds(date)
+
     for ticker_url, round in zip(ticker_urls, rounds):
         schedule_game_id, game_id = get_game_ids_via_ticker(ticker_url)
 
