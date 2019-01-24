@@ -42,6 +42,12 @@ SHOT_ZONE_CATEGORIES = [
     'behind_goal_pctg', 'behind_goal_on_goal_pctg',
 ]
 
+SHOT_ZONE_ABBREVIATIONS = {
+    'slot': 'sl', 'left': 'lf', 'right': 'rg', 'blue_line': 'bl',
+    'shots': 'sh', 'on_goal': 'og', 'missed': 'mi', 'blocked': 'bl',
+    'goals': 'g', 'distance': 'di', 'pctg': 'p',
+}
+
 
 def group_shot_data_by_game_team(shots):
     """
@@ -315,18 +321,26 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
         game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
 
+        shot_zones_to_retain = ['slot', 'left', 'right', 'blue_line']
+
         # retrieving shot data for current game and team
         shot_data = grouped_shot_data[(game_id, game_stat_line['team'])]
-
         for item in shot_data:
-            game_stat_line[item] = shot_data[item]
+            if item.startswith(tuple(shot_zones_to_retain)):
+                abbr_item = item
+                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():  
+                    abbr_item = abbr_item.replace(key, replacement) 
+                game_stat_line[abbr_item] = shot_data[item]
 
         # retrieving shots against data for current game and team
         shot_against_data = grouped_shot_data[
             (game_id, game_stat_line['opp_team'])]
-
         for item in shot_against_data:
-            game_stat_line["%s_against" % item] = shot_against_data[item]
+            if item.startswith(tuple(shot_zones_to_retain)):
+                abbr_item = item
+                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():  
+                    abbr_item = abbr_item.replace(key, replacement) 
+                game_stat_line["%s_a" % abbr_item] = shot_against_data[item]
 
         game_stat_lines.append(game_stat_line)
 
