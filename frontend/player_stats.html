@@ -3,8 +3,6 @@
             <h1>DEL-Spielerstatistiken für 2018/19</h1>
         </div>
 
-        <hr />
-
         <div class="alert alert-info">
             <p>Spielerstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.</p>
 
@@ -19,14 +17,9 @@
             </ul>
         </div>
 
-        <hr />
-
-
         <div class="alert alert-info">
             <p>Zu den <a href="#!/team_stats">Teamstatistiken</a></p>
         </div>
-    
-        <hr />
     
         <div class="alert alert-info">
             <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
@@ -136,66 +129,6 @@
                             <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                         </a>
                     </td>
-                    <!-- <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('last_name', sortCriterion, statsSortDescending); sortCriterion = 'last_name'">Name
-                            <span data-ng-show="sortCriterion == 'last_name' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'last_name' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('pim_from_events', sortCriterion, statsSortDescending); sortCriterion = 'pim_from_events'"><abbr title="Strafminuten insgesamt">Minuten</abbr>
-                            <span data-ng-show="sortCriterion == 'pim_from_events' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'pim_from_events' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_2min', sortCriterion, statsSortDescending); sortCriterion = '_2min'"><abbr title="Anzahl der 2-Minuten-Strafen">2 min</abbr>
-                            <span data-ng-show="sortCriterion == '_2min' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == '_2min' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_5min', sortCriterion, statsSortDescending); sortCriterion = '_5min'"><abbr title="Anzahl der 5-Minuten-Strafen">5 min</abbr>
-                            <span data-ng-show="sortCriterion == '_5min' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == '_5min' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_10min', sortCriterion, statsSortDescending); sortCriterion = '_10min'"><abbr title="Anzahl der 10-Minuten-Strafen">10 min</abbr>
-                            <span data-ng-show="sortCriterion == '_10min' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == '_10min' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('_20min', sortCriterion, statsSortDescending); sortCriterion = '_20min'"><abbr title="Anzahl der 20-Minuten-Strafen">20 min</abbr>
-                            <span data-ng-show="sortCriterion == '_20min' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == '_20min' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('lazy', sortCriterion, statsSortDescending); sortCriterion = 'lazy'"><abbr title="Beinstellen, Halten, Haken, Halten des Stocks, Behinderung, Stockschlag">Faul</abbr>
-                            <span data-ng-show="sortCriterion == 'lazy' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'lazy' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('roughing', sortCriterion, statsSortDescending); sortCriterion = 'roughing'"><abbr title="Übertriebene Härte, Unkorrekter Körperangriff, Bandencheck, Stockcheck, FIST?">Härte</abbr>
-                            <span data-ng-show="sortCriterion == 'roughing' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'roughing' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('reckless', sortCriterion, statsSortDescending); sortCriterion = 'reckless'"><abbr title="High-Sticking, Ellbogencheck, Später Hit, Check gegen den Kopf, Kniecheck">Fahrlässig</abbr>
-                            <span data-ng-show="sortCriterion == 'reckless' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'reckless' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td>
-                    <td class="text-center">
-                        <a href="" data-ng-click="statsSortDescending = setSortOrder('other', sortCriterion, statsSortDescending); sortCriterion = 'other'"><abbr title="Werfen des Stocks, Unsportliches Verhalten, Spielverzögerung, Beschimpfung von Offiziellen, Verlassen der Strafbank">Andere</abbr>
-                            <span data-ng-show="sortCriterion == 'other' && statsSortDescending" class="fa fa-caret-down"></span>
-                            <span data-ng-show="sortCriterion == 'other' && !statsSortDescending" class="fa fa-caret-up"></span>
-                        </a>
-                    </td> -->
                 </tr>
             </thead>
             <tbody>
