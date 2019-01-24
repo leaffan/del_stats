@@ -87,7 +87,7 @@
         {"data_key": "lf_p", "col_header": "Left%", "expl_de": "Anteil der Schüsse von links", "expl_en": "Shots From Left Percentage"},
         {"data_key": "rg_sh", "col_header": "Right", "expl_de": "Schüsse von rechts", "expl_en": "Shots From Right"},
         {"data_key": "rg_p", "col_header": "Right%", "expl_de": "Anteil der Schüsse von rechts", "expl_en": "Shots From Right Percentage"},
-        {"data_key": "bl_s", "col_header": "Point", "expl_de": "Schüsse von der blauen Linie", "expl_en": "Point Shots"},
+        {"data_key": "bl_sh", "col_header": "Point", "expl_de": "Schüsse von der blauen Linie", "expl_en": "Point Shots"},
         {"data_key": "bl_p", "col_header": "Point%", "expl_de": "Anteil der Schüsse von der blauen Linie", "expl_en": "Point Shot Percentage"}
     ],
      "shot_on_goal_zones": [
@@ -113,7 +113,7 @@
         {"data_key": "lf_p_a", "col_header": "LeftA%", "expl_de": "Anteil der gegnerischen Schüsse von links", "expl_en": "Shots From Left Against Percentage"},
         {"data_key": "rg_sh_a", "col_header": "RightA", "expl_de": "Gegnerische Schüsse von rechts", "expl_en": "Shots From Right Against"},
         {"data_key": "rg_p_a", "col_header": "RightA%", "expl_de": "Anteil der gegnerischen Schüsse von rechts", "expl_en": "Shots From Right Against Percentage"},
-        {"data_key": "bl_s_a", "col_header": "PointA", "expl_de": "Gegnerische Schüsse von der blauen Linie", "expl_en": "Point Shots Against"},
+        {"data_key": "bl_sh_a", "col_header": "PointA", "expl_de": "Gegnerische Schüsse von der blauen Linie", "expl_en": "Point Shots Against"},
         {"data_key": "bl_p_a", "col_header": "PointA%", "expl_de": "Anteil der gegnerischen Schüsse von der blauen Linie", "expl_en": "Point Shot Against Percentage"}
     ],
      "shot_on_goal_zones_against": [
