@@ -319,7 +319,9 @@ app.controller('teamController', function($scope, $http, svc) {
         'opp_shots_blocked', 'saves', 'opp_saves', 'pim', 'pp_time',
         'pp_opps', 'pp_goals', 'opp_pim', 'opp_pp_time', 'opp_pp_opps',
         'opp_pp_goals', 'sh_opps', 'sh_goals', 'opp_sh_opps', 'opp_sh_goals',
-        'faceoffs_won', 'faceoffs_lost', 'faceoffs'
+        'faceoffs_won', 'faceoffs_lost', 'faceoffs', 'sl_sh', 'lf_sh', 'rg_sh',
+        'bl_sh', 'sl_og', 'lf_og', 'rg_og', 'bl_og', 'sl_sh_a', 'lf_sh_a',
+        'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a' 
     ]
 
     // loading stats from external json file
@@ -400,7 +402,6 @@ app.controller('teamController', function($scope, $http, svc) {
                         is_filtered = true;
                 }
                 else if ($scope.homeAwaySelect) {
-                    console.log($scope.situationSelect);
                     if ($scope.homeAwaySelect === element.home_road)
                         is_filtered = true;
                 } else {
@@ -416,32 +417,78 @@ app.controller('teamController', function($scope, $http, svc) {
         filtered_team_stats = Object.values(filtered_team_stats);
 
         filtered_team_stats.forEach(element => {
+            // calculating score and goal differentials
             element['score_diff'] = element['score'] - element['opp_score'];
             element['goals_diff'] = element['goals'] - element['ow'] - element['opp_goals'] + element['ol'];
             element['goals_diff_1'] = element['goals_1'] - element['opp_goals_1'];
             element['goals_diff_2'] = element['goals_2'] - element['opp_goals_2'];
             element['goals_diff_3'] = element['goals_3'] - element['opp_goals_3'];
+            // calculating points percentage
             if (element['games_played']) {
                 element['pt_pctg'] = parseFloat((element['points'] / (element['games_played'] * 3.) * 100).toFixed(2));
             } else {
                 element['pt_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating shot zone percentages
+            if (element['shots']) {
+                element['sl_p'] = parseFloat(((element['sl_sh'] / element['shots']) * 100).toFixed(2));
+                element['lf_p'] = parseFloat(((element['lf_sh'] / element['shots']) * 100).toFixed(2));
+                element['rg_p'] = parseFloat(((element['rg_sh'] / element['shots']) * 100).toFixed(2));
+                element['bl_p'] = parseFloat(((element['bl_sh'] / element['shots']) * 100).toFixed(2));
+            } else {
+                element['sl_p'] = parseFloat((0).toFixed(2));
+                element['lf_p'] = parseFloat((0).toFixed(2));
+                element['rg_p'] = parseFloat((0).toFixed(2));
+                element['bl_p'] = parseFloat((0).toFixed(2));
+            }
+            // calculating zone percentages for shots against
+            if (element['opp_shots']) {
+                element['sl_p_a'] = parseFloat(((element['sl_sh_a'] / element['opp_shots']) * 100).toFixed(2));
+                element['lf_p_a'] = parseFloat(((element['lf_sh_a'] / element['opp_shots']) * 100).toFixed(2));
+                element['rg_p_a'] = parseFloat(((element['rg_sh_a'] / element['opp_shots']) * 100).toFixed(2));
+                element['bl_p_a'] = parseFloat(((element['bl_sh_a'] / element['opp_shots']) * 100).toFixed(2));
+            } else {
+                element['sl_p_a'] = parseFloat((0).toFixed(2));
+                element['lf_p_a'] = parseFloat((0).toFixed(2));
+                element['rg_p_a'] = parseFloat((0).toFixed(2));
+                element['bl_p_a'] = parseFloat((0).toFixed(2));
+            }
+            // calculating shooting, save and zone percentages for shots on goal
             if (element['shots_on_goal']) {
                 element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
                 element['opp_save_pctg'] = parseFloat(((element['opp_saves'] / element['shots_on_goal']) * 100).toFixed(2));
+                element['sl_og_p'] = parseFloat(((element['sl_og'] / element['shots_on_goal']) * 100).toFixed(2));
+                element['lf_og_p'] = parseFloat(((element['lf_og'] / element['shots_on_goal']) * 100).toFixed(2));
+                element['rg_og_p'] = parseFloat(((element['rg_og'] / element['shots_on_goal']) * 100).toFixed(2));
+                element['bl_og_p'] = parseFloat(((element['bl_og'] / element['shots_on_goal']) * 100).toFixed(2));
             } else {
                 element['shot_pct'] = parseFloat((0).toFixed(2));
                 element['opp_save_pct'] = parseFloat((0).toFixed(2));
+                element['sl_og_p'] = parseFloat((0).toFixed(2));
+                element['lf_og_p'] = parseFloat((0).toFixed(2));
+                element['rg_og_p'] = parseFloat((0).toFixed(2));
+                element['bl_og_p'] = parseFloat((0).toFixed(2));
             }
+            // calculating opponent shooting, save and zone percentages for shots on goal against
             if (element['opp_shots_on_goal']) {
                 element['opp_shot_pctg'] = parseFloat(((element['opp_goals'] / element['opp_shots_on_goal']) * 100).toFixed(2));
                 element['save_pctg'] = parseFloat(((element['saves'] / element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['sl_og_p_a'] = parseFloat(((element['sl_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['lf_og_p_a'] = parseFloat(((element['lf_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['rg_og_p_a'] = parseFloat(((element['rg_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
+                element['bl_og_p_a'] = parseFloat(((element['bl_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
             } else {
                 element['opp_shot_pct'] = parseFloat((0).toFixed(2));
                 element['save_pct'] = parseFloat((0).toFixed(2));
+                element['sl_og_p_a'] = parseFloat((0).toFixed(2));
+                element['lf_og_p_a'] = parseFloat((0).toFixed(2));
+                element['rg_og_p_a'] = parseFloat((0).toFixed(2));
+                element['bl_og_p_a'] = parseFloat((0).toFixed(2));
             }
+            // calculating PDO
             element['pdo'] = parseFloat((parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(2));
             element['opp_pdo'] = parseFloat((parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(2));
+            // calculating shots on goal for percentage
             if (element['shots_on_goal'] + element['opp_shots_on_goal']) {
                 element['shot_for_pctg'] = parseFloat((element['shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
                 element['opp_shot_for_pctg'] = parseFloat((element['opp_shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
@@ -449,6 +496,7 @@ app.controller('teamController', function($scope, $http, svc) {
                 element['shot_for_pctg'] = parseFloat((0).toFixed(2));
                 element['opp_shot_for_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating unblocked shots (i.e. Fenwick) for percentage
             element['fenwick_events'] = element['shots_on_goal'] + element['shots_missed']; 
             element['opp_fenwick_events'] = element['opp_shots_on_goal'] + element['opp_shots_missed']; 
             if (element['fenwick_events'] + element['opp_fenwick_events']) {
@@ -458,6 +506,7 @@ app.controller('teamController', function($scope, $http, svc) {
                 element['fenwick_for_pctg'] = parseFloat((0).toFixed(2));
                 element['opp_fenwick_for_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating shots (i.e. Corsi) for percentage
             if (element['shots'] + element['opp_shots']) {
                 element['corsi_for_pctg'] = parseFloat((element['shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
                 element['opp_corsi_for_pctg'] = parseFloat((element['opp_shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
@@ -465,23 +514,28 @@ app.controller('teamController', function($scope, $http, svc) {
                 element['corsi_for_pctg'] = parseFloat((0).toFixed(2));
                 element['opp_corsi_for_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating power play percentage
             if (element['pp_opps']) {
                 element['pp_pctg'] = parseFloat(((element['pp_goals'] / element['pp_opps']) * 100).toFixed(2));
             } else {
                 element['pp_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating penalty killing percentage
             if (element['sh_opps']) {
                 element['pk_pctg'] = parseFloat((100 - (element['opp_pp_goals'] / element['sh_opps']) * 100).toFixed(2));
             } else {
                 element['pk_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating special teams goal differential and combined special team percentages
             element['pp_pk_gdiff'] = element['pp_goals'] + element['sh_goals'] - element['opp_pp_goals'] - element['opp_sh_goals']; 
             element['pp_pk_comb_pctg'] = element['pp_pctg'] + element['pk_pctg'];
+            // calculating team faceoff percentage
             if (element['faceoffs']) {
                 element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
             } else {
                 element['faceoff_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating team penalty minutes per game
             if (element['games_played']) {
                 element['pim_per_game'] = parseFloat((element['pim'] / element['games_played']).toFixed(2));
             } else {
