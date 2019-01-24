@@ -50,6 +50,7 @@ def group_shot_data_by_game_team(shots):
     """
     grouped_shot_data = dict()
 
+    # definining zones
     zones = [
         'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
 
@@ -61,39 +62,55 @@ def group_shot_data_by_game_team(shots):
                 grouped_shot_data[game_team_key][shot_zone_cat] = 0
                 if 'distance' in shot_zone_cat:
                     grouped_shot_data[game_team_key][shot_zone_cat] = list()
+        # retrieving shot zone, e.g. *slot*, *left*
         zone = shot['shot_zone'].lower()
+        # retrieving combined shot zone and outcome used as key below, e.g.
+        # *slot_missed*, *left_blocked*, *blue_line_on_goal*
         zone_tgt_type = "%s_%s" % (zone, shot['target_type'])
+        # retrieving combined shot zone and distance used as key below, e.g.
+        # *right_distance*
         zone_distance = "%s_distance" % zone
+        # adding shot incident to counter for shot zone
         grouped_shot_data[game_team_key]["%s_shots" % zone] += 1
+        # adding shot incident to counter for shot zone/outcome
         grouped_shot_data[game_team_key][zone_tgt_type] += 1
+        # adding distance of shot incident
         grouped_shot_data[game_team_key][zone_distance].append(
             shot['distance'])
+        # in case of a goal, adding shot incident to couter for goals
+        # from shot zone
         if shot['scored']:
             grouped_shot_data[game_team_key]["%s_goals" % zone] += 1
-    else:
-        for key in grouped_shot_data:
-            all_shots = 0
-            all_on_goal = 0
-            for zone in zones:
-                all_shots += grouped_shot_data[key]["%s_shots" % zone]
-                all_on_goal += grouped_shot_data[key]["%s_on_goal" % zone]
-                if grouped_shot_data[key]["%s_shots" % zone]:
-                    grouped_shot_data[key]["%s_distance" % zone] = round(
-                        sum(grouped_shot_data[key]["%s_distance" % zone]) /
-                        grouped_shot_data[key]["%s_shots" % zone], 2
-                    )
-                else:
-                    grouped_shot_data[key]["%s_distance" % zone] = 0
-            for zone in zones:
-                if not all_shots:
-                    print(key)
 
-                grouped_shot_data[key]["%s_pctg" % zone] = round((
-                    grouped_shot_data[key]["%s_shots" % zone] / all_shots
-                ) * 100., 2)
-                grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
-                    grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
-                ) * 100., 2)
+    # finally calculating percentages and mean distances for shot incidents
+    # from each zone
+    for key in grouped_shot_data:
+        all_shots = 0
+        all_on_goal = 0
+        for zone in zones:
+            # adding shots from current zone to number of shots from all zones
+            all_shots += grouped_shot_data[key]["%s_shots" % zone]
+            # adding shots on goal from current zone to number of shots on goal
+            # from all zones
+            all_on_goal += grouped_shot_data[key]["%s_on_goal" % zone]
+            # calculating mean distance of shots from the current zone (if
+            # applicable)
+            if grouped_shot_data[key]["%s_shots" % zone]:
+                grouped_shot_data[key]["%s_distance" % zone] = round(
+                    sum(grouped_shot_data[key]["%s_distance" % zone]) /
+                    grouped_shot_data[key]["%s_shots" % zone], 2
+                )
+            else:
+                grouped_shot_data[key]["%s_distance" % zone] = 0
+
+        # calculating percentage of shots and shots on goal for each shot zone
+        for zone in zones:
+            grouped_shot_data[key]["%s_pctg" % zone] = round((
+                grouped_shot_data[key]["%s_shots" % zone] / all_shots
+            ) * 100., 2)
+            grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
+                grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
+            ) * 100., 2)
 
     return grouped_shot_data
 
