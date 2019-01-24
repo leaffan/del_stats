@@ -1,0 +1,38 @@
+body { padding-top: 40px;}
+
+.inline { display: inline-block; }
+
+.inline-headers h2, .inline-headers span, .inline-headers img {
+    display: inline-block;
+    vertical-align: middle;
+    margin: 0;
+}
+
+/* to avoid shrinking of empty condensed tables */
+table {
+    width: 100%;
+}
+
+.form_spacer {
+    background-color: white;
+    width: 10px; padding-left: 0px;
+    padding-right: 0px;
+    border: none;
+}
+
+thead td.text-center a, span.rank { font-size: 80%; font-weight: bold; }
+
+p { margin-bottom: 15px; }
+
+dl { margin: 0;}
+
+ul {margin: 10px;}
+
+li { width: 30%; }
+
+li i.fa, li i.fab { margin-right: 5px; }
+
+label { padding-left: 5px;}
+
+.red { color: red; }
+.green { color: darkgreen; }
