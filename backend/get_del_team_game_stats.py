@@ -315,10 +315,18 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
         game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
 
+        # retrieving shot data for current game and team
         shot_data = grouped_shot_data[(game_id, game_stat_line['team'])]
 
         for item in shot_data:
             game_stat_line[item] = shot_data[item]
+
+        # retrieving shots against data for current game and team
+        shot_against_data = grouped_shot_data[
+            (game_id, game_stat_line['opp_team'])]
+
+        for item in shot_against_data:
+            game_stat_line["%s_against" % item] = shot_against_data[item]
 
         game_stat_lines.append(game_stat_line)
 
