@@ -5,7 +5,7 @@ import os
 import json
 import argparse
 import intervaltree
-from collections import defaultdict
+from collections import OrderedDict
 
 import requests
 from shapely.geometry import Point
@@ -38,18 +38,22 @@ def build_interval_tree(game):
     r = requests.get(events_url)
     events_data = r.json()
 
-    goalie_changes = defaultdict(list)
+    # using ordered dictionary to maintain insertion order of keys
+    goalie_changes = OrderedDict()
+    goalie_changes['home'] = list()
+    goalie_changes['road'] = list()
     goalie_in_net = {'home': 0, 'road': 0}
     goalie_for_team = {'home': None, 'road': None}
 
-    max_game_time = 0
+    end_period_times = list()
 
     # TODO: tidy up the following mess
-    for period in events_data:
+    # sorting periods first to retain compatibility with Python 3.5
+    for period in sorted(events_data.keys()):
         for event in events_data[period]:
             event_type = event['type']
             if event_type == 'periodEnd':
-                max_game_time = event['time']
+                end_period_times.append(event['time'])
             if event_type == 'goalkeeperChange':
                 event_data = event['data']
                 if event_data['team'] == 'home':
@@ -81,7 +85,9 @@ def build_interval_tree(game):
     for key in goalie_in_net:
         if goalie_in_net[key] != 0:
             goalie_changes[key].append((
-                max_game_time, game["%s_abbr" % key],
+                # using the maximum time from all period end times as time
+                # of game end
+                max(end_period_times), game["%s_abbr" % key],
                 'goalie_out', goalie_for_team[key]))
 
     # setting up interval tree
@@ -93,6 +99,10 @@ def build_interval_tree(game):
                 goalie_changes[home_road][i])
             goalie_out_time, _, _, _ = (
                 goalie_changes[home_road][i + 1])
+            # optionally switching goalie in and out times if necessary
+            if goalie_out_time < goalie_in_time:
+                goalie_in_time, goalie_out_time = (
+                    goalie_out_time, goalie_in_time)
             it.addi(
                 goalie_in_time, goalie_out_time,
                 ('goalie', goalie_in_team, goalie_in_id))
