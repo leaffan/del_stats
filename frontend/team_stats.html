@@ -42,6 +42,10 @@
                     <option data-ng-option value="goal_stats">Torstatistiken</option>
                     <option data-ng-option value="shot_stats">Schuss- und Fangquoten</option>
                     <option data-ng-option value="shot_shares">Schussanteile</option>
+                    <option data-ng-option value="shot_zones">Schusszonen (alle Schüsse)</option>
+                    <option data-ng-option value="shot_on_goal_zones">Schusszonen (Torschüsse)</option>
+                    <option data-ng-option value="shot_zones_against">Schusszonen des Gegners (alle Schüsse)</option>
+                    <option data-ng-option value="shot_on_goal_zones_against">Schusszonen des Gegners (Torschüsse)</option>
                     <option data-ng-option value="additional_stats">Zusätzliche Statistiken</option>
                 </select>
                 <span data-ng-show="isStandingsView" class="input-group-addon form_spacer"></span>
@@ -205,6 +209,134 @@
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.shot_for_pctg.toFixed(2) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="standings" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.shots }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.lf_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.lf_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.rg_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.rg_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.bl_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.bl_p.toFixed(2) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="standings" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones_against'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.opp_shots }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_sh_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.lf_sh_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.lf_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.rg_sh_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.rg_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.bl_sh_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.bl_p_a.toFixed(2) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="standings" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.opp_shots_on_goal }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.lf_og_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.lf_og_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.rg_og_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.rg_og_p_a.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.bl_og_a }}</td>
+                <td class="col-md-1 text-right">{{ stat.bl_og_p_a.toFixed(2) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="standings" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortCriterion:statsSortDescending">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.lf_og }}</td>
+                <td class="col-md-1 text-right">{{ stat.lf_og_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.rg_og }}</td>
+                <td class="col-md-1 text-right">{{ stat.rg_og_p.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.bl_og }}</td>
+                <td class="col-md-1 text-right">{{ stat.bl_og_p.toFixed(2) }} %</td>
             </tr>
         </tbody>
     </table>
