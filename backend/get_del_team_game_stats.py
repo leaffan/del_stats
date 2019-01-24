@@ -328,8 +328,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         for item in shot_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
-                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():  
-                    abbr_item = abbr_item.replace(key, replacement) 
+                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
+                    abbr_item = abbr_item.replace(key, replacement)
                 game_stat_line[abbr_item] = shot_data[item]
 
         # retrieving shots against data for current game and team
@@ -338,8 +338,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         for item in shot_against_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
-                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():  
-                    abbr_item = abbr_item.replace(key, replacement) 
+                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
+                    abbr_item = abbr_item.replace(key, replacement)
                 game_stat_line["%s_a" % abbr_item] = shot_against_data[item]
 
         game_stat_lines.append(game_stat_line)
