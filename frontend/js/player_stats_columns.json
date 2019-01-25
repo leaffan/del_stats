@@ -51,6 +51,7 @@
     ],
     "penalty_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "pim_from_events", "col_header": "PIM", "expl_de": "Strafminuten ingesamt", "expl_en": "Penalties in Minutes"},
         {"data_key": "_2min", "col_header": "2 min", "expl_de": "Anzahl der 2-Minuten-Strafen", "expl_en": "Two-Minute Penalties"},
         {"data_key": "_5min", "col_header": "5 min", "expl_de": "Anzahl der 5-Minuten-Strafen", "expl_en": "Five-Minute Penalties"},
@@ -63,6 +64,7 @@
     ],
     "on_goal_shot_zones": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
         {"data_key": "slot_on_goal", "col_header": "Slot", "expl_de": "Torschüsse aus dem Slot", "expl_en": "Shots on Goal from Slot"},
         {"data_key": "slot_on_goal_pctg", "col_header": "Slot%", "expl_de": "Anteil der Torschüsse aus dem Slot", "expl_en": "Shots on Goal from Slot Percentage"},
@@ -76,6 +78,7 @@
     ],
     "shot_zones": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "shots", "col_header": "S", "expl_de": "Schüsse (auf das Tor, daneben, geblockt)", "expl_en": "Shots"},
         {"data_key": "slot_shots", "col_header": "Slot", "expl_de": "Schüsse aus dem Slot", "expl_en": "Shots from Slot"},
         {"data_key": "slot_pctg", "col_header": "Slot%", "expl_de": "Anteil der Schüsse aus dem Slot", "expl_en": "Shots from Slot Percentage"},

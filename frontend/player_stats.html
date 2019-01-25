@@ -135,15 +135,16 @@
                 <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                    <td class="col-md-1 text-right">{{ stat.pim_from_events }}</td>
-                    <td class="col-md-1 text-right">{{ stat._2min }}</td>
-                    <td class="col-md-1 text-right">{{ stat._5min }}</td>
-                    <td class="col-md-1 text-right">{{ stat._10min }}</td>
-                    <td class="col-md-1 text-right">{{ stat._20min }}</td>
-                    <td class="col-md-1 text-right">{{ stat.lazy }}</td>
-                    <td class="col-md-1 text-right">{{ stat.roughing }}</td>
-                    <td class="col-md-1 text-right">{{ stat.reckless }}</td>
-                    <td class="col-md-1 text-right">{{ stat.other }}</td>
+                    <td class="col-md-1" style="width: 5%">{{ stat.team }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat.pim_from_events }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat._2min }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat._5min }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat._10min }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat._20min }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat.lazy }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat.roughing }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat.reckless }}</td>
+                    <td class="col-md-1 text-right" style="width: 8%">{{ stat.other }}</td>
                 </tr>
             </tbody>
         </table>
@@ -389,16 +390,17 @@
                 <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                    <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.slot_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.slot_on_goal_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.left_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.left_on_goal_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.right_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.right_on_goal_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.blue_line_on_goal }}</td>
-                    <td class="col-md-1 text-right">{{ stat.blue_line_on_goal_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.neutral_zone_on_goal }}</td>
+                    <td class="col-md-1 text-left" style="width: 3%">{{ stat.team }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots_on_goal }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_on_goal }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_on_goal_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.left_on_goal }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.left_on_goal_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.right_on_goal }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.right_on_goal_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.blue_line_on_goal }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.blue_line_on_goal_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.neutral_zone_on_goal }}</td>
                 </tr>
             </tbody>
         </table>
@@ -421,16 +423,17 @@
                 <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter: greaterThan('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                     <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                    <td class="col-md-1 text-right">{{ stat.shots }}</td>
-                    <td class="col-md-1 text-right">{{ stat.slot_shots }}</td>
-                    <td class="col-md-1 text-right">{{ stat.slot_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.left_shots }}</td>
-                    <td class="col-md-1 text-right">{{ stat.left_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.right_shots }}</td>
-                    <td class="col-md-1 text-right">{{ stat.right_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.blue_line_shots }}</td>
-                    <td class="col-md-1 text-right">{{ stat.blue_line_pctg.toFixed(2) }} %</td>
-                    <td class="col-md-1 text-right">{{ stat.neutral_zone_shots }}</td>
+                    <td class="col-md-1 text-left" style="width: 3%">{{ stat.team }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_shots }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.left_shots }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.left_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.right_shots }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.right_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.blue_line_shots }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.blue_line_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.neutral_zone_shots }}</td>
                 </tr>
             </tbody>
         </table>
