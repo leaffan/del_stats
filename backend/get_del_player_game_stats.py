@@ -99,6 +99,8 @@ def get_single_game_player_data(game):
             gsl['pp_primary_assists'] = single_assist_dict.get('PPA1', 0)
             gsl['pp_secondary_assists'] = single_assist_dict.get('PPA2', 0)
             gsl['pp_points'] += gsl['pp_assists']
+        # calculating primary points
+        gsl['primary_points'] = gsl['goals'] + gsl['primary_assists']
         # adding penalty information to player's game stat line
         if gsl['player_id'] in penalties:
             single_penalty_dict = penalties[gsl['player_id']]
@@ -218,6 +220,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['primary_assists'] = 0
     single_player_game['secondary_assists'] = 0
     single_player_game['points'] = stat_dict['points'][key]
+    single_player_game['primary_points'] = 0
     single_player_game['pim'] = stat_dict['penaltyMinutes']
     single_player_game['plus'] = stat_dict['positive']
     single_player_game['minus'] = stat_dict['negative']
