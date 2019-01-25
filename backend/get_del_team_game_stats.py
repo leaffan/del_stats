@@ -312,9 +312,12 @@ def get_single_game_team_data(game, grouped_shot_data):
             raw_stats[opp_key]['faceOffsWon'])
         game_stat_line['faceoffs'] = (
             game_stat_line['faceoffs_won'] + game_stat_line['faceoffs_lost'])
-        game_stat_line['faceoff_pctg'] = round(
-            game_stat_line['faceoffs_won'] /
-            game_stat_line['faceoffs'] * 100., 1)
+        if game_stat_line['faceoffs']:
+            game_stat_line['faceoff_pctg'] = round(
+                game_stat_line['faceoffs_won'] /
+                game_stat_line['faceoffs'] * 100., 1)
+        else:
+            game_stat_line['faceoff_pctg'] = 0.
         # best players
         game_stat_line['best_plr_id'] = game["%s_best_player_id" % key]
         game_stat_line['best_plr'] = game["%s_best_player" % key]
