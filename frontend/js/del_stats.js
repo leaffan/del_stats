@@ -580,6 +580,26 @@ app.controller('teamController', function($scope, $http, svc) {
             $scope.statsSortDescending = true;
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_zones') {
+            $scope.sortCriterion = 'shots';
+            $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_on_goal_zones') {
+            $scope.sortCriterion = 'shots_on_goal';
+            $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_zones_against') {
+            $scope.sortCriterion = 'opp_shots';
+            $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_on_goal_zones_against') {
+            $scope.sortCriterion = 'opp_shots_on_goal';
+            $scope.statsSortDescending = true;
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         }
     };
 
