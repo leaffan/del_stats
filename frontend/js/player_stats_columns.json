@@ -1,4 +1,54 @@
 {
+    "basic_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
+        {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen", "expl_en": "Assists"},
+        {"data_key": "primary_assists", "col_header": "A1", "expl_de": "Direkte Vorlagen", "expl_en": "Primary Assists"},
+        {"data_key": "points", "col_header": "P", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "primary_points", "col_header": "P1", "expl_de": "Direkte Punkte", "expl_en": "Primary Points"},
+        {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
+        {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
+        {"data_key": "points_per_game", "col_header": "PPG", "expl_de": "Punkte/Spiel", "expl_en": "Points/Game"}
+    ],
+    "per_game_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "goals_per_game", "col_header": "GPG", "expl_de": "Tore/Spiel", "expl_en": "Goals/Game"},
+        {"data_key": "assists_per_game", "col_header": "APG", "expl_de": "Vorlagen/Spiel", "expl_en": "Assists/Game"},
+        {"data_key": "primary_assists_per_game", "col_header": "A1PG", "expl_de": "Direkte Vorlagen/Spiel", "expl_en": "Primary Assists/Game"},
+        {"data_key": "secondary_assists_per_game", "col_header": "A2PG", "expl_de": "Indirekte Vorlagen/Spiel", "expl_en": "Secondary Assists/Game"},
+        {"data_key": "points_per_game", "col_header": "PPG", "expl_de": "Punkte/Spiel", "expl_en": "Points/Game"},
+        {"data_key": "primary_points_per_game", "col_header": "P1PG", "expl_de": "Direkte Punkte/Spiel", "expl_en": "Primary Points/Game"},
+        {"data_key": "shots_per_game", "col_header": "SHPG", "expl_de": "Schüsse/Spiel", "expl_en": "Shots/Game"},
+        {"data_key": "shots_on_goal_per_game", "col_header": "SOGPG", "expl_de": "Torschüsse/Spiel", "expl_en": "Shots On Goal/Game"}
+    ],
+    "per_60_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "time_on_ice_seconds", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
+        {"data_key": "goals_per_60", "col_header": "G/60", "expl_de": "Tore pro 60 Minuten Eiszeit", "expl_en": "Goals/60"},
+        {"data_key": "assists_per_60", "col_header": "A/60", "expl_de": "Vorlagen pro 60 Minuten Eiszeit", "expl_en": "Assists/60"},
+        {"data_key": "primary_assists_per_60", "col_header": "A1/60", "expl_de": "Direkte Vorlagen pro 60 Minuten Eiszeit", "expl_en": "Primary Assists/60"},
+        {"data_key": "secondary_assists_per_60", "col_header": "A2/60", "expl_de": "Indirekte Vorlagen pro 60 Minuten Eiszeit", "expl_en": "Primary Assists/60"},
+        {"data_key": "points_per_60", "col_header": "P/60", "expl_de": "Punkte pro 60 Minuten Eiszeit", "expl_en": "Points/60"},
+        {"data_key": "primary_points_per_60", "col_header": "P1/60", "expl_de": "Direkte Punkte pro 60 Minuten Eiszeit", "expl_en": "Primary Points/60"},
+        {"data_key": "shots_on_goal_per_60", "col_header": "SOG/60", "expl_de": "Torschüsse pro 60 Minuten Eiszeit", "expl_en": "Shots On Goal/60"}
+    ],
+    "time_on_ice_shift_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "time_on_ice_seconds", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
+        {"data_key": "time_on_ice_pp_seconds", "col_header": "TOI PP", "expl_de": "Eiszeit in Überzahl", "expl_en": "Powerplay Time On Ice"},
+        {"data_key": "time_on_ice_sh_seconds", "col_header": "TOI SH", "expl_de": "Eiszeit in Unterzahl", "expl_en": "Shorthanded Time On Ice"},
+        {"data_key": "shifts", "col_header": "SHF", "expl_de": "Wechsel", "expl_en": "Shifts"},
+        {"data_key": "time_on_ice_per_game_seconds", "col_header": "TOI/G", "expl_de": "Eiszeit/Spiel", "expl_en": "Time On Ice/Game"},
+        {"data_key": "time_on_ice_pp_per_game_seconds", "col_header": "TOI PP/G", "expl_de": "Eiszeit in Überzahl/Spiel", "expl_en": "Powerplay Time On Ice/Game"},
+        {"data_key": "time_on_ice_sh_per_game_seconds", "col_header": "TOI SH/G", "expl_de": "Eiszeit in Unterzahl/Spiel", "expl_en": "Shorthanded Time On Ice/Game"},
+        {"data_key": "shifts_per_game", "col_header": "SHF/G", "expl_de": "Wechsel/Spiel", "expl_en": "Shifts/Game"}
+    ],
     "penalty_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "pim_from_events", "col_header": "PIM", "expl_de": "Strafminuten ingesamt", "expl_en": "Penalties in Minutes"},
@@ -37,16 +87,42 @@
         {"data_key": "blue_line_pctg", "col_header": "Point%", "expl_de": "Anteil der Schüsse von der blauen Linie", "expl_en": "Shots from Point Percentage"},
         {"data_key": "neutral_zone_shots", "col_header": "Neu. Zone", "expl_de": "Schüsse aus der neutralen Zone", "expl_en": "Shots from Neutral Zone"}
     ],
-    "additional_game_by_game": [
-        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
-        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
-        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
-        {"data_key": "shifts", "col_header": "Wechsel", "expl_de": null, "expl_en": null},
-        {"data_key": "time_on_ice_pp", "col_header": "TOI (PP)", "expl_de": "Eiszeit in Überzahl", "expl_en": "Powerplay Time on Ice"},
-        {"data_key": "time_on_ice_sh", "col_header": "TOI (SH)", "expl_de": "Eiszeit in Unterzahl", "expl_en": "Shorthanded Time on Ice"},
-        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+    "additional_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "shots", "col_header": "S", "expl_de": "Schüsse (auf das Tor, daneben, geblockt)", "expl_en": "Shots"},
+        {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
+        {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse neben das Tor", "expl_en": "Missed Shots"},
+        {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Schüsse, geblockt durch den Gegner", "expl_en": "Blocked Shots"},
+        {"data_key": "faceoffs", "col_header": "FAC", "expl_de": "Gespielte Bullies", "expl_en": "Faceoffs"},
+        {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
+        {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
+        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"},
+        {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"}
+    ],
+    "power_play_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "time_on_ice_pp_seconds", "col_header": "TOI PP", "expl_de": "Eiszeit in Überzahl", "expl_en": "Powerplay Time On Ice"},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
         {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
-        {"data_key": "sh_goals", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
-        {"data_key": "plus_minus", "col_header": "+/-", "expl_de": null, "expl_en": null}
+        {"data_key": "pp_goals_per_60", "col_header": "PPG/60", "expl_de": "Tore in Überzahl pro 60 Minuten Eiszeit", "expl_en": "Powerplay Goals/60 Minutes"},
+        {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen", "expl_en": "Assists"},
+        {"data_key": "pp_assists", "col_header": "PPA", "expl_de": "Vorlagen in Überzahl", "expl_en": "Powerplay Assists"},
+        {"data_key": "pp_assists_per_60", "col_header": "PPA/60", "expl_de": "Vorlagen in Überzahl pro 60 Minuten Eiszeit", "expl_en": "Powerplay Assists/60"},
+        {"data_key": "points", "col_header": "P", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "pp_points", "col_header": "PPP", "expl_de": "Punkte in Überzahl", "expl_en": "Powerplay Points"},
+        {"data_key": "pp_points_per_60", "col_header": "PPP/60", "expl_de": "Punkte in Überzahl pro 60 Minuten Eiszeit", "expl_en": "Powerplay Points/60"}
+    ],
+    "player_information": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "position", "col_header": "Position", "expl_de": null, "expl_en": null},
+        {"data_key": "shoots", "col_header": "Schuss-/Fanghand", "expl_de": null, "expl_en": null},
+        {"data_key": "height", "col_header": "Größe", "expl_de": null, "expl_en": null},
+        {"data_key": "weight", "col_header": "Gewicht", "expl_de": null, "expl_en": null},
+        {"data_key": "date_of_birth", "col_header": "Geburtsdatum", "expl_de": null, "expl_en": null},
+        {"data_key": "age", "col_header": "Alter", "expl_de": null, "expl_en": null},
+        {"data_key": "iso_country", "col_header": "Internationalität", "expl_de": null, "expl_en": null}
     ]
 }
