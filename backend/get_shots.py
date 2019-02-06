@@ -12,6 +12,7 @@ from shapely.geometry import Point
 
 import rink_dimensions as rd
 from utils import get_game_info
+from reconstruct_skater_situation import reconstruct_skater_situation
 
 
 BASE_URL = 'https://www.del.org/live-ticker'
@@ -238,59 +239,6 @@ def correct_time_of_shot(shot, goal_times):
     return shot
 
 
-def retrieve_plr_situation(shot, interval_tree):
-    """
-    Retrieves player situation on ice for specified shots using the given
-    collected intervals.
-    """
-    intervals = interval_tree.at(shot['time'])
-
-    # setting default number of players on the ice in accordance to period and
-    # game type
-    # regular season overtimes are played with three skaters and one goalie
-    if shot['game_type'] == 'RS' and str(shot['period']) == 'OT':
-        plr_f = plr_a = 4
-    # all other periods are played with five skaters and one goalie
-    else:
-        plr_f = plr_a = 6
-
-    for interval in intervals:
-        # retrieving description, concerned team and player from current
-        # interval
-        desc, team, plr_id = interval[-1]
-        # adjusting skaters on ice in accordance to whether a goalie has been
-        # in net at the given time
-        if desc == 'goalie':
-            if team == shot['team']:
-                plr_f -= 1
-            elif team == shot['team_against']:
-                plr_a -= 1
-        # all other intervals are penalties
-        else:
-            # retrieving duration of penalty, infraction and affected player
-            # from current interval's description
-            duration, infraction, plr_name = desc.split()
-            # only regular two-minute penalties and five-minute penalties not
-            # handed out for fighting have an influence on the player situation
-            # on ice
-            if (
-                duration == '120' or
-                (duration == '300' and infraction != 'FIST')
-            ):
-                # adjusting number of skaters on ice according to current
-                # penalty
-                if team == shot['team']:
-                    plr_f -= 1
-                elif team == shot['team_against']:
-                    plr_a -= 1
-
-    # finalizing player situation for shooting and receiving team
-    shot['plr_situation'] = "%dv%d" % (plr_f, plr_a)
-    shot['plr_situation_against'] = "%dv%d" % (plr_a, plr_f)
-
-    return shot
-
-
 def delete_shot_properties(shot):
     """
     Delete no longer necessary properties from shot item.
@@ -340,9 +288,9 @@ if __name__ == '__main__':
     for game in games[:]:
         cnt += 1
 
-        # building interval tree to query goalies and player situations
-        # receving a list of times when goals has been scored
-        it, goal_times = build_interval_tree(game)
+        # collecting skater situation for each second of the game and a list
+        # of times when goals has been scored
+        times, goal_times = reconstruct_skater_situation(game)
 
         # skipping already processed games
         if game['game_id'] in registered_games:
@@ -399,15 +347,21 @@ if __name__ == '__main__':
             # setting shot period and retrieving player situations at time of
             # the shot
             shot = set_period(shot)
-            shot = retrieve_plr_situation(shot, it)
 
-            # retrieving goalie involved in the current shot
-            shot['goalie_id'] = None
-            available_intervals = it[shot['time']]
-            for int_start, int_end, int_data in available_intervals:
-                int_type, int_team, int_plr_id = int_data
-                if int_type == 'goalie' and int_team != shot['team']:
-                    shot['goalie_id'] = int_plr_id
+            # retrieving skater situation at time of shot
+            skr_situation = times[shot['time']]
+            shot['plr_situation'] = "%dv%d" % (
+                skr_situation[shot['team']],
+                skr_situation[shot['team_against']])
+            shot['plr_situation_against'] = "%dv%d" % (
+                skr_situation[shot['team_against']],
+                skr_situation[shot['team']])
+
+            # retrieving goalie facing the shot
+            if game['home_abbr'] == shot['team_against']:
+                shot['goalie'] = times[shot['time']]['home_goalie']
+            else:
+                shot['goalie'] = times[shot['time']]['road_goalie']
 
             # deleting unnecessary shot properties
             shot = delete_shot_properties(shot)
