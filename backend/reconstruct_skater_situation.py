@@ -208,6 +208,10 @@ def create_penalty_interval(event, game, interval_tree):
 
     # disregarding penalties with zero length, i.e. penalty shots
     if penalty_end != penalty_start:
+        # optionally switching start and end time of penalty if necessary due
+        # to data errors (e.g. Felix Schütz penalty in game 1247)
+        if penalty_start > penalty_end:
+            penalty_start, penalty_end = penalty_end, penalty_start
         penalty_description = "%d %s %s" % (
             duration, infraction, penalty_player)
         all_penalty_info = (
