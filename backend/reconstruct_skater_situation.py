@@ -2,10 +2,9 @@
 # -*- coding: utf-8 -*-
 
 import os
-import copy
 import json
 
-from collections import OrderedDict
+from collections import OrderedDict, defaultdict
 
 import requests
 import intervaltree
@@ -75,28 +74,28 @@ def build_interval_tree(game):
                 create_time = event['data']['createTime']
                 duration = event['data']['duration']
 
-                if create_time not in penalty_times:
-                    penalty_times[create_time] = dict()
+                if duration in (120, 300):
 
-                if penalty_team not in penalty_times[create_time]:
-                    penalty_times[create_time][penalty_team] = (
-                        1, [duration])
-                else:
-                    (
-                        previous_penalties,
-                        previous_durations
-                    ) = penalty_times[
-                        create_time][penalty_team]
-                    penalty_times[create_time][penalty_team] = (
-                        previous_penalties + 1,
-                        previous_durations + [duration])
+                    if create_time not in penalty_times:
+                        penalty_times[create_time] = dict()
+
+                    if penalty_team not in penalty_times[create_time]:
+                        penalty_times[create_time][penalty_team] = (
+                            1, [duration])
+                    else:
+                        (
+                            previous_penalties,
+                            previous_durations
+                        ) = penalty_times[
+                            create_time][penalty_team]
+                        penalty_times[create_time][penalty_team] = (
+                            previous_penalties + 1,
+                            previous_durations + [duration])
 
             # registering goalie changes
             if event_type == 'goalkeeperChange':
                 register_goalie_change(
                     event, game, goalie_changes, goalie_for_team)
-
-    # print(penalty_times)
 
     create_goalie_intervals(
         goalie_changes, goalie_for_team, end_period_times, game, it)
@@ -248,11 +247,20 @@ def reconstruct_skater_situation(game):
     # set of currently on-going penalties that reduce the skater count on
     # ice
     on_going_intervals = set()
+    extra_intervals = set()
     # initial setting for skater counts per team
     skr_count = {'home': 5, 'road': 5}
+    goalies_not_on_ice = list()
+    goalie_was_off = list()
 
     # doing the following for each second of the game
     for t in range(1, game_end + 1):
+        if t == 3601:
+            skr_count['home'] = 3
+            skr_count['road'] = 3
+            skr_count[game['home_abbr']] = 3
+            skr_count[game['road_abbr']] = 3
+
         # retrieving all currently valid goalie and penalty intervals, i.e.
         # on-going goalie shifts and currently served penalties
         current_intervals = it[-t]
@@ -269,9 +277,14 @@ def reconstruct_skater_situation(game):
             curr_delta = {'home': 0, 'road': 0}
             # helper container holding all teams that current have no
             # goalie on ice
+            if goalies_not_on_ice:
+                goalie_was_off = goalies_not_on_ice
             goalies_not_on_ice = ['home', 'road']
+            goalies_on_ice = {'home_goalie': None, 'road_goalie': None}
 
-            print("Time: ", t)
+            # effective_intervals = {'home': list(), 'road': list()}
+            effective_intervals = defaultdict(list)
+
             for interval in current_intervals:
                 # exploding interval payload
                 desc, team, plr_id, create_time = interval[-1]
@@ -285,30 +298,118 @@ def reconstruct_skater_situation(game):
                 # is on ice, i.e. *not not on ice*
                 if desc == 'goalie':
                     goalies_not_on_ice.remove(team)
+                    goalies_on_ice["%s_goalie" % team] = plr_id
+                    if team in goalie_was_off:
+                        curr_delta[team] -= 1
+                        goalie_was_off.remove(team)
                 # if a penalty shift is on-going...
                 else:
                     # retrieving duration, infraction, and player name
                     duration, infraction, plr_name = desc.split(maxsplit=2)
                     # converting duration to actual number
                     duration = int(duration)
-                    print(create_time, duration, infraction, plr_name)
                     # only two- and five-minute-penalties can result in
                     # a reduction of the number of skaters on ice
                     if duration in (120, 300):
                         # checking if current interval has already been
                         # encountered previously
-                        if interval not in on_going_intervals:
-                            # add current interval to set of currently on-
-                            # going intervals
+                        if (
+                            interval not in on_going_intervals and
+                            interval not in extra_intervals
+                        ):
+                            effective_intervals[team].append(interval)
+
+            penalties_from_time = dict()
+
+            if t - 1 in penalty_times:
+                penalties_from_time = penalty_times[t - 1]
+
+            if len(penalties_from_time) == 1:
+                for team in effective_intervals:
+                    for interval in effective_intervals[team]:
+                        # add current interval to set of currently on-
+                        # going intervals
+                        on_going_intervals.add(interval)
+                        # reducing the number of skaters for
+                        # corresponding team starting at current time
+                        curr_delta[team] -= 1
+
+            elif len(penalties_from_time) == 2:
+
+                home_pen_cnt, home_durations = penalty_times[t - 1][
+                    game['home_abbr']]
+                road_pen_cnt, road_durations = penalty_times[t - 1][
+                    game['road_abbr']]
+
+                # if number and durations of penalties for both teams
+                # match, we have incidental penalties (DEL Rulebook,
+                # Rule #112)
+                if (
+                    home_pen_cnt == road_pen_cnt and
+                    sum(home_durations) == sum(road_durations)
+                ):
+                    if (
+                        home_pen_cnt == 1 and
+                        list(skr_count.values()) == [5, 5]
+                    ):
+                        for team in effective_intervals:
+                            for interval in effective_intervals[team]:
+                                # add current interval to set of currently
+                                # on-going intervals
+                                on_going_intervals.add(interval)
+                                # reducing the number of skaters for
+                                # corresponding team starting at current
+                                # time
+                                curr_delta[team] -= 1
+                elif (
+                    home_pen_cnt == road_pen_cnt and
+                    sum(home_durations) != sum(road_durations)
+                ):
+                    for team in effective_intervals:
+                        for interval in effective_intervals[team]:
+                            # add current interval to set of currently
+                            # on-going intervals
                             on_going_intervals.add(interval)
-                            # print("began:", interval)
                             # reducing the number of skaters for
-                            # corresponding team starting at current time
+                            # corresponding team starting at current
+                            # time
                             curr_delta[team] -= 1
-                        # otherwise the interval is just continuing
+
+                elif home_pen_cnt > road_pen_cnt:
+                    pen_cnt_diff = home_pen_cnt - road_pen_cnt
+                    pen_cnt = 0
+                    for interval in effective_intervals['home']:
+                        if pen_cnt < pen_cnt_diff:
+                            # add current interval to set of currently
+                            # on-going intervals
+                            on_going_intervals.add(interval)
+                            # reducing the number of skaters for
+                            # corresponding team starting at current
+                            # time
+                            curr_delta['home'] -= 1
                         else:
-                            # print("continues:", interval)
-                            pass
+                            extra_intervals.add(interval)
+                        pen_cnt += 1
+                    for interval in effective_intervals['road']:
+                        extra_intervals.add(interval)
+
+                elif road_pen_cnt > home_pen_cnt:
+                    pen_cnt_diff = road_pen_cnt - home_pen_cnt
+                    pen_cnt = 0
+                    for interval in effective_intervals['road']:
+                        if pen_cnt < pen_cnt_diff:
+                            # add current interval to set of currently
+                            # on-going intervals
+                            on_going_intervals.add(interval)
+                            # reducing the number of skaters for
+                            # corresponding team starting at current
+                            # time
+                            curr_delta['road'] -= 1
+                        else:
+                            extra_intervals.add(interval)
+                        pen_cnt += 1
+                    for interval in effective_intervals['home']:
+                        extra_intervals.add(interval)
 
             # preparing to remove intervals from set of on-going intervals
             # if they have been passed
@@ -329,12 +430,25 @@ def reconstruct_skater_situation(game):
                     # select no-longer on-going interval for removal from
                     # set of intervals currently registered as on-going
                     intervals_to_remove.add(interval)
-                    # print("ended:", interval)
                     # increading the number of skaters for corresponding
                     # team starting at current time
                     curr_delta[team] += 1
             # actually removing no longer on-going intervals
             on_going_intervals.difference_update(intervals_to_remove)
+
+            intervals_to_remove = set()
+            for interval in extra_intervals:
+                # checking whether interval currently registered as
+                # on-going is in fact still on-going
+                if interval not in current_intervals:
+                    # select no-longer on-going interval for removal from
+                    # set of intervals currently registered as on-going
+                    intervals_to_remove.add(interval)
+                    # increading the number of skaters for corresponding
+                    # team starting at current time
+                    # curr_delta[team] += 1
+            # actually removing no longer on-going intervals
+            extra_intervals.difference_update(intervals_to_remove)
 
             # increasing the number of skaters on the ice in case an
             # involved team has been found to be playing without a goalie
@@ -346,20 +460,17 @@ def reconstruct_skater_situation(game):
             skr_count['home'] = skr_count['home'] + curr_delta['home']
             skr_count['road'] = skr_count['road'] + curr_delta['road']
 
-            print("%s: %dv%d" % (
-                game['home_abbr'], skr_count['home'], skr_count['road']))
-            print("%s: %dv%d" % (
-                game['road_abbr'], skr_count['road'], skr_count['home']))
-            print("------------------------------")
+            skr_count[game['home_abbr']] = skr_count['home']
+            skr_count[game['road_abbr']] = skr_count['road']
 
         # saving currently valid intervals for comparison at next
         # second in the game
         last_intervals = current_intervals
 
         # setting current skater count per team for second in game
-        time_dict[t] = skr_count
+        time_dict[t] = {**skr_count, **goalies_on_ice}
 
-    return time_dict
+    return time_dict, goal_times
 
 
 if __name__ == '__main__':
@@ -371,7 +482,10 @@ if __name__ == '__main__':
     games = json.loads(open(src_path).read())
 
     cnt = 0
-    for game in games[0:1]:
+    for game in games[:]:
         cnt += 1
 
-        reconstruct_skater_situation(game)
+        time_dict, goal_times = reconstruct_skater_situation(game)
+
+        for t in time_dict:
+            print(t, time_dict[t])
