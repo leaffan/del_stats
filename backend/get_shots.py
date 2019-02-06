@@ -288,14 +288,14 @@ if __name__ == '__main__':
     for game in games[:]:
         cnt += 1
 
-        # collecting skater situation for each second of the game and a list
-        # of times when goals has been scored
-        times, goal_times = reconstruct_skater_situation(game)
-
         # skipping already processed games
         if game['game_id'] in registered_games:
             continue
         print("+ Retrieving shots for game %s " % get_game_info(game))
+
+        # collecting skater situation for each second of the game and a list
+        # of times when goals has been scored
+        times, goal_times = reconstruct_skater_situation(game)
 
         # retrieving raw shot data
         shots_path = SHOTS_SUFFIX % game['game_id']
@@ -349,24 +349,29 @@ if __name__ == '__main__':
             shot = set_period(shot)
 
             # retrieving skater situation at time of shot
-            skr_situation = times[shot['time']]
-            shot['plr_situation'] = "%dv%d" % (
-                skr_situation[shot['team']],
-                skr_situation[shot['team_against']])
-            shot['plr_situation_against'] = "%dv%d" % (
-                skr_situation[shot['team_against']],
-                skr_situation[shot['team']])
-
-            # retrieving goalie facing the shot
-            if game['home_abbr'] == shot['team_against']:
-                shot['goalie'] = times[shot['time']]['home_goalie']
+            if not shot['time']:
+                print(
+                    "Shot at zero time encountered in " +
+                    "game %s" % get_game_info(game))
             else:
-                shot['goalie'] = times[shot['time']]['road_goalie']
+                skr_situation = times[shot['time']]
+                shot['plr_situation'] = "%dv%d" % (
+                    skr_situation[shot['team']],
+                    skr_situation[shot['team_against']])
+                shot['plr_situation_against'] = "%dv%d" % (
+                    skr_situation[shot['team_against']],
+                    skr_situation[shot['team']])
 
-            # deleting unnecessary shot properties
-            shot = delete_shot_properties(shot)
+                # retrieving goalie facing the shot
+                if game['home_abbr'] == shot['team_against']:
+                    shot['goalie'] = times[shot['time']]['home_goalie']
+                else:
+                    shot['goalie'] = times[shot['time']]['road_goalie']
 
-            all_shots.append(shot)
+                # deleting unnecessary shot properties
+                shot = delete_shot_properties(shot)
+
+                all_shots.append(shot)
 
         if limit and cnt >= limit:
             break
