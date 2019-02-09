@@ -354,7 +354,15 @@ if __name__ == '__main__':
                     "Shot at zero time encountered in " +
                     "game %s" % get_game_info(game))
             else:
-                skr_situation = times[shot['time']]
+                try:
+                    skr_situation = times[shot['time']]
+                except KeyError as e:
+                    if shot['time'] > max(times.keys()):
+                        print(
+                            "+ Shot at %d after the actual " % shot['time'] +
+                            "end of game (%d) registered" % max(times.keys()))
+                        shot['time'] = max(times.keys())
+
                 shot['plr_situation'] = "%dv%d" % (
                     skr_situation[shot['team']],
                     skr_situation[shot['team_against']])
