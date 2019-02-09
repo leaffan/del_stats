@@ -21,9 +21,25 @@ name_corrections = {
 
 
 def get_game_info(game):
+    """
+    Gets printable game information.
+    """
     return (
         "%d (%s: %s [%d] vs. %s [%d])" % (
             game['game_id'], game['date'],
             game['home_team'], game['home_score'],
             game['road_team'], game['road_score'],
         ))
+
+
+def get_team_from_game(game, home_road):
+    """
+    Gets abbreviation for team aassociated with specified
+    home/road denominator.
+    """
+    if home_road == 'home':
+        return game['home_abbr']
+    elif home_road == 'road':
+        return game['road_abbr']
+    else:
+        return None
