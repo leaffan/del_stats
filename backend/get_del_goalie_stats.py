@@ -35,7 +35,11 @@ def retrieve_goalies_in_game(game):
         if desc == 'goalie':
             goalie_seconds[(team, plr_id)] += abs(interval[0] - interval[1])
 
-    return goalie_seconds
+    # retrieving on-going goalie shifts at time of the game-winning goal
+    # later used to determine the goalie of record
+    intervals_at_gw_goal_time = interval_tree[-game['gw_goal_time']]
+
+    return dict(goalie_seconds), intervals_at_gw_goal_time
 
 
 def calculate_save_pctg(goalie_dict, type=''):
@@ -81,6 +85,36 @@ def collect_shots_goals_per_situations(goalie_dict, situation='EV'):
     return shots_against, goals_against
 
 
+def is_shutout(goalie_dict, goalies_in_game):
+    """
+    Checks whether current goalie game can be considered a shutout.
+    """
+    # only goalies that played and didn't concede any goals can have a shutout
+    if (goalie_dict['games_played'] and not goalie_dict['goals_against']):
+        # if more than two goalies (for both teams) were in the game, we
+        # have to check whether goalies shared a game with no goals against
+        if len(goalies_in_game) > 2:
+            # counting goalies per team
+            goalies_per_team_cnt = 0
+            for team, id in goalies_in_game:
+                if team == goalie_dict['team']:
+                    goalies_per_team_cnt += 1
+            # if current team had more than one goalie in the game, this can't
+            # be a personal shutout
+            if goalies_per_team_cnt > 1:
+                return False
+
+        # games lost in overtime or the shootout are no shutouts regardless
+        if goalie_dict['sl'] or goalie_dict['ol']:
+            return False
+
+        # only games solely played with no goals against throughout regulation,
+        # overtime, and shootout are shutouts
+        return True
+
+    return False
+
+
 if __name__ == '__main__':
 
     if not os.path.isdir(TGT_DIR):
@@ -113,7 +147,7 @@ if __name__ == '__main__':
             (game['road_abbr'], game['road_g1'][0]),
             (game['road_abbr'], game['road_g2'][0]),
         ]
-        goalies_in_game = retrieve_goalies_in_game(game)
+        goalies_in_game, gw_goal_intervals = retrieve_goalies_in_game(game)
 
         for goalie_team, goalie_id in goalies_dressed:
 
@@ -148,12 +182,39 @@ if __name__ == '__main__':
             # # TODO: determine whether to cut processing short right here
             # if not goalie_dict['games_played']:
             #     continue
-            goalie_dict['toi'] = goalies_in_game[(goalie_team, goalie_id)]
+            if (goalie_team, goalie_id) in goalies_in_game:
+                goalie_dict['toi'] = goalies_in_game[(goalie_team, goalie_id)]
+            else:
+                goalie_dict['toi'] = 0
 
-            # print(goalies_in_game[(goalie_team, goalie_id)])
+            goalie_dict['of_record'] = 0
 
-            for outcome in ['w', 'l', 'otw', 'otl', 'sow', 'sol']:
+            for interval in gw_goal_intervals:
+                desc, gw_g_team, gw_g_id, _ = interval[-1]
+                if gw_g_team == goalie_team and gw_g_id == goalie_id:
+                    goalie_dict['of_record'] += 1
+                    break
+
+            for outcome in ['w', 'rw', 'ow', 'sw', 'l', 'rl', 'ol', 'sl']:
                 goalie_dict[outcome] = 0
+
+            if goalie_dict['of_record']:
+                if game['gw_goal'] == goalie_team:
+                    goalie_dict['w'] += 1
+                    if game['shootout_game']:
+                        goalie_dict['sw'] += 1
+                    elif game['overtime_game']:
+                        goalie_dict['ow'] += 1
+                    else:
+                        goalie_dict['rw'] += 1
+                else:
+                    goalie_dict['l'] += 1
+                    if game['shootout_game']:
+                        goalie_dict['sl'] += 1
+                    elif game['overtime_game']:
+                        goalie_dict['ol'] += 1
+                    else:
+                        goalie_dict['rl'] += 1
 
             # initializing goalie data dictionary
             goalie_dict['shots_against'] = 0
@@ -203,6 +264,11 @@ if __name__ == '__main__':
                     goalie_dict['gaa'] = round(
                         goalie_dict['goals_against'] * 3600 /
                         goalie_dict['toi'], 2)
+
+            if is_shutout(goalie_dict, goalies_in_game):
+                goalie_dict['so'] = 1
+            else:
+                goalie_dict['so'] = 0
 
             goalies_per_game.append(goalie_dict)
 
