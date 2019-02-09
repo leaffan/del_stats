@@ -16,6 +16,8 @@ from dateutil.parser import parse
 from dateutil.rrule import rrule, DAILY
 from dateutil.relativedelta import relativedelta
 
+from utils import get_team_from_game
+
 
 BASE_URL = "https://www.del.org"
 SCHEDULE_URL_SUFFIX = "spielplan"
@@ -100,6 +102,12 @@ def get_games_for_date(date, existing_games=None):
             **single_game_data, **single_game_details,
             **single_game_rosters, **single_game_events
         }
+
+        single_game_data['first_goal'] = get_team_from_game(
+            single_game_data, single_game_data['first_goal'])
+        single_game_data['gw_goal'] = get_team_from_game(
+            single_game_data, single_game_data['gw_goal'])
+
         print("\t+ %s (%d) vs. %s (%d)" % (
             single_game_data['home_team'], single_game_data['home_score'],
             single_game_data['road_team'], single_game_data['road_score']
@@ -268,15 +276,47 @@ def get_game_events(game_id):
 
     single_game_events = dict()
 
+    # setting up containers for all goals
+    all_goals = list()
+    goals_per_team = {'home': list(), 'road': list()}
+
+    # collecting all goals scored in the game
     for period in game_events:
         for event in game_events[period]:
             # retrieving team that scored the first goal of the game
-            if (
-                event['type'] == 'goal' and
-                'first_goal' not in single_game_events
-            ):
-                single_game_events['first_goal'] = event[
-                    'data']['team'].replace('visitor', 'road')
+            if event['type'] == 'goal':
+                all_goals.append(event)
+                home_road = event['data']['team'].replace('visitor', 'road')
+                goals_per_team[home_road].append(event)
+
+    # retrieving first goal of the game
+    first_goal = all_goals[0]
+
+    single_game_events['first_goal'] = first_goal[
+        'data']['team'].replace('visitor', 'road')
+    single_game_events['first_goal_time'] = first_goal['time']
+    single_game_events['first_goal_player_id'] = first_goal[
+        'data']['scorer']['playerId']
+    single_game_events['first_goal_first_name'] = first_goal[
+        'data']['scorer']['name']
+    single_game_events['first_goal_last_name'] = first_goal[
+        'data']['scorer']['surname']
+
+    # retrieving game-winning goal
+    if len(goals_per_team['home']) > len(goals_per_team['road']):
+        winning_goal = goals_per_team['home'][len(goals_per_team['road'])]
+    else:
+        winning_goal = goals_per_team['road'][len(goals_per_team['home'])]
+
+    single_game_events['gw_goal'] = winning_goal[
+        'data']['team'].replace('visitor', 'road')
+    single_game_events['gw_goal_time'] = winning_goal['time']
+    single_game_events['gw_goal_player_id'] = winning_goal[
+        'data']['scorer']['playerId']
+    single_game_events['gw_goal_first_name'] = winning_goal[
+        'data']['scorer']['name']
+    single_game_events['gw_goal_last_name'] = winning_goal[
+        'data']['scorer']['surname']
 
     return single_game_events
 
