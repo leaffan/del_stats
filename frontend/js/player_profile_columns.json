@@ -33,5 +33,58 @@
         {"data_key": "forwards[0]", "col_header": "LW", "expl_de": "linker Flügel", "expl_en": "Left Wing"},
         {"data_key": "forwards[1]", "col_header": "C", "expl_de": "Center", "expl_en": "Center"},
         {"data_key": "forwards[2]", "col_header": "RW", "expl_de": "rechter Flügel", "expl_en": "Right Wing"}
+    ],
+    "goalie_stats": [
+        {"data_key": "game_date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "games_started", "col_header": "GS", "expl_de": "Spiel begonnen", "expl_en": "Games Started"},
+        {"data_key": "w", "col_header": "W", "expl_de": "Siege", "expl_en": "Wins"},
+        {"data_key": "l", "col_header": "L", "expl_de": "Niederlagen", "expl_en": "Losses"},
+        {"data_key": "shots_against", "col_header": "SA", "expl_de": "Schüsse auf das Tor", "expl_en": "Shots Against"},
+        {"data_key": "goals_against", "col_header": "GA", "expl_de": "Zugelassene Tore", "expl_en": "Goals Against"},
+        {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
+        {"data_key": "gaa", "col_header": "GAA", "expl_de": "Gegentorschnitt", "expl_en": "Goals Against Average"},
+        {"data_key": "so", "col_header": "SO", "expl_de": "Ohne Gegentor", "expl_en": "Shutouts"},
+        {"data_key": "toi", "col_header": "TOI", "expl_de": "Eiszeit", "expl_en": "Time On Ice"}
+    ],
+    "goalie_zone_stats_near": [
+        {"data_key": "game_date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_slot", "col_header": "Slot SA", "expl_de": "Abzuwehrende Torschüsse aus dem Slot", "expl_en": "Slot Shots Against"},
+        {"data_key": "ga_slot", "col_header": "Slot GA", "expl_de": "Zugelassene Tore aus dem Slot", "expl_en": "Slot Goals Against"},
+        {"data_key": "save_pctg_slot", "col_header": "Slot SV%", "expl_de": "Fangquote aus dem Slot", "expl_en": "Slot Save Percentage"},
+        {"data_key": "sa_left", "col_header": "Left SA", "expl_de": "Abzuwehrende Torschüsse von der linken Angriffsseite", "expl_en": "Left Shots Against"},
+        {"data_key": "ga_left", "col_header": "Left GA", "expl_de": "Zugelassene Tore von der linken Angriffsseite", "expl_en": "Left Goals Against"},
+        {"data_key": "save_pctg_left", "col_header": "Left SV%", "expl_de": "Fangquote von der linken Angriffsseite", "expl_en": "Left Save Percentage"},
+        {"data_key": "sa_right", "col_header": "Right SA", "expl_de": "Abzuwehrende Torschüsse von der rechten Angriffsseite", "expl_en": "Right Shots Against"},
+        {"data_key": "ga_right", "col_header": "Right GA", "expl_de": "Zugelassene Tore von der rechten Angriffsseite", "expl_en": "Right Goals Against"},
+        {"data_key": "save_pctg_right", "col_header": "Right SV%", "expl_de": "Fangquote von der rechten Angriffsseite", "expl_en": "Right Save Percentage"}
+    ],
+    "goalie_zone_stats_far": [
+        {"data_key": "game_date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_blue_line", "col_header": "Point SA", "expl_de": "Abzuwehrende Torschüsse von der blauen Linie", "expl_en": "Point Shots Against"},
+        {"data_key": "ga_blue_line", "col_header": "Point GA", "expl_de": "Zugelassene Tore von der blauen Linie", "expl_en": "Point Goals Against"},
+        {"data_key": "save_pctg_blue_line", "col_header": "Point SV%", "expl_de": "Fangquote von der blauen Linie", "expl_en": "Point Save Percentage"},
+        {"data_key": "sa_neutral_zone", "col_header": "Out Of Zone SA", "expl_de": "Abzuwehrende Torschüsse von außerhalb des Drittels", "expl_en": "Out Of Zone Shots Against"},
+        {"data_key": "ga_neutral_zone", "col_header": "Out Of Zone GA", "expl_de": "Zugelassene Tore von außerhalb des Drittels", "expl_en": "Out Of Zone Goals Against"},
+        {"data_key": "save_pctg_neutral_zone", "col_header": "Out Of Zone SV%", "expl_de": "Fangquote von außerhalb des Drittels", "expl_en": "Out Of Zone Save Percentage"}
+    ],
+    "goalie_situation_stats": [
+        {"data_key": "game_date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_5v5", "col_header": "5v5 SA", "expl_de": "Abzuwehrende Torschüsse im 5-gegen-5", "expl_en": "5v5 Shots Against"},
+        {"data_key": "ga_5v5", "col_header": "5v5 GA", "expl_de": "Zugelassene Tore im 5-gegen-5", "expl_en": "5v5 Goals Against"},
+        {"data_key": "save_pctg_5v5", "col_header": "5v5 SV%", "expl_de": "Fangquote im 5-gegen-5", "expl_en": "5v5 Save Percentage"},
+        {"data_key": "sa_sh", "col_header": "SH SA", "expl_de": "Abzuwehrende Torschüsse in Unterzahl", "expl_en": "Shots Against whilst Shorthanded"},
+        {"data_key": "ga_sh", "col_header": "SH GA", "expl_de": "Zugelassene Tore in Unterzahl", "expl_en": "Goals Against whilst Shorthanded"},
+        {"data_key": "save_pctg_sh", "col_header": "SH SV%", "expl_de": "Fangquote in Unterzahl", "expl_en": "Save Percentage whilst Shorthanded"},
+        {"data_key": "sa_pp", "col_header": "PP SA", "expl_de": "Abzuwehrende Torschüsse in Überzahl", "expl_en": "Shots Against whilst on the Power Play"},
+        {"data_key": "ga_pp", "col_header": "PP GA", "expl_de": "Zugelassene Tore in Überzahl", "expl_en": "Goals Against whilst on the Power Play"},
+        {"data_key": "save_pctg_pp", "col_header": "PP SV%", "expl_de": "Fangquote in Überzahl", "expl_en": "Save Percentage whilst on the Power Play"}
     ]
 }
