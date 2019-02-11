@@ -49,9 +49,13 @@
         <div class="form-group">
             <div class="input-group">
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
-                    <option data-ng-option value="basic_game_by_game">Basisdaten</option>
-                    <option data-ng-option value="additional_game_by_game">zusätzliche Daten</option>
-                    <option data-ng-option value="lines">Reihenpartner</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisdaten</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">zusätzliche Daten</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
+                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
+                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
+                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
+                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
@@ -187,14 +191,203 @@
                         === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
                         === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right" style="width: 2%">{{ stat.line }}</td>
-                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[0]}}">{{ players[stat.defense[0]]['first_name'].length > 10 ? players[stat.defense[0]]['first_name'].charAt(0) + '.' : players[stat.defense[0]]['first_name'] }} {{ players[stat.defense[0]]['last_name'] }}</a></td>
-                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[1]}}">{{ players[stat.defense[1]]['first_name'].length > 10 ? players[stat.defense[1]]['first_name'].charAt(0) + '.' : players[stat.defense[1]]['first_name'] }} {{ players[stat.defense[1]]['last_name'] }}</a></td>
-                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[0]}}">{{ players[stat.forwards[0]]['first_name'].length > 10 ? players[stat.forwards[0]]['first_name'].charAt(0) + '.' : players[stat.forwards[0]]['first_name'] }} {{ players[stat.forwards[0]]['last_name'] }}</a></td>
-                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[1]}}">{{ players[stat.forwards[1]]['first_name'].length > 10 ? players[stat.forwards[1]]['first_name'].charAt(0) + '.' : players[stat.forwards[1]]['first_name'] }} {{ players[stat.forwards[1]]['last_name'] }}</a></td>
-                <td class="col-md-1 text-right"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[2]}}">{{ players[stat.forwards[2]]['first_name'].length > 10 ? players[stat.forwards[2]]['first_name'].charAt(0) + '.' : players[stat.forwards[2]]['first_name'] }} {{ players[stat.forwards[2]]['last_name'] }}</a></td>
+                <td class="col-md-1"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[0]}}">{{ players[stat.defense[0]]['first_name'].length > 10 ? players[stat.defense[0]]['first_name'].charAt(0) + '.' : players[stat.defense[0]]['first_name'] }} {{ players[stat.defense[0]]['last_name'] }}</a></td>
+                <td class="col-md-1"><a href="#!/player_profile/{{stat.team}}/{{stat.defense[1]}}">{{ players[stat.defense[1]]['first_name'].length > 10 ? players[stat.defense[1]]['first_name'].charAt(0) + '.' : players[stat.defense[1]]['first_name'] }} {{ players[stat.defense[1]]['last_name'] }}</a></td>
+                <td class="col-md-1"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[0]}}">{{ players[stat.forwards[0]]['first_name'].length > 10 ? players[stat.forwards[0]]['first_name'].charAt(0) + '.' : players[stat.forwards[0]]['first_name'] }} {{ players[stat.forwards[0]]['last_name'] }}</a></td>
+                <td class="col-md-1"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[1]}}">{{ players[stat.forwards[1]]['first_name'].length > 10 ? players[stat.forwards[1]]['first_name'].charAt(0) + '.' : players[stat.forwards[1]]['first_name'] }} {{ players[stat.forwards[1]]['last_name'] }}</a></td>
+                <td class="col-md-1"><a href="#!/player_profile/{{stat.team}}/{{stat.forwards[2]}}">{{ players[stat.forwards[2]]['first_name'].length > 10 ? players[stat.forwards[2]]['first_name'].charAt(0) + '.' : players[stat.forwards[2]]['first_name'] }} {{ players[stat.forwards[2]]['last_name'] }}</a></td>
             </tr>
         </tbody>
     </table>
 
+    <table id="goalie_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'goalie_stats'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (goalie_stats | orderBy:sortCriterion:statsSortDescending | filter:goalieFilter | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_started }}</td>
+                <td class="col-md-1 text-right">{{ stat.w }}</td>
+                <td class="col-md-1 text-right">{{ stat.l }}</td>
+                <td class="col-md-1 text-right">{{ stat.shots_against }}</td>
+                <td class="col-md-1 text-right">{{ stat.goals_against }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg != null ? stat.save_pctg.toFixed(2) + ' %' : 'n/a'}}</td>
+                <td class="col-md-1 text-right">{{ stat.gaa.toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ stat.so }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(stat.toi) }}</td>
+            </tr>
+            <tr data-ng-if="player_name">
+                <td class="col-md-1"></td>
+                <td class="col-md-1" style="width: 3%"></td>
+                <td class="col-md-1" style="width: 12%">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'l', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ shots_against_total = svc.getFilteredTotal(filtered_stats, 'shots_against', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ goals_against_total = svc.getFilteredTotal(filtered_stats, 'goals_against', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - goals_against_total / shots_against_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ (goals_against_total * 3600 / toi_total).toFixed(2) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'so', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'toi', goalie_stats); svc.formatTime(toi_total) }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_zone_stats_near" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'goalie_zone_stats_near'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (goalie_stats | orderBy:sortCriterion:statsSortDescending | filter:goalieFilter | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.sa_slot }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_slot }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_slot != null ? stat.save_pctg_slot.toFixed(2) + ' %' : 'n/a' }}</td>
+                <td class="col-md-1 text-right">{{ stat.sa_left }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_left }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_left != null ? stat.save_pctg_left.toFixed(2) + ' %' : 'n/a' }}</td>
+                <td class="col-md-1 text-right">{{ stat.sa_right }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_right }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_right != null ? stat.save_pctg_right.toFixed(2) + ' %' : 'n/a' }}</td>
+            </tr>
+            <tr data-ng-if="player_name">
+                <td class="col-md-1"></td>
+                <td class="col-md-1" style="width: 3%"></td>
+                <td class="col-md-1" style="width: 12%">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ sa_slot_total = svc.getFilteredTotal(filtered_stats, 'sa_slot', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_slot_total = svc.getFilteredTotal(filtered_stats, 'ga_slot', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_slot_total / sa_slot_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ sa_left_total = svc.getFilteredTotal(filtered_stats, 'sa_left', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_left_total = svc.getFilteredTotal(filtered_stats, 'ga_left', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_left_total / sa_left_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ sa_right_total = svc.getFilteredTotal(filtered_stats, 'sa_right', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_right_total = svc.getFilteredTotal(filtered_stats, 'ga_right', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_right_total / sa_right_total) * 100.).toFixed(2) }} %</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_zone_stats_far" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'goalie_zone_stats_far'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (goalie_stats | orderBy:sortCriterion:statsSortDescending | filter:goalieFilter | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.sa_blue_line }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_blue_line }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_blue_line != null ? stat.save_pctg_blue_line.toFixed(2) + ' %' : 'n/a' }}</td>
+                <td class="col-md-1 text-right">{{ stat.sa_neutral_zone }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_neutral_zone }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_neutral_zone != null ? stat.save_pctg_neutral_zone.toFixed(2) + ' %' : 'n/a' }}</td>
+            </tr>
+            <tr data-ng-if="player_name">
+                <td class="col-md-1"></td>
+                <td class="col-md-1" style="width: 3%"></td>
+                <td class="col-md-1" style="width: 12%">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ sa_blue_line_total = svc.getFilteredTotal(filtered_stats, 'sa_blue_line', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_blue_line_total = svc.getFilteredTotal(filtered_stats, 'ga_blue_line', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_blue_line_total / sa_blue_line_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ sa_neutral_zone_total = svc.getFilteredTotal(filtered_stats, 'sa_neutral_zone', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_neutral_zone_total = svc.getFilteredTotal(filtered_stats, 'ga_neutral_zone', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_neutral_zone_total / sa_neutral_zone_total) * 100.).toFixed(2) }} %</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_situation_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'goalie_situation_stats'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (goalie_stats | orderBy:sortCriterion:statsSortDescending | filter:goalieFilter | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
+                        stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score
+                        }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
+                        === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
+                        === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.sa_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_5v5 != null ? stat.save_pctg_5v5.toFixed(2) + ' %' : 'n/a' }}</td>
+                <td class="col-md-1 text-right">{{ stat.sa_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_sh }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_sh != null ? stat.save_pctg_sh.toFixed(2) + ' %' : 'n/a' }}</td>
+                <td class="col-md-1 text-right">{{ stat.sa_pp }}</td>
+                <td class="col-md-1 text-right">{{ stat.ga_pp }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_pp != null ? stat.save_pctg_pp.toFixed(2) + ' %' : 'n/a' }}</td>
+            </tr>
+            <tr data-ng-if="player_name">
+                <td class="col-md-1"></td>
+                <td class="col-md-1" style="width: 3%"></td>
+                <td class="col-md-1" style="width: 12%">Gesamt:</td>
+                <td class="col-md-1 text-right"><b>{{ sa_5v5_total = svc.getFilteredTotal(filtered_stats, 'sa_5v5', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_5v5_total = svc.getFilteredTotal(filtered_stats, 'ga_5v5', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_5v5_total / sa_5v5_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ sa_sh_total = svc.getFilteredTotal(filtered_stats, 'sa_sh', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_sh_total = svc.getFilteredTotal(filtered_stats, 'ga_sh', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_sh_total / sa_sh_total) * 100.).toFixed(2) }} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ sa_pp_total = svc.getFilteredTotal(filtered_stats, 'sa_pp', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ga_pp_total = svc.getFilteredTotal(filtered_stats, 'ga_pp', goalie_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ ((1 - ga_pp_total / sa_pp_total) * 100.).toFixed(2) }} %</b></td>
+            </tr>
+        </tbody>
+    </table>
 
 </div>
