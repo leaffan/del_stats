@@ -59,6 +59,10 @@ def calculate_save_pctg(goalie_dict, type=''):
         shots_against = goalie_dict[sa_key]
         goals_against = goalie_dict[ga_key]
 
+    if type and "sa_%s" % type not in goalie_dict:
+        goalie_dict["sa_%s" % type.lower()] = shots_against
+        goalie_dict["ga_%s" % type.lower()] = goals_against
+
     if shots_against:
         goalie_dict[sv_key] = round(
             100 - goals_against / shots_against * 100., 3)
@@ -159,6 +163,25 @@ if __name__ == '__main__':
 
             # retrieving game, team and base goalie information
             goalie_dict['game_id'] = game['game_id']
+            goalie_dict['game_date'] = game['date']
+            goalie_dict['round'] = game['round']
+            goalie_dict['team'] = goalie_team
+            if goalie_dict['team'] == game['home_abbr']:
+                goalie_dict['opp_team'] = game['road_abbr']
+                goalie_dict['score'] = game['home_score']
+                goalie_dict['opp_score'] = game['road_score']
+                goalie_dict['home_road'] = 'home'
+            else:
+                goalie_dict['opp_team'] = game['home_abbr']
+                goalie_dict['score'] = game['road_score']
+                goalie_dict['opp_score'] = game['home_score']
+                goalie_dict['home_road'] = 'road'
+            if game['shootout_game']:
+                goalie_dict['game_type'] = 'SO'
+            elif game['overtime_game']:
+                goalie_dict['game_type'] = 'OT'
+            else:
+                goalie_dict['game_type'] = ''
             goalie_dict['team'] = goalie_team
             goalie_dict['goalie_id'] = goalie_id
             goalie_dict['first_name'] = players[str(goalie_id)]['first_name']
@@ -264,6 +287,8 @@ if __name__ == '__main__':
                     goalie_dict['gaa'] = round(
                         goalie_dict['goals_against'] * 3600 /
                         goalie_dict['toi'], 2)
+                else:
+                    goalie_dict['gaa'] = 0
 
             if is_shutout(goalie_dict, goalies_in_game):
                 goalie_dict['so'] = 1
