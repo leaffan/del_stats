@@ -642,6 +642,11 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
         $scope.player_name = res.data[0].full_name;
     });
 
+    // loading goalie stats
+    $http.get('./data/del_goalie_game_stats.json').then(function (res) {
+        $scope.goalie_stats = res.data;
+    });
+
     $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
         $scope.all_players = res.data[1];
     });
@@ -676,8 +681,12 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
 
     $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
 
-    $scope.tableSelect = 'basic_game_by_game';
-    $scope.sortCriterion = 'date';
+    if ($scope.player_stats != undefined && $scope.player_stats[0]['position'] != 'GK') {
+        $scope.tableSelect = 'basic_game_by_game';
+    } else {
+        $scope.tableSelect = 'goalie_stats';
+    }
+    $scope.sortCriterion = 'game_date';
     $scope.statsSortDescending = true;
 
     $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
@@ -693,6 +702,17 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
             total += $scope.player_stats[i][attribute];
         }
         return total;
+    }
+
+    $scope.goalieFilter = function(a) {
+        if (!a['games_played']) {
+            return false;
+        }
+        if (a['goalie_id'] == $routeParams.player_id) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
     $scope.dayFilter = function (a) {
@@ -731,9 +751,6 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
         else {
             return ""
         }
-    };
-
-    $scope.changePlrTeam = function() {
     };
 
     $scope.changePlayer = function() {
