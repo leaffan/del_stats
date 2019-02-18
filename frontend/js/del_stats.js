@@ -268,11 +268,14 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
 app.controller('teamController', function($scope, $http, svc) {
 
     var ctrl = this;
-    // setting default table selection and sort criterion/order
+    // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
     $scope.isStandingsView = true;
-    $scope.sortCriterion = 'points';
-    $scope.statsSortDescending = true;
+    $scope.sortConfig = {
+        'sortKey': 'points',
+        'sortCriteria': ['points', 'goals'],
+        'sortDescending': true
+    }
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_stats_columns.json').then(function (res) {
@@ -285,30 +288,30 @@ app.controller('teamController', function($scope, $http, svc) {
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
     });
-
+ 
     $scope.$watch('ctrl.fromDate', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
-    });
+    }, true);
 
     $scope.$watch('ctrl.toDate', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
-    });
+    }, true);
 
     $scope.$watch('situationSelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
-    });
+    }, true);
 
     $scope.$watch('homeAwaySelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
-    });
+    }, true);
 
     $scope.stats_to_aggregate = [
         'games_played', 'score', 'opp_score', 'goals', 'opp_goals',
@@ -330,7 +333,6 @@ app.controller('teamController', function($scope, $http, svc) {
         $scope.team_stats = res.data[1];
         $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
     });
-
 
     $scope.filter_stats = function (stats) {
         filtered_team_stats = {};
@@ -527,7 +529,7 @@ app.controller('teamController', function($scope, $http, svc) {
                 element['pk_pctg'] = parseFloat((0).toFixed(2));
             }
             // calculating special teams goal differential and combined special team percentages
-            element['pp_pk_gdiff'] = element['pp_goals'] + element['sh_goals'] - element['opp_pp_goals'] - element['opp_sh_goals']; 
+            element['pp_pk_gdiff'] = element['pp_goals'] + element['sh_goals'] - element['opp_pp_goals'] - element['opp_sh_goals'];
             element['pp_pk_comb_pctg'] = element['pp_pctg'] + element['pk_pctg'];
             // calculating team faceoff percentage
             if (element['faceoffs']) {
@@ -549,62 +551,128 @@ app.controller('teamController', function($scope, $http, svc) {
     $scope.changeTable = function () {
         if ($scope.tableSelect === 'standings') {
             if ($scope.situationSelect) {
-                $scope.sortCriterion = 'pt_pctg';
+                $scope.sortConfig = {
+                    'sortKey': 'pt_pctg',
+                    'sortCriteria': ['pt_pctg', 'points', 'goals_diff'],
+                    'sortDescending': true
+                }
             } else {
-                $scope.sortCriterion = 'points';
+                $scope.sortConfig = {
+                    'sortKey': 'points',
+                    'sortCriteria': ['points', 'goals_diff'],
+                    'sortDescending': true
+                }
             }
-            $scope.statsSortDescending = true;
             $scope.isStandingsView = true;
         } else if ($scope.tableSelect === 'goal_stats') {
-            $scope.sortCriterion = 'goals_diff';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'goals_diff',
+                'sortCriteria': ['goals_diff', 'goals'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_stats') {
-            $scope.sortCriterion = 'shots_on_goal';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'shots_on_goal',
+                'sortCriteria': ['shots_on_goal', 'goals'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_shares') {
-            $scope.sortCriterion = 'corsi_for_pctg';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'corsi_for_pctg',
+                'sortCriteria': ['corsi_for_pctg', 'shots'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'special_team_stats') {
-            $scope.sortCriterion = 'pp_pctg';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'pp_pctg',
+                'sortCriteria': ['pp_pctg', 'shots'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'additional_stats') {
-            $scope.sortCriterion = 'faceoff_pctg';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'faceoff_pctg',
+                'sortCriteria': ['faceoff_pctg', 'faceoffs'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_zones') {
-            $scope.sortCriterion = 'shots';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'shots',
+                'sortCriteria': ['shots'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_on_goal_zones') {
-            $scope.sortCriterion = 'shots_on_goal';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'shots_on_goal',
+                'sortCriteria': ['shots_on_goal'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_zones_against') {
-            $scope.sortCriterion = 'opp_shots';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'opp_shots',
+                'sortCriteria': ['opp_shots'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_on_goal_zones_against') {
-            $scope.sortCriterion = 'opp_shots_on_goal';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'shots_on_goal',
+                'sortCriteria': ['shots_on_goal'],
+                'sortDescending': true
+            }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         }
     };
 
-    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, ['team']);
+    $scope.sort_def = {
+        "points": ['points', 'score_diff'],
+        "games_played": ['games_played', '-team']
+    };
+
+    $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
+        ascendingAttrs = ['team'];
+        // if previous sort key equals the new one
+        if (oldSortConfig['sortKey'] == sortKey) {
+            // just change sort direction
+            return {
+                'sortKey': oldSortConfig['sortKey'],
+                'sortCriteria': oldSortConfig['sortCriteria'],
+                'sortDescending': !oldSortConfig['sortDescending']
+            }
+        } else {
+            // ascending for a few columns
+            if (ascendingAttrs.indexOf(sortKey) !== -1) {
+                sortCriteria = $scope.sort_def[sortKey] || sortKey;
+                return {
+                    'sortKey': sortKey,
+                    'sortCriteria': sortCriteria,
+                    'sortDescending': false
+                }
+            } else {
+                // otherwise descending sort order
+                sortCriteria = $scope.sort_def[sortKey] || sortKey;
+                return {
+                    'sortKey': sortKey,
+                    'sortCriteria': sortCriteria,
+                    'sortDescending': true
+                }
+            }
+        }
     }
 
     $scope.setTextColor = function(goals, opp_goals) {
