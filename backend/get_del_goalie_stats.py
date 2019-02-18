@@ -3,6 +3,7 @@
 
 import os
 import json
+import argparse
 
 from collections import defaultdict
 
@@ -16,7 +17,6 @@ PLR_SRC = 'del_players.json'
 # GOALIE_TGT = 'del_goalies.json'
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-PER_GOALIE_TGT_DIR = 'per_goalie'
 
 SKR_SITUATIONS = [
     '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
@@ -121,26 +121,45 @@ def is_shutout(goalie_dict, goalies_in_game):
 
 if __name__ == '__main__':
 
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Download DEL goalie game statistics.')
+    parser.add_argument(
+        '--initial', dest='initial', required=False,
+        action='store_true', help='Re-create list of goalie games')
+
+    args = parser.parse_args()
+
+    initial = args.initial
+
     if not os.path.isdir(TGT_DIR):
         os.makedirs(TGT_DIR)
-    if not os.path.isdir(os.path.join(TGT_DIR, PER_GOALIE_TGT_DIR)):
-        os.makedirs(os.path.join(TGT_DIR, PER_GOALIE_TGT_DIR))
 
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
     shot_src_path = os.path.join(TGT_DIR, SHOT_SRC)
     plr_src_path = os.path.join(TGT_DIR, PLR_SRC)
     tgt_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_TGT)
-    # plr_tgt_path = os.path.join(TGT_DIR, GOALIE_TGT)
 
     # loading games and shots
     games = json.loads(open(src_path).read())
     shots = json.loads(open(shot_src_path).read())
     players = json.loads(open(plr_src_path).read())
 
-    goalies_per_game = list()
+    # loading existing player game stats
+    if not initial and os.path.isfile(tgt_path):
+        goalies_per_game = json.loads(open(tgt_path).read())
+    else:
+        goalies_per_game = list()
+
+    # retrieving set of games we already have retrieved player stats for
+    registered_games = set([gpg['game_id'] for gpg in goalies_per_game])
 
     for game in games[:]:
+
+        # skipping already processed games
+        if game['game_id'] in registered_games:
+            continue
 
         print("+ Retrieving goalie stats for game %s" % get_game_info(game))
 
@@ -163,6 +182,7 @@ if __name__ == '__main__':
 
             # retrieving game, team and base goalie information
             goalie_dict['game_id'] = game['game_id']
+            goalie_dict['schedule_game_id'] = game['schedule_game_id']
             goalie_dict['game_date'] = game['date']
             goalie_dict['round'] = game['round']
             goalie_dict['team'] = goalie_team
