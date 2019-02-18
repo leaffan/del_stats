@@ -640,6 +640,11 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
     $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
         $scope.player_name = res.data[0].full_name;
+        if ($scope.player_stats[0]['position'] == 'GK') {
+            $scope.tableSelect = 'goalie_stats'
+        } else {
+            $scope.tableSelect = 'basic_game_by_game'
+        }
     });
 
     // loading goalie stats
@@ -681,11 +686,6 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
 
     $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
 
-    if ($scope.player_stats != undefined && $scope.player_stats[0]['position'] != 'GK') {
-        $scope.tableSelect = 'basic_game_by_game';
-    } else {
-        $scope.tableSelect = 'goalie_stats';
-    }
     $scope.sortCriterion = 'game_date';
     $scope.statsSortDescending = true;
 
