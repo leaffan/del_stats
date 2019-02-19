@@ -278,7 +278,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
