@@ -49,12 +49,16 @@ def build_interval_tree(game):
     # TODO: tidy up the following mess
     # sorting periods first to retain compatibility with Python 3.5
     for period in sorted(events_data.keys()):
+
+        if period in ['1', '2', '3']:
+            end_period_times.append(int(period) * 1200)
+
         for event in events_data[period]:
             # retrieving type of event first
             event_type = event['type']
 
             # adding time of period end to list of period end times
-            if event_type == 'periodEnd':
+            if period == 'overtime' and event_type == 'periodEnd':
                 end_period_times.append(event['time'])
 
             # adding time of goal to list of times a goal has been scored
