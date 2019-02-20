@@ -273,7 +273,8 @@ app.controller('teamController', function($scope, $http, svc) {
     $scope.isStandingsView = true;
     $scope.sortConfig = {
         'sortKey': 'points',
-        'sortCriteria': ['points', 'goals'],
+        // 'sortCriteria': ['points', 'score_diff', 'score'],
+        'sortCriteria': ['points', 'score_diff', 'score'],
         'sortDescending': true
     }
 
@@ -559,7 +560,7 @@ app.controller('teamController', function($scope, $http, svc) {
             } else {
                 $scope.sortConfig = {
                     'sortKey': 'points',
-                    'sortCriteria': ['points', 'goals_diff'],
+                    'sortCriteria': ['points', 'score_diff', 'score'],
                     'sortDescending': true
                 }
             }
@@ -640,7 +641,7 @@ app.controller('teamController', function($scope, $http, svc) {
     };
 
     $scope.sort_def = {
-        "points": ['points', 'score_diff'],
+        "points": ['points', 'score_diff', 'score'],
         "games_played": ['games_played', '-team']
     };
 
