@@ -232,10 +232,10 @@ def get_single_game_team_data(game, grouped_shot_data):
         else:
             game_stat_line['trail40'] = True
         # scored first?
-        if game['first_goal'] == game_stat_line['home_road']:
+        if game['first_goal'] == game_stat_line['team']:
             game_stat_line['scored_first'] = True
             game_stat_line['trailed_first'] = False
-        else:
+        elif game['first_goal'] == game_stat_line['opp_team']:
             game_stat_line['scored_first'] = False
             game_stat_line['trailed_first'] = True
         # shots
