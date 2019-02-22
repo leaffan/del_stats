@@ -11,6 +11,7 @@ from collections import defaultdict
 from dateutil.parser import parse
 
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
+GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
 SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 U23_CUTOFF_DATE = parse("1996-01-01")
@@ -31,6 +32,20 @@ TO_AGGREGATE_INTS = [
     'faceoffs_lost', 'blocked_shots', 'shifts', 'penalties', 'pim_from_events',
     'penalty_shots', '_2min', '_5min', '_10min', '_20min', 'lazy', 'roughing',
     'reckless', 'other',
+]
+TO_AGGREGATE_INTS_GOALIES = [
+    'games_played', 'games_started', 'toi', 'w', 'rw', 'ow', 'sw', 'l', 'rl',
+    'ol', 'sl', 'shots_against', 'goals_against', 'sa_5v5', 'sa_4v4', 'sa_3v3',
+    'sa_5v4', 'sa_5v3', 'sa_4v3', 'sa_4v5', 'sa_3v5', 'sa_3v4', 'ga_5v5',
+    'ga_4v4', 'ga_3v3', 'ga_5v4', 'ga_5v3', 'ga_4v3', 'ga_4v5', 'ga_3v5',
+    'ga_3v4', 'sa_slot', 'sa_blue_line', 'sa_left', 'sa_right',
+    'sa_neutral_zone', 'ga_slot', 'ga_blue_line', 'ga_left', 'ga_right',
+    'ga_neutral_zone', 'sa_ev', 'sa_sh', 'sa_pp', 'ga_ev', 'ga_sh', 'ga_pp',
+    'so',
+]
+TO_CALCULATE_PCTG_GOALIES = [
+    '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4', 'slot',
+    'blue_line', 'left', 'right', 'neutral_zone', 'ev', 'sh', 'pp'
 ]
 # attributes from single-game player statistics to aggregate as timedeltas
 TO_AGGREGATE_TIMES = [
@@ -198,12 +213,47 @@ def get_shot_stats(player_id, team, shot_data):
     return shot_stats
 
 
+def calculate_goalie_stats(player_id, team, aggregated_stats):
+    """
+    Calculates goaltender stats, i.e. save percentages and goals against
+    average from previously aggregated stats.
+    """
+    goalie_stats = dict()
+    # retrieving aggregated stats for current player and team
+    aggregated_stats = aggregated_stats[(player_id, team)]
+    # calculating overall save percentage and goals against average
+    if aggregated_stats['shots_against']:
+        goalie_stats['save_pctg'] = round(
+            100 - aggregated_stats['goals_against'] /
+            aggregated_stats['shots_against'] * 100., 3)
+        goalie_stats['gaa'] = round(
+            aggregated_stats['goals_against'] * 3600 /
+            aggregated_stats['toi'], 2)
+    else:
+        goalie_stats['save_pctg'] = None
+        goalie_stats['gaa'] = None
+
+    # calculating save percentages for multiple skater situations and shot
+    # zones
+    for key in TO_CALCULATE_PCTG_GOALIES:
+        if aggregated_stats["sa_%s" % key]:
+            goalie_stats["save_pctg_%s" % key] = round(
+                100 - aggregated_stats["ga_%s" % key] /
+                aggregated_stats["sa_%s" % key] * 100., 3)
+        else:
+            goalie_stats["save_pctg_%s" % key] = None
+
+    return goalie_stats
+
+
 if __name__ == '__main__':
 
     src_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data', PLAYER_GAME_STATS_SRC)
     shot_src_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data', SHOTS_DATA_SRC)
+    goalie_src_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data', GOALIE_GAME_STATS_SRC)
     tgt_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data', AGGREGATED_PLAYER_STATS_TGT)
     tgt_csv_path = os.path.join(os.path.dirname(
@@ -212,6 +262,7 @@ if __name__ == '__main__':
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
+    goalie_game_stats = json.loads(open(goalie_src_path).read())
     # loading shot data
     shot_data = json.loads(open(shot_src_path).read())
 
@@ -241,6 +292,23 @@ if __name__ == '__main__':
         for attr in TO_AGGREGATE_TIMES:
             aggregate_time_stats[player_team_key][attr] += timedelta(
                 seconds=game_stat_line[attr])
+    else:
+        # re-setting games played counter for goaltenders
+        for player_id, team in aggregated_stats:
+            if list(player_data[(player_id, team)]['position'])[0] == 'GK':
+                aggregated_stats[(player_id, team)]['games_played'] = 0
+
+    for game_stat_line in goalie_game_stats:
+        # constructing reference key
+        goalie_team_key = (game_stat_line['goalie_id'], game_stat_line['team'])
+        # creating empty data dictionaries
+        if goalie_team_key not in aggregated_stats:
+            aggregated_stats[goalie_team_key] = defaultdict(int)
+            aggregate_time_stats[goalie_team_key] = defaultdict(timedelta)
+            player_data[goalie_team_key] = defaultdict(set)
+        # aggregating integer attributes for goaltenders
+        for attr in TO_AGGREGATE_INTS_GOALIES:
+            aggregated_stats[goalie_team_key][attr] += game_stat_line[attr]
 
     # post-processing aggregated attributes
     aggregated_stats_as_list = list()
@@ -285,12 +353,21 @@ if __name__ == '__main__':
         else:
             basic_values['iso_country'] = None
 
+        # calculating shot statistics
+        # TODO: determine whether to deactivate for goalies
         shot_stats = get_shot_stats(player_id, team, shot_data)
+        # calculating goaltender statistics
+        if basic_values['position'] == 'GK':
+            goalie_stats = calculate_goalie_stats(
+                player_id, team, aggregated_stats)
+        else:
+            goalie_stats = dict()
 
         # combining data dictionaries
         all_values = {
             **basic_values,
-            **aggregated_stats[key], **aggregate_time_stats[key], **shot_stats
+            **aggregated_stats[key], **aggregate_time_stats[key],
+            **shot_stats, **goalie_stats
         }
         aggregated_stats_as_list.append(all_values)
 
