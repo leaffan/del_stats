@@ -127,5 +127,81 @@
         {"data_key": "date_of_birth", "col_header": "Geburtsdatum", "expl_de": null, "expl_en": null},
         {"data_key": "age", "col_header": "Alter", "expl_de": null, "expl_en": null},
         {"data_key": "iso_country", "col_header": "Internationalität", "expl_de": null, "expl_en": null}
+    ],
+    "goalie_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "games_started", "col_header": "GS", "expl_de": "Spiele begonnen", "expl_en": "Games Started"},
+        {"data_key": "toi", "col_header": "MIN", "expl_de": "Eiszeit", "expl_en": "Time On Ice"},
+        {"data_key": "w", "col_header": "W", "expl_de": "Siege", "expl_en": "Wins"},
+        {"data_key": "l", "col_header": "L", "expl_de": "Niederlagen", "expl_en": "Losses"},
+        {"data_key": "shots_against", "col_header": "SA", "expl_de": "Torschüsse", "expl_en": "Shots Against"},
+        {"data_key": "goals_against", "col_header": "GA", "expl_de": "Erlaubte Tore", "expl_en": "Goals Against"},
+        {"data_key": "gaa", "col_header": "GAA", "expl_de": "Gegentorschnitt", "expl_en": "Goals Against Average"},
+        {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
+        {"data_key": "so", "col_header": "SO", "expl_de": "Spiele ohne Gegentor", "expl_en": "Shutouts"}
+    ],
+    "goalie_stats_ev": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_5v5", "col_header": "SA 5v5", "expl_de": "Torschüsse im 5-gegen-5", "expl_en": "Shots Against 5v5"},
+        {"data_key": "ga_5v5", "col_header": "GA 5v5", "expl_de": "Zugelassene Tore im 5-gegen-5", "expl_en": "Goals Against 5v5"},
+        {"data_key": "save_pctg_5v5", "col_header": "SV% 5v5", "expl_de": "Fangquote im 5-gegen-5", "expl_en": "Save Percentage 5v5"},
+        {"data_key": "sa_4v4", "col_header": "SA 4v4", "expl_de": "Torschüsse im 4-gegen-4", "expl_en": "Shots Against 4v4"},
+        {"data_key": "ga_4v4", "col_header": "GA 4v4", "expl_de": "Zugelassene Tore im 4-gegen-4", "expl_en": "Goals Against 4v4"},
+        {"data_key": "save_pctg_4v4", "col_header": "SV% 4v4", "expl_de": "Fangquote im 4-gegen-4", "expl_en": "Save Percentage 4v4"},
+        {"data_key": "sa_3v3", "col_header": "SA 3v3", "expl_de": "Torschüsse im 3-gegen-3", "expl_en": "Shots Against 3v3"},
+        {"data_key": "ga_3v3", "col_header": "GA 3v3", "expl_de": "Zugelassene Tore im 3-gegen-3", "expl_en": "Goals Against 3v3"},
+        {"data_key": "save_pctg_3v3", "col_header": "SV% 3v3", "expl_de": "Fangquote im 3-gegen-3", "expl_en": "Save Percentage 3v3"}
+    ],
+    "goalie_stats_pp": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_5v4", "col_header": "SA 5v4", "expl_de": "Torschüsse im 5-gegen-4", "expl_en": "Shots Against 5v4"},
+        {"data_key": "ga_5v4", "col_header": "GA 5v4", "expl_de": "Zugelassene Tore im 5-gegen-4", "expl_en": "Goals Against 5v4"},
+        {"data_key": "save_pctg_5v4", "col_header": "SV% 5v4", "expl_de": "Fangquote im 5-gegen-4", "expl_en": "Save Percentage 5v4"},
+        {"data_key": "sa_5v3", "col_header": "SA 5v3", "expl_de": "Torschüsse im 5-gegen-3", "expl_en": "Shots Against 5v3"},
+        {"data_key": "ga_5v3", "col_header": "GA 5v3", "expl_de": "Zugelassene Tore im 5-gegen-3", "expl_en": "Goals Against 5v3"},
+        {"data_key": "save_pctg_5v3", "col_header": "SV% 5v3", "expl_de": "Fangquote im 5-gegen-3", "expl_en": "Save Percentage 5v3"},
+        {"data_key": "sa_4v3", "col_header": "SA 4v3", "expl_de": "Torschüsse im 4-gegen-3", "expl_en": "Shots Against 4v3"},
+        {"data_key": "ga_4v3", "col_header": "GA 4v3", "expl_de": "Zugelassene Tore im 4-gegen-3", "expl_en": "Goals Against 4v3"},
+        {"data_key": "save_pctg_4v3", "col_header": "SV% 4v3", "expl_de": "Fangquote im 4-gegen-3", "expl_en": "Save Percentage 4v3"}
+    ],
+    "goalie_stats_sh": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_4v5", "col_header": "SA 4v5", "expl_de": "Torschüsse im 4-gegen-5", "expl_en": "Shots Against 4v5"},
+        {"data_key": "ga_4v5", "col_header": "GA 4v5", "expl_de": "Zugelassene Tore im 4-gegen-5", "expl_en": "Goals Against 4v5"},
+        {"data_key": "save_pctg_4v5", "col_header": "SV% 4v5", "expl_de": "Fangquote im 4-gegen-5", "expl_en": "Save Percentage 4v5"},
+        {"data_key": "sa_3v5", "col_header": "SA 3v5", "expl_de": "Torschüsse im 3-gegen-5", "expl_en": "Shots Against 3v5"},
+        {"data_key": "ga_3v5", "col_header": "GA 3v5", "expl_de": "Zugelassene Tore im 3-gegen-5", "expl_en": "Goals Against 3v5"},
+        {"data_key": "save_pctg_3v5", "col_header": "SV% 3v5", "expl_de": "Fangquote im 3-gegen-5", "expl_en": "Save Percentage 3v5"},
+        {"data_key": "sa_3v4", "col_header": "SA 3v4", "expl_de": "Torschüsse im 3-gegen-4", "expl_en": "Shots Against 3v4"},
+        {"data_key": "ga_3v4", "col_header": "GA 3v4", "expl_de": "Zugelassene Tore im 3-gegen-4", "expl_en": "Goals Against 3v4"},
+        {"data_key": "save_pctg_3v4", "col_header": "SV% 3v4", "expl_de": "Fangquote im 3-gegen-4", "expl_en": "Save Percentage 3v4"}
+    ],
+    "goalie_zone_stats_near": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_slot", "col_header": "Slot SA", "expl_de": "Abzuwehrende Torschüsse aus dem Slot", "expl_en": "Slot Shots Against"},
+        {"data_key": "ga_slot", "col_header": "Slot GA", "expl_de": "Zugelassene Tore aus dem Slot", "expl_en": "Slot Goals Against"},
+        {"data_key": "save_pctg_slot", "col_header": "Slot SV%", "expl_de": "Fangquote aus dem Slot", "expl_en": "Slot Save Percentage"},
+        {"data_key": "sa_left", "col_header": "Left SA", "expl_de": "Abzuwehrende Torschüsse von der linken Angriffsseite", "expl_en": "Left Shots Against"},
+        {"data_key": "ga_left", "col_header": "Left GA", "expl_de": "Zugelassene Tore von der linken Angriffsseite", "expl_en": "Left Goals Against"},
+        {"data_key": "save_pctg_left", "col_header": "Left SV%", "expl_de": "Fangquote von der linken Angriffsseite", "expl_en": "Left Save Percentage"},
+        {"data_key": "sa_right", "col_header": "Right SA", "expl_de": "Abzuwehrende Torschüsse von der rechten Angriffsseite", "expl_en": "Right Shots Against"},
+        {"data_key": "ga_right", "col_header": "Right GA", "expl_de": "Zugelassene Tore von der rechten Angriffsseite", "expl_en": "Right Goals Against"},
+        {"data_key": "save_pctg_right", "col_header": "Right SV%", "expl_de": "Fangquote von der rechten Angriffsseite", "expl_en": "Right Save Percentage"}
+    ],
+    "goalie_zone_stats_far": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "sa_blue_line", "col_header": "Point SA", "expl_de": "Abzuwehrende Torschüsse von der blauen Linie", "expl_en": "Point Shots Against"},
+        {"data_key": "ga_blue_line", "col_header": "Point GA", "expl_de": "Zugelassene Tore von der blauen Linie", "expl_en": "Point Goals Against"},
+        {"data_key": "save_pctg_blue_line", "col_header": "Point SV%", "expl_de": "Fangquote von der blauen Linie", "expl_en": "Point Save Percentage"},
+        {"data_key": "sa_neutral_zone", "col_header": "Out Of Zone SA", "expl_de": "Abzuwehrende Torschüsse von außerhalb des Drittels", "expl_en": "Out Of Zone Shots Against"},
+        {"data_key": "ga_neutral_zone", "col_header": "Out Of Zone GA", "expl_de": "Zugelassene Tore von außerhalb des Drittels", "expl_en": "Out Of Zone Goals Against"},
+        {"data_key": "save_pctg_neutral_zone", "col_header": "Out Of Zone SV%", "expl_de": "Fangquote von außerhalb des Drittels", "expl_en": "Out Of Zone Save Percentage"}
     ]
 }
