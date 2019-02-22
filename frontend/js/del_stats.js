@@ -832,102 +832,121 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
 
 app.controller('mainController', function ($scope, $http, svc) {
 
-        // default table selection and sort criterion for skater page
-        $scope.tableSelect = 'basic_stats';
-        $scope.sortCriterion = 'points';
-        // default sort order is descending
-        $scope.statsSortDescending = true;
-        $scope.showOnlyU23 = false;
-    
-        $scope.ascendingAttrs = [
-            'last_name', 'team', 'position', 'shoots',
-            'date_of_birth', 'iso_country'
-        ];
+    $scope.svc = svc;
+    // default table selection and sort criterion for skater page
+    $scope.tableSelect = 'basic_stats';
+    $scope.sortCriterion = 'points';
+    // default sort order is descending
+    $scope.statsSortDescending = true;
+    $scope.showOnlyU23 = false;
 
-        // loading stats from external json file
-        $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
-            $scope.last_modified = res.data[0];
-            $scope.stats = res.data[1];
-        });
+    $scope.ascendingAttrs = [
+        'last_name', 'team', 'position', 'shoots',
+        'date_of_birth', 'iso_country', 'gaa'
+    ];
 
-        // retrieving column headers (and abbreviations + explanations)
-        $http.get('./js/player_stats_columns.json').then(function (res) {
-            $scope.stats_cols = res.data;
-        });
+    // loading stats from external json file
+    $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
+        $scope.last_modified = res.data[0];
+        $scope.stats = res.data[1];
+    });
 
-        // default filter values
-        $scope.nameFilter = ''; // empty name filter
-        $scope.teamFilter = ''; // empty name filter
+    // retrieving column headers (and abbreviations + explanations)
+    $http.get('./js/player_stats_columns.json').then(function (res) {
+        $scope.stats_cols = res.data;
+    });
 
-        $scope.changeTable = function () {
-            if ($scope.tableSelect === 'player_information') {
-                $scope.sortCriterion = 'last_name';
-                $scope.statsSortDescending = false;
-            } else if ($scope.tableSelect === 'basic_stats') {
-                $scope.sortCriterion = 'points';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'per_game_stats') {
-                $scope.sortCriterion = 'points_per_game';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'time_on_ice_shift_stats') {
-                $scope.sortCriterion = 'time_on_ice_seconds';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'power_play_stats') {
-                $scope.sortCriterion = 'time_on_ice_pp_seconds';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'penalty_stats') {
-                $scope.sortCriterion = 'pim_from_events';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'additional_stats') {
-                $scope.sortCriterion = 'faceoff_pctg';
-                $scope.statsSortDescending = true;
-            } else if ($scope.tableSelect === 'per_60_stats') {
-                $scope.sortCriterion = 'points_per_60';
-                $scope.statsSortDescending = true;
-            }
-        };
+    // default filter values
+    $scope.nameFilter = ''; // empty name filter
+    $scope.teamFilter = ''; // empty name filter
 
-        $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-            return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.ascendingAttrs);
-        };
-
-        $scope.greaterThan = function (prop, val) {
-            return function (item) {
-                return item[prop] > val;
-            }
+    $scope.changeTable = function () {
+        if ($scope.tableSelect === 'player_information') {
+            $scope.sortCriterion = 'last_name';
+            $scope.statsSortDescending = false;
+        } else if ($scope.tableSelect === 'basic_stats') {
+            $scope.sortCriterion = 'points';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'per_game_stats') {
+            $scope.sortCriterion = 'points_per_game';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'time_on_ice_shift_stats') {
+            $scope.sortCriterion = 'time_on_ice_seconds';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'power_play_stats') {
+            $scope.sortCriterion = 'time_on_ice_pp_seconds';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'penalty_stats') {
+            $scope.sortCriterion = 'pim_from_events';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'additional_stats') {
+            $scope.sortCriterion = 'faceoff_pctg';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'per_60_stats') {
+            $scope.sortCriterion = 'points_per_60';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_stats') {
+            $scope.sortCriterion = 'save_pctg';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_stats_ev') {
+            $scope.sortCriterion = 'save_pctg_5v5';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_stats_sh') {
+            $scope.sortCriterion = 'save_pctg_4v5';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_stats_pp') {
+            $scope.sortCriterion = 'save_pctg_5v4';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_zone_stats_near') {
+            $scope.sortCriterion = 'save_pctg_slot';
+            $scope.statsSortDescending = true;
+        } else if ($scope.tableSelect === 'goalie_zone_stats_far') {
+            $scope.sortCriterion = 'save_pctg_blue_line';
+            $scope.statsSortDescending = true;
         }
+    };
 
-        $scope.u23Filter = function(a) {
-            if (!$scope.showOnlyU23)
-                return true;
-            if ($scope.showOnlyU23 && a.u23) {
-                return true;
-            } else {
+    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
+        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.ascendingAttrs);
+    };
+
+    $scope.greaterThan = function (prop, val) {
+        return function (item) {
+            return item[prop] > val;
+        }
+    }
+
+    $scope.u23Filter = function(a) {
+        if (!$scope.showOnlyU23)
+            return true;
+        if ($scope.showOnlyU23 && a.u23) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.minimumAgeFilter = function (a) {
+        if ($scope.minimumAge) {
+            if (a.age < $scope.minimumAge) {
                 return false;
-            }
-        };
-
-        $scope.minimumAgeFilter = function (a) {
-            if ($scope.minimumAge) {
-                if (a.age < $scope.minimumAge) {
-                    return false;
-                } else {
-                    return true;
-                }
             } else {
                 return true;
             }
+        } else {
+            return true;
         }
+    }
 
-        $scope.maximumAgeFilter = function (a) {
-            if ($scope.maximumAge) {
-                if (a.age > $scope.maximumAge) {
-                    return false;
-                } else {
-                    return true;
-                }
+    $scope.maximumAgeFilter = function (a) {
+        if ($scope.maximumAge) {
+            if (a.age > $scope.maximumAge) {
+                return false;
             } else {
                 return true;
             }
+        } else {
+            return true;
         }
+    }
 });
