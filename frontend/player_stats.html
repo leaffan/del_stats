@@ -42,6 +42,12 @@
                         <option data-ng-option value="on_goal_shot_zones">Schusszonen-Statistiken (Torschüsse)</option>
                         <option data-ng-option value="shot_zones">Schusszonen-Statistiken (alle Schüsse)</option>
                         <option data-ng-option value="additional_stats">Weitere Statistiken</option>
+                        <option data-ng-option value="goalie_stats">Torhüterstatistiken</option>
+                        <option data-ng-option value="goalie_stats_ev">Torhüterstatistiken (Fangquoten)</option>
+                        <option data-ng-option value="goalie_stats_sh">Torhüterstatistiken (Fangquoten Unterzahl)</option>
+                        <option data-ng-option value="goalie_stats_pp">Torhüterstatistiken (Fangquoten Überzahl)</option>
+                        <option data-ng-option value="goalie_zone_stats_near">Torhüterstatistiken (Fangquoten Nahschüsse)</option>
+                        <option data-ng-option value="goalie_zone_stats_far">Torhüterstatistiken (Fangquoten Fernschüsse)</option>
                         <option data-ng-option value="player_information">Spielerinformationen</option>
                     </select>
                 <span class="input-group-addon form_spacer"></span>
@@ -438,6 +444,194 @@
             </tbody>
         </table>
 
+        <table id="goalie_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_stats'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_played }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_started }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ svc.formatTime(stat.toi) }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.w }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.l }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots_against }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.goals_against }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.gaa.toFixed(2) }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg.toFixed(2) }} %</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.so }}</td>
+                </tr>
+            </tbody>
+        </table>
 
+        <table id="goalie_stats_ev" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_stats_ev'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_5v5 != null ? stat.save_pctg_5v5.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_4v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_4v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_4v4 != null ? stat.save_pctg_4v4.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_3v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_3v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_3v3 != null ? stat.save_pctg_3v3.toFixed(2) + ' %' : 'n/a' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="goalie_stats_sh" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_stats_sh'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_4v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_4v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_4v5 != null ? stat.save_pctg_4v5.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_3v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_3v5 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_3v5 != null ? stat.save_pctg_3v5.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_3v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_3v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_3v4 != null ? stat.save_pctg_3v4.toFixed(2) + ' %' : 'n/a' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="goalie_stats_pp" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_stats_pp'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v4 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_5v4 != null ? stat.save_pctg_5v4.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_5v3 != null ? stat.save_pctg_5v3.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_4v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_4v3 }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_4v3 != null ? stat.save_pctg_4v3.toFixed(2) + ' %' : 'n/a' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="goalie_zone_stats_near" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_zone_stats_near'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_slot }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_slot }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_slot != null ? stat.save_pctg_slot.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_left }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_left }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_left != null ? stat.save_pctg_left.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_right }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_right }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_right != null ? stat.save_pctg_right.toFixed(2) + ' %' : 'n/a' }}</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <table id="goalie_zone_stats_far" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_zone_stats_far'">
+            <thead>
+                <tr>
+                    <td class="text-center"><span class="rank">Rang</span></td>
+                    <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                        <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                            <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                            <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                            <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                        </a>
+                    </td>
+                </tr>
+            </thead>
+            <tbody>
+                <tr data-ng-repeat="stat in stats | orderBy:sortCriterion:statsSortDescending | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                    <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                    <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_blue_line }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_blue_line }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_blue_line != null ? stat.save_pctg_blue_line.toFixed(2) + ' %' : 'n/a' }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_neutral_zone }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_neutral_zone }}</td>
+                    <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_neutral_zone != null ? stat.save_pctg_neutral_zone.toFixed(2) + ' %' : 'n/a' }}</td>
+                </tr>
+            </tbody>
+        </table>
 
     </div>
