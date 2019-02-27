@@ -49,8 +49,9 @@
         <div class="form-group">
             <div class="input-group">
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisdaten</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">zusätzliche Daten</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken (1)</option>
+                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game_2">Zusatzstatistiken (2)</option>
                     <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
@@ -103,22 +104,67 @@
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_sh) }}</td>
-                <td class="col-md-1 text-right">{{ stat.pim }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_goals }}</td>
                 <td class="col-md-1 text-right">{{ stat.sh_goals }}</td>
-                <td class="col-md-1 text-right">{{ stat.plus_minus }}</td>
+                <td class="col-md-1 text-right">{{ stat.first_goals }}</td>
+                <td class="col-md-1 text-right">{{ stat.gw_goals }}</td>
             </tr>
             <tr>
                 <td class="col-md-1"></td>
-                <td class="col-md-1">Gesamt:</td>
+                <td class="col-md-1" style="width: 3%">Gesamt:</td>
                 <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shifts', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_pp', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_sh', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pim', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pp_goals', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'sh_goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'first_goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'gw_goals', player_stats) }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="additional_game_by_game_2" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'additional_game_by_game_2'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="col-md-1 text-center" style="width: 8%"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
+                <td class="col-md-1{{ setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right">{{ stat.shots_missed }}</td>
+                <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
+                <td class="col-md-1 text-right">{{ stat.plus_minus }}</td>
+                <td class="col-md-1 text-right">{{ stat.faceoffs }}</td>
+                <td class="col-md-1 text-right">{{ stat.faceoffs_won }}</td>
+                <td class="col-md-1 text-right">{{ stat.faceoffs_lost }}</td>
+                <td class="col-md-1 text-right">{{ stat.faceoff_pctg.toFixed(2  ) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.pim }}</td>
+                <td class="col-md-1 text-right">{{ stat.blocked_shots }}</td>
+            </tr>
+            <tr>
+                <td class="col-md-1"></td>
+                <td class="col-md-1" style="width: 3%">Gesamt:</td>
+                <td class="col-md-1 text-right" style="width: 12%"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_missed', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_blocked', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'plus_minus', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ totalFaceoffs = svc.getFilteredTotal(filtered_stats, 'faceoffs', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ totalFaceoffsWon = svc.getFilteredTotal(filtered_stats, 'faceoffs_won', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'faceoffs_lost', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ totalFaceoffs != 0 ? (totalFaceoffsWon / totalFaceoffs * 100.).toFixed(2) : (0).toFixed(2)}} %</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pim', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'blocked_shots', player_stats) }}</b></td>
             </tr>
         </tbody>
     </table>
@@ -147,22 +193,24 @@
                         === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
                 <td class="col-md-1 text-right">{{ stat.assists }}</td>
+                <td class="col-md-1 text-right">{{ stat.primary_assists }}</td>
                 <td class="col-md-1 text-right">{{ stat.points }}</td>
+                <td class="col-md-1 text-right">{{ stat.primary_points }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
-                <td class="col-md-1 text-right">{{ stat.shots_missed }}</td>
-                <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
+                <td class="col-md-1 text-right">{{ stat.shot_pctg.toFixed(2) }} %</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
             </tr>
             <tr data-ng-if="player_name">
                 <td class="col-md-1"></td>
-                <td class="col-md-1">Gesamt:</td>
+                <td class="col-md-1" style="width: 3%">Gesamt:</td>
                 <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'goals', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ goals_total = svc.getFilteredTotal(filtered_stats, 'goals', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'assists', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'primary_assists', player_stats) }}</b></td>
                 <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'points', player_stats) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_on_goal', player_stats) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_missed', player_stats) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'shots_blocked', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'primary_points', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_stats, 'shots_on_goal', player_stats) }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ (goals_total / shots_on_goal_total * 100.).toFixed(2) }} %</b></td>
                 <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
             </tr>
         </tbody>
