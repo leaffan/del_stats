@@ -241,6 +241,12 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['faceoffs'] = stat_dict['faceoffsCount']
     single_player_game['faceoffs_won'] = stat_dict['faceoffsWin']
     single_player_game['faceoffs_lost'] = stat_dict['faceoffsLosses']
+    if single_player_game['faceoffs']:
+        single_player_game['faceoff_pctg'] = round(
+            single_player_game['faceoffs_won'] /
+            single_player_game['faceoffs'] * 100., 3)
+    else:
+        single_player_game['faceoff_pctg'] = 0
     single_player_game['blocked_shots'] = stat_dict['blockedShotsByPlayer']
     single_player_game['time_on_ice'] = timedelta(
         seconds=stat_dict['timeOnIce'])
@@ -252,6 +258,10 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['penalties'] = 0
     single_player_game['pim_from_events'] = 0
     single_player_game['penalty_shots'] = 0
+    if game['first_goal_player_id'] == single_player_game['player_id']:
+        single_player_game['first_goals'] = 1
+    else:
+        single_player_game['first_goals'] = 0
     for l in [2, 5, 10, 20]:
         single_player_game["_%dmin" % l] = 0
     for category in PENALTY_CATEGORIES:
