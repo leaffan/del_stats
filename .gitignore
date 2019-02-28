@@ -111,6 +111,7 @@ frontend/*.csv
 frontend/*.json
 frontend/index.php
 frontend/data/*
+frontend/data_bak/*
 sandbox/*
 svg/*
 
