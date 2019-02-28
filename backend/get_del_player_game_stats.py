@@ -394,7 +394,7 @@ if __name__ == '__main__':
         all_players = json.loads(open(plr_tgt_path).read())
     else:
         all_players = dict()
-        all_players[0] = {'first_name': '', 'last_name': ''}
+        all_players[0] = {'first_name': '', 'last_name': '', 'position': ''}
 
     per_player_game_stats = defaultdict(list)
 
@@ -430,11 +430,13 @@ if __name__ == '__main__':
     for player_id, team in per_player_game_stats:
 
         if player_id not in all_players:
-            all_players[int(player_id)] = {
+            all_players[player_id] = {
                 'first_name': per_player_game_stats[
                     (player_id, team)][0]['first_name'],
                 'last_name': per_player_game_stats[
-                    (player_id, team)][0]['last_name']
+                    (player_id, team)][0]['last_name'],
+                'position': per_player_game_stats[
+                    (player_id, team)][0]['position']
             }
 
         tgt_path = os.path.join(
