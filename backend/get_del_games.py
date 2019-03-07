@@ -16,7 +16,7 @@ from dateutil.parser import parse
 from dateutil.rrule import rrule, DAILY
 from dateutil.relativedelta import relativedelta
 
-from utils import get_team_from_game
+from utils import get_team_from_game, get_season
 
 
 BASE_URL = "https://www.del.org"
@@ -31,6 +31,10 @@ POS_KEYS = {'1': 'G', '2': 'D', '3': 'F'}
 
 TGT_FILE = "del_games.json"
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+
+PLAYOFF_DATES = {
+    2018: datetime.date(2019, 3, 5)
+}
 
 
 def get_game_ticker_urls_rounds(date):
@@ -76,6 +80,11 @@ def get_games_for_date(date, existing_games=None):
         single_game_data = dict()
         # setting game date and round information
         single_game_data['date'] = date
+        single_game_data['season'] = get_season(date)
+        if date < PLAYOFF_DATES[single_game_data['season']]:
+            single_game_data['season_type'] = 'RS'
+        elif date >= PLAYOFF_DATES[single_game_data['season']]:
+            single_game_data['season_type'] = 'PO'
         single_game_data['round'] = int(round.split()[-1])
 
         # setting game ids
