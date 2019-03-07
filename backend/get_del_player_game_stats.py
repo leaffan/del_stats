@@ -198,6 +198,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     else:
         single_player_game['home_road'] = "road"
     single_player_game['game_date'] = game['date']
+    single_player_game['season'] = game['season']
+    single_player_game['season_type'] = game['season_type']
     single_player_game['round'] = game['round']
     single_player_game['team'] = stat_dict['teamShortcut']
     if key == 'home':

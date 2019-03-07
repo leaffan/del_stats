@@ -145,6 +145,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line = dict()
         # basic game information
         game_stat_line['game_date'] = game['date']
+        game_stat_line['season'] = game['season']
+        game_stat_line['season_type'] = game['season_type']
         game_stat_line['round'] = game['round']
         game_stat_line['game_id'] = game_id
         game_stat_line['schedule_game_id'] = game['schedule_game_id']
