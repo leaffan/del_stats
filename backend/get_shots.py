@@ -307,9 +307,7 @@ if __name__ == '__main__':
 
             shot['game_id'] = game['game_id']
             shot['schedule_game_id'] = game['schedule_game_id']
-            # default game type is regular season
-            # TODO: adjust for playoff games
-            shot['game_type'] = 'RS'
+            shot['season_type'] = game['season_type']
 
             # converting arbitrary coordinates to actual coordinates in meters
             x = rd.X_TO_M * shot['coordinate_x']
