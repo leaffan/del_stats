@@ -92,7 +92,7 @@
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
                         }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
                         game.game_type
@@ -139,7 +139,7 @@
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
                         }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
                         game.game_type
@@ -188,7 +188,7 @@
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
                         }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
                         game.game_type
@@ -237,7 +237,7 @@
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
                         }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
                         game.game_type
@@ -281,7 +281,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-2">{{ game.arena }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.attendance }}</td>
@@ -321,7 +321,7 @@
         <tbody>
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(game.pp_time) }}</td>
                 <td class="col-md-1 text-right">{{ game.pp_opps }}</td>
@@ -365,7 +365,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:game_date:true | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 10%">
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%">
                     <b>{{ game.score}}:{{game.opp_score}} </b>
                     <a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
                         {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
@@ -419,7 +419,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ game.shots }}</td>
                 <td class="col-md-1 text-right">{{ game.sl_sh }}</td>
@@ -466,7 +466,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ game.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ game.sl_og }}</td>
@@ -513,7 +513,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ game.opp_shots }}</td>
                 <td class="col-md-1 text-right">{{ game.sl_sh_a }}</td>
@@ -560,7 +560,7 @@
             <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center"><a href="http://anonymto.com/?https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
+                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="http://anonymto.com/?https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="col-md-1 text-right">{{ game.opp_shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ game.sl_og_a }}</td>
