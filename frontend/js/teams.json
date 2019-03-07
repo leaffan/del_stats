@@ -4,97 +4,111 @@
         "url_name": "augsburger-panther",
         "full_name": "Augsburger Panther",
         "location": "Augsburg",
-        "id": 13
+        "id": 13,
+        "po": true
     },
     {
         "abbr": "EBB",
         "url_name": "eisbaeren-berlin",
         "full_name": "Eisbären Berlin",
         "location": "Berlin",
-        "id": 3
+        "id": 3,
+        "po": true
     },
     {
         "abbr": "BHV",
         "url_name": "pinguins-bremerhaven",
         "full_name": "Pinguins Bremerhaven",
         "location": "Bremerhaven",
-        "id": 9
+        "id": 9,
+        "po": true
     },
     {
         "abbr": "DEG",
         "url_name": "duesseldorfer-eg",
         "full_name": "Düsseldorfer EG",
         "location": "Düsseldorf",
-        "id": 4
+        "id": 4,
+        "po": true
     },
     {
         "abbr": "ING",
         "url_name": "erc-ingolstadt",
         "full_name": "ERC Ingolstadt",
         "location": "Ingolstadt",
-        "id": 3
+        "id": 3,
+        "po": true
     },
     {
         "abbr": "IEC",
         "url_name": "iserlohn-roosters",
         "full_name": "Iserlohn Roosters",
         "location": "Iserlohn",
-        "id": 7
+        "id": 7,
+        "po": false
     },
     {
         "abbr": "KEC",
         "url_name": "koelner-haie",
         "full_name": "Kölner Haie",
         "location": "Köln",
-        "id": 11
+        "id": 11,
+        "po": true
     },
     {
         "abbr": "KEV",
         "url_name": "krefeld-pinguine",
         "full_name": "Krefeld Pinguine",
         "location": "Krefeld",
-        "id": 5
+        "id": 5,
+        "po": false
     },
     {
         "abbr": "MAN",
         "url_name": "adler-mannheim",
         "full_name": "Adler Mannheim",
         "location": "Mannheim",
-        "id": 2
+        "id": 2,
+        "po": true
     },
     {
         "abbr": "RBM",
         "url_name": "ehc-red-bull-muenchen",
         "full_name": "EHC Red Bull München",
         "location": "München",
-        "id": 12
+        "id": 12,
+        "po": true
     },
     {
         "abbr": "NIT",
         "url_name": "thomas-sabo-ice-tigers",
         "full_name": "Thomas Sabo Ice Tigers",
         "location": "Nürnberg",
-        "id": 14
+        "id": 14,
+        "po": true
     },
     {
         "abbr": "SWW",
         "url_name": "schwenninger-wild-wings",
         "full_name": "Schwenninger Wild Wings",
         "location": "Schwenningen",
-        "id": 15
+        "id": 15,
+        "po": false
     },
     {
         "abbr": "STR",
         "url_name": "straubing-tigers",
         "full_name": "Straubing Tigers",
         "location": "Straubing",
-        "id": 6
+        "id": 6,
+        "po": true
     },
     {
         "abbr": "WOB",
         "url_name": "grizzlys-wolfsburg",
         "full_name": "Grizzlys Wolfsburg",
         "location": "Wolfsburg",
-        "id": 8
+        "id": 8,
+        "po": false
     }
 ]
