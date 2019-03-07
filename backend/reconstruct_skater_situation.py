@@ -263,7 +263,7 @@ def reconstruct_skater_situation(game):
 
     # doing the following for each second of the game
     for t in range(1, game_end + 1):
-        if t == 3601:
+        if game['season_type'] == 'RS' and t == 3601:
             skr_count['home'] = 3
             skr_count['road'] = 3
             skr_count[game['home_abbr']] = 3
