@@ -176,6 +176,7 @@ def get_shot_stats(player_id, team, shot_data):
     for attr in SHOT_STATS_ATTRS:
         shot_stats[attr] = 0
 
+    # counters for all shots and all shots on goal respectively
     all_shots = 0
     on_goal = 0
 
@@ -188,6 +189,7 @@ def get_shot_stats(player_id, team, shot_data):
         if "goal" in shot['target_type']:
             on_goal += 1
         shot_stats["%s_shots" % shot['shot_zone'].lower()] += 1
+        # adding up shot distances
         shot_stats[
             "%s_distance" % shot['shot_zone'].lower()] += shot['distance']
         shot_zone_result = "%s_%s" % (
@@ -199,13 +201,19 @@ def get_shot_stats(player_id, team, shot_data):
     for zone in [
         'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal'
     ]:
+        # calculating average distance to goal from all previously aggregated
+        # distances and number of shots for the current shot zone
         if shot_stats["%s_distance" % zone]:
             shot_stats["%s_distance" % zone] = round(
                 shot_stats["%s_distance" % zone] /
                 float(shot_stats["%s_shots" % zone]), 2)
+        # calculating shots on goal percentage for current shot zone in
+        # relation to all shots on goal
         if shot_stats["%s_on_goal" % zone]:
             shot_stats["%s_on_goal_pctg" % zone] = round(
                 shot_stats["%s_on_goal" % zone] / float(on_goal) * 100, 2)
+        # calculating shots percentage for current shot zone in relation
+        # to all shots
         if shot_stats["%s_shots" % zone]:
             shot_stats["%s_pctg" % zone] = round(
                 shot_stats["%s_shots" % zone] / float(all_shots) * 100, 2)
