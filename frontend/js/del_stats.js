@@ -92,7 +92,7 @@ app.factory('svc', function() {
         // gets average of filtered attributed values through a specified game date
         getFilteredAverageTotal: function(list, attribute, dataSource, to) {
             if (dataSource === undefined) {
-                return
+                return;
             }
             var total = 0;
             var cnt_data = 0;
@@ -109,6 +109,17 @@ app.factory('svc', function() {
         },
         parseFloat: function(floatAsString) {
             return parseFloat(floatAsString);
+        },
+        setTextColor: function(score, opp_score) {
+            if (score > opp_score) {
+                return " green";
+            }
+            else if (opp_score > score) {
+                return " red";
+            }
+            else {
+                return "";
+            }
         }
     }
 });
@@ -167,18 +178,6 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
 
     $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
         return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.model.ascendingAttrs);
-    };
-
-    $scope.setTextColor = function(goals, opp_goals) {
-        if (goals > opp_goals) {
-            return " green";
-        }
-        else if (opp_goals > goals) {
-            return " red"
-        }
-        else {
-            return ""
-        }
     };
 
     // get standings position through specified game date
@@ -270,6 +269,7 @@ app.controller('teamController', function($scope, $http, svc) {
     var ctrl = this;
     // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
+    $scope.seasonTypeSelect = 'PO'
     $scope.isStandingsView = true;
     $scope.sortConfig = {
         'sortKey': 'points',
@@ -288,6 +288,7 @@ app.controller('teamController', function($scope, $http, svc) {
         // creating lookup structures...
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
+        $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
     });
  
     $scope.$watch('ctrl.fromDate', function() {
@@ -309,6 +310,12 @@ app.controller('teamController', function($scope, $http, svc) {
     }, true);
 
     $scope.$watch('homeAwaySelect', function() {
+        if ($scope.team_stats) {
+            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+        }
+    }, true);
+
+    $scope.$watch('seasonTypeSelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
@@ -340,64 +347,155 @@ app.controller('teamController', function($scope, $http, svc) {
         if ($scope.team_stats === undefined)
             return filtered_team_stats;
         $scope.team_stats.forEach(element => {
-            date_to_test = moment(element.game_date);
             team = element['team'];
             if (!filtered_team_stats[team]) {
-                filtered_team_stats[team] = {};
-                filtered_team_stats[team]['team'] = team;
-                $scope.stats_to_aggregate.forEach(category => {
-                    filtered_team_stats[team][category] = 0;
-                });
+                // leaving out non-playoff teams in playoff standings
+                if ($scope.seasonTypeSelect != 'PO' || $scope.team_playoff_lookup[team]) {
+                    filtered_team_stats[team] = {};
+                    filtered_team_stats[team]['team'] = team;
+                    $scope.stats_to_aggregate.forEach(category => {
+                        filtered_team_stats[team][category] = 0;
+                    });
+                }
             }
+            // determining for each team game element whether it will be
+            // included (is_filtered = true) in display or not (is_filtered =
+            // false)
+            // element not included per default
             var is_filtered = false;
+            // retrieving game date as moment structure
+            date_to_test = moment(element.game_date);
+            // if both a start and end date for a range have been set
             if (ctrl.fromDate && ctrl.toDate) {
+                // checking if game date is located within selected time range
                 if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
-                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                    // checking additional filters
+                    // if each home/road-game filter, game-situation filterm and season-type filter have been activated
+                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    // if home/road-game filter and game-situation filter have been activated
+                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
                         if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
                             is_filtered = true;
-                    } else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
+                    }
+                    // if game-situation filter and season-type filter have been activated
+                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
+                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
                             is_filtered = true;
-                    } else if ($scope.situationSelect) {
+                    }
+                    // if home/road-game filter and season-type filter have been activated
+                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    // if only situation-type filter has been activated
+                    else if ($scope.situationSelect) {
                         if (element[$scope.situationSelect])
                             is_filtered = true;
-                    } else {
+                    }
+                    // if only home/road-game filter has been activated
+                    else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    }
+                    // if only season-type filter has been activated
+                    else if ($scope.seasonTypeSelect) {
+                        if ($scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else {
                         is_filtered = true;
                     }
                 }
+            // if only a start date for a range has been set
             } else if (ctrl.fromDate) {
+                // checking if game date is located within selected time range
                 if (date_to_test >= ctrl.fromDate.startOf('day')) {
-                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
                         if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
                             is_filtered = true;
-                    } else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
+                    }
+                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
+                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
                             is_filtered = true;
-                    } else if ($scope.situationSelect) {
+                    }
+                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else if ($scope.situationSelect) {
                         if (element[$scope.situationSelect])
                             is_filtered = true;
-                    } else {
+                    }
+                    else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    }
+                    else if ($scope.seasonTypeSelect) {
+                        if ($scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else {
                         is_filtered = true;
                     }
                 }
+            // if only an end date for a range has been set
             } else if (ctrl.toDate) {
+                // checking if game date is located within selected time range
                 if (date_to_test <= ctrl.toDate.startOf('day')) {
-                    if ($scope.homeAwaySelect && $scope.situationSelect) {
+                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
                         if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
                             is_filtered = true;
-                    } else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
+                    }
+                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
+                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
                             is_filtered = true;
-                    } else if ($scope.situationSelect) {
+                    }
+                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
+                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else if ($scope.situationSelect) {
                         if (element[$scope.situationSelect])
                             is_filtered = true;
-                    } else {
+                    }
+                    else if ($scope.homeAwaySelect) {
+                        if ($scope.homeAwaySelect === element.home_road)
+                            is_filtered = true;
+                    }
+                    else if ($scope.seasonTypeSelect) {
+                        if ($scope.seasonTypeSelect === element.season_type)
+                            is_filtered = true;
+                    }
+                    else {
                         is_filtered = true;
                     }
                 }
             } else {
-                if ($scope.homeAwaySelect && $scope.situationSelect) {
+                if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
+                    if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
+                        is_filtered = true;
+                }
+                else if ($scope.homeAwaySelect && $scope.situationSelect) {
                     if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
+                        is_filtered = true;
+                }
+                else if ($scope.situationSelect && $scope.seasonTypeSelect) {
+                    if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
+                        is_filtered = true;
+                }
+                else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
+                    if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
                         is_filtered = true;
                 }
                 else if ($scope.situationSelect) {
@@ -407,7 +505,12 @@ app.controller('teamController', function($scope, $http, svc) {
                 else if ($scope.homeAwaySelect) {
                     if ($scope.homeAwaySelect === element.home_road)
                         is_filtered = true;
-                } else {
+                }
+                else if ($scope.seasonTypeSelect) {
+                    if ($scope.seasonTypeSelect === element.season_type)
+                        is_filtered = true;
+                }
+                else {
                     is_filtered = true;
                 }
         }
@@ -676,18 +779,6 @@ app.controller('teamController', function($scope, $http, svc) {
         }
     }
 
-    $scope.setTextColor = function(goals, opp_goals) {
-        if (goals > opp_goals) {
-            return " green";
-        }
-        else if (opp_goals > goals) {
-            return " red"
-        }
-        else {
-            return ""
-        }
-    };
-
 });
 
 app.controller('plrController', function($scope, $http, $routeParams, $location, svc) {
@@ -809,25 +900,10 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
         }
     };
 
-
-    $scope.setTextColor = function(score, opp_score) {
-        if (score > opp_score) {
-            return " green";
-        }
-        else if (opp_score > score) {
-            return " red"
-        }
-        else {
-            return ""
-        }
-    };
-
     $scope.changePlayer = function() {
         $scope.model.player_id = $scope.model.new_player_id;
         $location.path('/player_profile/' + $scope.model.new_team + '/' + $scope.model.player_id);
     };
-
-
 });
 
 app.controller('mainController', function ($scope, $http, svc) {
