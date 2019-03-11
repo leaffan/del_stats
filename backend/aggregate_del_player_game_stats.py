@@ -20,7 +20,7 @@ U23_CUTOFF_DATE = parse("1996-01-01")
 # attributes to simply collect from single-game player statistics
 TO_COLLECT = [
     'no', 'position', 'first_name', 'last_name', 'full_name', 'country',
-    'shoots', 'date_of_birth', 'weight', 'height',
+    'shoots', 'date_of_birth', 'weight', 'height', 'season_type',
 ]
 # attributes from single-game player statistics to aggregate as integers
 TO_AGGREGATE_INTS = [
@@ -103,7 +103,8 @@ ISO_COUNTRY_CODES = {
 }
 
 OUT_FIELDS = [
-    'player_id', 'team', 'no', 'position', 'first_name', 'last_name',
+    'player_id', 'season_type', 'team', 'no', 'position',
+    'first_name', 'last_name',
     'full_name', 'country', 'shoots', 'date_of_birth', 'age', 'height',
     'weight', 'games_played', 'goals', 'assists', 'primary_assists',
     'secondary_assists', 'points', 'primary_points', 'plus', 'minus',
@@ -168,7 +169,7 @@ def convert_to_minutes(td):
         td.total_seconds() // 60, round(td.total_seconds() % 60, 0))
 
 
-def get_shot_stats(player_id, team, shot_data):
+def get_shot_stats(player_id, team, season_type, shot_data):
     """
     Compiles and aggregates shot statistics for specified player and team.
     """
@@ -184,6 +185,8 @@ def get_shot_stats(player_id, team, shot_data):
         if shot['player_id'] != player_id:
             continue
         if shot['team'] != team:
+            continue
+        if shot['season_type'] != season_type:
             continue
         all_shots += 1
         if "goal" in shot['target_type']:
@@ -228,7 +231,7 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
     """
     goalie_stats = dict()
     # retrieving aggregated stats for current player and team
-    aggregated_stats = aggregated_stats[(player_id, team)]
+    aggregated_stats = aggregated_stats[(player_id, team, season_type)]
     # calculating overall save percentage and goals against average
     if aggregated_stats['shots_against']:
         goalie_stats['save_pctg'] = round(
@@ -283,7 +286,10 @@ if __name__ == '__main__':
 
     for game_stat_line in player_game_stats:
         # constructing reference key
-        player_team_key = (game_stat_line['player_id'], game_stat_line['team'])
+        player_team_key = (
+            game_stat_line['player_id'],
+            game_stat_line['team'],
+            game_stat_line['season_type'])
         # creating empty data dictionaries
         if player_team_key not in aggregated_stats:
             aggregated_stats[player_team_key] = defaultdict(int)
@@ -302,13 +308,20 @@ if __name__ == '__main__':
                 seconds=game_stat_line[attr])
     else:
         # re-setting games played counter for goaltenders
-        for player_id, team in aggregated_stats:
-            if list(player_data[(player_id, team)]['position'])[0] == 'GK':
-                aggregated_stats[(player_id, team)]['games_played'] = 0
+        for player_id, team, season_type in aggregated_stats:
+            if (
+                list(player_data[
+                    (player_id, team, season_type)]['position'])[0] == 'GK'
+            ):
+                aggregated_stats[
+                    (player_id, team, season_type)]['games_played'] = 0
 
     for game_stat_line in goalie_game_stats:
         # constructing reference key
-        goalie_team_key = (game_stat_line['goalie_id'], game_stat_line['team'])
+        goalie_team_key = (
+            game_stat_line['goalie_id'],
+            game_stat_line['team'],
+            game_stat_line['season_type'])
         # creating empty data dictionaries
         if goalie_team_key not in aggregated_stats:
             aggregated_stats[goalie_team_key] = defaultdict(int)
@@ -321,9 +334,9 @@ if __name__ == '__main__':
     # post-processing aggregated attributes
     aggregated_stats_as_list = list()
 
-    for player_id, team in aggregated_stats:
+    for player_id, team, season_type in aggregated_stats:
         # constructing reference key
-        key = (player_id, team)
+        key = (player_id, team, season_type)
 
         for pd_item in player_data[key]:
             # reviewing multiple values for personal player attributes
@@ -335,6 +348,9 @@ if __name__ == '__main__':
                         pd_item,
                         ", ".join([str(s) for s in player_data[key][pd_item]]))
                 )
+
+        if not player_data[key]:
+            continue
 
         # setting up data dictionary for personal player attributes
         basic_values = dict()
@@ -363,7 +379,7 @@ if __name__ == '__main__':
 
         # calculating shot statistics
         # TODO: determine whether to deactivate for goalies
-        shot_stats = get_shot_stats(player_id, team, shot_data)
+        shot_stats = get_shot_stats(player_id, team, season_type, shot_data)
         # calculating goaltender statistics
         if basic_values['position'] == 'GK':
             goalie_stats = calculate_goalie_stats(
