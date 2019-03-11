@@ -184,6 +184,8 @@ if __name__ == '__main__':
             goalie_dict['game_id'] = game['game_id']
             goalie_dict['schedule_game_id'] = game['schedule_game_id']
             goalie_dict['game_date'] = game['date']
+            goalie_dict['season'] = game['season']
+            goalie_dict['season_type'] = game['season_type']
             goalie_dict['round'] = game['round']
             goalie_dict['team'] = goalie_team
             if goalie_dict['team'] == game['home_abbr']:
