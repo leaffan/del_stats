@@ -288,6 +288,8 @@ def get_game_events(game_id):
     # setting up containers for all goals
     all_goals = list()
     goals_per_team = {'home': list(), 'road': list()}
+    empty_net_goals_per_team = {'home': 0, 'road': 0}
+    extra_attacker_goals_per_team = {'home': 0, 'road': 0}
 
     # collecting all goals scored in the game
     for period in game_events:
@@ -326,6 +328,27 @@ def get_game_events(game_id):
         'data']['scorer']['name']
     single_game_events['gw_goal_last_name'] = winning_goal[
         'data']['scorer']['surname']
+
+    # counting empty net and extra attacker goals per team
+    for key in ['home', 'road']:
+        for goal in goals_per_team[key]:
+            if goal['data']['en']:
+                empty_net_goals_per_team[key] += 1
+            if goal['data']['ea']:
+                # some empty net goals are also falsely registered as extra
+                # attacker goals
+                if goal['data']['en']:
+                    continue
+                # game-winning shootout goals are falsely registered as extra
+                # attacker goals
+                if goal['data']['balance'] == 'GWS':
+                    continue
+                extra_attacker_goals_per_team[key] += 1
+        else:
+            single_game_events[
+                "%s_en_goals" % key] = empty_net_goals_per_team[key]
+            single_game_events[
+                "%s_ea_goals" % key] = extra_attacker_goals_per_team[key]
 
     return single_game_events
 
