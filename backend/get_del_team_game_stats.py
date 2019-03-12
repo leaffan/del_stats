@@ -213,6 +213,11 @@ def get_single_game_team_data(game, grouped_shot_data):
                 "%s_goals_%d" % (key, period)]
             game_stat_line["opp_goals_%d" % period] = game[
                 "%s_goals_%d" % (opp_key, period)]
+        # empty-net and extra-attacker goals
+        game_stat_line['en_goals'] = game["%s_en_goals" % key]
+        game_stat_line['ea_goals'] = game["%s_ea_goals" % key]
+        game_stat_line['opp_en_goals'] = game["%s_en_goals" % opp_key]
+        game_stat_line['opp_ea_goals'] = game["%s_ea_goals" % opp_key]
         # situation after 20 and 40 minutes respectively
         for situation in [
             'tied20', 'lead20', 'trail20', 'tied40', 'lead40', 'trail40'
@@ -240,6 +245,25 @@ def get_single_game_team_data(game, grouped_shot_data):
         elif game['first_goal'] == game_stat_line['opp_team']:
             game_stat_line['scored_first'] = False
             game_stat_line['trailed_first'] = True
+        # one-goal, two-goal, three-goal, four-goal-game?
+        for goal_game in ['one_goal', 'two_goal', 'three_goal', 'four_goal']:
+            game_stat_line[goal_game] = False
+        score_diff = abs(
+            (game_stat_line['score'] - game_stat_line['en_goals']) -
+            (game_stat_line['opp_score'] - game_stat_line['opp_en_goals']))
+        # in case the right amount of empty-net goals have been scored, we
+        # may end up with a score differential of zero, see game between STR
+        # and ING on Mar 3, 2019
+        if not score_diff:
+            game_stat_line['zero_goal'] = True
+        if score_diff == 1:
+            game_stat_line['one_goal'] = True
+        elif score_diff == 2:
+            game_stat_line['two_goal'] = True
+        elif score_diff == 3:
+            game_stat_line['three_goal'] = True
+        elif score_diff > 3:
+            game_stat_line['four_goal'] = True
         # shots
         game_stat_line['shots'] = raw_stats[key]['shotsAttempts']
         game_stat_line['shots_on_goal'] = raw_stats[key]['shotsOnGoal']
