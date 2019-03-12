@@ -1,5 +1,7 @@
 var app = angular.module('delStatsApp', ['ngRoute', 'moment-picker'])
 
+// main application configuration
+
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider
         .when('/home', {
@@ -156,6 +158,8 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         $scope.team_full_name_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
+        // ...for playoff participation indicator
+        $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
     });
 
     $scope.model = {
@@ -288,6 +292,7 @@ app.controller('teamController', function($scope, $http, svc) {
         // creating lookup structures...
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
+        // ...for playoff participation indicator
         $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
     });
  
@@ -911,6 +916,7 @@ app.controller('mainController', function ($scope, $http, svc) {
     $scope.svc = svc;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
+    $scope.seasonTypeFilter = 'RS';
     $scope.sortCriterion = 'points';
     // default sort order is descending
     $scope.statsSortDescending = true;
