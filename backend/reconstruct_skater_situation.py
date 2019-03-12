@@ -58,7 +58,10 @@ def build_interval_tree(game):
             event_type = event['type']
 
             # adding time of period end to list of period end times
-            if period == 'overtime' and event_type == 'periodEnd':
+            if (
+                period == 'overtime' and (
+                    event_type == 'periodEnd' or event_type == 'goal')
+            ):
                 end_period_times.append(event['time'])
 
             # adding time of goal to list of times a goal has been scored
