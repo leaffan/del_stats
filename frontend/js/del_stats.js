@@ -530,7 +530,7 @@ app.controller('teamController', function($scope, $http, svc) {
         filtered_team_stats.forEach(element => {
             // calculating score and goal differentials
             element['score_diff'] = element['score'] - element['opp_score'];
-            element['goals_diff'] = element['goals'] - element['ow'] - element['opp_goals'] + element['ol'];
+            element['goals_diff'] = element['goals'] - element['opp_goals'];
             element['goals_diff_1'] = element['goals_1'] - element['opp_goals_1'];
             element['goals_diff_2'] = element['goals_2'] - element['opp_goals_2'];
             element['goals_diff_3'] = element['goals_3'] - element['opp_goals_3'];
