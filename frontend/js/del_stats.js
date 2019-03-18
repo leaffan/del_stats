@@ -925,11 +925,16 @@ app.controller('mainController', function ($scope, $http, svc) {
     $scope.svc = svc;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
-    $scope.seasonTypeFilter = 'RS';
+    $scope.seasonTypeFilter = 'PO';
     $scope.sortCriterion = 'points';
     // default sort order is descending
     $scope.statsSortDescending = true;
     $scope.showOnlyU23 = false;
+    $scope.sortConfig = {
+        'sortKey': 'points',
+        'sortCriteria': ['points', '-games_played', 'goals', 'primary_points'],
+        'sortDescending': true
+    }
 
     $scope.ascendingAttrs = [
         'last_name', 'team', 'position', 'shoots',
@@ -1000,6 +1005,47 @@ app.controller('mainController', function ($scope, $http, svc) {
     $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
         return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.ascendingAttrs);
     };
+
+    $scope.sort_def = {
+        "points": ['points', '-games_played', 'goals', 'primary_points'],
+        "assists": ['assists', '-games_played', 'primary_assists'],
+        "goals": ['goals', '-games_played', 'points'],
+        "games_played": ['games_played', '-team']
+    };
+
+    $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
+        ascendingAttrs = [
+            'last_name', 'team', 'position', 'shoots',
+            'date_of_birth', 'iso_country', 'gaa'
+        ];
+        // if previous sort key equals the new one
+        if (oldSortConfig['sortKey'] == sortKey) {
+            // just change sort direction
+            return {
+                'sortKey': oldSortConfig['sortKey'],
+                'sortCriteria': oldSortConfig['sortCriteria'],
+                'sortDescending': !oldSortConfig['sortDescending']
+            }
+        } else {
+            // ascending for a few columns
+            if (ascendingAttrs.indexOf(sortKey) !== -1) {
+                sortCriteria = $scope.sort_def[sortKey] || sortKey;
+                return {
+                    'sortKey': sortKey,
+                    'sortCriteria': sortCriteria,
+                    'sortDescending': false
+                }
+            } else {
+                // otherwise descending sort order
+                sortCriteria = $scope.sort_def[sortKey] || sortKey;
+                return {
+                    'sortKey': sortKey,
+                    'sortCriteria': sortCriteria,
+                    'sortDescending': true
+                }
+            }
+        }
+    }
 
     $scope.greaterThan = function (prop, val) {
         return function (item) {
