@@ -818,7 +818,16 @@ app.controller('plrController', function($scope, $http, $routeParams, $location,
     });
 
     $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
-        $scope.all_players = res.data[1];
+        seen = [];
+        $scope.all_players = []
+        // de-duplicating array with players
+        res.data[1].forEach(element => {
+            if (!seen[element.player_id]) {
+                $scope.all_players.push(element);
+                seen[element.player_id] = true;
+            }
+        });
+        // $scope.all_players = res.data[1];
     });
 
     $scope.model = {
