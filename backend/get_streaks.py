@@ -6,6 +6,7 @@ import json
 import operator
 
 from collections import namedtuple, defaultdict
+from concurrent.futures import ThreadPoolExecutor, as_completed
 
 TeamGame = namedtuple('TeamGame', [
     'team', 'game_id', 'game_date', 'game_type', 'home_road', 'roster'])
@@ -148,31 +149,38 @@ def single_task(plr_id, plr_team, team_games, player_stats):
                         post_process_streak(
                             single_player_streaks, raw_streaks, component,
                             plr_id, team_game.team, max_streak_lengths)
+                break
     # finally ending all on-going streaks
     else:
         for component in ['goals', 'assists', 'points']:
             post_process_streak(
                 single_player_streaks, raw_streaks, component,
                 plr_id, team_game.team, max_streak_lengths)
+    # retrieving last game date for current team
+    last_team_game_date = team_games[plr_team][-1].game_date
 
     return combine_single_player_streaks(
-        single_player_streaks, max_streak_lengths)
+        single_player_streaks, max_streak_lengths, last_team_game_date)
 
 
-def combine_single_player_streaks(single_player_streaks, max_streak_lengths):
-
+def combine_single_player_streaks(
+    single_player_streaks, max_streak_lengths, last_team_game_date
+):
+    """
+    Combines all collected player scoring streaks determining the longest and
+    (possibly) current ones as well.
+    """
     all_single_player_streaks = list()
 
     for component in single_player_streaks:
         for streak in single_player_streaks[component]:
             streak_d = streak._asdict()
+            # setting default indicators for longest and current streaks
             streak_d['longest'] = False
             streak_d['current'] = False
             if streak.length == max_streak_lengths[component]:
-                # print("longest %s streak:" % component, streak)
                 streak_d['longest'] = True
-            if streak.to_date == last_team_games[streak.team]:
-                # print("Current %s streak:" % component, streak)
+            if streak.to_date == last_team_game_date:
                 streak_d['current'] = True
             all_single_player_streaks.append(streak_d)
 
@@ -192,25 +200,26 @@ if __name__ == '__main__':
 
     teams = set()
     player_teams = set()
-
+    # collecting teams
     [teams.add(game['home_abbr']) for game in games]
     [teams.add(game['road_abbr']) for game in games]
+    # collecting games played by each team and player
     [player_teams.add((
         player_stat['player_id'],
         player_stat['team'])) for player_stat in player_stats]
-
+    # collecting indivudual team games
     team_games = collect_team_games(games, teams)
-
-    last_team_games = dict()
-    for team in teams:
-        last_team_games[team] = team_games[team][-1].game_date
 
     all_streaks = list()
 
-    for plr_id, plr_team in list(player_teams)[:]:
-        all_single_player_streaks = single_task(
-            plr_id, plr_team, team_games, player_stats)
-        all_streaks.extend(all_single_player_streaks)
+    # retrieving scoring streaks in parallel threads
+    with ThreadPoolExecutor(max_workers=4) as threads:
+        tasks = {threads.submit(
+            single_task, plr_id, plr_team, team_games, player_stats): (
+                plr_id, plr_team) for plr_id, plr_team in player_teams}
+        for completed_task in as_completed(tasks):
+            all_streaks.extend(completed_task.result())
 
+    # dumping results to JSON
     tgt_streak_path = os.path.join(TGT_DIR, STREAK_DATA_TGT)
     open(tgt_streak_path, 'w').write(json.dumps(all_streaks, indent=2))
