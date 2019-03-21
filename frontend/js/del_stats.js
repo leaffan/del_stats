@@ -926,6 +926,7 @@ app.controller('mainController', function ($scope, $http, svc) {
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
     $scope.seasonTypeFilter = 'PO';
+    $scope.scoringStreakTypeFilter = 'points';
     $scope.sortCriterion = 'points';
     // default sort order is descending
     $scope.statsSortDescending = true;
@@ -947,6 +948,11 @@ app.controller('mainController', function ($scope, $http, svc) {
         $scope.stats = res.data[1];
     });
 
+    // loading player scoring streaks from external json file
+    $http.get('data/del_streaks.json').then(function (res) {
+        $scope.streaks = res.data;
+    });
+
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_stats_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
@@ -956,64 +962,121 @@ app.controller('mainController', function ($scope, $http, svc) {
     $scope.nameFilter = ''; // empty name filter
     $scope.teamFilter = ''; // empty name filter
 
-    $scope.changeTable = function () {
+    $scope.changeTable = function() {
         if ($scope.tableSelect === 'player_information') {
-            $scope.sortCriterion = 'last_name';
-            $scope.statsSortDescending = false;
+            $scope.sortConfig = {
+                'sortKey': 'last_name',
+                'sortCriteria': ['last_name'],
+                'sortDescending': false
+            }
+        } else if ($scope.tableSelect === 'streaks') {
+            $scope.sortConfig = {
+                'sortKey': 'length',
+                'sortCriteria': ['length', 'points', 'from_date'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'basic_stats') {
-            $scope.sortCriterion = 'points';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'points',
+                'sortCriteria': ['points', '-games_played', 'goals', 'primary_points'],
+                'sortDescending': true
+            }
+        } else if ($scope.tableSelect === 'on_goal_shot_zones') {
+            $scope.sortConfig = {
+                'sortKey': 'shots_on_goal',
+                'sortCriteria': ['shots_on_goal', 'slot_on_goal_pctg', 'slot_on_goal'],
+                'sortDescending': true
+            }
+        } else if ($scope.tableSelect === 'shot_zones') {
+            $scope.sortConfig = {
+                'sortKey': 'shots',
+                'sortCriteria': ['shots', 'slot_pctg', 'slot_shots'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'per_game_stats') {
-            $scope.sortCriterion = 'points_per_game';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'points_per_game',
+                'sortCriteria': ['points_per_game', 'primary_points_per_game'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'time_on_ice_shift_stats') {
-            $scope.sortCriterion = 'time_on_ice_seconds';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'time_on_ice_seconds',
+                'sortCriteria': ['time_on_ice_seconds', 'shifts'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'power_play_stats') {
-            $scope.sortCriterion = 'time_on_ice_pp_seconds';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'time_on_ice_pp_seconds',
+                'sortCriteria': ['time_on_ice_pp_seconds', 'pp_goals_per_60'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'penalty_stats') {
-            $scope.sortCriterion = 'pim_from_events';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'pim_from_events',
+                'sortCriteria': ['pim_from_events', '-games_played'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'additional_stats') {
-            $scope.sortCriterion = 'faceoff_pctg';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'faceoff_pctg',
+                'sortCriteria': ['faceoff_pctg', 'faceoffs'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'per_60_stats') {
-            $scope.sortCriterion = 'points_per_60';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'points_per_60',
+                'sortCriteria': ['points_per_60', 'time_on_ice_seconds'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_stats') {
-            $scope.sortCriterion = 'save_pctg';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg',
+                'sortCriteria': ['save_pctg', 'shots_against', 'toi'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_stats_ev') {
-            $scope.sortCriterion = 'save_pctg_5v5';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg_5v5',
+                'sortCriteria': ['save_pctg_5v5', 'sa_5v5'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_stats_sh') {
-            $scope.sortCriterion = 'save_pctg_4v5';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg_4v5',
+                'sortCriteria': ['save_pctg_4v5', 'sa_4v5'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_stats_pp') {
-            $scope.sortCriterion = 'save_pctg_5v4';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg_5v4',
+                'sortCriteria': ['save_pctg_5v4', 'sa_5v4'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_zone_stats_near') {
-            $scope.sortCriterion = 'save_pctg_slot';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg_slot',
+                'sortCriteria': ['save_pctg_slot', 'sa_slot'],
+                'sortDescending': true
+            }
         } else if ($scope.tableSelect === 'goalie_zone_stats_far') {
-            $scope.sortCriterion = 'save_pctg_blue_line';
-            $scope.statsSortDescending = true;
+            $scope.sortConfig = {
+                'sortKey': 'save_pctg_blue_line',
+                'sortCriteria': ['save_pctg_blue_line', 'sa_blue_line'],
+                'sortDescending': true
+            }
         }
-    };
-
-    $scope.setSortOrder = function(sortCriterion, oldSortCriterion, oldStatsSortDescending) {
-        return svc.setSortOrder(sortCriterion, oldSortCriterion, oldStatsSortDescending, $scope.ascendingAttrs);
     };
 
     $scope.sort_def = {
         "points": ['points', '-games_played', 'goals', 'primary_points'],
         "assists": ['assists', '-games_played', 'primary_assists'],
         "goals": ['goals', '-games_played', 'points'],
-        "games_played": ['games_played', '-team']
+        "games_played": ['games_played', '-team'],
+        "length": ['length', 'points', 'from_date'],
     };
 
-    $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
+    $scope.setSortOrder = function(sortKey, oldSortConfig) {
         ascendingAttrs = [
             'last_name', 'team', 'position', 'shoots',
             'date_of_birth', 'iso_country', 'gaa'
@@ -1057,6 +1120,27 @@ app.controller('mainController', function ($scope, $http, svc) {
         if (!$scope.showOnlyU23)
             return true;
         if ($scope.showOnlyU23 && a.u23) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.longestStreakFilter = function(a) {
+        if (!$scope.showOnlyLongestStreak) {
+            return true;
+        }
+        if ($scope.showOnlyLongestStreak && a.longest) {
+            return true;
+        } else {
+            return false;
+        }
+    };
+
+    $scope.currentStreakFilter = function(a) {
+        if (!$scope.showOnlyCurrentStreak)
+            return true;
+        if ($scope.showOnlyCurrentStreak && a.current) {
             return true;
         } else {
             return false;
