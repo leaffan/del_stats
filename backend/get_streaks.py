@@ -175,6 +175,15 @@ def combine_single_player_streaks(
     for component in single_player_streaks:
         for streak in single_player_streaks[component]:
             streak_d = streak._asdict()
+            streak_d['last_name'] = players[str(streak.player_id)]['last_name']
+            streak_d['full_name'] = " ".join((
+                players[str(streak.player_id)]['first_name'],
+                players[str(streak.player_id)]['last_name']
+            ))
+            streak_d['position'] = players[str(streak.player_id)]['position']
+            streak_d['age'] = players[str(streak.player_id)]['age']
+            streak_d['iso_country'] = players[
+                str(streak.player_id)]['iso_country']
             # setting default indicators for longest and current streaks
             streak_d['longest'] = False
             streak_d['current'] = False
@@ -213,7 +222,7 @@ if __name__ == '__main__':
     all_streaks = list()
 
     # retrieving scoring streaks in parallel threads
-    with ThreadPoolExecutor(max_workers=4) as threads:
+    with ThreadPoolExecutor(max_workers=8) as threads:
         tasks = {threads.submit(
             single_task, plr_id, plr_team, team_games, player_stats): (
                 plr_id, plr_team) for plr_id, plr_team in player_teams}
