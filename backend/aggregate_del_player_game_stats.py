@@ -14,6 +14,7 @@ PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
 SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
+ALL_PLAYER_TGT = 'del_players.json'
 U23_CUTOFF_DATE = parse("1996-01-01")
 
 
@@ -270,6 +271,8 @@ if __name__ == '__main__':
     tgt_csv_path = os.path.join(os.path.dirname(
         os.path.abspath(__file__)), 'data',
         AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
+    plr_tgt_path = os.path.join(os.path.dirname(
+        os.path.abspath(__file__)), 'data', ALL_PLAYER_TGT)
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -458,3 +461,20 @@ if __name__ == '__main__':
             extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(aggregated_stats_as_list)
+
+    all_players = dict()
+    all_players[0] = {
+        'first_name': '', 'last_name': '', 'position': '', 'age': '',
+        'iso_country': ''}
+
+    for stats_line in aggregated_stats_as_list:
+        if stats_line['player_id'] not in all_players:
+            all_players[stats_line['player_id']] = {
+                'first_name': stats_line['first_name'],
+                'last_name': stats_line['last_name'],
+                'position': stats_line['position'],
+                'age': stats_line['age'],
+                'iso_country': stats_line['iso_country']
+            }
+
+    open(plr_tgt_path, 'w').write(json.dumps(all_players, indent=2))
