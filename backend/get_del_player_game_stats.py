@@ -5,7 +5,7 @@ import os
 import json
 import argparse
 import itertools
-from datetime import timedelta, datetime
+from datetime import datetime
 from collections import defaultdict
 
 import requests
@@ -19,7 +19,6 @@ MATCHES_INSERT = 'matches'
 VISUALIZATION_INSERT = 'visualization/shots'
 
 GAME_SRC = 'del_games.json'
-PLAYER_TGT = 'del_players.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 
 HOME_STATS_SUFFIX = 'player-stats-home.json'
@@ -41,8 +40,10 @@ for key, values in PENALTY_CATEGORIES.items():
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 PER_PLAYER_TGT_DIR = 'per_player'
 U23_CUTOFF_DATE = parse("1996-01-01")
-EMPTY_LINE = [0, 0, 0]
 
+# default empty line
+EMPTY_LINE = [0, 0, 0]
+# defining potential lines and positions
 LINES = ['1', '2', '3', '4']
 POSITIONS = ['d', 'f']
 POS_LINES = list(
@@ -135,9 +136,9 @@ def get_linemates(game_stat_line, game):
         player_id = game_stat_line['player_id']
         # iterating over all possible four lines/two positions
         for pos_line in POS_LINES:
-                full_key = "%s_%s" % (game_stat_line['home_road'], pos_line)
-                if full_key in game and player_id in game[full_key]:
-                    break
+            full_key = "%s_%s" % (game_stat_line['home_road'], pos_line)
+            if full_key in game and player_id in game[full_key]:
+                break
 
         # retrieving line number for current player
         if full_key:
@@ -148,13 +149,13 @@ def get_linemates(game_stat_line, game):
             forwards = game[full_key]
             try:
                 defense = game[full_key.replace("_f", "_d")]
-            except KeyError as e:
+            except KeyError:
                 pass
         elif '_d' in full_key:
             defense = game[full_key]
             try:
                 forwards = game[full_key.replace("_d", "_f")]
-            except KeyError as e:
+            except KeyError:
                 pass
 
     return defense, forwards, line
@@ -164,9 +165,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     """
     Retrieves single player's statistics in specified game.
     """
-
     game_id = game['game_id']
-
+    # retrieving individual base data
     single_player_game = dict()
     single_player_game['game_id'] = game_id
     single_player_game['schedule_game_id'] = game['schedule_game_id']
@@ -178,8 +178,10 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['full_name'] = data_dict['name']
     single_player_game['country'] = data_dict['nationalityShort']
     single_player_game['shoots'] = data_dict['stick']
+    single_player_game['weight'] = data_dict['weight']
+    single_player_game['height'] = data_dict['height']
     single_player_game['date_of_birth'] = data_dict['dateOfBirth']
-
+    # setting u23 status
     if (
         single_player_game['country'] == 'GER' and
         parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATE
@@ -187,12 +189,9 @@ def retrieve_single_player_game_stats(data_dict, game, key):
         single_player_game['u23'] = True
     else:
         single_player_game['u23'] = False
-
-    single_player_game['weight'] = data_dict['weight']
-    single_player_game['height'] = data_dict['height']
-
+    # setting up actual stats dictionary
     stat_dict = data_dict['statistics']
-
+    # retrieving game stats for current player
     if key == 'home':
         single_player_game['home_road'] = key
     else:
@@ -250,12 +249,9 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     else:
         single_player_game['faceoff_pctg'] = 0
     single_player_game['blocked_shots'] = stat_dict['blockedShotsByPlayer']
-    single_player_game['time_on_ice'] = timedelta(
-        seconds=stat_dict['timeOnIce'])
-    single_player_game['time_on_ice_pp'] = timedelta(
-        seconds=stat_dict['timeOnIcePP'])
-    single_player_game['time_on_ice_sh'] = timedelta(
-        seconds=stat_dict['timeOnIceSH'])
+    single_player_game['time_on_ice'] = stat_dict['timeOnIce']
+    single_player_game['time_on_ice_pp'] = stat_dict['timeOnIcePP']
+    single_player_game['time_on_ice_sh'] = stat_dict['timeOnIceSH']
     single_player_game['shifts'] = stat_dict['shifts']
     single_player_game['penalties'] = 0
     single_player_game['pim_from_events'] = 0
@@ -348,14 +344,6 @@ def retrieve_penalties_from_event_data(period_events):
     return penalties_dict
 
 
-def total_seconds(timedelta):
-    return timedelta.total_seconds()
-
-
-def seconds(timedelta):
-    return timedelta.seconds
-
-
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -381,7 +369,6 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
     tgt_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_TGT)
-    plr_tgt_path = os.path.join(TGT_DIR, PLAYER_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -392,14 +379,8 @@ if __name__ == '__main__':
     else:
         player_game_stats = list()
 
-    if not initial and os.path.isfile(plr_tgt_path):
-        all_players = json.loads(open(plr_tgt_path).read())
-    else:
-        all_players = dict()
-        all_players[0] = {'first_name': '', 'last_name': '', 'position': ''}
-
+    # setting up container for player game statistics
     per_player_game_stats = defaultdict(list)
-
     # retrieving set of games we already have retrieved player stats for
     registered_games = set([pg['game_id'] for pg in player_game_stats])
 
@@ -426,34 +407,19 @@ if __name__ == '__main__':
     current_datetime = datetime.now().timestamp() * 1000
     output = [current_datetime, player_game_stats]
 
-    open(tgt_path, 'w').write(
-        json.dumps(output, indent=2, default=seconds))
+    # dumping combined game stats for all players
+    open(tgt_path, 'w').write(json.dumps(output, indent=2))
 
+    # dumping individual player game stats
     for player_id, team in per_player_game_stats:
-
-        if player_id not in all_players:
-            all_players[player_id] = {
-                'first_name': per_player_game_stats[
-                    (player_id, team)][0]['first_name'],
-                'last_name': per_player_game_stats[
-                    (player_id, team)][0]['last_name'],
-                'position': per_player_game_stats[
-                    (player_id, team)][0]['position']
-            }
-
         tgt_path = os.path.join(
             TGT_DIR, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
 
         output = per_player_game_stats[(player_id, team)]
-
-        # adding output to already existing data
+        # optionally adding output to already existing data
         if not initial and os.path.isfile(tgt_path):
             existing_data = json.loads(open(tgt_path).read())
             existing_data.extend(output)
             output = existing_data
 
-        open(tgt_path, 'w').write(
-            json.dumps(output, indent=2, default=seconds))
-
-    else:
-        open(plr_tgt_path, 'w').write(json.dumps(all_players, indent=2))
+        open(tgt_path, 'w').write(json.dumps(output, indent=2))
