@@ -422,7 +422,7 @@ if __name__ == '__main__':
             per_game_attr = item[attr] / float(item['games_played'])
             try:
                 item["%s_per_game" % attr] = round(per_game_attr, 4)
-            except TypeError as e:
+            except TypeError:
                 item["%s_per_game" % attr] = per_game_attr
 
         item['time_on_ice_per_game_seconds'] = item[
