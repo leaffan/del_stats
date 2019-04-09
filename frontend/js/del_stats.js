@@ -956,7 +956,7 @@ app.controller('mainController', function ($scope, $http, svc) {
     $scope.tableSelect = 'basic_stats';
     $scope.seasonTypeFilter = 'PO';
     $scope.scoringStreakTypeFilter = 'points';
-    $scope.showOnlyU23 = false;
+    $scope.u23Check = false;
     // setting default sort configuration
     $scope.sortConfig = {
         'sortKey': 'points',
@@ -1065,9 +1065,9 @@ app.controller('mainController', function ($scope, $http, svc) {
     }
 
     $scope.u23Filter = function(a) {
-        if (!$scope.showOnlyU23)
+        if (!$scope.u23Check)
             return true;
-        if ($scope.showOnlyU23 && a.u23) {
+        if ($scope.u23Check && a.u23) {
             return true;
         } else {
             return false;
