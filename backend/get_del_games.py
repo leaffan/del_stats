@@ -26,7 +26,7 @@ GAME_ROSTERS_SUFFIX = "live-ticker/matches/%d/roster.json"
 GAME_EVENTS_SUFFIX = "live-ticker/matches/%d/period-events.json"
 
 MATCH_ID_REGEX = re.compile(
-    "livetickerParams\.matchId\s+=\s+(\d+)")
+    R"livetickerParams\.matchId\s+=\s+(\d+)")
 POS_KEYS = {'1': 'G', '2': 'D', '3': 'F'}
 
 TGT_FILE = "del_games.json"
@@ -34,6 +34,10 @@ TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 PLAYOFF_DATES = {
     2018: datetime.date(2019, 3, 5)
+}
+
+EMERGENCY_MAPPING = {
+    3656: 1402, 3659: 1403, 3662: 1404
 }
 
 
@@ -72,6 +76,9 @@ def get_games_for_date(date, existing_games=None):
     for ticker_url, round in zip(ticker_urls, rounds):
         schedule_game_id, game_id = get_game_ids_via_ticker(ticker_url)
 
+        if game_id is None:
+            game_id = EMERGENCY_MAPPING[schedule_game_id]
+
         if game_id in registered_game_ids:
             print("Game with id %d already registered" % game_id)
             continue
@@ -96,7 +103,7 @@ def get_games_for_date(date, existing_games=None):
             try:
                 single_game_details = get_single_game_details(
                     single_game_data['game_id'])
-            except Exception as e:
+            except Exception:
                 import traceback
                 traceback.print_exc()
                 print(game_id)
