@@ -36,7 +36,7 @@ def get_game_info(game):
 
 def get_team_from_game(game, home_road):
     """
-    Gets abbreviation for team aassociated with specified
+    Gets abbreviation for team associated with specified
     home/road denominator.
     """
     if home_road == 'home':
