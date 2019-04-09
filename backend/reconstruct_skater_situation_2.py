@@ -4,7 +4,7 @@
 import os
 import json
 
-from collections import OrderedDict, namedtuple, defaultdict
+from collections import namedtuple, defaultdict
 
 import requests
 import intervaltree
@@ -22,8 +22,8 @@ GoalieChange = namedtuple(
 GoalieShift = namedtuple(
     'GoalieShift', ['player_id', 'team', 'home_road', 'from_time', 'to_time'])
 Penalty = namedtuple('Penalty', [
-    'player_id', 'surname', 'team', 'home_road', 'infraction', 'duration',
-    'from_time', 'to_time', 'create_time'])
+    'id', 'player_id', 'surname', 'team', 'home_road', 'infraction',
+    'duration', 'from_time', 'to_time', 'create_time', 'actual_duration'])
 
 
 def build_interval_tree(game):
@@ -37,18 +37,14 @@ def build_interval_tree(game):
     r = requests.get(events_url)
     events_data = r.json()
 
-    # using ordered dictionary to maintain insertion order of keys
-    goalie_changes = OrderedDict()
-    goalie_changes['home'] = list()
-    goalie_changes['road'] = list()
-
     # setting up interval tree
     it = intervaltree.IntervalTree()
     # setting up list to contain all end of period times and all times a goal
     # has been scored
     end_period_times = list()
     goal_times = list()
-    penalty_times = dict()
+    # setting up dictionary for goalie changes
+    goalie_changes = {'home': list(), 'road': list()}
 
     for period in sorted(events_data.keys()):
         # adding end time of current period to all end of period times
@@ -65,6 +61,7 @@ def build_interval_tree(game):
                     event_type == 'periodEnd' or event_type == 'goal')
             ):
                 end_period_times.append(event['time'])
+
             # adding time of goal to list of times a goal has been scored
             if event_type == 'goal':
                 goal_times.append(event['time'])
@@ -73,32 +70,35 @@ def build_interval_tree(game):
             if event_type == 'goalkeeperChange':
                 register_goalie_change(event, game, goalie_changes)
 
+            # adding penalties to interval tree
             if event_type == 'penalty':
-                create_penalty_interval(event, game, it, penalty_times)
+                create_penalty_interval(event, game, it)
 
-    else:
-        # (optionally) adding final outgoing goalie change at end of game
-        for home_road in goalie_changes:
-            event_team = goalie_changes[home_road][-1].team
-            player_id = goalie_changes[home_road][-1].player_id
-            if goalie_changes[home_road][-1].type == 'goalie_in':
-                goalie_changes[home_road].append(
-                    GoalieChange(
-                        # using the maximum time from all period end times as
-                        # time of game end
-                        max(end_period_times), event_team,
-                        home_road, 'goalie_out', player_id))
+    # (optionally) adding final outgoing goalie change at end of game
+    for home_road in goalie_changes:
+        # retrieving team and player id for last registered goalie change
+        # in current game
+        event_team = goalie_changes[home_road][-1].team
+        player_id = goalie_changes[home_road][-1].player_id
+        if goalie_changes[home_road][-1].type == 'goalie_in':
+            goalie_changes[home_road].append(
+                GoalieChange(
+                    # using the maximum time from all period end times as
+                    # time of game end
+                    max(end_period_times), event_team,
+                    home_road, 'goalie_out', player_id))
 
+    # creating actual goalie shifts from registered goalie changes
     create_goalie_shifts(goalie_changes, game, it)
 
-    return it, goal_times, penalty_times
+    return it, goal_times
 
 
-def create_penalty_interval(event, game, interval_tree, penalty_times):
+def create_penalty_interval(event, game, interval_tree):
     """
     Creates a time interval including all penalty-related information.
     """
-    # retrieving team involved in penalty (including home/road indicator)
+    # retrieving team taking the penalty (including home/road indicator)
     event_team, home_road = get_home_road(game, event)
     # retrieving penalized player
     if (
@@ -111,39 +111,41 @@ def create_penalty_interval(event, game, interval_tree, penalty_times):
         penalty_player_id = None
         penalty_player = None
     # retrieving other penalty information
+    id = event['data']['id']
     penalty_start = event['data']['time']['from']['scoreboardTime']
     penalty_end = event['data']['time']['to']['scoreboardTime']
     # optionally switching start and end time of penalty if necessary due
     # to data errors (e.g. Felix Schütz penalty in game 1247)
     if penalty_start > penalty_end:
         penalty_start, penalty_end = penalty_end, penalty_start
-    duration = event['data']['duration']
+    # retrieving infraction
     infraction = event['data']['codename']
+    # retrieving nominal duration and calculating the actual duration of the
+    # penalty
+    duration = int(event['data']['duration'])
+    actual_duration = penalty_end - penalty_start
+    # registering create time, i.e. the time of the game when the penalty was
+    # called
     create_time = event['data']['createTime']
-    create_time = penalty_start
 
     # disregarding penalties with zero length, i.e. penalty shots
-    if penalty_end != penalty_start:
+    if duration:
         # creating penalty item
         penalty = Penalty(
-            penalty_player_id, penalty_player, event_team, home_road,
-            infraction, int(duration), penalty_start, penalty_end, create_time)
+            id, penalty_player_id, penalty_player, event_team, home_road,
+            infraction, duration, penalty_start, penalty_end,
+            create_time, actual_duration)
+        # using dummy times for penalties that effectively start at the end of
+        # the game
+        if penalty_end == penalty_start and penalty_start >= 3600:
+            penalty_start = -2
+            penalty_end = -1
         # adding interval to interval tree, using penalty item as payload
-        interval_tree.addi(-penalty_end, -penalty_start, penalty)
-
-    # adding penalty creation time of current penalty to list of all penalty
-    # times
-    # only two- and five-minute-penalties do influence skater situation on ice
-    if duration in (120, 300):
-        if create_time not in penalty_times:
-            penalty_times[create_time] = dict()
-        if event_team not in penalty_times[create_time]:
-            penalty_times[create_time][event_team] = (1, [duration])
-        else:
-            previous_penalties, previous_durations = penalty_times[
-                create_time][event_team]
-            penalty_times[create_time][event_team] = (
-                previous_penalties + 1, previous_durations + [duration])
+        try:
+            interval_tree.addi(-penalty_end, -penalty_start, penalty)
+        except ValueError as e:
+            # TODO: notification
+            print(e)
 
 
 def create_goalie_shifts(goalie_changes, game, interval_tree):
@@ -162,6 +164,7 @@ def create_goalie_shifts(goalie_changes, game, interval_tree):
                 goalie_in_change.player_id, goalie_in_change.team,
                 home_road, goalie_in_change.time, goalie_out_change.time)
 
+            # adding goalie shift to interval tree
             interval_tree.addi(
                 -goalie_out_change.time, -goalie_in_change.time, goalie_shift)
 
@@ -169,12 +172,11 @@ def create_goalie_shifts(goalie_changes, game, interval_tree):
 def register_goalie_change(event, game, goalie_changes):
     """
     Registers a goalie change retrieved from game events by extending the
-    specified list of previous changes and by updating the specified dictioary
-    holding the current goalie for a team involved in the game.
+    specified list of previous changes.
     """
     # retrieving time of goalie change
     event_time = event['data']['time']
-    # retrieving team involved in goalie change
+    # retrieving team facilitating the goalie change
     event_team, home_road = get_home_road(game, event)
 
     changes = list()
@@ -265,151 +267,29 @@ def adjust_skater_counts_for_goalies(time, goalies_on_ice, curr_goalie_delta):
     return current_goalies
 
 
-def change_skater_count(
-    effective_intervals, ongoing_penalties, extra_penalties, curr_delta
-):
-    """
-    Changes skater count effectively.
-    """
-    for team in effective_intervals:
-        for ei in effective_intervals[team]:
-            # reducing the number of skaters for
-            # corresponding team starting at current time
-            if ei.data not in ongoing_penalties.union(extra_penalties):
-                curr_delta[team] -= 1
-            # add current interval to set of currently on-
-            # going intervals
-            ongoing_penalties.add(ei.data)
-
-
-def handle_ongoing_penalties(
-    time, penalty_times, effective_intervals, ongoing_penalties,
-    extra_penalties, curr_delta, skr_count
-):
-    """
-    Handles ongoing penalties.
-    """
-    # retrieving all penalties created at current time
-    penalties_from_time = dict()
-    if time - 1 in penalty_times:
-        penalties_from_time = penalty_times[time - 1]
-
-    if not penalties_from_time:
-        pass
-    # if only one team has been handed one or multiple penalties at the
-    # current time handle that/these correspondingly
-    elif len(penalties_from_time) == 1:
-        change_skater_count(
-            effective_intervals, ongoing_penalties,
-            extra_penalties, curr_delta)
-    # handling incidental penalties
-    else:
-        # retrieving number and durations of penalties per team
-        # handed out first
-        home_pen_cnt, home_durations = penalty_times[time - 1][
-            game['home_abbr']]
-        road_pen_cnt, road_durations = penalty_times[time - 1][
-            game['road_abbr']]
-
-        # if number and durations of penalties for both teams
-        # match, we have incidental penalties (DEL Rulebook,
-        # Rule #112)
-        if (
-            home_pen_cnt == road_pen_cnt and
-            sum(home_durations) == sum(road_durations)
-        ):
-            # if previous skater situation was 5-on-5 we're going to
-            # 4-on-4 then
-            if (
-                home_pen_cnt == 1 and
-                list(skr_count.values()) == [5, 5]
-            ):
-                change_skater_count(
-                    effective_intervals, ongoing_penalties,
-                    extra_penalties, curr_delta)
-            else:
-                for team in effective_intervals:
-                    for ei in effective_intervals[team]:
-                        if ei.data not in ongoing_penalties:
-                            extra_penalties.add(ei.data)
-        elif (
-            home_pen_cnt == road_pen_cnt and
-            sum(home_durations) != sum(road_durations)
-        ):
-            change_skater_count(
-                effective_intervals, ongoing_penalties,
-                extra_penalties, curr_delta)
-
-        elif home_pen_cnt > road_pen_cnt:
-            pen_cnt_diff = home_pen_cnt - road_pen_cnt
-            pen_cnt = 0
-            for ei in effective_intervals['home']:
-                if pen_cnt < pen_cnt_diff:
-                    # reducing the number of skaters for
-                    # corresponding team starting at current
-                    # time
-                    if (
-                        ei not in
-                        ongoing_penalties.union(extra_penalties)
-                    ):
-                        curr_delta['home'] -= 1
-                    # add current interval to set of currently
-                    # on-going intervals
-                    ongoing_penalties.add(ei.data)
-                else:
-                    extra_penalties.add(ei.data)
-                pen_cnt += 1
-            for ei in effective_intervals['road']:
-                if ei.data not in ongoing_penalties:
-                    extra_penalties.add(ei.data)
-
-        elif road_pen_cnt > home_pen_cnt:
-            pen_cnt_diff = road_pen_cnt - home_pen_cnt
-            pen_cnt = 0
-            for ei in effective_intervals['road']:
-                if pen_cnt < pen_cnt_diff:
-                    # reducing the number of skaters for
-                    # corresponding team starting at current
-                    # time
-                    if (
-                        ei not in
-                        ongoing_penalties.union(extra_penalties)
-                    ):
-                        curr_delta['road'] -= 1
-                    # add current interval to set of currently
-                    # on-going intervals
-                    ongoing_penalties.add(ei.data)
-                else:
-                    extra_penalties.add(ei.data)
-                pen_cnt += 1
-            for ei in effective_intervals['home']:
-                if ei.data not in ongoing_penalties:
-                    extra_penalties.add(ei.data)
-
-
-def handle_expired_penalties(
-    ongoing_penalties, extra_penalties, current_intervals, curr_delta
-):
-    """
-    Processes expired penalties, i.e. checks whether any of the specified
-    ongoing penalties is still ongoing, i.e. contained by the currently valid
-    intervals. Adjust the delta in skaters on ice accordingly.
-    """
-    # preparing to remove penalties from set of ongoing penalties
-    # if they have expired
-    expired_penalties = set()
-    # doing the following for each penalty currently registered as
-    # ongoing
-    for penalty in ongoing_penalties:
-        current_penalties = [i.data for i in current_intervals]
-        # checking whether penalty interval currently registered as
-        # ongoing is in fact still ongoing
-        if penalty not in current_penalties:
-            expired_penalties.add(penalty)
-            if penalty not in extra_penalties:
-                curr_delta[penalty.home_road] += 1
-    # actually removing no longer on-going intervals
-    ongoing_penalties.difference_update(expired_penalties)
+# def handle_expired_penalties(
+#     ongoing_penalties, extra_penalties, current_intervals, curr_delta
+# ):
+#     """
+#     Processes expired penalties, i.e. checks whether any of the specified
+#     ongoing penalties is still ongoing, i.e. contained by the currently valid
+#     intervals. Adjust the delta in skaters on ice accordingly.
+#     """
+#     # preparing to remove penalties from set of ongoing penalties
+#     # if they have expired
+#     expired_penalties = set()
+#     # doing the following for each penalty currently registered as
+#     # ongoing
+#     for penalty in ongoing_penalties:
+#         current_penalties = [i.data for i in current_intervals]
+#         # checking whether penalty interval currently registered as
+#         # ongoing is in fact still ongoing
+#         if penalty not in current_penalties:
+#             expired_penalties.add(penalty)
+#             if penalty not in extra_penalties:
+#                 curr_delta[penalty.home_road] += 1
+#     # actually removing no longer on-going intervals
+#     ongoing_penalties.difference_update(expired_penalties)
 
 
 def adjust_skater_count_in_overtime(game, time, skr_count):
@@ -439,6 +319,47 @@ def adjust_skater_count_in_overtime(game, time, skr_count):
             if skr_count['road'] == 5 and skr_count['home'] == 4:
                 skr_count['road'] = 4
                 skr_count['home'] = 3
+        return True
+    else:
+        return False
+
+
+def switch_team(team):
+    """
+    Returns the opponent team given the specified team.
+    """
+    if team == 'home':
+        return 'road'
+    elif team == 'road':
+        return 'home'
+
+
+def retrieve_penalty_counts_durations(penalties):
+    """
+    Retrieves penalty counts and durations grouped by home/road for specified
+    set of penalties.
+    """
+    home_pen_cnt = road_pen_cnt = 0
+    home_durations = list()
+    road_durations = list()
+    penalty_teams = set()
+
+    for penalty in penalties:
+        penalty_teams.add(penalty.home_road)
+        if penalty.home_road == 'home':
+            home_pen_cnt += 1
+            home_durations.append(penalty.duration)
+        elif penalty.home_road == 'road':
+            road_pen_cnt += 1
+            road_durations.append(penalty.duration)
+    else:
+        home_durations = sorted(home_durations, reverse=True)
+        road_durations = sorted(road_durations, reverse=True)
+
+    return (
+        home_pen_cnt, road_pen_cnt,
+        home_durations, road_durations, penalty_teams
+    )
 
 
 def reconstruct_skater_situation(game):
@@ -451,7 +372,14 @@ def reconstruct_skater_situation(game):
 
     # building interval tree to query goalies and player situations
     # receiving a list of times when goals has been scored
-    it, goal_times, penalty_times = build_interval_tree(game)
+    it, goal_times = build_interval_tree(game)
+
+    # retrieving all penalties
+    all_penalties = list()
+    for interval in it:
+        if isinstance(interval.data, Penalty):
+            penalty = interval.data
+            all_penalties.append(penalty)
 
     # retrieving game end (in seconds) from interval tree
     game_end = - it.range().begin
@@ -464,52 +392,293 @@ def reconstruct_skater_situation(game):
     # setting up container to hold goalie/penalty intervals that have been
     # valid previously
     last_intervals = ''
-    ongoing_penalties = set()
-    extra_penalties = set()
+    # setting up sets to hold a) penalties that effectively influence the
+    # skater situation on ice, b) penalties that canceled each other out, c)
+    # penalties that actually have started
+    effective_penalties = set()
+    cancelling_penalties = set()
+    started_penalties = set()
     # initial setting for skater counts per team
     skr_count = {'home': 5, 'road': 5}
-    # goalies_not_on_ice = list()
 
+    # setting up skater situation at the beginning of the game
     time_dict[0] = {**skr_count, **goalies_on_ice[0]}
 
     for t in range(1, game_end + 1):
-        # setting up containers holding the difference in skater numbers
+        # setting up containers holding the difference in skater/goalie numbers
         # in comparison to previous numbers produced by the currently
         # ongoing intervals
         curr_delta = {'home': 0, 'road': 0}
         curr_goalie_delta = {'home': 0, 'road': 0}
-        adjust_skater_count_in_overtime(game, t, skr_count)
-
+        # checking whether we're in the overtime of a regular season game and
+        # adjusting skater counts accordingly
+        in_ot = adjust_skater_count_in_overtime(game, t, skr_count)
+        # adjusting skater counts according to the goaltenders currently on ice
         current_goalies = adjust_skater_counts_for_goalies(
             t, goalies_on_ice, curr_goalie_delta)
+
+        if t in goal_times:
+            print("--> Goal: %d:%02d" % (t // 60, t % 60))
 
         # retrieving all currently valid goalie and penalty intervals, i.e.
         # on-going goalie shifts and currently served penalties
         current_intervals = it[-t]
-        effective_intervals = defaultdict(list)
+        current_penalties = defaultdict(list)
 
         # doing further processing for the current second of the game only
-        # if penalty intervals have changed from previous second of the game
+        # if currently valid intervals have changed from previous second of
+        # the game
         if current_intervals != last_intervals:
-            print(t)
+            print("--> %d:%02d (%d)" % (t // 60, t % 60, t))
             # retaining only penalty intervals
             penalty_intervals = list(filter(lambda item: (
                 isinstance(item.data, Penalty)), current_intervals))
-            for pi in penalty_intervals:
+            # collecting currently on-going penalties by team
+            for pi in sorted(
+                penalty_intervals, key=lambda interval: interval.data.from_time
+            ):
                 penalty = pi.data
-                print(
-                    pi.end, pi.begin, penalty.duration,
-                    penalty.team, penalty.infraction)
                 if penalty.duration in (120, 300):
-                    effective_intervals[penalty.home_road].append(pi)
+                    print(
+                        "%d:%02d" % (pi.end // -60, -pi.end % 60),
+                        "%d:%02d" % (pi.begin // -60, -pi.begin % 60),
+                        penalty.duration, penalty.team, penalty.infraction,
+                        penalty.actual_duration, penalty.surname)
+                    current_penalties[penalty.home_road].append(penalty)
 
-            handle_ongoing_penalties(
-                t, penalty_times, effective_intervals, ongoing_penalties,
-                extra_penalties, curr_delta, skr_count)
+            # collecting penalties that have been created at the current time
+            penalties = list(filter(
+                lambda penalty:
+                penalty.create_time == (t - 1) and
+                penalty.duration in (120, 300), all_penalties))
+            # if no penalties have been created at the current time, collect
+            # all penalties that have started at the current time
+            if not penalties:
+                penalties = list(filter(
+                    lambda penalty:
+                    penalty.from_time == (t - 1) and
+                    penalty.duration in (120, 300), all_penalties))
 
-            handle_expired_penalties(
-                ongoing_penalties, extra_penalties,
-                current_intervals, curr_delta)
+            # sorting collected penalties by actual duration and start time
+            penalties = sorted(penalties, key=lambda penalty: (
+                penalty.actual_duration, penalty.from_time))
+            home_penalties = list(
+                filter(lambda penalty: penalty.home_road == 'home', penalties))
+            home_penalties = sorted(home_penalties, key=lambda penalty: (
+                penalty.actual_duration, penalty.from_time))
+            road_penalties = list(
+                filter(lambda penalty: penalty.home_road == 'road', penalties))
+            road_penalties = sorted(road_penalties, key=lambda penalty: (
+                penalty.actual_duration, penalty.from_time))
+
+            # retrieving home and road penalty counts and durations as well as
+            # list of teams that actually have taken a penalty
+            (
+                home_pen_cnt, road_pen_cnt,
+                home_durations, road_durations,
+                penalty_teams
+            ) = retrieve_penalty_counts_durations(penalties)
+
+            # continuing if no penalties have been created or started at
+            # the current time of the game
+            if not penalties:
+                pass
+            # if only one team has taken penalties
+            elif len(penalty_teams) == 1:
+                for penalty in penalties:
+                    # skipping penalty if it hasn't already started
+                    if penalty.from_time > t:
+                        continue
+                    # checking if current penalty has not started yet or has
+                    # been cancelled by other penalties
+                    if penalty not in started_penalties.union(
+                        cancelling_penalties
+                    ):
+                        team = penalty.home_road
+                        # in overtime the other team gets another player
+                        if in_ot:
+                            curr_delta[switch_team(team)] += 1
+                        # in regulation the current team loses a player
+                        else:
+                            curr_delta[team] -= 1
+                        # adding current penalty to effective penalties
+                        effective_penalties.add(penalty)
+                    # adding current penalty to started penalties
+                    started_penalties.add(penalty)
+            # if both teams have taken penalties
+            else:
+                print(home_pen_cnt, home_durations)
+                print(road_pen_cnt, road_durations)
+
+                # if penalty counts and durations for both teams match
+                if (
+                    home_pen_cnt == road_pen_cnt and
+                    sum(home_durations) == sum(road_durations)
+                ):
+                    # if previous skater situation was 5-on-5 we're going to
+                    # 4-on-4 then
+                    if (
+                        home_pen_cnt == 1 and
+                        list(skr_count.values()) == [5, 5]
+                    ):
+                        for penalty in penalties:
+                            team = penalty.home_road
+                            if penalty not in started_penalties.union(
+                                cancelling_penalties
+                            ):
+                                if in_ot:
+                                    curr_delta[switch_team(team)] += 1
+                                else:
+                                    curr_delta[team] -= 1
+                                effective_penalties.add(penalty)
+                            started_penalties.add(penalty)
+                    # otherwise all penalties are cancelling each other out
+                    else:
+                        for penalty in penalties:
+                            cancelling_penalties.add(penalty)
+                # if penalty counts for both teams match but durations don't
+                elif (
+                    home_pen_cnt == road_pen_cnt and
+                    sum(home_durations) != sum(road_durations)
+                ):
+                    for h_dur, r_dur in zip(home_durations, road_durations):
+                        # if penalty durations match both penalties are
+                        # cancelling each other out
+                        if h_dur == r_dur:
+                            for penalty in penalties:
+                                if penalty not in started_penalties.union(
+                                    cancelling_penalties
+                                ):
+                                    if ((
+                                            penalty.home_road == 'home' and
+                                            penalty.duration == h_dur
+                                        ) or (
+                                            penalty.home_road == 'road' and
+                                            penalty.duration == r_dur
+                                    )):
+                                        started_penalties.add(penalty)
+                                        cancelling_penalties.add(penalty)
+                        # otherwise...
+                        else:
+                            home_effective_cnt = 0
+                            road_effective_cnt = 0
+                            for penalty in penalties:
+                                if penalty in started_penalties:
+                                    continue
+                                if (
+                                    not home_effective_cnt and
+                                    penalty.home_road == 'home' and
+                                    penalty.duration == h_dur
+                                ):
+                                    curr_delta['home'] -= 1
+                                    effective_penalties.add(penalty)
+                                    home_effective_cnt += 1
+                                    started_penalties.add(penalty)
+                                if (
+                                    not road_effective_cnt and
+                                    penalty.home_road == 'road' and
+                                    penalty.duration == r_dur
+                                ):
+                                    curr_delta['road'] -= 1
+                                    effective_penalties.add(penalty)
+                                    road_effective_cnt += 1
+                                    started_penalties.add(penalty)
+
+                elif home_pen_cnt > road_pen_cnt:
+                    pen_cnt_diff = home_pen_cnt - road_pen_cnt
+                    pen_cnt = 0
+                    # retaining only home team penalties
+                    home_penalties = list(filter(
+                        lambda penalty: penalty.home_road == 'home',
+                        penalties))
+                    # sorting penalties by actual duration making sure that
+                    # if there is a penalty the other has scored on this one
+                    # is going into the container for ongoing penalties making
+                    # it eligible for expiring and bringing a skater back on
+                    # ice later on
+                    for penalty in sorted(
+                        home_penalties,
+                        key=lambda penalty: (
+                            penalty.actual_duration,
+                            penalty.from_time)
+                    ):
+                        if pen_cnt < pen_cnt_diff:
+                            # adjusting the number of skaters for corresponding
+                            # team starting at current time
+                            if penalty not in started_penalties.union(
+                                cancelling_penalties
+                            ):
+                                if in_ot:
+                                    curr_delta['road'] += 1
+                                else:
+                                    curr_delta['home'] -= 1
+                                pen_cnt += 1
+                                effective_penalties.add(penalty)
+                            started_penalties.add(penalty)
+                        else:
+                            started_penalties.add(penalty)
+                            cancelling_penalties.add(penalty)
+                    for penalty in current_penalties['road']:
+                        started_penalties.add(penalty)
+                        cancelling_penalties.add(penalty)
+
+                elif home_pen_cnt < road_pen_cnt:
+                    pen_cnt_diff = road_pen_cnt - home_pen_cnt
+                    pen_cnt = 0
+                    # retaining only road team penalties
+                    road_penalties = list(filter(
+                        lambda penalty: penalty.home_road == 'road',
+                        penalties))
+                    # sorting penalties by actual duration making sure that
+                    # if there is a penalty the other has scored on this one
+                    # is going into the container for ongoing penalties making
+                    # it eligible for expiring and bringing a skater back on
+                    # ice later on
+                    for penalty in sorted(
+                        road_penalties,
+                        key=lambda penalty: (
+                            penalty.actual_duration,
+                            penalty.from_time)
+                    ):
+                        if pen_cnt < pen_cnt_diff:
+                            # adjusting the number of skaters for corresponding
+                            # team starting at current time
+                            if penalty not in started_penalties.union(
+                                cancelling_penalties
+                            ):
+                                if in_ot:
+                                    curr_delta['home'] += 1
+                                else:
+                                    curr_delta['road'] -= 1
+                                pen_cnt += 1
+                                effective_penalties.add(penalty)
+                            started_penalties.add(penalty)
+                        else:
+                            started_penalties.add(penalty)
+                            cancelling_penalties.add(penalty)
+                    for penalty in current_penalties['home']:
+                        started_penalties.add(penalty)
+                        cancelling_penalties.add(penalty)
+
+##########################################
+
+            # handling expired penalties
+            expired_penalties = set()
+            for penalty in started_penalties:
+                if t < penalty.from_time:
+                    continue
+                # checking whether penalty interval currently registered as
+                # ongoing is in fact still ongoing
+                if penalty not in current_penalties[penalty.home_road]:
+                    expired_penalties.add(penalty)
+                    if penalty in effective_penalties:
+                        if in_ot:
+                            curr_delta[switch_team(penalty.home_road)] -= 1
+                        else:
+                            curr_delta[penalty.home_road] += 1
+            # actually removing no longer on-going intervals
+            effective_penalties.difference_update(expired_penalties)
+            started_penalties.difference_update(expired_penalties)
 
         # actually calculating current skater count from previous count
         # and deltas collected from all current intervals
@@ -520,20 +689,36 @@ def reconstruct_skater_situation(game):
         # expired
         adjust_skater_count_in_overtime(game, t, skr_count)
 
-        assert 3 <= skr_count['home'] <= 6
-        assert 3 <= skr_count['road'] <= 6
+        # testing modified skater counts
+        test_skater_counts(skr_count)
 
         if current_intervals != last_intervals:
             print(skr_count)
 
-        # time_dict[t] = deepcopy(skr_count)
         time_dict[t] = {**skr_count, **current_goalies}
-
         # saving currently valid intervals for comparison at next
         # second in the game
         last_intervals = current_intervals
 
     return time_dict
+
+
+def test_skater_counts(skater_count):
+    """
+    Testing modified skater counts and notifying user if lower and upper limits
+    have been exceeded.
+    """
+    for key in ['home', 'road']:
+        try:
+            assert skater_count[key] >= 3
+        except AssertionError:
+            print("Skater number for %s team under limit of 3: %d" % (
+                key, skater_count[key]))
+        try:
+            assert skater_count[key] <= 6
+        except AssertionError:
+            print("Skater number for %s team over limit of 6: %d" % (
+                key, skater_count[key]))
 
 
 def get_home_road(game, event):
@@ -551,22 +736,36 @@ if __name__ == '__main__':
     # loading games
     games = json.loads(open(src_path).read())
 
-    cnt = 0
+    cnt = 639
     for game in games[:]:
         # if game['game_id'] not in [1056, 1070, 1064]:
         # if game['game_id'] not in [1070, 1073, 1040, 1247]:
         # if game['game_id'] not in [1009]:
-        if game['game_id'] not in [1377]:
+        # if game['game_id'] not in [1377]:
+        # if game['game_id'] not in [1077]:  # overtime penalty
+        # 1378: double high-sticking minor
+        # 1019: major + minor for one team, only minor for other
+
+        # not okay: 1220 (5-on-3 nicht erkannt)
+        # if game['game_id'] in [1131, 1224]:  # games with penalties
+        # resulting in a 5v2
+        #     continue
+        if game['game_id'] not in [1019]:
             continue
         print(game['game_id'])
-        print()
         cnt += 1
+        print(cnt)
 
-        it, _, _ = build_interval_tree(game)
+        it, _ = build_interval_tree(game)
 
         skr_sit = reconstruct_skater_situation(game)
         prev_skr_sit = ''
         for t in skr_sit:
+            for key in ['home', 'road']:
+                if skr_sit[t][key] < 3:
+                    skr_sit[t][key] = 3
+                if skr_sit[t][key] > 6:
+                    skr_sit[t][key] = 6
             if skr_sit[t] != prev_skr_sit:
                 print(t, skr_sit[t])
                 prev_skr_sit = skr_sit[t]
