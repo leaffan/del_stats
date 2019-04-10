@@ -12,7 +12,7 @@ from shapely.geometry import Point
 
 import rink_dimensions as rd
 from utils import get_game_info
-from reconstruct_skater_situation import reconstruct_skater_situation
+from reconstruct_skater_situation_2 import reconstruct_skater_situation
 
 
 BASE_URL = 'https://www.del.org/live-ticker'
@@ -354,7 +354,7 @@ if __name__ == '__main__':
             else:
                 try:
                     skr_situation = times[shot['time']]
-                except KeyError as e:
+                except KeyError:
                     if shot['time'] > max(times.keys()):
                         print(
                             "+ Shot at %d after the actual " % shot['time'] +
