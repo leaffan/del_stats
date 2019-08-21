@@ -19,6 +19,7 @@ MATCHES_INSERT = 'matches'
 VISUALIZATION_INSERT = 'visualization/shots'
 
 GAME_SRC = 'del_games.json'
+SHOT_SRC = 'del_shots.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 
 HOME_STATS_SUFFIX = 'player-stats-home.json'
@@ -50,7 +51,18 @@ POS_LINES = list(
     map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
 
 
-def get_single_game_player_data(game):
+def retrieve_player_per_game_shots(shots, game_id, player_id):
+
+    player_per_game_shots = list()
+
+    for shot in shots:
+        if shot['game_id'] == game_id and shot['player_id'] == player_id:
+            player_per_game_shots.append(shot)
+
+    return player_per_game_shots
+
+
+def get_single_game_player_data(game, shots):
     """
     Retrieves statistics for all players participating in specified game.
     """
@@ -91,6 +103,9 @@ def get_single_game_player_data(game):
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
+        # retrieving per game shots for current player
+        # per_player_game_shots = retrieve_player_per_game_shots(
+        #     shots, game_id, gsl['player_id'])
         # adding assistant information to player's game stat line
         if gsl['player_id'] in assistants:
             single_assist_dict = assistants[gsl['player_id']]
@@ -368,10 +383,12 @@ if __name__ == '__main__':
 
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
+    src_shots_path = os.path.join(TGT_DIR, SHOT_SRC)
     tgt_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
+    shots = json.loads(open(src_shots_path).read())
 
     # loading existing player game stats
     if not initial and os.path.isfile(tgt_path):
@@ -393,7 +410,7 @@ if __name__ == '__main__':
             continue
 
         print("+ Retrieving player stats for game %s" % get_game_info(game))
-        single_player_game_stats = get_single_game_player_data(game)
+        single_player_game_stats = get_single_game_player_data(game, shots)
         player_game_stats.extend(single_player_game_stats)
 
         # collecting stat lines on a per-player basis
