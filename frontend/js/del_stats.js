@@ -1,4 +1,4 @@
-var app = angular.module('delStatsApp', ['ngRoute', 'moment-picker'])
+var app = angular.module('delStatsApp', ['ngResource', 'ngRoute', 'ngStorage', 'moment-picker', 'angularMoment'])
 
 // main application configuration
 
@@ -44,6 +44,12 @@ app.config(['momentPickerProvider', function(momentPickerProvider){
         autoclose: true,
         keyboard: true
     })
+}]);
+
+app.run(['$rootScope', function($rootScope) {
+    $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+        $rootScope.title = current.$$route.title;
+    });
 }]);
 
 // providing functions to several controllers as services
