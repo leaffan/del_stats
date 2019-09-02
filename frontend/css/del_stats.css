@@ -28,7 +28,7 @@ dl { margin: 0;}
 
 ul {margin: 10px;}
 
-li { width: 30%; }
+li.personal_stuff { width: 33%; }
 
 li i.fa, li i.fab { margin-right: 5px; }
 
