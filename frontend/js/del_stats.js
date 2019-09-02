@@ -165,6 +165,23 @@ app.factory('svc', function() {
             else {
                 return "";
             }
+        },
+        // team stats to be simply aggregated
+        stats_to_aggregate: function() {
+            return [
+                'games_played', 'score', 'opp_score', 'goals', 'opp_goals',
+                'w', 'rw', 'ow', 'sw', 'l', 'rl', 'ol', 'sl', 'points', 'goals_1',
+                'opp_goals_1', 'goals_2', 'opp_goals_2', 'goals_3', 'opp_goals_3',
+                'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked',
+                'opp_shots', 'opp_shots_on_goal', 'opp_shots_missed',
+                'opp_shots_blocked', 'saves', 'opp_saves', 'pim', 'pp_time',
+                'pp_opps', 'pp_goals', 'opp_pim', 'opp_pp_time', 'opp_pp_opps',
+                'opp_pp_goals', 'sh_opps', 'sh_goals', 'opp_sh_opps', 'opp_sh_goals',
+                'faceoffs_won', 'faceoffs_lost', 'faceoffs', 'sl_sh', 'lf_sh', 'rg_sh',
+                'bl_sh', 'sl_og', 'lf_og', 'rg_og', 'bl_og', 'sl_sh_a', 'lf_sh_a',
+                'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a',
+                'attendance' 
+            ];    
         }
     }
 });
