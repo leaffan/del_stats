@@ -52,6 +52,10 @@ app.run(['$rootScope', function($rootScope) {
     });
 }]);
 
+app.run(function(amMoment) {
+	amMoment.changeLocale('de');
+});
+
 // providing functions to several controllers as services
 app.factory('svc', function() {
     return {
