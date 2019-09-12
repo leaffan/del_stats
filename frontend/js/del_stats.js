@@ -5,29 +5,35 @@ var app = angular.module('delStatsApp', ['ngResource', 'ngRoute', 'ngStorage', '
 app.config(['$routeProvider', function($routeProvider){
     $routeProvider
         .when('/home', {
+            title: 'DEL-Statistiken',
             templateUrl: 'home.html',
+            reloadOnSearch: false
         })
-        .when('/del_stats', {
+        .when('/del_stats/:season', {
             title: 'Spielerstatistiken',
             templateUrl: 'player_stats.html',
-            controller: 'plrStatsController as ctrl'
+            controller: 'plrStatsController as ctrl',
+            reloadOnSearch: false
         })
-        .when('/team_stats', {
+        .when('/team_stats/:season', {
             title: 'Teamstatistiken',
             templateUrl: 'team_stats.html',
-            controller: 'teamStatsController as ctrl'
+            controller: 'teamStatsController as ctrl',
+            reloadOnSearch: false
         })
-        .when('/player_profile/:team/:player_id',
+        .when('/player_profile/:season/:team/:player_id',
         {
             title: 'Spielerprofil',
             templateUrl: 'player_profile.html',
-            controller: 'plrProfileController as ctrl'
+            controller: 'plrProfileController as ctrl',
+            reloadOnSearch: false
         })
-        .when('/team_profile/:team',
+        .when('/team_profile/:season/:team',
         {
             title: 'Teamprofil',
             templateUrl: 'team_profile.html',
-            controller: 'teamProfileController as ctrl'
+            controller: 'teamProfileController as ctrl',
+            reloadOnSearch: false
         })
         .otherwise({
             redirectTo: '/home'
@@ -180,7 +186,7 @@ app.factory('svc', function() {
                 'faceoffs_won', 'faceoffs_lost', 'faceoffs', 'sl_sh', 'lf_sh', 'rg_sh',
                 'bl_sh', 'sl_og', 'lf_og', 'rg_og', 'bl_og', 'sl_sh_a', 'lf_sh_a',
                 'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a',
-                'attendance' 
+                'attendance', 'penalty_2', 'penalty_5', 'penalty_10', 'penalty_20'
             ];    
         }
     }
