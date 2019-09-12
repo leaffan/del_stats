@@ -1,9 +1,9 @@
 <div class="container" data-ng-app="delStatsApp" data-ng-controller="teamStatsController">
-    <div class="alert alert-info">
-        <h1>DEL-Teamstatistiken für 2018/19</h1>
+    <div class="alert alert-info main-bg">
+        <h1>DEL-Teamstatistiken für {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p>Teamstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.</p>
 
         <ul class="list-inline">
@@ -17,11 +17,11 @@
         </ul>
     </div>
 
-    <div class="alert alert-info">
-        <p>Zu den <a href="#!/del_stats">Spielerstatistiken</a></p>
+    <div class="alert alert-info main-bg">
+        <p>Zu den <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
             <dl ng-show="toggle" class="dl-horizontal">
                 <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
@@ -92,7 +92,7 @@
         </div>
     </form>
 
-    <table id="standings" class="table table-bordered table-striped" data-ng-if="tableSelect == 'standings'">
+    <table id="standings" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'standings'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -109,7 +109,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.rw }}</td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.ow }}</td>
@@ -125,7 +125,7 @@
         </tbody>
     </table>
 
-    <table id="goal_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'goal_stats'">
+    <table id="goal_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goal_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -142,7 +142,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right {{ stat.goals_diff > 0 ? 'green' : stat.goals_diff < 0 ? 'red' : '' }}">{{ stat.goals_diff }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals_1 }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_goals_1 }}</td>
@@ -157,7 +157,7 @@
         </tbody>
     </table>
 
-    <table id="shot_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_stats'">
+    <table id="shot_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -174,7 +174,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals }}</td>
@@ -187,7 +187,7 @@
         </tbody>
     </table>
 
-    <table id="shot_shares" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_shares'">
+    <table id="shot_shares" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_shares'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -204,7 +204,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_shots }}</td>
@@ -219,7 +219,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones'">
+    <table id="shot_zones" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -236,7 +236,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right">{{ stat.sl_sh }}</td>
@@ -251,7 +251,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones_against" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones_against'">
+    <table id="shot_zones_against" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_zones_against'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -268,7 +268,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_shots }}</td>
                 <td class="col-md-1 text-right">{{ stat.sl_sh_a }}</td>
@@ -283,7 +283,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones_against" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+    <table id="shot_on_goal_zones_against" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -300,7 +300,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.opp_shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.sl_og_a }}</td>
@@ -315,7 +315,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones" class="table table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+    <table id="shot_on_goal_zones" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_on_goal_zones'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -332,7 +332,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right">{{ stat.sl_og }}</td>
@@ -347,7 +347,7 @@
         </tbody>
     </table>
 
-    <table id="special_team_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'special_team_stats'">
+    <table id="special_team_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'special_team_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -364,7 +364,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_opps }}</td>
                 <td class="col-md-1 text-right">{{ stat.pp_goals }}</td>
@@ -380,7 +380,7 @@
         </tbody>
     </table>
 
-    <table id="additional_stats" class="table table-bordered table-striped" data-ng-if="tableSelect == 'additional_stats'">
+    <table id="additional_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'additional_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -397,7 +397,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right">{{ stat.points }}</td>
                 <td class="col-md-1 text-right">{{ stat.pt_pctg.toFixed(2) }} %</td>

@@ -1,13 +1,14 @@
 app.controller('teamProfileController', function($scope, $http, $routeParams, $location, svc) {
     var ctrl = this;
     $scope.svc = svc;
+    $scope.season = $routeParams.season;
     $scope.currentTeam = $routeParams.team;
     $scope.tableSelect = 'basic_game_by_game';
     $scope.sortCriterion = 'date';
     $scope.statsSortDescending = true;
 
     // loading stats from external json file
-    $http.get('data/del_team_game_stats.json').then(function (res) {
+    $http.get('data/'+ $scope.season + '/del_team_game_stats.json').then(function (res) {
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
         $scope.game_log = $scope.team_stats.filter(function(value, index, arr) {
@@ -134,7 +135,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     };
 
     $scope.changeTeam = function() {
-        $location.path('/team_profile/' + $scope.model.team);
+        $location.path('/team_profile/' + $scope.season + '/' + $scope.model.team);
     };
 
 });

@@ -3,18 +3,21 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
     var ctrl = this;
     $scope.svc = svc;
 
+    $scope.season = $routeParams.season;
+    $scope.player_id = $routeParams.player_id;
+
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_profile_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
     });
 
     // retrieving players
-    $http.get('./data/del_players.json').then(function (res) {
+    $http.get('./data/'+ $scope.season + '/del_players.json').then(function (res) {
         $scope.players = res.data;
     });
 
     // loading stats from external json file
-    $http.get('data/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
+    $http.get('data/' + $scope.season + '/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
         $scope.player_name = res.data[0].full_name;
         if ($scope.player_stats[0]['position'] == 'GK') {
@@ -25,11 +28,11 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
     });
 
     // loading goalie stats
-    $http.get('./data/del_goalie_game_stats.json').then(function (res) {
+    $http.get('./data/'+ $scope.season + '/del_goalie_game_stats.json').then(function (res) {
         $scope.goalie_stats = res.data;
     });
 
-    $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
+    $http.get('data/'+ $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
         seen = [];
         $scope.all_players = []
         // de-duplicating array with players
@@ -47,6 +50,7 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         new_team: $routeParams.team,
         player_id: $routeParams.player_id,
         new_player_id: $routeParams.player_id,
+        // possibly no longer needed:
         countries: {
             'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
             'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
@@ -128,6 +132,6 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
 
     $scope.changePlayer = function() {
         $scope.model.player_id = $scope.model.new_player_id;
-        $location.path('/player_profile/' + $scope.model.new_team + '/' + $scope.model.player_id);
+        $location.path('/player_profile/' + $scope.season + '/' + $scope.model.new_team + '/' + $scope.model.player_id);
     };
 });

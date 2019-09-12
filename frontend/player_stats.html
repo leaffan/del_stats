@@ -1,9 +1,9 @@
 <div class="container" data-ng-app="delStatsApp" data-ng-controller="plrStatsController">
-    <div class="alert alert-info">
-        <h1>DEL-Spielerstatistiken für 2018/19</h1>
+    <div class="alert alert-info main-bg">
+        <h1>DEL-Spielerstatistiken für {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p>Spielerstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.</p>
 
         <ul class="list-inline">
@@ -17,11 +17,11 @@
         </ul>
     </div>
 
-    <div class="alert alert-info">
-        <p>Zu den <a href="#!/team_stats">Teamstatistiken</a></p>
+    <div class="alert alert-info main-bg">
+        <p>Zu den <a href="#!/team_stats/{{ season }}"><b>Teamstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
     </div>
     
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
             <dl ng-show="toggle" class="dl-horizontal">
                 <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
@@ -165,8 +165,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.pim_from_events }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat._2min }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat._5min }}</td>
@@ -197,8 +197,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.shots_missed }}</td>
@@ -230,8 +230,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_pp_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.time_on_ice_pp }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.goals }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.pp_goals }}</td>
@@ -264,8 +264,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.time_on_ice }}</td>
                 <td class="col-md-1 text-right">{{ stat.time_on_ice_pp }}</td>
                 <td class="col-md-1 text-right">{{ stat.time_on_ice_sh }}</td>
@@ -296,8 +296,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.goals_per_game.toFixed(2) }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.assists_per_game.toFixed(2) }}</td>
@@ -328,8 +328,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_seconds', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.time_on_ice | date : 'mm:ss' }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals_per_60.toFixed(2) }}</td>
                 <td class="col-md-1 text-right">{{ stat.assists_per_60.toFixed(2) }}</td>
@@ -359,8 +359,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter | filter: {season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.goals }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.assists }}</td>
@@ -391,8 +391,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-left">{{ stat.position }}</td>
                 <td class="col-md-1 text-left">{{ stat.shoots }}</td>
                 <td class="col-md-1 text-right">{{ stat.height }} cm</td>
@@ -421,8 +421,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_on_goal }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_on_goal_pctg.toFixed(2) }} %</td>
@@ -454,8 +454,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_shots }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_pctg.toFixed(2) }} %</td>
@@ -487,8 +487,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_started }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ svc.formatTime(stat.toi) }}</td>
@@ -520,8 +520,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_5v5 != null ? stat.save_pctg_5v5.toFixed(2) + ' %' : 'n/a' }}</td>
@@ -552,8 +552,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_4v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_4v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_4v5 != null ? stat.save_pctg_4v5.toFixed(2) + ' %' : 'n/a' }}</td>
@@ -584,8 +584,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v4 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v4 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_5v4 != null ? stat.save_pctg_5v4.toFixed(2) + ' %' : 'n/a' }}</td>
@@ -616,8 +616,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_slot }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_slot }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_slot != null ? stat.save_pctg_slot.toFixed(2) + ' %' : 'n/a' }}</td>
@@ -648,8 +648,8 @@
         <tbody>
             <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
-                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{ stat.team }}">{{ stat.team }}</a></td>
+                <td class="col-md-1" style="width: 16%"><a href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 3%"><a href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_blue_line }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_blue_line }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg_blue_line != null ? stat.save_pctg_blue_line.toFixed(2) + ' %' : 'n/a' }}</td>
@@ -677,8 +677,8 @@
         <tbody>
             <tr data-ng-repeat="streak in streaks | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:longestStreakFilter | filter:currentStreakFilter | filter: {type: scoringStreakTypeFilter} | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-2"><a href='#!/player_profile/{{streak.team}}/{{streak.player_id}}'>{{ streak.full_name }}</a></td>
-                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{ streak.team }}">{{ streak.team }}</a></td>
+                <td class="col-md-2"><a href='#!/player_profile/{{season}}/{{streak.team}}/{{streak.player_id}}'>{{ streak.full_name }}</a></td>
+                <td class="col-md-1" style="width: 5%"><a href="#!/team_profile/{{season}}/{{ streak.team }}">{{ streak.team }}</a></td>
                 <td class="col-md-1 text" style="width: 8%">{{ streak.type == 'points' ? 'Punkte' : streak.type == 'goals' ? 'Tore' : 'Vorlagen' }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ streak.length }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ streak.from_date }}</td>

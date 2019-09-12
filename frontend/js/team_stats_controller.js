@@ -1,13 +1,14 @@
-app.controller('teamStatsController', function($scope, $http, svc) {
+app.controller('teamStatsController', function($scope, $http, $routeParams, svc) {
 
+    $scope.svc = svc;
     var ctrl = this;
+    $scope.season = $routeParams.season;
     // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
     $scope.seasonTypeSelect = 'PO'
     $scope.isStandingsView = true;
     $scope.sortConfig = {
         'sortKey': 'points',
-        // 'sortCriteria': ['points', 'score_diff', 'score'],
         'sortCriteria': ['points', 'score_diff', 'score'],
         'sortDescending': true
     }
@@ -56,27 +57,14 @@ app.controller('teamStatsController', function($scope, $http, svc) {
         }
     }, true);
 
-    $scope.stats_to_aggregate = [
-        'games_played', 'score', 'opp_score', 'goals', 'opp_goals',
-        'w', 'rw', 'ow', 'sw', 'l', 'rl', 'ol', 'sl', 'points', 'goals_1',
-        'opp_goals_1', 'goals_2', 'opp_goals_2', 'goals_3', 'opp_goals_3',
-        'shots', 'shots_on_goal', 'shots_missed', 'shots_blocked',
-        'opp_shots', 'opp_shots_on_goal', 'opp_shots_missed',
-        'opp_shots_blocked', 'saves', 'opp_saves', 'pim', 'pp_time',
-        'pp_opps', 'pp_goals', 'opp_pim', 'opp_pp_time', 'opp_pp_opps',
-        'opp_pp_goals', 'sh_opps', 'sh_goals', 'opp_sh_opps', 'opp_sh_goals',
-        'faceoffs_won', 'faceoffs_lost', 'faceoffs', 'sl_sh', 'lf_sh', 'rg_sh',
-        'bl_sh', 'sl_og', 'lf_og', 'rg_og', 'bl_og', 'sl_sh_a', 'lf_sh_a',
-        'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a' 
-    ]
-
     // loading stats from external json file
-    $http.get('data/del_team_game_stats.json').then(function (res) {
+    $http.get('data/' + $scope.season + '/del_team_game_stats.json').then(function (res) {
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
         $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
     });
 
+    // TODO: move to out-of-controller location
     $scope.filter_stats = function (stats) {
         filtered_team_stats = {};
         if ($scope.team_stats === undefined)
@@ -88,7 +76,7 @@ app.controller('teamStatsController', function($scope, $http, svc) {
                 if ($scope.seasonTypeSelect != 'PO' || $scope.team_playoff_lookup[team]) {
                     filtered_team_stats[team] = {};
                     filtered_team_stats[team]['team'] = team;
-                    $scope.stats_to_aggregate.forEach(category => {
+                    $scope.svc.stats_to_aggregate().forEach(category => {
                         filtered_team_stats[team][category] = 0;
                     });
                 }
@@ -250,7 +238,7 @@ app.controller('teamStatsController', function($scope, $http, svc) {
                 }
         }
             if (is_filtered) {
-                $scope.stats_to_aggregate.forEach(category => {
+                $scope.svc.stats_to_aggregate().forEach(category => {
                     filtered_team_stats[team][category] += element[category];
                 })
             }
@@ -515,4 +503,3 @@ app.controller('teamStatsController', function($scope, $http, svc) {
     }
 
 });
-
