@@ -18,7 +18,26 @@ name_corrections = {
     'Jamie Bartmann': 'Jamie Bartman',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
-    'Arena NBG Versicheru': 'Arena Nürnberger Versicherung'
+    'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
+}
+
+capacities = {
+    'Arena Nürnberger Versicherung': 7672,
+    'Curt-Frenzel-Stadion': 6139,
+    'Mercedes-Benz Arena': 14200,
+    'SAP-Arena': 13600,
+    'Eisarena Bremerhaven': 4647,
+    'ISS Dome': 13205,
+    'Saturn Arena': 4816,
+    'Eissporthalle Iserlohn': 4967,
+    'Lanxess Arena': 18700,
+    'RheinEnergieSTADION': 50000,
+    'König Palast': 8029,
+    'Yayla-Arena': 8029,
+    'Olympia Eishalle': 6142,
+    'Helios Arena': 6214,
+    'Eisstadion Straubing': 5825,
+    'EisArena Wolfsburg': 4503,
 }
 
 
@@ -61,3 +80,27 @@ def get_season(date_of_interest=None):
         season = date_of_interest.year
 
     return season
+
+
+def get_game_type_from_season_type(game):
+    """
+    Determines game type (as used in storage directories) from season type
+    (e.g RS or PO) as stored in game definition.
+    """
+    if game['season_type'] == 'RS':
+        return 1
+    elif game['season_type'] == 'PO':
+        return 3
+    else:
+        return 0
+
+
+def get_home_road(game, event):
+    """
+    Determines whether specified game and event combination is related to the
+    home or the road team.
+    """
+    if event['data']['team'] == 'home':
+        return game['home_abbr'], 'home'
+    else:
+        return game['road_abbr'], 'road'
