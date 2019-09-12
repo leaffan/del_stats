@@ -1,6 +1,7 @@
-app.controller('plrStatsController', function ($scope, $http, svc) {
+app.controller('plrStatsController', function ($scope, $http, $routeParams, svc) {
 
     $scope.svc = svc;
+    $scope.season = $routeParams.season;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
     $scope.seasonTypeFilter = 'PO';
@@ -14,13 +15,13 @@ app.controller('plrStatsController', function ($scope, $http, svc) {
     }
 
     // loading stats from external json file
-    $http.get('data/del_player_game_stats_aggregated.json').then(function (res) {
+    $http.get('data/' + $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
         $scope.last_modified = res.data[0];
         $scope.stats = res.data[1];
     });
 
     // loading player scoring streaks from external json file
-    $http.get('data/del_streaks.json').then(function (res) {
+    $http.get('data/' + $scope.season + '/del_streaks.json').then(function (res) {
         $scope.streaks = res.data;
     });
 
