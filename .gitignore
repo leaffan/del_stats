@@ -114,6 +114,8 @@ frontend/data/*
 frontend/data_bak/*
 sandbox/*
 svg/*
+old/
+.vscode
 
 angular-animate.min.js
 angular-aria.min.js
