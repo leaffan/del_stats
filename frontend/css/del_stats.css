@@ -1,4 +1,4 @@
-body { padding-top: 40px;}
+body { padding-top: 40px; }
 
 .inline { display: inline-block; }
 
@@ -20,7 +20,7 @@ table {
     border: none;
 }
 
-thead td.text-center a, span.rank { font-size: 80%; font-weight: bold; }
+thead td.text-center a, span.rank, abbr.rank { font-size: 80%; font-weight: bold; }
 
 p { margin-bottom: 15px; }
 
@@ -36,3 +36,7 @@ label { padding-left: 5px;}
 
 .red { color: red; }
 .green { color: darkgreen; }
+
+div.main-bg { background-color: rgb(216, 250, 250); }
+
+.marker { background: orange !important; font-weight: bold;}
