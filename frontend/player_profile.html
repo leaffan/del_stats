@@ -7,7 +7,7 @@
         </div>
         <ul class="list-inline">
             <li><b>Geburtsdatum:</b> {{ player_stats[0].date_of_birth | date: 'dd.MM.yyyy' }}</li>
-            <li><b>Alter:</b> {{ players[player_id].age }}</li>
+            <li><b>Alter:</b> {{ players[player_id].age.toFixed(3) }}</li>
         </ul>
         <ul class="list-inline">
             <li><b>Größe:</b> {{player_stats[0].height }} cm</li>
