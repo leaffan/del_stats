@@ -1,0 +1,47 @@
+<div class="container" data-ng-app="delStatsApp" data-ng-controller="careerStatsController">
+    <div class="alert alert-info main-bg">
+        <h1>Karrierestatistiken</h1>
+    </div>
+
+    <div class="alert alert-info main-bg">
+        <p>Karrierestatistiken für aktive DEL-Spieler.</p>
+    </div>
+
+    <div class="alert alert-info main-bg">
+        <p><a href="#!"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Startseite</b></a></p>
+    </div>
+    
+    <table id="career_stats_skaters" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">Rang</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['career_stats_skaters']">
+                <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                    <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in full_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter: {position: '!GK'}">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.full_name }}</a></td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.gp }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.g }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.a }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.pts }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.pim }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.ppg }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.shg }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.sog }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.sh_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.ptspg.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+    <p>{{ test }}</p>
+</div>
