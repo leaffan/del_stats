@@ -35,6 +35,20 @@ app.config(['$routeProvider', function($routeProvider){
             controller: 'teamProfileController as ctrl',
             reloadOnSearch: false
         })
+        .when('/career_stats',
+        {
+            title: 'Karrierestatistiken',
+            templateUrl: 'career_stats.html',
+            controller: 'careerStatsController as ctrl',
+            reloadOnSearch: false
+        })
+        .when('/player_career/:player_id',
+        {
+            title: 'Karriereverlauf',
+            templateUrl: 'player_career.html',
+            controller: 'plrCareerController as ctrl',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/home'
         })
@@ -188,6 +202,11 @@ app.factory('svc', function() {
                 'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a',
                 'attendance', 'penalty_2', 'penalty_5', 'penalty_10', 'penalty_20'
             ];    
+        },
+        pad: function pad(num, size) {
+            var s = num+"";
+            while (s.length < size) s = "0" + s;
+            return s;
         }
     }
 });
