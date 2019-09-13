@@ -1,0 +1,71 @@
+<div class="container" data-ng-app="delStatsApp" data-ng-controller="plrCareerController">
+    <div class="alert alert-info main-bg">
+        <h1>{{ player_name }}</h1>
+        <h3>Karriereverlauf</h3>
+    </div>
+
+    <table id="skater_career_stats" class="table table-condensed table-bordered table-striped table-hover" data-ng-if="table_select == 'skater_career_stats'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols['skater_career_stats']">
+                    <!-- <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key"> -->
+                        <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span> -->
+                        <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span> -->
+                    <!-- </a> -->
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})"> -->
+            <tr data-ng-repeat="season in seasons">
+                <td class="col-md-1">{{ season.season }}/{{ svc.pad(season.season + 1 - 2000, 2) }}</td>
+                <td class="col-md-1">{{ season.team }}</td>
+                <td class="col-md-1">{{ season.season_type }}</td>
+                <td class="col-md-1 text-right">{{ season.gp }}</td>
+                <td class="col-md-1 text-right">{{ season.g }}</td>
+                <td class="col-md-1 text-right">{{ season.a }}</td>
+                <td class="col-md-1 text-right">{{ season.pts }}</td>
+                <td class="col-md-1 text-right">{{ season.ppg }}</td>
+                <td class="col-md-1 text-right">{{ season.shg }}</td>
+                <td class="col-md-1 text-right">{{ season.sog }}</td>
+                <td class="col-md-1 text-right">{{ season.sh_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right">{{ season.ptspg.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_career_stats" class="table table-condensed table-bordered table-striped table-hover" data-ng-if="table_select == 'goalie_career_stats'">
+        <thead>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols['goalie_career_stats']">
+                    <!-- <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key"> -->
+                        <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span> -->
+                        <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span> -->
+                    <!-- </a> -->
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <!-- <tr data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})"> -->
+            <tr data-ng-repeat="season in seasons">
+                <td class="col-md-1">{{ season.season }}/{{ svc.pad(season.season + 1 - 2000, 2) }}</td>
+                <td class="col-md-1">{{ season.team }}</td>
+                <td class="col-md-1">{{ season.season_type }}</td>
+                <td class="col-md-1 text-right">{{ season.gp }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(season.toi) }}</td>
+                <td class="col-md-1 text-right">{{ season.w }}</td>
+                <td class="col-md-1 text-right">{{ season.l }}</td>
+                <td class="col-md-1 text-right">{{ season.sa }}</td>
+                <td class="col-md-1 text-right">{{ season.ga }}</td>
+                <td class="col-md-1 text-right">{{ season.sv_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right">{{ season.gaa }}</td>
+                <td class="col-md-1 text-right">{{ season.so }}</td>
+            </tr>
+        </tbody>
+    </table>
+    
+</div>

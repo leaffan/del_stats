@@ -1,0 +1,29 @@
+{
+    "career_stats_skaters": [
+        {"data_key": "full_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "gp", "col_header": "GP", "expl_de": "Spiele", "expl_en": "Games Played"},
+        {"data_key": "g", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
+        {"data_key": "a", "col_header": "A", "expl_de": "Vorlagen", "expl_en": "Assists"},
+        {"data_key": "pts", "col_header": "P", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalty Minutes"},
+        {"data_key": "ppg", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
+        {"data_key": "shg", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
+        {"data_key": "sog", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
+        {"data_key": "sh_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
+        {"data_key": "ptspg", "col_header": "P/G", "expl_de": "Punkte pro Spiel", "expl_en": "Points/Game"}
+    ],
+    "goalie_career_stats": [
+        {"data_key": "season", "col_header": "Saison", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "season_type", "col_header": "Phase", "expl_de": null, "expl_en": null},
+        {"data_key": "gp", "col_header": "GP", "expl_de": "Spiele", "expl_en": "Games Played"},
+        {"data_key": "toi", "col_header": "Min", "expl_de": "Eiszeit", "expl_en": "Time On Ice"},
+        {"data_key": "w", "col_header": "W", "expl_de": "Siege", "expl_en": "Wins"},
+        {"data_key": "l", "col_header": "L", "expl_de": "Niederlagen", "expl_en": "Losses"},
+        {"data_key": "sa", "col_header": "SA", "expl_de": "Abzuwehrende Torschüsse", "expl_en": "Shots Against"},
+        {"data_key": "ga", "col_header": "GA", "expl_de": "Gegentore", "expl_en": "Goals Against"},
+        {"data_key": "sv_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
+        {"data_key": "gaa", "col_header": "GAA", "expl_de": "Gegentorschnitt", "expl_en": "Goals Against Average"},
+        {"data_key": "so", "col_header": "SO", "expl_de": "Shutouts", "expl_en": "Shutouts"}
+    ]
+}
