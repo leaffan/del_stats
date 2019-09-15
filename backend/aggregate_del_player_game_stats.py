@@ -4,18 +4,30 @@
 import os
 import csv
 import json
-from datetime import timedelta, date
+import yaml
+from datetime import timedelta
 
 from collections import defaultdict
 
 from dateutil.parser import parse
 
+from utils import calculate_age
+
+# loading external configuration
+CONFIG = yaml.load(open('config.yml'))
+
+# TODO: get season of interes from command line
+# TODO: adjust u23 cutoff dates below to season of interest
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
+
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
 SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
+AGGREGATED_GOALIE_STATS_TGT = 'del_goalie_game_stats_aggregated.json'
 ALL_PLAYER_TGT = 'del_players.json'
-U23_CUTOFF_DATE = parse("1996-01-01")
+U23_CUTOFF_DATE = parse("1997-01-01")
 
 
 # attributes to simply collect from single-game player statistics
@@ -28,11 +40,11 @@ TO_AGGREGATE_INTS = [
     'games_played', 'goals', 'assists', 'primary_assists', 'secondary_assists',
     'points', 'primary_points', 'pim', 'plus', 'minus', 'plus_minus',
     'pp_goals', 'pp_assists', 'pp_primary_assists', 'pp_secondary_assists',
-    'pp_points', 'sh_goals', 'gw_goals', 'shots', 'shots_on_goal',
-    'shots_missed', 'shots_blocked', 'faceoffs', 'faceoffs_won',
-    'faceoffs_lost', 'blocked_shots', 'shifts', 'penalties', 'pim_from_events',
-    'penalty_shots', '_2min', '_5min', '_10min', '_20min', 'lazy', 'roughing',
-    'reckless', 'other',
+    'pp_points', 'sh_goals', 'sh_assists', 'sh_points', 'gw_goals', 'shots',
+    'shots_on_goal', 'shots_missed', 'shots_blocked', 'faceoffs',
+    'faceoffs_won', 'faceoffs_lost', 'blocked_shots', 'shifts', 'penalties',
+    'pim_from_events', 'penalty_shots', '_2min', '_5min', '_10min', '_20min',
+    'lazy', 'roughing', 'reckless', 'other',
 ]
 TO_AGGREGATE_INTS_GOALIES = [
     'games_played', 'games_started', 'toi', 'w', 'rw', 'ow', 'sw', 'l', 'rl',
@@ -65,6 +77,7 @@ PER_60_ATTRS = [
     'primary_points', 'shots', 'shots_on_goal', 'shots_missed',
     'shots_blocked', 'blocked_shots', 'pp_goals', 'pp_assists',
     'pp_primary_assists', 'pp_secondary_assists', 'pp_points', 'sh_goals',
+    'sh_assists', 'sh_points'
 ]
 
 SHOT_STATS_ATTRS = [
@@ -101,6 +114,7 @@ ISO_COUNTRY_CODES = {
     'SVN': 'si',
     'HUN': 'hu',
     'SLO': 'si',
+    'CRO': 'hr',
 }
 
 OUT_FIELDS = [
@@ -131,38 +145,6 @@ OUT_FIELDS = [
     'pp_primary_assists_per_60', 'pp_secondary_assists_per_60',
     'pp_points_per_60', 'sh_goals_per_60',
 ]
-
-
-def calculate_player_age(player_dob):
-    """
-    Calculates current age of player with specified date of birth.
-    """
-    # parsing player's date of birth
-    player_dob = parse(player_dob).date()
-    # retrieving today's date
-    today = date.today()
-    # projecting player's date of birth to this year
-    # TODO: check for Feb 29 in a leap year
-    this_year_dob = date(today.year, player_dob.month, player_dob.day)
-
-    # if this year's birthday has already passed...
-    if (today - this_year_dob).days >= 0:
-        # calculating age as years since year of birth and days since this
-        # year's birthday
-        years = today.year - player_dob.year
-        days = (today - this_year_dob).days
-    # otherwise...
-    else:
-        # projecting player's data of birth to last year
-        # TODO: check for Feb 29 in a leap year
-        last_year_dob = date(today.year - 1, player_dob.month, player_dob.day)
-        # calculating age as years between last year and year of birth and days
-        # since last year's birthday
-        years = last_year_dob.year - player_dob.year
-        days = (today - last_year_dob).days
-
-    # converting result to pseudo-float
-    return float("%d.%03d" % (years, days))
 
 
 def convert_to_minutes(td):
@@ -260,19 +242,14 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
 
 if __name__ == '__main__':
 
-    src_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data', PLAYER_GAME_STATS_SRC)
-    shot_src_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data', SHOTS_DATA_SRC)
-    goalie_src_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data', GOALIE_GAME_STATS_SRC)
-    tgt_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data', AGGREGATED_PLAYER_STATS_TGT)
-    tgt_csv_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data',
-        AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
-    plr_tgt_path = os.path.join(os.path.dirname(
-        os.path.abspath(__file__)), 'data', ALL_PLAYER_TGT)
+    src_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_SRC)
+    shot_src_path = os.path.join(TGT_DIR, SHOTS_DATA_SRC)
+    goalie_src_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_SRC)
+    tgt_path = os.path.join(TGT_DIR, AGGREGATED_PLAYER_STATS_TGT)
+    tgt_goalies_path = os.path.join(TGT_DIR, AGGREGATED_GOALIE_STATS_TGT)
+    tgt_csv_path = os.path.join(
+        TGT_DIR, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
+    plr_tgt_path = os.path.join(TGT_DIR, ALL_PLAYER_TGT)
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -363,8 +340,7 @@ if __name__ == '__main__':
         for attr in TO_COLLECT:
             basic_values[attr] = list(player_data[key][attr])[-1]
         # calculating player age
-        basic_values['age'] = calculate_player_age(
-            basic_values['date_of_birth'])
+        basic_values['age'] = calculate_age(basic_values['date_of_birth'])
 
         if (
             basic_values['country'] == 'GER' and
@@ -378,6 +354,9 @@ if __name__ == '__main__':
             basic_values[
                 'iso_country'] = ISO_COUNTRY_CODES[basic_values['country']]
         else:
+            print(
+                "+ Country code '%s' not found " % basic_values['country'] +
+                "in list of available ones")
             basic_values['iso_country'] = None
 
         # calculating shot statistics
@@ -449,8 +428,16 @@ if __name__ == '__main__':
 
     output = [last_modified, aggregated_stats_as_list]
 
+    aggregated_goalie_stats = list()
+    for item in aggregated_stats_as_list:
+        if item['position'] == 'GK':
+            aggregated_goalie_stats.append(item)
+
     open(tgt_path, 'w').write(
         json.dumps(output, indent=2, default=convert_to_minutes))
+    open(tgt_goalies_path, 'w').write(
+        json.dumps(
+            aggregated_goalie_stats, indent=2, default=convert_to_minutes))
 
     keys = aggregated_stats_as_list[0].keys()
 
@@ -461,20 +448,3 @@ if __name__ == '__main__':
             extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(aggregated_stats_as_list)
-
-    all_players = dict()
-    all_players[0] = {
-        'first_name': '', 'last_name': '', 'position': '', 'age': '',
-        'iso_country': ''}
-
-    for stats_line in aggregated_stats_as_list:
-        if stats_line['player_id'] not in all_players:
-            all_players[stats_line['player_id']] = {
-                'first_name': stats_line['first_name'],
-                'last_name': stats_line['last_name'],
-                'position': stats_line['position'],
-                'age': stats_line['age'],
-                'iso_country': stats_line['iso_country']
-            }
-
-    open(plr_tgt_path, 'w').write(json.dumps(all_players, indent=2))
