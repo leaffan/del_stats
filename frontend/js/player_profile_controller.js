@@ -12,7 +12,7 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
     });
 
     // retrieving players
-    $http.get('./data/'+ $scope.season + '/del_players.json').then(function (res) {
+    $http.get('./data/del_players.json').then(function (res) {
         $scope.players = res.data;
     });
 
