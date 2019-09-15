@@ -12,7 +12,8 @@ app.controller('plrCareerController', function ($scope, $http, $routeParams, svc
     // loading stats from external json file
     $http.get('data/career_stats/per_player/' + $scope.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
-        $scope.player_name = res.data.full_name;
+        $scope.player_first_name = res.data.first_name;
+        $scope.player_last_name = res.data.last_name;
         if (res.data.position == 'GK') {
             $scope.table_select = 'goalie_career_stats';
         }
