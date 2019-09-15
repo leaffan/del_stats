@@ -25,9 +25,12 @@ def get_download_targets(args, config):
     # setting target game type(s)
     tgt_game_type = args.game_type
     if not tgt_game_type:
-        game_types = config['game_types']
+        game_types = list(config['game_types'].keys())
     else:
-        game_types = [tgt_game_type]
+        game_types = {
+            k: v for (k, v) in config['game_types'].items() if
+            v == tgt_game_type
+        }
 
     return seasons, game_types, teams
 
@@ -50,8 +53,8 @@ if __name__ == '__main__':
         choices=[2016, 2017, 2018, 2019],
         help="The season for which information will be downloaded for")
     parser.add_argument(
-        '-g', '--game_type', dest='game_type', required=False, type=int,
-        metavar='game type to download data for', choices=[1, 3],
+        '-g', '--game_type', dest='game_type', required=False,
+        metavar='game type to download data for', choices=['RS', 'PO'],
         help="The game type for which information will be downloaded for")
     parser.add_argument(
         'category', metavar='information category',
@@ -60,10 +63,11 @@ if __name__ == '__main__':
 
     # loading external configuration
     config = yaml.load(open('config.yml'))
-    print("+ Using base url %s" % config['base_url'])
 
     args = parser.parse_args()
     seasons, game_types, teams = get_download_targets(args, config)
+    print("+ Downloading %s data" % args.category)
+    print("+ Using base url %s" % config['base_url'])
 
     # retrieving configuration
     base_url = config['base_url']
@@ -90,18 +94,21 @@ if __name__ == '__main__':
                     base_url, target_url_component,
                     str(season), str(game_type), "%d.json" % team_id))
 
-                # setting up customized header
-                req_header = dict()
-                if target_url in last_modified_dict:
-                    req_header['If-Modified-Since'] = last_modified_dict[
-                        target_url]
-
                 # setting up target directory and path
                 tgt_dir = os.path.join(
                     tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
                 if not os.path.isdir(tgt_dir):
                     os.makedirs(tgt_dir)
                 tgt_path = os.path.join(tgt_dir, "%d.json" % team_id)
+
+                # setting up customized header
+                req_header = dict()
+                if (
+                    os.path.isfile(tgt_path) and
+                    target_url in last_modified_dict
+                ):
+                    req_header['If-Modified-Since'] = last_modified_dict[
+                        target_url]
 
                 # retrieving target data using customized header
                 try:
@@ -125,6 +132,9 @@ if __name__ == '__main__':
                     print(
                         "Unable to retrieve JSON data from %s" % target_url)
                     continue
+
+                if args.category == 'roster_stats':
+                    data = sorted(data, key=lambda k: k['id'])
 
                 open(tgt_path, 'w').write(json.dumps(data, indent=2))
 
