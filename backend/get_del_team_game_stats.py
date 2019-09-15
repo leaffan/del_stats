@@ -3,26 +3,24 @@
 
 import os
 import json
+import yaml
 import argparse
 
+from collections import defaultdict
 from datetime import datetime
 
-import requests
+from utils import get_game_info, get_game_type_from_season_type
+from utils import name_corrections
 
-from utils import name_corrections, get_game_info
-
-BASE_URL = 'https://www.del.org/live-ticker'
-
-MATCHES_INSERT = 'matches'
-
-HOME_STATS_SUFFIX = 'team-stats-home.json'
-ROAD_STATS_SUFFIX = 'team-stats-guest.json'
+# loading external configuration
+CONFIG = yaml.load(open('config.yml'))
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 TEAM_GAME_STATS_TGT = 'del_team_game_stats.json'
 
-TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 
 SHOT_ZONE_CATEGORIES = [
     'slot_shots', 'slot_on_goal', 'slot_missed', 'slot_blocked', 'slot_goals',
@@ -41,7 +39,6 @@ SHOT_ZONE_CATEGORIES = [
     'behind_goal_blocked', 'behind_goal_goals', 'behind_goal_distance',
     'behind_goal_pctg', 'behind_goal_on_goal_pctg',
 ]
-
 SHOT_ZONE_ABBREVIATIONS = {
     'slot': 'sl', 'left': 'lf', 'right': 'rg', 'blue_line': 'bl',
     'shots': 'sh', 'on_goal': 'og', 'missed': 'mi', 'blocked': 'bl',
@@ -49,96 +46,29 @@ SHOT_ZONE_ABBREVIATIONS = {
 }
 
 
-def group_shot_data_by_game_team(shots):
-    """
-    Groups shot data by game and team using the globally defined shot zones
-    and target types.
-    """
-    grouped_shot_data = dict()
-
-    # definining zones
-    zones = [
-        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
-
-    for shot in shots[:]:
-        game_team_key = (shot['game_id'], shot['team'])
-        if game_team_key not in grouped_shot_data:
-            grouped_shot_data[game_team_key] = dict()
-            for shot_zone_cat in SHOT_ZONE_CATEGORIES:
-                grouped_shot_data[game_team_key][shot_zone_cat] = 0
-                if 'distance' in shot_zone_cat:
-                    grouped_shot_data[game_team_key][shot_zone_cat] = list()
-        # retrieving shot zone, e.g. *slot*, *left*
-        zone = shot['shot_zone'].lower()
-        # retrieving combined shot zone and outcome used as key below, e.g.
-        # *slot_missed*, *left_blocked*, *blue_line_on_goal*
-        zone_tgt_type = "%s_%s" % (zone, shot['target_type'])
-        # retrieving combined shot zone and distance used as key below, e.g.
-        # *right_distance*
-        zone_distance = "%s_distance" % zone
-        # adding shot incident to counter for shot zone
-        grouped_shot_data[game_team_key]["%s_shots" % zone] += 1
-        # adding shot incident to counter for shot zone/outcome
-        grouped_shot_data[game_team_key][zone_tgt_type] += 1
-        # adding distance of shot incident
-        grouped_shot_data[game_team_key][zone_distance].append(
-            shot['distance'])
-        # in case of a goal, adding shot incident to couter for goals
-        # from shot zone
-        if shot['scored']:
-            grouped_shot_data[game_team_key]["%s_goals" % zone] += 1
-
-    # finally calculating percentages and mean distances for shot incidents
-    # from each zone
-    for key in grouped_shot_data:
-        all_shots = 0
-        all_on_goal = 0
-        for zone in zones:
-            # adding shots from current zone to number of shots from all zones
-            all_shots += grouped_shot_data[key]["%s_shots" % zone]
-            # adding shots on goal from current zone to number of shots on goal
-            # from all zones
-            all_on_goal += grouped_shot_data[key]["%s_on_goal" % zone]
-            # calculating mean distance of shots from the current zone (if
-            # applicable)
-            if grouped_shot_data[key]["%s_shots" % zone]:
-                grouped_shot_data[key]["%s_distance" % zone] = round(
-                    sum(grouped_shot_data[key]["%s_distance" % zone]) /
-                    grouped_shot_data[key]["%s_shots" % zone], 2
-                )
-            else:
-                grouped_shot_data[key]["%s_distance" % zone] = 0
-
-        # calculating percentage of shots and shots on goal for each shot zone
-        for zone in zones:
-            grouped_shot_data[key]["%s_pctg" % zone] = round((
-                grouped_shot_data[key]["%s_shots" % zone] / all_shots
-            ) * 100., 2)
-            grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
-                grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
-            ) * 100., 2)
-
-    return grouped_shot_data
-
-
 def get_single_game_team_data(game, grouped_shot_data):
     """
     Retrieves statistics for both teams participating in specified game.
     """
     game_stat_lines = list()
-
     game_id = game['game_id']
+    home_id = game['home_id']
+    road_id = game['road_id']
+    game_type = get_game_type_from_season_type(game)
 
-    home_stats_url = "%s/%s/%d/%s" % (
-        BASE_URL, MATCHES_INSERT, game_id, HOME_STATS_SUFFIX)
-    road_stats_url = "%s/%s/%d/%s" % (
-        BASE_URL, MATCHES_INSERT, game_id, ROAD_STATS_SUFFIX)
+    home_stats_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_team_stats',
+        str(game['season']), str(game_type), "%d_%d.json" % (game_id, home_id))
+    road_stats_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_team_stats',
+        str(game['season']), str(game_type), "%d_%d.json" % (game_id, road_id))
 
     raw_stats = dict()
-    r = requests.get(home_stats_url)
-    raw_stats['home'] = r.json()
-    r = requests.get(road_stats_url)
-    raw_stats['road'] = r.json()
+    raw_stats['home'] = json.loads(open(home_stats_src_path).read())
+    raw_stats['road'] = json.loads(open(road_stats_src_path).read())
+
+    # counting penalties per team
+    penalty_counts = get_penalty_counts(game)
 
     for key in ['home', 'road']:
         opp_key = 'road' if key == 'home' else 'home'
@@ -149,7 +79,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['season_type'] = game['season_type']
         game_stat_line['round'] = game['round']
         game_stat_line['game_id'] = game_id
-        game_stat_line['schedule_game_id'] = game['schedule_game_id']
+        # TODO: reactivate when schedule game id is available again
+        # game_stat_line['schedule_game_id'] = game['schedule_game_id']
         game_stat_line['arena'] = correct_name(game['arena'])
         game_stat_line['attendance'] = game['attendance']
         # coaches and referees
@@ -349,6 +280,11 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['best_plr'] = game["%s_best_player" % key]
         game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
         game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
+        # game-winning-goal
+        game_stat_line['gw_goal_team'] = game['gw_goal']
+        game_stat_line['gw_goal_player_id'] = game['gw_goal_player_id']
+        game_stat_line['gw_goal_first_name'] = game['gw_goal_first_name']
+        game_stat_line['gw_goal_last_name'] = game['gw_goal_last_name']
 
         shot_zones_to_retain = ['slot', 'left', 'right', 'blue_line']
 
@@ -357,8 +293,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         for item in shot_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
-                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
-                    abbr_item = abbr_item.replace(key, replacement)
+                for zone_key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
+                    abbr_item = abbr_item.replace(zone_key, replacement)
                 game_stat_line[abbr_item] = shot_data[item]
 
         # retrieving shots against data for current game and team
@@ -367,18 +303,103 @@ def get_single_game_team_data(game, grouped_shot_data):
         for item in shot_against_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
-                for key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
-                    abbr_item = abbr_item.replace(key, replacement)
+                for zone_key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
+                    abbr_item = abbr_item.replace(zone_key, replacement)
                 game_stat_line["%s_a" % abbr_item] = shot_against_data[item]
+
+        for penalty_duration in [2, 5, 10, 20]:
+            if penalty_counts[key] and penalty_duration in penalty_counts[key]:
+                game_stat_line["penalty_%d" % penalty_duration] = (
+                    penalty_counts[key][penalty_duration])
+            else:
+                game_stat_line["penalty_%d" % penalty_duration] = 0
 
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
 
 
+def group_shot_data_by_game_team(shots):
+    """
+    Groups shot data by game and team using the globally defined shot zones
+    and target types.
+    """
+    grouped_shot_data = dict()
+
+    # definining zones
+    zones = [
+        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
+
+    for shot in shots[:]:
+        game_team_key = (shot['game_id'], shot['team'])
+        if game_team_key not in grouped_shot_data:
+            grouped_shot_data[game_team_key] = dict()
+            for shot_zone_cat in SHOT_ZONE_CATEGORIES:
+                grouped_shot_data[game_team_key][shot_zone_cat] = 0
+                if 'distance' in shot_zone_cat:
+                    grouped_shot_data[game_team_key][shot_zone_cat] = list()
+        # retrieving shot zone, e.g. *slot*, *left*
+        zone = shot['shot_zone'].lower()
+        # retrieving combined shot zone and outcome used as key below, e.g.
+        # *slot_missed*, *left_blocked*, *blue_line_on_goal*
+        zone_tgt_type = "%s_%s" % (zone, shot['target_type'])
+        # retrieving combined shot zone and distance used as key below, e.g.
+        # *right_distance*
+        zone_distance = "%s_distance" % zone
+        # adding shot incident to counter for shot zone
+        grouped_shot_data[game_team_key]["%s_shots" % zone] += 1
+        # adding shot incident to counter for shot zone/outcome
+        grouped_shot_data[game_team_key][zone_tgt_type] += 1
+        # adding distance of shot incident
+        grouped_shot_data[game_team_key][zone_distance].append(
+            shot['distance'])
+        # in case of a goal, adding shot incident to couter for goals
+        # from shot zone
+        if shot['scored']:
+            grouped_shot_data[game_team_key]["%s_goals" % zone] += 1
+
+    # finally calculating percentages and mean distances for shot incidents
+    # from each zone
+    for key in grouped_shot_data:
+        all_shots = 0
+        all_on_goal = 0
+        for zone in zones:
+            # adding shots from current zone to number of shots from all zones
+            all_shots += grouped_shot_data[key]["%s_shots" % zone]
+            # adding shots on goal from current zone to number of shots on goal
+            # from all zones
+            all_on_goal += grouped_shot_data[key]["%s_on_goal" % zone]
+            # calculating mean distance of shots from the current zone (if
+            # applicable)
+            if grouped_shot_data[key]["%s_shots" % zone]:
+                grouped_shot_data[key]["%s_distance" % zone] = round(
+                    sum(grouped_shot_data[key]["%s_distance" % zone]) /
+                    grouped_shot_data[key]["%s_shots" % zone], 2
+                )
+            else:
+                grouped_shot_data[key]["%s_distance" % zone] = 0
+
+        # calculating percentage of shots and shots on goal for each shot zone
+        for zone in zones:
+            grouped_shot_data[key]["%s_pctg" % zone] = round((
+                grouped_shot_data[key]["%s_shots" % zone] / all_shots
+            ) * 100., 2)
+            grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
+                grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
+            ) * 100., 2)
+
+    return grouped_shot_data
+
+
 def correct_name(name, corrections=name_corrections):
-    if "," in name:
-        name = " ".join([token.strip() for token in name.split(",")][::-1])
+    for delimiter in [',', ';']:
+        if delimiter in name:
+            name = " ".join(
+                [token.strip() for token in name.split(delimiter)][::-1])
+    # if "," in name:
+    #     name = " ".join([token.strip() for token in name.split(",")][::-1])
+    # if ";" in name:
+    #     name = " ".join([token.strip() for token in name.split(";")][::-1])
     if name.upper() == name:
         name = name.title()
     if name in name_corrections:
@@ -386,11 +407,40 @@ def correct_name(name, corrections=name_corrections):
     return name
 
 
+def get_penalty_counts(game):
+    """
+    Get penalty counts for specified home or road team, i.e. how many two-,
+    five-, ten-, and twenty-minute penalties have been accumulated by its
+    players.
+    """
+    game_type = get_game_type_from_season_type(game)
+
+    pen_counts = dict()
+    pen_counts['home'] = defaultdict(int)
+    pen_counts['road'] = defaultdict(int)
+
+    game_events_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_events',
+        str(game['season']), str(game_type), "%d.json" % game['game_id'])
+    events_data = json.loads(open(game_events_src_path).read())
+
+    for period in events_data:
+        for event in events_data[period]:
+            if event['type'] == 'penalty':
+                duration = int(event['data']['duration'] / 60)
+                if event['data']['team'] == 'home':
+                    pen_counts['home'][duration] += 1
+                else:
+                    pen_counts['road'][duration] += 1
+
+    return pen_counts
+
+
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
     parser = argparse.ArgumentParser(
-        description='Download DEL team game statistics.')
+        description='Process DEL team game statistics.')
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of team games')
@@ -444,5 +494,4 @@ if __name__ == '__main__':
     current_datetime = datetime.now().timestamp() * 1000
     output = [current_datetime, team_game_stats]
 
-    open(tgt_path, 'w').write(
-        json.dumps(output, indent=2, default=str))
+    open(tgt_path, 'w').write(json.dumps(output, indent=2, default=str))

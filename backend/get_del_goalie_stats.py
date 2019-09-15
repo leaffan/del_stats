@@ -3,20 +3,26 @@
 
 import os
 import json
+import yaml
 import argparse
 
 from collections import defaultdict
 
 from utils import get_game_info
-from reconstruct_skater_situation import build_interval_tree
+from reconstruct_skater_situation_offline import build_interval_tree
+from reconstruct_skater_situation_offline import GoalieShift
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 PLR_SRC = 'del_players.json'
 
-# GOALIE_TGT = 'del_goalies.json'
+# loading external configuration
+CONFIG = yaml.load(open('config.yml'))
+
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
+
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
-TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 SKR_SITUATIONS = [
     '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
@@ -26,14 +32,15 @@ SHOT_ZONES = [
 
 def retrieve_goalies_in_game(game):
 
-    interval_tree, _, _ = build_interval_tree(game)
+    interval_tree, _ = build_interval_tree(game)
 
     goalie_seconds = defaultdict(int)
 
     for interval in interval_tree:
-        desc, team, plr_id, _ = interval[-1]
-        if desc == 'goalie':
-            goalie_seconds[(team, plr_id)] += abs(interval[0] - interval[1])
+        if type(interval[-1]) is GoalieShift:
+            gs = interval[-1]
+            goalie_seconds[(gs.team, gs.player_id)] += (
+                abs(interval[0] - interval[1]))
 
     # retrieving on-going goalie shifts at time of the game-winning goal
     # later used to determine the goalie of record
@@ -138,7 +145,7 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(TGT_DIR, GAME_SRC)
     shot_src_path = os.path.join(TGT_DIR, SHOT_SRC)
-    plr_src_path = os.path.join(TGT_DIR, PLR_SRC)
+    plr_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLR_SRC)
     tgt_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_TGT)
 
     # loading games and shots
@@ -182,7 +189,8 @@ if __name__ == '__main__':
 
             # retrieving game, team and base goalie information
             goalie_dict['game_id'] = game['game_id']
-            goalie_dict['schedule_game_id'] = game['schedule_game_id']
+            # TODO: reactivate when schedule game id is available again
+            # goalie_dict['schedule_game_id'] = game['schedule_game_id']
             goalie_dict['game_date'] = game['date']
             goalie_dict['season'] = game['season']
             goalie_dict['season_type'] = game['season_type']
@@ -235,8 +243,8 @@ if __name__ == '__main__':
             goalie_dict['of_record'] = 0
 
             for interval in gw_goal_intervals:
-                desc, gw_g_team, gw_g_id, _ = interval[-1]
-                if gw_g_team == goalie_team and gw_g_id == goalie_id:
+                gs = interval[-1]
+                if gs.team == goalie_team and gs.player_id == goalie_id:
                     goalie_dict['of_record'] += 1
                     break
 
