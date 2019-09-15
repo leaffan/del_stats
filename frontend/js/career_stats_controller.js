@@ -20,9 +20,10 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
         $scope.player_stats.forEach(element => {
             if (element['career']['all']) {
                 c_stats = element['career']['all'];
-                c_stats['player_id'] = element['player_id']
-                c_stats['full_name'] = element['full_name']
-                c_stats['position'] = element['position']
+                c_stats['player_id'] = element['player_id'];
+                c_stats['first_name'] = element['first_name'];
+                c_stats['last_name'] = element['last_name'];
+                c_stats['position'] = element['position'];
                 $scope.full_player_stats.push(c_stats);
             }
         });
