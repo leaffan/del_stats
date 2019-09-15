@@ -3,44 +3,47 @@
 
 import os
 import json
+import yaml
 import argparse
 import itertools
+
 from datetime import datetime
 from collections import defaultdict
 
-import requests
 from dateutil.parser import parse
 
-from utils import get_game_info
+from utils import get_game_info, get_game_type_from_season_type
 
-BASE_URL = 'https://www.del.org/live-ticker'
+# loading external configuration
+CONFIG = yaml.load(open('config.yml'))
 
-MATCHES_INSERT = 'matches'
-VISUALIZATION_INSERT = 'visualization/shots'
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 
+PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
-
-HOME_STATS_SUFFIX = 'player-stats-home.json'
-ROAD_STATS_SUFFIX = 'player-stats-guest.json'
-PERIOD_EVENTS_SUFFIX = 'period-events.json'
+# TODO: reduced csv output
 
 PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
-    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP'],
+    'reckless': [
+        'HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP', 'SPEAR'],
     'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE'],
 }
-
 REVERSE_PENALTY_CATEGORIES = dict()
 for key, values in PENALTY_CATEGORIES.items():
     for value in values:
         REVERSE_PENALTY_CATEGORIES[value] = key
 
-TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-PER_PLAYER_TGT_DIR = 'per_player'
-U23_CUTOFF_DATE = parse("1996-01-01")
+U23_CUTOFF_DATES = {
+    2016: parse("1994-01-01"),
+    2017: parse("1995-01-01"),
+    2018: parse("1996-01-01"),
+    2019: parse("1997-01-01")
+}
 
 # default empty line
 EMPTY_LINE = [0, 0, 0]
@@ -51,41 +54,29 @@ POS_LINES = list(
     map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
 
 
-def retrieve_player_per_game_shots(shots, game_id, player_id):
-
-    player_per_game_shots = list()
-
-    for shot in shots:
-        if shot['game_id'] == game_id and shot['player_id'] == player_id:
-            player_per_game_shots.append(shot)
-
-    return player_per_game_shots
-
-
 def get_single_game_player_data(game, shots):
     """
     Retrieves statistics for all players participating in specified game.
     """
     game_stat_lines = list()
-
     game_id = game['game_id']
+    home_id = game['home_id']
+    road_id = game['road_id']
+    game_type = get_game_type_from_season_type(game)
 
-    home_stats_url = "%s/%s/%d/%s" % (
-        BASE_URL, MATCHES_INSERT, game_id, HOME_STATS_SUFFIX)
-    road_stats_url = "%s/%s/%d/%s" % (
-        BASE_URL, MATCHES_INSERT, game_id, ROAD_STATS_SUFFIX)
-    # shots_url = "%s/%s/%d.json" % (BASE_URL, VISUALIZATION_INSERT, game_id)
-    events_url = "%s/%s/%d/%s" % (
-        BASE_URL, MATCHES_INSERT, game_id, PERIOD_EVENTS_SUFFIX)
+    home_stats_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_player_stats',
+        str(game['season']), str(game_type), "%d_%d.json" % (game_id, home_id))
+    road_stats_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_player_stats',
+        str(game['season']), str(game_type), "%d_%d.json" % (game_id, road_id))
+    game_events_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_events',
+        str(game['season']), str(game_type), "%d.json" % game['game_id'])
 
-    r = requests.get(home_stats_url)
-    home_stats = r.json()
-    r = requests.get(road_stats_url)
-    road_stats = r.json()
-    # r = requests.get(shots_url)
-    # shots = r.json()
-    r = requests.get(events_url)
-    period_events = r.json()
+    home_stats = json.loads(open(home_stats_src_path).read())
+    road_stats = json.loads(open(road_stats_src_path).read())
+    period_events = json.loads(open(game_events_src_path).read())
 
     for home_stat_line in home_stats:
         player_game = retrieve_single_player_game_stats(
@@ -115,6 +106,8 @@ def get_single_game_player_data(game, shots):
             gsl['pp_primary_assists'] = single_assist_dict.get('PPA1', 0)
             gsl['pp_secondary_assists'] = single_assist_dict.get('PPA2', 0)
             gsl['pp_points'] += gsl['pp_assists']
+            gsl['sh_assists'] = single_assist_dict.get('SHA', 0)
+            gsl['sh_points'] += gsl['sh_assists']
         # calculating primary points
         gsl['primary_points'] = gsl['goals'] + gsl['primary_assists']
         # adding penalty information to player's game stat line
@@ -137,45 +130,6 @@ def get_single_game_player_data(game, shots):
     return game_stat_lines
 
 
-def get_linemates(game_stat_line, game):
-    """
-    Retrieving line mates in specified game for player with with given stat
-    line.
-    """
-    # per default, linemates are non-existing
-    defense = EMPTY_LINE[:2]
-    forwards = EMPTY_LINE
-    line = 0
-
-    if game_stat_line['position'] != 'GK':
-        player_id = game_stat_line['player_id']
-        # iterating over all possible four lines/two positions
-        for pos_line in POS_LINES:
-            full_key = "%s_%s" % (game_stat_line['home_road'], pos_line)
-            if full_key in game and player_id in game[full_key]:
-                break
-
-        # retrieving line number for current player
-        if full_key:
-            line = int(list(full_key)[-1])
-
-        # complementing line information with players at different positions
-        if "_f" in full_key:
-            forwards = game[full_key]
-            try:
-                defense = game[full_key.replace("_f", "_d")]
-            except KeyError:
-                pass
-        elif '_d' in full_key:
-            defense = game[full_key]
-            try:
-                forwards = game[full_key.replace("_d", "_f")]
-            except KeyError:
-                pass
-
-    return defense, forwards, line
-
-
 def retrieve_single_player_game_stats(data_dict, game, key):
     """
     Retrieves single player's statistics in specified game.
@@ -184,7 +138,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     # retrieving individual base data
     single_player_game = dict()
     single_player_game['game_id'] = game_id
-    single_player_game['schedule_game_id'] = game['schedule_game_id']
+    # TODO: reactivate when schedule game id is available again
+    # single_player_game['schedule_game_id'] = game['schedule_game_id']
     single_player_game['player_id'] = data_dict['id']
     single_player_game['no'] = data_dict['jersey']
     single_player_game['position'] = data_dict['position']
@@ -199,7 +154,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     # setting u23 status
     if (
         single_player_game['country'] == 'GER' and
-        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATE
+        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATES[
+            game['season']]
     ):
         single_player_game['u23'] = True
     else:
@@ -248,6 +204,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['pp_secondary_assists'] = 0
     single_player_game['pp_points'] = single_player_game['pp_goals']
     single_player_game['sh_goals'] = stat_dict['shGoals']
+    single_player_game['sh_assists'] = 0
+    single_player_game['sh_points'] = single_player_game['sh_goals']
     single_player_game['gw_goals'] = stat_dict['gwGoals']
     single_player_game['shots'] = stat_dict['shotsAttempts']
     single_player_game['shots_on_goal'] = stat_dict['shotsOnGoal'][key]
@@ -304,6 +262,9 @@ def retrieve_assistants_from_event_data(period_events):
                 if 'PP' in event['data']['balance']:
                     assists_dict[assist_plr_id]["PPA"] += 1
                     assists_dict[assist_plr_id]["PPA%d" % assist_cnt] += 1
+                if 'SH' in event['data']['balance']:
+                    assists_dict[assist_plr_id]["SHA"] += 1
+                    # assists_dict[assist_plr_id]["SHA%d" % assist_cnt] += 1
 
     return assists_dict
 
@@ -357,6 +318,45 @@ def retrieve_penalties_from_event_data(period_events):
                 penalties_dict[plr_id]['penalty_shots'] += 1
 
     return penalties_dict
+
+
+def get_linemates(game_stat_line, game):
+    """
+    Retrieving line mates in specified game for player with with given stat
+    line.
+    """
+    # per default, linemates are non-existing
+    defense = EMPTY_LINE[:2]
+    forwards = EMPTY_LINE
+    line = 0
+
+    if game_stat_line['position'] != 'GK':
+        player_id = game_stat_line['player_id']
+        # iterating over all possible four lines/two positions
+        for pos_line in POS_LINES:
+            full_key = "%s_%s" % (game_stat_line['home_road'], pos_line)
+            if full_key in game and player_id in game[full_key]:
+                break
+
+        # retrieving line number for current player
+        if full_key:
+            line = int(list(full_key)[-1])
+
+        # complementing line information with players at different positions
+        if "_f" in full_key:
+            forwards = game[full_key]
+            try:
+                defense = game[full_key.replace("_f", "_d")]
+            except KeyError:
+                pass
+        elif '_d' in full_key:
+            defense = game[full_key]
+            try:
+                forwards = game[full_key.replace("_d", "_f")]
+            except KeyError:
+                pass
+
+    return defense, forwards, line
 
 
 if __name__ == '__main__':
@@ -417,6 +417,7 @@ if __name__ == '__main__':
         for stat_line in single_player_game_stats:
             per_player_game_stats[
                 (stat_line['player_id'], stat_line['team'])].append(stat_line)
+
         if limit and cnt >= limit:
             break
 
