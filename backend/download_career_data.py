@@ -25,15 +25,25 @@ GOALIE_CATEGORIES = [
     'gp', 'min', 'w', 't', 'l', 'so', 'ga', 'gaa', 'sv', 'sv_pctg'
 ]
 
+ALL_PLAYERS_SRC = 'del_players.json'
+
 if __name__ == '__main__':
 
     del_base_url = CONFIG['del_base_url']
     team_url_component = CONFIG['url_components']['team_profile']
     teams = CONFIG['teams']
 
+    all_player_src_path = os.path.join(
+        CONFIG['tgt_processing_dir'], ALL_PLAYERS_SRC)
+    all_players = json.loads(open(all_player_src_path).read())
+
     # setting up target directories and paths
-    tgt_dir = os.path.join(CONFIG['base_data_dir'], 'career_stats')
+    tgt_dir = os.path.join(CONFIG['tgt_base_dir'], 'career_stats')
+    if not os.path.isdir(tgt_dir):
+        os.makedirs(tgt_dir)
     per_player_tgt_dir = os.path.join(tgt_dir, 'per_player')
+    if not os.path.isdir(per_player_tgt_dir):
+        os.makedirs(per_player_tgt_dir)
     tgt_path = os.path.join(tgt_dir, 'career_stats.json')
 
     careers = list()
@@ -41,15 +51,16 @@ if __name__ == '__main__':
     for team_id in list(teams.keys())[:]:
         # setting up team page url
         team_url = "/".join((del_base_url, team_url_component, str(team_id)))
-        print(team_url)
+        print("+ Accessing %s to get links to player pages" % team_url)
 
         r = requests.get(team_url)
         doc = html.fromstring(r.text)
 
         # retrieving active players' urls from team page
-        plr_urls = doc.xpath("//div[@class='profile']/ancestor::a/@href")
+        plr_urls = set(doc.xpath("//div[@class='profile']/ancestor::a/@href"))
 
-        for plr_url in plr_urls[:]:
+        # TODO: download in parallel
+        for plr_url in plr_urls:
             # setting up complete player page url
             plr_url = "/".join((del_base_url, plr_url))
             # retrieving player id from player page url
@@ -57,7 +68,7 @@ if __name__ == '__main__':
             if match:
                 plr_id = int(match.group(1))
 
-            print(plr_url, plr_id)
+            print("+ Collecting data from %s" % plr_url)
 
             r = requests.get(plr_url)
             doc = html.fromstring(r.text)
@@ -76,10 +87,16 @@ if __name__ == '__main__':
             # setting up player career stats dictionary
             plr_career_stats = dict()
             plr_career_stats['player_id'] = plr_id
-            plr_career_stats['full_name'] = full_name
+            # retrieving name of player from dictionary of all players
+            plr_career_stats['first_name'] = all_players[
+                str(plr_id)]['first_name']
+            plr_career_stats['last_name'] = all_players[
+                str(plr_id)]['last_name']
+            # TODO: check and mark different position from dictionary of all
+            # players (?)
             plr_career_stats['position'] = position
             plr_career_stats['seasons'] = list()
-            plr_career_stats['career'] = list()
+            plr_career_stats['career'] = dict()
 
             for tr in trs:
                 single_stat_line = dict()
@@ -117,7 +134,7 @@ if __name__ == '__main__':
                 tds = tr.xpath("td/text()")
 
                 # skipping seasons when player didn't play at all
-                if not int(tds[0]):
+                if tds[0].startswith('0'):
                     continue
 
                 # retrieving skater stats
@@ -133,6 +150,12 @@ if __name__ == '__main__':
                                     single_stat_line['sog'] * 100., 2)
                             else:
                                 single_stat_line[category] = 0.0
+                    single_stat_line['gpg'] = round(
+                        single_stat_line['g'] / single_stat_line['gp'], 2)
+                    single_stat_line['apg'] = round(
+                        single_stat_line['a'] / single_stat_line['gp'], 2)
+                    single_stat_line['ptspg'] = round(
+                        single_stat_line['pts'] / single_stat_line['gp'], 2)
                 # retrieving goalie stats
                 else:
                     for category, td in zip(GOALIE_CATEGORIES, tds):
@@ -168,7 +191,8 @@ if __name__ == '__main__':
                     plr_career_stats['seasons'].append(single_stat_line)
                 # adding full career stats to according container
                 else:
-                    plr_career_stats['career'].append(single_stat_line)
+                    plr_career_stats['career'][
+                        single_stat_line['season_type']] = single_stat_line
 
             # exporting single player career stats
             plr_career_stats['seasons'] = list(
@@ -178,6 +202,9 @@ if __name__ == '__main__':
                 json.dumps(plr_career_stats, indent=2))
 
             careers.append(plr_career_stats)
+        print()
+
+    careers = sorted(careers, key=lambda k: k['player_id'])
 
     # exporting all players' career stats to single file
     open(tgt_path, 'w').write(json.dumps(careers, indent=2))
