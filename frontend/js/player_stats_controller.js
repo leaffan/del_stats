@@ -4,7 +4,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     $scope.season = $routeParams.season;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
-    $scope.seasonTypeFilter = 'PO';
+    $scope.seasonTypeFilter = 'RS';
     $scope.scoringStreakTypeFilter = 'points';
     $scope.u23Check = false;
     // setting default sort configuration
