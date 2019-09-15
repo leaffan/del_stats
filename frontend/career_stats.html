@@ -28,7 +28,7 @@
         <tbody>
             <tr data-ng-repeat="stat in full_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter: {position: '!GK'}">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.full_name }}</a></td>
+                <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.gp }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.g }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.a }}</td>
@@ -42,6 +42,4 @@
             </tr>
         </tbody>
     </table>
-    
-    <p>{{ test }}</p>
 </div>
