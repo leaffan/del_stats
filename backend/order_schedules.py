@@ -36,7 +36,7 @@ if __name__ == '__main__':
                         game_ids.add(game['id'])
                         game['game_id'] = game['id']
                         del(game['id'])
-                        games.append(game) 
+                        games.append(game)
 
     tgt_dir = os.path.join(
         CONFIG['tgt_processing_dir'], str(season))
