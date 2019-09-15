@@ -133,17 +133,21 @@ if __name__ == '__main__':
 
     # loading external configuration
     config = yaml.load(open('config.yml'))
-    print("+ Using base url %s" % config['base_url'])
-    print("+ Using DEL base url %s" % config['del_base_url'])
 
     args = parser.parse_args()
     seasons, game_types = get_download_targets(args, config)
+    print("+ Downloading %s data" % args.category)
 
     base_url = config['base_url']
     del_base_url = config['del_base_url']
     tgt_base_dir = config['tgt_base_dir']
     tgt_sub_dir = args.category
     target_url_component = config['url_components'][args.category]
+
+    if args.category == 'shots':
+        print("+ Using DEL base url %s" % del_base_url)
+    else:
+        print("+ Using base url %s" % base_url)
 
     schedule_src_dir = os.path.join(tgt_base_dir, 'schedules')
 
