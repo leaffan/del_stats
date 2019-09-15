@@ -3,6 +3,7 @@
 
 import os
 import json
+import yaml
 import operator
 
 from collections import namedtuple, defaultdict
@@ -14,10 +15,15 @@ Streak = namedtuple('Streak', [
     'player_id', 'team', 'type', 'length', 'from_date', 'to_date',
     'goals', 'assists', 'points'])
 
+# loading external configuration
+CONFIG = yaml.load(open('config.yml'))
+
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
+
 GAME_SRC = 'del_games.json'
 PLAYER_STATS_SRC = 'del_player_game_stats.json'
 PLAYER_SRC = 'del_players.json'
-TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
 
 STREAK_DATA_TGT = 'del_streaks.json'
 
@@ -101,12 +107,14 @@ def post_process_streak(
             max_streak_lengths[component] = streak.length
 
 
-def single_task(plr_id, plr_team, team_games, player_stats):
+def single_task(plr_id, plr_team, team_games, player_stats, players):
     """
     Retrieves scorings streaks for specified player and team using provided
     team games and player statistics.
     """
-    print("Working on player id %d" % plr_id)
+    plr_name = " ".join((
+        players[plr_id]['first_name'], players[plr_id]['last_name']))
+    print("Collecting scoring streaks by %s" % plr_name)
     # setting container for all of a player's streaks
     single_player_streaks = defaultdict(list)
     # setting container to hold maximum length of player's streaks
@@ -199,13 +207,14 @@ def combine_single_player_streaks(
 if __name__ == '__main__':
 
     src_path = os.path.join(TGT_DIR, GAME_SRC)
-    player_src_path = os.path.join(TGT_DIR, PLAYER_SRC)
+    player_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLAYER_SRC)
     player_stats_src_path = os.path.join(TGT_DIR, PLAYER_STATS_SRC)
 
     # loading games
     games = json.loads(open(src_path).read())
     player_stats = json.loads(open(player_stats_src_path).read())[-1]
     players = json.loads(open(player_src_path).read())
+    players = {int(k): v for (k, v) in players.items()}
 
     teams = set()
     player_teams = set()
@@ -224,8 +233,9 @@ if __name__ == '__main__':
     # retrieving scoring streaks in parallel threads
     with ThreadPoolExecutor(max_workers=8) as threads:
         tasks = {threads.submit(
-            single_task, plr_id, plr_team, team_games, player_stats): (
-                plr_id, plr_team) for plr_id, plr_team in player_teams}
+            single_task, plr_id, plr_team, team_games, player_stats, players
+        ): (
+            plr_id, plr_team) for plr_id, plr_team in player_teams}
         for completed_task in as_completed(tasks):
             all_streaks.extend(completed_task.result())
 
