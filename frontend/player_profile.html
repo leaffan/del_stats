@@ -1,5 +1,5 @@
 <div class="container" data-ng-app="delStatsApp" data-ng-controller="plrProfileController"v>
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <div class="inline-headers">
             <h2 data-ng-if="player_name">{{ player_name}} ({{ model.team }}) {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}&#160;</h2>
             <span class="flag-icon flag-icon-{{ players[player_id].iso_country }}"></span>
@@ -19,11 +19,11 @@
         </ul>
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p>Zu den <a href="#!/del_stats/{{season}}"><b>Spielertatistiken</b></a> | Zu den <a href="#!/team_stats/{{season}}"><b>Teamstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
     </div>
 
-    <div class="alert alert-info">
+    <div class="alert alert-info main-bg">
         <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
             <dl ng-show="toggle" class="dl-horizontal">
                 <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
