@@ -1,7 +1,10 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from datetime import date
+import calendar
+from datetime import date, timedelta
+
+from dateutil.parser import parse
 
 name_corrections = {
     # Coaches
@@ -16,6 +19,9 @@ name_corrections = {
     'Jodoin Clement': 'Clément Jodoin',
     'Clement Jodoin': 'Clément Jodoin',
     'Jamie Bartmann': 'Jamie Bartman',
+    'Richer Stephane': 'Stephane Richer',
+    'Stewart Mike': 'Mike Stewart',
+    'Roos Matthias': 'Matthias Roos',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
@@ -104,3 +110,41 @@ def get_home_road(game, event):
         return game['home_abbr'], 'home'
     else:
         return game['road_abbr'], 'road'
+
+
+def calculate_age(dob):
+    """
+    Calculates current age of player with specified date of birth.
+    """
+    # parsing player's date of birth
+    dob = parse(dob).date()
+    # retrieving today's date
+    today = date.today()
+    # projecting player's date of birth to this year
+    # checking if player was born in a leap year and this year isn't one first
+    if (
+        dob.month == 2 and
+        dob.day == 29 and
+        not calendar.isleap(today.year)
+    ):
+        # moving player's date of birth forward then
+        dob = dob + timedelta(days=1)
+    this_year_dob = date(today.year, dob.month, dob.day)
+
+    # if this year's birthday has already passed...
+    if (today - this_year_dob).days >= 0:
+        # calculating age as years since year of birth and days since this
+        # year's birthday
+        years = today.year - dob.year
+        days = (today - this_year_dob).days
+    # otherwise...
+    else:
+        # projecting player's data of birth to last year
+        last_year_dob = date(today.year - 1, dob.month, dob.day)
+        # calculating age as years between last year and year of birth and days
+        # since last year's birthday
+        years = last_year_dob.year - dob.year
+        days = (today - last_year_dob).days
+
+    # converting result to pseudo-float
+    return float("%d.%03d" % (years, days))
