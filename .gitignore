@@ -131,3 +131,7 @@ bootstrap.min.css
 fonttawesome.all.css
 backend/.vscode/launch.json
 data_test
+data_old/
+backend/get_del_stats.bat
+backend/config.yml
+shots_info.txt
