@@ -94,10 +94,22 @@ def get_single_game_player_data(game, shots):
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
-        # retrieving per game shots for current player
-        # per_player_game_shots = retrieve_player_per_game_shots(
-        #     shots, game_id, gsl['player_id'])
-        # adding assistant information to player's game stat line
+        per_player_game_shots = list(filter(
+            lambda d:
+                d['game_id'] == game_id and
+                d['player_id'] == gsl['player_id'], shots))
+        shots_5v5 = list(filter(
+            lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
+        gsl['shots_5v5'] = len(shots_5v5)
+        shots_missed_5v5 = list(filter(
+            lambda d: d['target_type'] == 'missed', shots_5v5))
+        gsl['shots_missed_5v5'] = len(shots_missed_5v5)
+        shots_on_goal_5v5 = list(filter(
+            lambda d: d['target_type'] == 'on_goal', shots_5v5))
+        gsl['shots_on_goal_5v5'] = len(shots_on_goal_5v5)
+        goals_5v5 = list(filter(
+            lambda d: d['scored'] is True, shots_on_goal_5v5))
+        gsl['goals_5v5'] = len(goals_5v5)
         if gsl['player_id'] in assistants:
             single_assist_dict = assistants[gsl['player_id']]
             gsl['primary_assists'] = single_assist_dict.get('A1', 0)
