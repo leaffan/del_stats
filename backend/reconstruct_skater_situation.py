@@ -14,8 +14,9 @@ from utils import get_game_info, get_game_type_from_season_type, get_home_road
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
 
-GAME_SRC = 'del_games_offline.json'
-TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
+GAME_SRC = 'del_games.json'
+TGT_DIR = os.path.join(
+    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 
 # named tuples to define various items
 GoalieChange = namedtuple(
@@ -670,4 +671,4 @@ if __name__ == '__main__':
     for game in games[:]:
         print(get_game_info(game))
 
-        skr_sit, goal_times = reconstruct_skater_situation(game)
+        skr_sit, goal_times = reconstruct_skater_situation(game, True)
