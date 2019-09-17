@@ -410,6 +410,11 @@ if __name__ == '__main__':
             'time_on_ice_pp_per_game'].total_seconds()
         item['time_on_ice_sh_per_game_seconds'] = item[
             'time_on_ice_sh_per_game'].total_seconds()
+        if item['shifts']:
+            item['time_on_ice_per_shift'] = round(
+                item['time_on_ice_per_game_seconds'] / item['shifts'], 2)
+        else:
+            item['time_on_ice_per_shift'] = 0.
 
         # calculating per-60-minute relative values
         for attr in PER_60_ATTRS:
