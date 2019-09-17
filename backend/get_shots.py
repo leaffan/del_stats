@@ -10,7 +10,7 @@ from shapely.geometry import Point
 
 import rink_dimensions as rd
 from utils import get_game_info, get_game_type_from_season_type
-from reconstruct_skater_situation_offline import reconstruct_skater_situation
+from reconstruct_skater_situation import reconstruct_skater_situation
 
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
