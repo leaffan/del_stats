@@ -9,8 +9,8 @@ import argparse
 from collections import defaultdict
 
 from utils import get_game_info
-from reconstruct_skater_situation_offline import build_interval_tree
-from reconstruct_skater_situation_offline import GoalieShift
+from reconstruct_skater_situation import build_interval_tree
+from reconstruct_skater_situation import GoalieShift
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
