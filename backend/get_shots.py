@@ -15,8 +15,6 @@ from reconstruct_skater_situation import reconstruct_skater_situation
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
 
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 GAME_SRC = 'del_games.json'
 SHOTS_DATA_TGT = 'del_shots.json'
 
@@ -89,15 +87,22 @@ if __name__ == '__main__':
     parser.add_argument(
         '--limit', dest='limit', required=False, type=int, default=0,
         help='Number of maximum games to be processed')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        metavar='season to process games for',
+        help="The season information will be processed for")
 
     args = parser.parse_args()
 
     initial = args.initial
-    limit = int(args.limit)
+    limit = args.limit
+    season = args.season
+
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
 
     # setting up source and target paths
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
-    tgt_path = os.path.join(TGT_DIR, SHOTS_DATA_TGT)
+    src_path = os.path.join(tgt_dir, GAME_SRC)
+    tgt_path = os.path.join(tgt_dir, SHOTS_DATA_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())

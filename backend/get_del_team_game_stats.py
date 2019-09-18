@@ -19,9 +19,6 @@ GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 TEAM_GAME_STATS_TGT = 'del_team_game_stats.json'
 
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
-
 SHOT_ZONE_CATEGORIES = [
     'slot_shots', 'slot_on_goal', 'slot_missed', 'slot_blocked', 'slot_goals',
     'slot_distance', 'slot_pctg', 'slot_on_goal_pctg',
@@ -447,19 +444,26 @@ if __name__ == '__main__':
     parser.add_argument(
         '--limit', dest='limit', required=False, type=int, default=0,
         help='Number of maximum games to be processed')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        metavar='season to process games for',
+        help="The season information will be processed for")
 
     args = parser.parse_args()
 
     initial = args.initial
-    limit = int(args.limit)
+    limit = args.limit
+    season = args.season
 
-    if not os.path.isdir(TGT_DIR):
-        os.makedirs(TGT_DIR)
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+
+    if not os.path.isdir(tgt_dir):
+        os.makedirs(tgt_dir)
 
     # setting up source and target paths
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
-    shots_src_path = os.path.join(TGT_DIR, SHOT_SRC)
-    tgt_path = os.path.join(TGT_DIR, TEAM_GAME_STATS_TGT)
+    src_path = os.path.join(tgt_dir, GAME_SRC)
+    shots_src_path = os.path.join(tgt_dir, SHOT_SRC)
+    tgt_path = os.path.join(tgt_dir, TEAM_GAME_STATS_TGT)
 
     # loading games and shots
     games = json.loads(open(src_path).read())

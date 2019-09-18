@@ -19,9 +19,6 @@ PLR_SRC = 'del_players.json'
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
 
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
-
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
 
 SKR_SITUATIONS = [
@@ -134,19 +131,25 @@ if __name__ == '__main__':
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of goalie games')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        metavar='season to process games for',
+        help="The season information will be processed for")
 
     args = parser.parse_args()
-
     initial = args.initial
+    season = args.season
 
-    if not os.path.isdir(TGT_DIR):
-        os.makedirs(TGT_DIR)
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+
+    if not os.path.isdir(tgt_dir):
+        os.makedirs(tgt_dir)
 
     # setting up source and target paths
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
-    shot_src_path = os.path.join(TGT_DIR, SHOT_SRC)
+    src_path = os.path.join(tgt_dir, GAME_SRC)
+    shot_src_path = os.path.join(tgt_dir, SHOT_SRC)
     plr_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLR_SRC)
-    tgt_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_TGT)
+    tgt_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_TGT)
 
     # loading games and shots
     games = json.loads(open(src_path).read())
@@ -328,5 +331,5 @@ if __name__ == '__main__':
             goalies_per_game.append(goalie_dict)
 
     # dumping collected and calculated data to target file
-    tgt_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_TGT)
+    tgt_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_TGT)
     open(tgt_path, 'w').write(json.dumps(goalies_per_game, indent=2))

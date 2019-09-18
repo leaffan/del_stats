@@ -5,6 +5,7 @@ import os
 import csv
 import json
 import yaml
+import argparse
 from datetime import timedelta
 
 from collections import defaultdict
@@ -16,18 +17,12 @@ from utils import calculate_age
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
 
-# TODO: get season of interes from command line
-# TODO: adjust u23 cutoff dates below to season of interest
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
-
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
 SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 AGGREGATED_GOALIE_STATS_TGT = 'del_goalie_game_stats_aggregated.json'
 ALL_PLAYER_TGT = 'del_players.json'
-U23_CUTOFF_DATE = parse("1997-01-01")
 
 
 # attributes to simply collect from single-game player statistics
@@ -146,6 +141,13 @@ OUT_FIELDS = [
     'pp_points_per_60', 'sh_goals_per_60',
 ]
 
+U23_CUTOFF_DATES = {
+    2016: parse("1994-01-01"),
+    2017: parse("1995-01-01"),
+    2018: parse("1996-01-01"),
+    2019: parse("1997-01-01")
+}
+
 
 def convert_to_minutes(td):
     return "%02d:%02d" % (
@@ -242,14 +244,27 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
 
 if __name__ == '__main__':
 
-    src_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_SRC)
-    shot_src_path = os.path.join(TGT_DIR, SHOTS_DATA_SRC)
-    goalie_src_path = os.path.join(TGT_DIR, GOALIE_GAME_STATS_SRC)
-    tgt_path = os.path.join(TGT_DIR, AGGREGATED_PLAYER_STATS_TGT)
-    tgt_goalies_path = os.path.join(TGT_DIR, AGGREGATED_GOALIE_STATS_TGT)
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Aggregate DEL player stats.')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, type=int,
+        metavar='season to download data for', default=2019,
+        choices=[2016, 2017, 2018, 2019],
+        help="The season for which data  will be aggregated")
+
+    args = parser.parse_args()
+    season = args.season
+
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+
+    src_path = os.path.join(tgt_dir, PLAYER_GAME_STATS_SRC)
+    shot_src_path = os.path.join(tgt_dir, SHOTS_DATA_SRC)
+    goalie_src_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_SRC)
+    tgt_path = os.path.join(tgt_dir, AGGREGATED_PLAYER_STATS_TGT)
+    tgt_goalies_path = os.path.join(tgt_dir, AGGREGATED_GOALIE_STATS_TGT)
     tgt_csv_path = os.path.join(
-        TGT_DIR, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
-    plr_tgt_path = os.path.join(TGT_DIR, ALL_PLAYER_TGT)
+        tgt_dir, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -344,7 +359,7 @@ if __name__ == '__main__':
 
         if (
             basic_values['country'] == 'GER' and
-            parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATE
+            parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATES[season]
         ):
             basic_values['u23'] = True
         else:
@@ -412,7 +427,7 @@ if __name__ == '__main__':
             'time_on_ice_sh_per_game'].total_seconds()
         if item['shifts']:
             item['time_on_ice_per_shift'] = round(
-                item['time_on_ice_per_game_seconds'] / item['shifts'], 2)
+                item['time_on_ice_seconds'] / item['shifts'], 2)
         else:
             item['time_on_ice_per_shift'] = 0.
 
