@@ -275,6 +275,7 @@
                 <td class="col-md-1 text-right">{{ stat.time_on_ice_pp_per_game }}</td>
                 <td class="col-md-1 text-right">{{ stat.time_on_ice_sh_per_game }}</td>
                 <td class="col-md-1 text-right">{{ stat.shifts_per_game.toFixed(2) }}</td>
+                <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_per_shift) }}</td>
             </tr>
         </tbody>
     </table>
