@@ -258,12 +258,16 @@ def get_game_rosters(game_id, season, game_type):
     """
     Retrieves rosters for all teams in game with the specified game id.
     """
+    roster_data = defaultdict(list)
+
     game_roster_src_path = os.path.join(
         CONFIG['base_data_dir'], 'game_roster',
         str(season), str(game_type), "%d.json" % game_id)
+    if not os.path.isfile(game_roster_src_path):
+        return roster_data
+
     game_rosters = json.loads(open(game_roster_src_path).read())
 
-    roster_data = defaultdict(list)
     collected_tgt_keys = set()
 
     for home_road_key in ['home', 'visitor']:
