@@ -4,16 +4,25 @@
 import os
 import json
 import yaml
-
-# import argparse
+import argparse
 
 CONFIG = yaml.load(open('config.yml'))
 
-# TODO: use command line to specify season
-seasons = [2019]
 game_types = [1, 3]
 
 if __name__ == '__main__':
+
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Aggregate DEL player stats.')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, type=int,
+        metavar='season to download data for', default=2019,
+        choices=[2016, 2017, 2018, 2019],
+        help="The season for which data  will be aggregated")
+
+    args = parser.parse_args()
+    seasons = [args.season]
 
     teams = CONFIG['teams']
 

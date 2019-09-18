@@ -17,9 +17,6 @@ from utils import get_game_info, get_game_type_from_season_type
 # loading external configuration
 CONFIG = yaml.load(open('config.yml'))
 
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
-
 PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
@@ -30,8 +27,11 @@ PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
     'reckless': [
-        'HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP', 'SPEAR'],
-    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE'],
+        'HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP',
+        'BUT-E', 'SPEAR'],
+    'other': [
+        'THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE',
+        'BENCH', 'BR-ST'],
 }
 REVERSE_PENALTY_CATEGORIES = dict()
 for key, values in PENALTY_CATEGORIES.items():
@@ -382,21 +382,28 @@ if __name__ == '__main__':
     parser.add_argument(
         '--limit', dest='limit', required=False, type=int, default=0,
         help='Number of maximum games to be processed')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        metavar='season to process games for',
+        help="The season information will be processed for")
 
     args = parser.parse_args()
 
     initial = args.initial
-    limit = int(args.limit)
+    limit = args.limit
+    season = args.season
 
-    if not os.path.isdir(TGT_DIR):
-        os.makedirs(TGT_DIR)
-    if not os.path.isdir(os.path.join(TGT_DIR, PER_PLAYER_TGT_DIR)):
-        os.makedirs(os.path.join(TGT_DIR, PER_PLAYER_TGT_DIR))
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+
+    if not os.path.isdir(tgt_dir):
+        os.makedirs(tgt_dir)
+    if not os.path.isdir(os.path.join(tgt_dir, PER_PLAYER_TGT_DIR)):
+        os.makedirs(os.path.join(tgt_dir, PER_PLAYER_TGT_DIR))
 
     # setting up source and target paths
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
-    src_shots_path = os.path.join(TGT_DIR, SHOT_SRC)
-    tgt_path = os.path.join(TGT_DIR, PLAYER_GAME_STATS_TGT)
+    src_path = os.path.join(tgt_dir, GAME_SRC)
+    src_shots_path = os.path.join(tgt_dir, SHOT_SRC)
+    tgt_path = os.path.join(tgt_dir, PLAYER_GAME_STATS_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -443,7 +450,7 @@ if __name__ == '__main__':
     # dumping individual player game stats
     for player_id, team in per_player_game_stats:
         tgt_path = os.path.join(
-            TGT_DIR, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
+            tgt_dir, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
 
         output = per_player_game_stats[(player_id, team)]
         # optionally adding output to already existing data
