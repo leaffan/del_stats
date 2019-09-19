@@ -13,7 +13,8 @@ from utils import get_game_info, get_game_type_from_season_type
 from reconstruct_skater_situation import reconstruct_skater_situation
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 SHOTS_DATA_TGT = 'del_shots.json'
@@ -49,17 +50,22 @@ def correct_time_of_shot(shot, goal_times):
     return shot
 
 
-def set_period(shot):
+def set_period(shot, season):
     """
     Sets period of a shot in accordance of its actual time.
     """
-    if shot['time'] <= 1200:
-        shot['period'] = 1
-    elif shot['time'] <= 2400:
-        shot['period'] = 2
-    elif shot['time'] <= 3600:
-        shot['period'] = 3
+    # in season 2016/17 shot times are mainly set to full period times with
+    # 0 meaning first period, 1200 second period etc.
+    if season == 2016:
+        shot['period'] = shot['time'] // 1200 + 1
     else:
+        if shot['time'] % 20 != 0:
+            shot['period'] = shot['time'] // 1200 + 1
+        else:
+            shot['period'] = shot['time'] // 1200
+    if shot['period'] == 0:
+        shot['period'] = 1
+    elif shot['period'] > 3:
         shot['period'] = 'OT'
 
     return shot
@@ -89,7 +95,8 @@ if __name__ == '__main__':
         help='Number of maximum games to be processed')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, default=2019,
-        metavar='season to process games for',
+        type=int, metavar='season to process games for',
+        choices=[2016, 2017, 2018, 2019],
         help="The season information will be processed for")
 
     args = parser.parse_args()
@@ -135,6 +142,10 @@ if __name__ == '__main__':
         shots_src_path = os.path.join(
             CONFIG['base_data_dir'], 'shots',
             str(game['season']), str(game_type), "%d.json" % game['game_id'])
+        if not os.path.isfile(shots_src_path):
+            print("+ Skipping game since shot data is unavailable")
+            continue
+
         match_data = json.loads(open(shots_src_path).read())
 
         for shot in match_data['match']['shots'][:]:
@@ -179,7 +190,7 @@ if __name__ == '__main__':
 
             # setting shot period and retrieving player situations at time of
             # the shot
-            shot = set_period(shot)
+            shot = set_period(shot, season)
 
             # retrieving skater situation at time of shot
             if not shot['time']:
