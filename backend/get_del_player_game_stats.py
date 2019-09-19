@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import csv
 import json
 import yaml
 import argparse
@@ -45,6 +46,23 @@ U23_CUTOFF_DATES = {
     2018: parse("1996-01-01"),
     2019: parse("1997-01-01")
 }
+
+OUT_FIELDS = [
+    "game_id", "player_id", "no", "position", "first_name", "last_name",
+    "country", "shoots", "weight", "height", "date_of_birth",
+    "u23", "home_road", "game_date", "season", "season_type", "round", "team",
+    "score", "opp_team", "opp_score", "game_type", "games_played", "goals",
+    "assists", "primary_assists", "secondary_assists", "points",
+    "primary_points", "pim", "plus", "minus", "plus_minus", "pp_goals",
+    "pp_assists", "pp_primary_assists", "pp_secondary_assists", "pp_points",
+    "sh_goals", "sh_assists", "sh_points", "gw_goals", "shots",
+    "shots_on_goal", "shots_missed", "shots_blocked", "shot_pctg", "faceoffs",
+    "faceoffs_won", "faceoffs_lost", "faceoff_pctg", "blocked_shots",
+    "time_on_ice", "time_on_ice_pp", "time_on_ice_sh", "shifts", "penalties",
+    "pim_from_events", "penalty_shots", "first_goals", "_2min", "_5min",
+    "_10min", "_20min", "lazy", "roughing", "reckless", "other", "shots_5v5",
+    "shots_missed_5v5", "shots_on_goal_5v5", "goals_5v5", "line"
+]
 
 # default empty line
 EMPTY_LINE = [0, 0, 0]
@@ -448,6 +466,15 @@ if __name__ == '__main__':
 
     # dumping combined game stats for all players
     open(tgt_path, 'w').write(json.dumps(output, indent=2))
+
+    tgt_csv_path = tgt_path.replace(".json", ".csv")
+    with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
+        output_file.write('\ufeff')
+        dict_writer = csv.DictWriter(
+            output_file, OUT_FIELDS, delimiter=';', lineterminator='\n',
+            extrasaction='ignore')
+        dict_writer.writeheader()
+        dict_writer.writerows(player_game_stats)
 
     # dumping individual player game stats
     for player_id, team in per_player_game_stats:
