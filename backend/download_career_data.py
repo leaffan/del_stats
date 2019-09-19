@@ -9,7 +9,8 @@ import requests
 
 from lxml import html
 
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PLR_ID_REGEX = re.compile(R"\-(\d+)\/")
 

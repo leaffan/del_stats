@@ -12,7 +12,8 @@ import intervaltree
 from utils import get_game_info, get_game_type_from_season_type, get_home_road
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 TGT_DIR = os.path.join(

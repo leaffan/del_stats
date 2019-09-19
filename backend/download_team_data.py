@@ -62,7 +62,8 @@ if __name__ == '__main__':
         choices=['schedules', 'team_stats', 'roster_stats'])
 
     # loading external configuration
-    config = yaml.load(open('config.yml'))
+    config = yaml.safe_load(open(os.path.join(
+        os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
     args = parser.parse_args()
     seasons, game_types, teams = get_download_targets(args, config)
