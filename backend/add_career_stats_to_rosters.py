@@ -4,23 +4,42 @@
 import os
 import yaml
 import json
+import argparse
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
-
-SEASON = 2019
-SEASON_TYPE = 1
-
-# TODO: get current season's goalie stats
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 if __name__ == '__main__':
+
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Add career stats to team roster stats.')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, type=int,
+        metavar='season to download data for', default=2019,
+        choices=[2016, 2017, 2018, 2019],
+        help="The season for which data will be processed")
+    parser.add_argument(
+        '-g', '--game_type', dest='game_type', required=False, default='RS',
+        metavar='game type to download data for', choices=['RS', 'PO'],
+        help="The game type for which data will be processed")
+
+    args = parser.parse_args()
+    season = args.season
+    # TODO: do the following less awkward
+    game_types = {
+        k: v for (k, v) in CONFIG['game_types'].items() if
+        v == args.game_type
+    }
+    game_type = list(game_types.keys()).pop(0)
 
     teams = CONFIG['teams']
 
     roster_stats_src_dir = os.path.join(
-        CONFIG['base_data_dir'], 'roster_stats', str(SEASON), str(SEASON_TYPE))
+        CONFIG['base_data_dir'], 'roster_stats', str(season), str(game_type))
     goalie_stats_src_dir = os.path.join(
-        CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
+        CONFIG['tgt_processing_dir'], str(season))
     goalie_stats_src_path = os.path.join(
         goalie_stats_src_dir, 'del_goalie_game_stats_aggregated.json')
     goalie_stats = json.loads(open(goalie_stats_src_path).read())
