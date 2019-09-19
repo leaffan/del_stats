@@ -16,7 +16,8 @@ Streak = namedtuple('Streak', [
     'goals', 'assists', 'points'])
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 TGT_DIR = os.path.join(
     CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))

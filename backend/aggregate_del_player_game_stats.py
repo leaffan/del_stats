@@ -15,7 +15,8 @@ from dateutil.parser import parse
 from utils import calculate_age
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'

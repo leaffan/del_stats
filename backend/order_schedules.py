@@ -6,7 +6,9 @@ import json
 import yaml
 import argparse
 
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+
 
 game_types = [1, 3]
 

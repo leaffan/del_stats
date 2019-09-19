@@ -9,7 +9,8 @@ import json
 from utils import calculate_age
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 ISO_COUNTRY_CODES = {
     'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',

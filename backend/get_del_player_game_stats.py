@@ -15,7 +15,8 @@ from dateutil.parser import parse
 from utils import get_game_info, get_game_type_from_season_type
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
@@ -384,6 +385,7 @@ if __name__ == '__main__':
         help='Number of maximum games to be processed')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, default=2019,
+        type=int, choices=[2016, 2017, 2018, 2019],
         metavar='season to process games for',
         help="The season information will be processed for")
 

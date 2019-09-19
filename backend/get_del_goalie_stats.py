@@ -17,7 +17,8 @@ SHOT_SRC = 'del_shots.json'
 PLR_SRC = 'del_players.json'
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
 
@@ -133,6 +134,7 @@ if __name__ == '__main__':
         action='store_true', help='Re-create list of goalie games')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, default=2019,
+        type=int, choices=[2016, 2017, 2018, 2019],
         metavar='season to process games for',
         help="The season information will be processed for")
 
