@@ -16,7 +16,8 @@ from dateutil.relativedelta import relativedelta
 from utils import get_season, get_team_from_game
 
 # loading external configuration
-CONFIG = yaml.load(open('config.yml'))
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 # TODO: decide whether to put the following stuff into external configuration
 PLAYOFF_DATES = {
@@ -67,7 +68,7 @@ def get_games_for_date(date, existing_games=None):
             #     'start_date'])
             continue
         # comparing start date of game with current date
-        if start_date == game_date:
+        if start_date == game_date and schedule['status'] == 'AFTER_MATCH':
             game_ids_rounds.append(
                 (schedule['game_id'], int(schedule['round'].split()[-1])))
 
@@ -394,6 +395,7 @@ if __name__ == '__main__':
         help="The last date information will be processed for")
     parser.add_argument(
         '-s', '--season', dest='season', required=False, default=2019,
+        type=int, choices=[2016, 2017, 2018, 2019],
         metavar='season to process games for',
         help="The season information will be processed for")
     parser.add_argument(
