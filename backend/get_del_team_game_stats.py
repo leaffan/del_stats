@@ -10,7 +10,7 @@ from collections import defaultdict
 from datetime import datetime
 
 from utils import get_game_info, get_game_type_from_season_type
-from utils import name_corrections
+from utils import name_corrections, coaches
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -84,11 +84,15 @@ def get_single_game_team_data(game, grouped_shot_data):
         # coaches and referees
         if "%s_coach" % key in game:
             game_stat_line['coach'] = correct_name(game["%s_coach" % key])
+            if game_stat_line['coach'] not in coaches:
+                print("+ Unknown coach '%s'" % game_stat_line['coach'])
         else:
             game_stat_line['coach'] = None
         if "%s_coach" % opp_key in game:
             game_stat_line['opp_coach'] = correct_name(
                 game["%s_coach" % opp_key])
+            if game_stat_line['opp_coach'] not in coaches:
+                print("+ Unknown coach '%s'" % game_stat_line['opp_coach'])
         else:
             game_stat_line['opp_coach'] = None
         game_stat_line['ref_1'] = correct_name(game['referee_1'])
@@ -394,10 +398,6 @@ def correct_name(name, corrections=name_corrections):
         if delimiter in name:
             name = " ".join(
                 [token.strip() for token in name.split(delimiter)][::-1])
-    # if "," in name:
-    #     name = " ".join([token.strip() for token in name.split(",")][::-1])
-    # if ";" in name:
-    #     name = " ".join([token.strip() for token in name.split(";")][::-1])
     if name.upper() == name:
         name = name.title()
     if name in name_corrections:
