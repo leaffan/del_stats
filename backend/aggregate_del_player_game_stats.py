@@ -111,6 +111,7 @@ ISO_COUNTRY_CODES = {
     'HUN': 'hu',
     'SLO': 'si',
     'CRO': 'hr',
+    'CZE': 'cz'
 }
 
 OUT_FIELDS = [
