@@ -1,10 +1,20 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import math
 import calendar
 from datetime import date, timedelta
 
 from dateutil.parser import parse
+
+coaches = [
+    'Tray Tuomie', 'Serge Aubin', 'Thomas Popiesch', 'Harold Kreis',
+    'Doug Shedden', "Jason O'Leary", 'Mike Stewart', 'Brandon Reid',
+    'Pavel Gross', 'Don Jackson', 'Kurt Kleinendorst', 'Paul Thompson',
+    'Tom Pokel', 'Pat Cortina', 'Peter Draisaitl', 'Clément Jodoin',
+    'Jamie Bartman', 'Stephane Richer', 'Matthias Roos'
+]
+
 
 name_corrections = {
     # Coaches
@@ -14,6 +24,7 @@ name_corrections = {
     'Herold Kreis': 'Harold Kreis',
     'Gross Pavel': 'Pavel Gross',
     'MIke Stewart': 'Mike Stewart',
+    'Mike Steward': 'Mike Stewart',
     'Michael Stewart': 'Mike Stewart',
     'Jodoi Clement': 'Clément Jodoin',
     'Jodoin Clement': 'Clément Jodoin',
@@ -22,6 +33,7 @@ name_corrections = {
     'Richer Stephane': 'Stephane Richer',
     'Stewart Mike': 'Mike Stewart',
     'Roos Matthias': 'Matthias Roos',
+    'Jason O`Leary': "Jason O'Leary",
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
@@ -148,3 +160,14 @@ def calculate_age(dob):
 
     # converting result to pseudo-float
     return float("%d.%03d" % (years, days))
+
+
+def calculate_games_left_till_next_hundred(games):
+    if games:
+        next_hundred = int(math.ceil(games / 100.0)) * 100
+        if games % 100 == 0:
+            next_hundred += 100
+        games_left = next_hundred - games
+    else:
+        games_left = 100
+    return games_left
