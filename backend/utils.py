@@ -34,6 +34,7 @@ name_corrections = {
     'Stewart Mike': 'Mike Stewart',
     'Roos Matthias': 'Matthias Roos',
     'Jason O`Leary': "Jason O'Leary",
+    'Tray Toumie': 'Tray Tuomie',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
