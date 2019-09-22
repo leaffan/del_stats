@@ -140,3 +140,6 @@ backend/get_facts.py
 backend/get_h2h_from_txt.py
 backend/get_pre_season_data.py
 backend/copy_del_stats.bat
+backend/update_coaches.py
+backend/update_h2h_records.py
+backend/process_del_data.bat
