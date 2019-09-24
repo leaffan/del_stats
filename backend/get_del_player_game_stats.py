@@ -257,6 +257,12 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['time_on_ice_pp'] = stat_dict['timeOnIcePP']
     single_player_game['time_on_ice_sh'] = stat_dict['timeOnIceSH']
     single_player_game['shifts'] = stat_dict['shifts']
+    if single_player_game['shifts']:
+        single_player_game['toi_per_shift'] = round(
+            single_player_game['time_on_ice'] / single_player_game['shifts'], 2
+        )
+    else:
+        single_player_game['toi_per_shift'] = 0.
     single_player_game['penalties'] = 0
     single_player_game['pim_from_events'] = 0
     single_player_game['penalty_shots'] = 0
