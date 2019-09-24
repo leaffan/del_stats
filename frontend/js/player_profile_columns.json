@@ -10,21 +10,24 @@
         {"data_key": "primary_points", "col_header": "P1", "expl_de": "Direkte Punkte", "expl_en": "Primary Points"},
         {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
         {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
-        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit", "expl_en": "Time on Ice"}
+        {"data_key": "gw_goals", "col_header": "GWG", "expl_de": "Siegtor im Spiel", "expl_en": "Game-Winning Goals"},
+        {"data_key": "first_goals", "col_header": "FG", "expl_de": "Erstes Tor im Spiel", "expl_en": "First Goals"}
     ],
-    "additional_game_by_game": [
+    "toi_special_teams": [
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
         {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
-        {"data_key": "shifts", "col_header": "Wechsel", "expl_de": null, "expl_en": null},
+        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit", "expl_en": "Time on Ice"},
         {"data_key": "time_on_ice_pp", "col_header": "TOI (PP)", "expl_de": "Eiszeit in Überzahl", "expl_en": "Powerplay Time on Ice"},
         {"data_key": "time_on_ice_sh", "col_header": "TOI (SH)", "expl_de": "Eiszeit in Unterzahl", "expl_en": "Shorthanded Time on Ice"},
+        {"data_key": "shifts", "col_header": "SHF", "expl_de": "Wechsel", "expl_en": "Shifts"},
+        {"data_key": "toi_per_shift", "col_header": "TOI/SHF", "expl_de": "Eiszeit/Wechsel", "expl_en": "Time on Ice/Shift"},
         {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
+        {"data_key": "pp_assists", "col_header": "PPA", "expl_de": "Vorlagen in Überzahl", "expl_en": "Powerplay Assists"},
         {"data_key": "sh_goals", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
-        {"data_key": "first_goals", "col_header": "FG", "expl_de": "Erstes Tor im Spiel", "expl_en": "First Goals"},
-        {"data_key": "gw_goals", "col_header": "GWG", "expl_de": "Siegtor im Spiel", "expl_en": "Game-Winning Goals"}
+        {"data_key": "sh_assists", "col_header": "SHA", "expl_de": "Vorlagen in Unterzahl", "expl_en": "Shorthanded Assists"}
     ],
-    "additional_game_by_game_2": [
+    "additional_game_by_game": [
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
         {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
