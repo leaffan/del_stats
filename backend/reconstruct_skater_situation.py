@@ -496,7 +496,10 @@ def reconstruct_skater_situation(game, verbose=False):
                     expired_penalties.add(penalty)
                     if penalty in effective_penalties:
                         if in_ot:
-                            curr_delta[switch_team(penalty.home_road)] -= 1
+                            # this turned out to be wrong, since it lead to
+                            # skater counts below 3, but is it correct now?
+                            # curr_delta[switch_team(penalty.home_road)] -= 1
+                            curr_delta[penalty.home_road] += 1
                         else:
                             curr_delta[penalty.home_road] += 1
             # actually removing no longer on-going intervals
@@ -515,8 +518,12 @@ def reconstruct_skater_situation(game, verbose=False):
         # testing modified skater counts
         test_skater_counts(skr_count)
 
-        if current_intervals != last_intervals and verbose:
-            print(skr_count)
+        if verbose:
+            if current_intervals != last_intervals:
+                print(skr_count)
+            if t == 3601:
+                print("--> %d:%02d (%d)" % (t // 60, t % 60, t))
+                print(skr_count)
 
         time_dict[t] = {**skr_count, **current_goalies}
         # saving currently valid intervals for comparison at next
@@ -670,6 +677,8 @@ if __name__ == '__main__':
     games = json.loads(open(src_path).read())
 
     for game in games[:]:
+        # if not game['overtime_game']:
+        #     continue
         print(get_game_info(game))
 
         skr_sit, goal_times = reconstruct_skater_situation(game, True)
