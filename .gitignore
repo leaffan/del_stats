@@ -132,14 +132,12 @@ fonttawesome.all.css
 backend/.vscode/launch.json
 data_test
 data_old/
-backend/get_del_stats.bat
 backend/config.yml
 shots_info.txt
 backend/create_facts_templates.py
 backend/get_facts.py
 backend/get_h2h_from_txt.py
 backend/get_pre_season_data.py
-backend/copy_del_stats.bat
 backend/update_coaches.py
 backend/update_h2h_records.py
-backend/process_del_data.bat
+backend/*.bat
