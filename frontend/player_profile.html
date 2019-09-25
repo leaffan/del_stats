@@ -103,8 +103,8 @@
             <tr class="{{stat.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="col-md-1 text-center" style="width: 8%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 10%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
+                <td class="col-md-1{{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="col-md-1 text-right" style="width: 10%">{{ svc.formatTime(stat.time_on_ice) }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_sh) }}</td>
                 <td class="col-md-1 text-right">{{ stat.shifts }}</td>
@@ -117,8 +117,8 @@
             <tr>
                 <td class="col-md-1"></td>
                 <td class="col-md-1" style="width: 3%">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
+                <td class="col-md-1 text-right" style="width: 12%"><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="col-md-1 text-right" style="width: 10%"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_pp', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ toi_total = svc.getFilteredTotal(filtered_stats, 'time_on_ice_sh', player_stats); svc.formatTime(toi_total) }} {{ toi_total > 0 && filtered_stats.length > 1 ? '(' + svc.formatTime(toi_total / filtered_stats.length) + ')' : ''}}</b></td>
                 <td class="col-md-1 text-right"><b>{{ shifts_total = svc.getFilteredTotal(filtered_stats, 'shifts', player_stats) }} {{ shifts_total > 0 && filtered_stats.length > 1 ? '(' + (shifts_total / filtered_stats.length).toFixed(1) + ')' : ''}}</b></td>
@@ -243,7 +243,7 @@
                 <td class="col-md-1 text-center" style="width: 5%"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{
                         stat.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ stat.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 7%"><b>{{ stat.score
+                <td class="col-md-1{{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score
                         }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road
                         === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type
                         === 'OT' ? '(VL)' : ''}}</a></td>
