@@ -42,6 +42,13 @@ SHOT_ZONE_ABBREVIATIONS = {
     'shots': 'sh', 'on_goal': 'og', 'missed': 'mi', 'blocked': 'bl',
     'goals': 'g', 'distance': 'di', 'pctg': 'p',
 }
+RAW_STATS_MAPPING = {
+    ('shots', 'shotsAttempts'), ('shots_on_goal', 'shotsOnGoal'),
+    ('shots_missed', 'shotsMissed'), ('shots_blocked', 'shotsBlocked'),
+    ('saves', 'saves'), ('pim', 'penaltyMinutes'),
+    ('pp_time', 'powerPlaySeconds'), ('pp_opps', 'ppCount'),
+    ('pp_goals', 'ppGoals'), ('sh_opps', 'shCount'), ('sh_goals', 'shGoals'),
+}
 
 
 def get_single_game_team_data(game, grouped_shot_data):
@@ -61,9 +68,16 @@ def get_single_game_team_data(game, grouped_shot_data):
         CONFIG['base_data_dir'], 'game_team_stats',
         str(game['season']), str(game_type), "%d_%d.json" % (game_id, road_id))
 
+    # loading raw team game stats (if available)
     raw_stats = dict()
-    raw_stats['home'] = json.loads(open(home_stats_src_path).read())
-    raw_stats['road'] = json.loads(open(road_stats_src_path).read())
+    if os.path.isfile(home_stats_src_path):
+        raw_stats['home'] = json.loads(open(home_stats_src_path).read())
+    else:
+        raw_stats['home'] = dict()
+    if os.path.isfile(road_stats_src_path):
+        raw_stats['road'] = json.loads(open(road_stats_src_path).read())
+    else:
+        raw_stats['road'] = dict()
 
     # counting penalties per team
     penalty_counts = get_penalty_counts(game)
@@ -197,78 +211,80 @@ def get_single_game_team_data(game, grouped_shot_data):
             game_stat_line['three_goal'] = True
         elif score_diff > 3:
             game_stat_line['four_goal'] = True
-        # shots
-        game_stat_line['shots'] = raw_stats[key]['shotsAttempts']
-        game_stat_line['shots_on_goal'] = raw_stats[key]['shotsOnGoal']
-        game_stat_line['shots_missed'] = raw_stats[key]['shotsMissed']
-        game_stat_line['shots_blocked'] = raw_stats[key]['shotsBlocked']
-        game_stat_line['opp_shots'] = raw_stats[opp_key]['shotsAttempts']
-        game_stat_line['opp_shots_on_goal'] = raw_stats[opp_key]['shotsOnGoal']
-        game_stat_line['opp_shots_missed'] = raw_stats[opp_key]['shotsMissed']
-        game_stat_line['opp_shots_blocked'] = raw_stats[
-            opp_key]['shotsBlocked']
-        game_stat_line['shot_pctg'] = round(
-            game_stat_line['goals'] /
-            game_stat_line['shots_on_goal'] * 100., 2)
-        game_stat_line['opp_shot_pctg'] = round(
-            game_stat_line['opp_goals'] /
-            game_stat_line['opp_shots_on_goal'] * 100., 2)
-        # saves
-        game_stat_line['saves'] = raw_stats[key]['saves']
-        game_stat_line['save_pctg'] = round(
-            100 - game_stat_line['opp_goals'] /
-            game_stat_line['opp_shots_on_goal'] * 100., 2)
-        game_stat_line['opp_saves'] = raw_stats[opp_key]['saves']
-        game_stat_line['opp_save_pctg'] = round(
-            100 - game_stat_line['goals'] /
-            game_stat_line['shots_on_goal'] * 100., 2)
-        # pdo
-        game_stat_line['pdo'] = round((
-            game_stat_line['shot_pctg'] + game_stat_line['save_pctg']), 1)
-        game_stat_line['opp_pdo'] = round((
-            game_stat_line['opp_shot_pctg'] +
-            game_stat_line['opp_save_pctg']), 1)
-        # penalty minutes, power play and penalty killing
-        game_stat_line['pim'] = raw_stats[key]['penaltyMinutes']
-        game_stat_line['pp_time'] = raw_stats[key]['powerPlaySeconds']
-        game_stat_line['pp_opps'] = raw_stats[key]['ppCount']
-        game_stat_line['pp_goals'] = raw_stats[key]['ppGoals']
+
+        # retrieving raw stats for team and opposing team
+        for category, raw_category in RAW_STATS_MAPPING:
+            game_stat_line[category] = raw_stats[key].get(raw_category, None)
+            game_stat_line["opp_%s" % category] = raw_stats[opp_key].get(
+                raw_category, None)
+        # calculating shooting percentages
+        if game_stat_line['shots_on_goal']:
+            game_stat_line['shot_pctg'] = round(
+                game_stat_line['goals'] /
+                game_stat_line['shots_on_goal'] * 100., 2)
+        else:
+            game_stat_line['shot_pctg'] = None
+        if game_stat_line['opp_shots_on_goal']:
+            game_stat_line['opp_shot_pctg'] = round(
+                game_stat_line['opp_goals'] /
+                game_stat_line['opp_shots_on_goal'] * 100., 2)
+        else:
+            game_stat_line['opp_shot_pctg'] = None
+        # calculating save percentages
+        if game_stat_line['opp_shots_on_goal']:
+            game_stat_line['save_pctg'] = round(
+                100 - game_stat_line['opp_goals'] /
+                game_stat_line['opp_shots_on_goal'] * 100., 2)
+        else:
+            game_stat_line['save_pctg'] = None
+        if game_stat_line['shots_on_goal']:
+            game_stat_line['opp_save_pctg'] = round(
+                100 - game_stat_line['goals'] /
+                game_stat_line['shots_on_goal'] * 100., 2)
+        else:
+            game_stat_line['opp_save_pctg'] = None
+        # calculating pdo values
+        if all([game_stat_line['shot_pctg'], game_stat_line['save_pctg']]):
+            game_stat_line['pdo'] = round((
+                game_stat_line['shot_pctg'] +
+                game_stat_line['save_pctg']), 1)
+            game_stat_line['opp_pdo'] = round((
+                game_stat_line['opp_shot_pctg'] +
+                game_stat_line['opp_save_pctg']), 1)
+        # calculating power play percentages
         if game_stat_line['pp_opps']:
             game_stat_line['pp_pctg'] = round((
                 game_stat_line['pp_goals'] /
                 game_stat_line['pp_opps']) * 100., 1)
         else:
             game_stat_line['pp_pctg'] = 0
-        game_stat_line['opp_pim'] = raw_stats[opp_key]['penaltyMinutes']
-        game_stat_line['opp_pp_time'] = raw_stats[opp_key]['powerPlaySeconds']
-        game_stat_line['opp_pp_opps'] = raw_stats[opp_key]['ppCount']
-        game_stat_line['opp_pp_goals'] = raw_stats[opp_key]['ppGoals']
         if game_stat_line['opp_pp_opps']:
             game_stat_line['opp_pp_pctg'] = round((
                 game_stat_line['opp_pp_goals'] /
                 game_stat_line['opp_pp_opps']) * 100., 1)
         else:
             game_stat_line['opp_pp_pctg'] = 0
-        game_stat_line['sh_opps'] = raw_stats[key]['shCount']
-        game_stat_line['sh_goals'] = raw_stats[key]['shGoals']
+        # calculating penalty killing percentages
         if game_stat_line['sh_opps']:
             game_stat_line['pk_pctg'] = round(
                 100 - game_stat_line['opp_pp_goals'] /
                 game_stat_line['sh_opps'] * 100., 1)
         else:
             game_stat_line['pk_pctg'] = 0
-        game_stat_line['opp_sh_opps'] = raw_stats[opp_key]['shCount']
-        game_stat_line['opp_sh_goals'] = raw_stats[opp_key]['shGoals']
         if game_stat_line['opp_sh_opps']:
             game_stat_line['opp_pk_pctg'] = round(
                 100 - game_stat_line['pp_goals'] /
                 game_stat_line['opp_sh_opps'] * 100., 1)
         else:
             game_stat_line['opp_pk_pctg'] = 0
-        # faceoffs
-        game_stat_line['faceoffs_won'] = int(raw_stats[key]['faceOffsWon'])
+        # faceoffs are treated separately since each of the team game stats
+        # datasets only contains the number of won faceoffs and sometimes this
+        # one is stored as a string (wtf?)
+        game_stat_line['faceoffs_won'] = int(
+            raw_stats[key].get('faceOffsWon', 0))
         game_stat_line['faceoffs_lost'] = int(
-            raw_stats[opp_key]['faceOffsWon'])
+            raw_stats[opp_key].get('faceOffsWon', 0))
+        # calculating overall number of faceoffs and faceoff percentage
         game_stat_line['faceoffs'] = (
             game_stat_line['faceoffs_won'] + game_stat_line['faceoffs_lost'])
         if game_stat_line['faceoffs']:
@@ -278,10 +294,13 @@ def get_single_game_team_data(game, grouped_shot_data):
         else:
             game_stat_line['faceoff_pctg'] = 0.
         # best players
-        game_stat_line['best_plr_id'] = game["%s_best_player_id" % key]
-        game_stat_line['best_plr'] = game["%s_best_player" % key]
-        game_stat_line['opp_best_plr_id'] = game["%s_best_player_id" % opp_key]
-        game_stat_line['opp_best_plr'] = game["%s_best_player" % opp_key]
+        game_stat_line['best_plr_id'] = game.get(
+            "%s_best_player_id" % key, None)
+        game_stat_line['best_plr'] = game.get("%s_best_player" % key, None)
+        game_stat_line['opp_best_plr_id'] = game.get(
+            "%s_best_player_id" % opp_key, None)
+        game_stat_line['opp_best_plr'] = game.get(
+            "%s_best_player" % opp_key, None)
         # game-winning-goal
         game_stat_line['gw_goal_team'] = game['gw_goal']
         game_stat_line['gw_goal_player_id'] = game['gw_goal_player_id']
@@ -291,7 +310,8 @@ def get_single_game_team_data(game, grouped_shot_data):
         shot_zones_to_retain = ['slot', 'left', 'right', 'blue_line']
 
         # retrieving shot data for current game and team
-        shot_data = grouped_shot_data[(game_id, game_stat_line['team'])]
+        shot_data = grouped_shot_data.get(
+            (game_id, game_stat_line['team']), list())
         for item in shot_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
@@ -300,8 +320,8 @@ def get_single_game_team_data(game, grouped_shot_data):
                 game_stat_line[abbr_item] = shot_data[item]
 
         # retrieving shots against data for current game and team
-        shot_against_data = grouped_shot_data[
-            (game_id, game_stat_line['opp_team'])]
+        shot_against_data = grouped_shot_data.get(
+            (game_id, game_stat_line['opp_team']), list())
         for item in shot_against_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
