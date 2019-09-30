@@ -51,6 +51,17 @@
         {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
         {"data_key": "pdo", "col_header": "PDO", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert)", "expl_en": "PDO"}
     ],
+    "shot_stats_5v5": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "shots_on_goal_5v5", "col_header": "SOG+ 5v5", "expl_de": "Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal in 5-on-5"},
+        {"data_key": "goals_5v5", "col_header": "GF 5v5", "expl_de": "Tore im 5-gegen-5", "expl_en": "Goals For in 5-on-5"},
+        {"data_key": "shot_pctg_5v5", "col_header": "SH% 5v5", "expl_de": "Schussquote im 5-gegen-5", "expl_en": "Shooting Percentage in 5-on-5"},
+        {"data_key": "opp_shots_on_goal_5v5", "col_header": "SOG- 5v5", "expl_de": "Gegnerische Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal Against in 5-on-5"},
+        {"data_key": "opp_goals_5v5", "col_header": "GA 5v5", "expl_de": "Gegentore im 5-gegen-5", "expl_en": "Goals Against in 5-on-5"},
+        {"data_key": "save_pctg_5v5", "col_header": "SV% 5v5", "expl_de": "Fangquote im 5-gegen-5", "expl_en": "Save Percentage in 5-on-5"},
+        {"data_key": "pdo_5v5", "col_header": "PDO 5v5", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert) im 5-gegen-5", "expl_en": "PDO in 5-on-5"}
+    ],
     "shot_shares": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
