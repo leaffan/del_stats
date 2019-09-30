@@ -7,6 +7,7 @@ import yaml
 import argparse
 
 from shapely.geometry import Point
+from intervaltree import IntervalTree
 
 import rink_dimensions as rd
 from utils import get_game_info, get_game_type_from_season_type
@@ -82,6 +83,49 @@ def delete_shot_properties(shot):
     return shot
 
 
+def retrieve_shifts(shifts_src_path):
+    """
+    Retrieves shifts as interval tree from original data.
+    """
+    shifts = IntervalTree()
+    if not os.path.isfile(shifts_src_path):
+        return shifts
+
+    shifts_orig = json.loads(open(shifts_src_path).read())
+
+    for shift in shifts_orig:
+        payload = dict()
+        payload['player_id'] = shift['player']['id']
+        payload['player'] = shift['player']['name']
+        payload['team_id'] = shift['team']['id']
+        payload['team'] = CONFIG['teams'][payload['team_id']]
+        payload['start'] = shift['startTime']['time']
+        payload['end'] = shift['endTime']['time']
+        if payload['start'] != payload['end']:
+            shifts.addi(-payload['end'], -payload['start'], payload)
+
+    return shifts
+
+
+def retrieve_goals(events_src_path):
+    """
+    Retrieves goals (along with corresponding players on ice) from original
+    events data.
+    """
+    goals = dict()
+    if not os.path.isfile(events_src_path):
+        return goals
+
+    events_orig = json.loads(open(events_src_path).read())
+
+    for period in events_orig:
+        for event in events_orig[period]:
+            if event['type'] == 'goal':
+                goals[event['time']] = event['data']
+
+    return goals
+
+
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -138,7 +182,7 @@ if __name__ == '__main__':
         times, goal_times = reconstruct_skater_situation(game)
         game_type = get_game_type_from_season_type(game)
 
-        # # retrieving raw shot data
+        # retrieving raw shot data
         shots_src_path = os.path.join(
             CONFIG['base_data_dir'], 'shots',
             str(game['season']), str(game_type), "%d.json" % game['game_id'])
@@ -146,6 +190,16 @@ if __name__ == '__main__':
             print("+ Skipping game since shot data is unavailable")
             continue
 
+        shifts_src_path = os.path.join(
+            CONFIG['base_data_dir'], 'shifts', str(game['season']),
+            str(game_type), "%d.json" % game['game_id'])
+
+        events_src_path = os.path.join(
+            CONFIG['base_data_dir'], 'game_events', str(game['season']),
+            str(game_type), "%d.json" % game['game_id'])
+
+        shifts = retrieve_shifts(shifts_src_path)
+        goals = retrieve_goals(events_src_path)
         match_data = json.loads(open(shots_src_path).read())
 
         for shot in match_data['match']['shots'][:]:
@@ -207,12 +261,46 @@ if __name__ == '__main__':
                             "end of game (%d) registered" % max(times.keys()))
                         shot['time'] = max(times.keys())
 
+                if (
+                    skr_situation[shot['team']] ==
+                    skr_situation[shot['team_against']]
+                ):
+                    shot['situation'] = 'EV'
+                elif (
+                    skr_situation[shot['team']] >
+                    skr_situation[shot['team_against']]
+                ):
+                    shot['situation'] = 'PP'
+                elif (
+                    skr_situation[shot['team']] <
+                    skr_situation[shot['team_against']]
+                ):
+                    shot['situation'] = 'SH'
+
                 shot['plr_situation'] = "%dv%d" % (
                     skr_situation[shot['team']],
                     skr_situation[shot['team_against']])
                 shot['plr_situation_against'] = "%dv%d" % (
                     skr_situation[shot['team_against']],
                     skr_situation[shot['team']])
+
+                if shot['scored'] and goals:
+                    goal = goals[shot['time']]
+                    shot['players_on_for'] = sorted(
+                        [plr['playerId'] for plr in goal[
+                            'attendants']['positive']])
+                    shot['players_on_against'] = sorted(
+                        [plr['playerId'] for plr in goal[
+                            'attendants']['negative']])
+                # retrieving players on ice via shift data
+                elif shifts:
+                    skaters = shifts[-shot['time']]
+                    shot['players_on_for'] = sorted([
+                        plr[-1]['player_id'] for plr in skaters if
+                        plr[-1]['team'] == shot['team']])
+                    shot['players_on_against'] = sorted([
+                        plr[-1]['player_id'] for plr in skaters if
+                        plr[-1]['team'] == shot['team_against']])
 
                 # retrieving goalie facing the shot
                 if game['home_abbr'] == shot['team_against']:
