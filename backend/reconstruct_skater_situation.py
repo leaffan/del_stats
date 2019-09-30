@@ -4,6 +4,7 @@
 import os
 import json
 import yaml
+import argparse
 
 from collections import namedtuple, defaultdict
 
@@ -16,8 +17,6 @@ CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 
 # named tuples to define various items
 GoalieChange = namedtuple(
@@ -670,15 +669,37 @@ def switch_team(team):
 
 if __name__ == '__main__':
 
-    # setting up source path
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Process DEL team game statistics.')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        type=int, choices=[2016, 2017, 2018, 2019],
+        metavar='season to process games for',
+        help="The season information will be processed for")
+    parser.add_argument(
+        '-g', '--game_id', dest='game_id', required=False, type=int,
+        metavar='game to reconstruct skater situation for',
+        help="The ID of the game skater situations will be reconstructed for")
+
+    args = parser.parse_args()
+
+    season = args.season
+    game_id = args.game_id
+
+    # setting up path to source data file
+    src_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+    src_path = os.path.join(src_dir, GAME_SRC)
 
     # loading games
     games = json.loads(open(src_path).read())
 
-    for game in games[:]:
-        # if not game['overtime_game']:
-        #     continue
+    for game in games:
+        if game_id and game['game_id'] != game_id:
+            continue
         print(get_game_info(game))
 
         skr_sit, goal_times = reconstruct_skater_situation(game, True)
+
+    # for x in skr_sit:
+    #     print(x, skr_sit[x])
