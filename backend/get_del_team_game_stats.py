@@ -10,7 +10,7 @@ from collections import defaultdict
 from datetime import datetime
 
 from utils import get_game_info, get_game_type_from_season_type
-from utils import name_corrections, coaches
+from utils import name_corrections, coaches, capacities
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -95,6 +95,13 @@ def get_single_game_team_data(game, grouped_shot_data):
         # game_stat_line['schedule_game_id'] = game['schedule_game_id']
         game_stat_line['arena'] = correct_name(game['arena'])
         game_stat_line['attendance'] = game['attendance']
+        if game_stat_line['arena'] in capacities:
+            game_stat_line['capacity'] = capacities[game_stat_line['arena']]
+        else:
+            print(
+                "\t+ Unable to retrieve capacity " +
+                "for '%s'" % game_stat_line['arena'])
+            game_stat_line['capacity'] = 0
         # coaches and referees
         if "%s_coach" % key in game:
             game_stat_line['coach'] = correct_name(game["%s_coach" % key])
