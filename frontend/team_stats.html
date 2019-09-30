@@ -37,6 +37,7 @@
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
                     <option data-ng-option value="goal_stats">Torstatistiken</option>
                     <option data-ng-option value="shot_stats">Schuss- und Fangquoten</option>
+                    <option data-ng-option value="shot_stats_5v5">Schuss- und Fangquoten (5-gegen-5)</option>
                     <option data-ng-option value="shot_shares">Schussanteile</option>
                     <option data-ng-option value="shot_zones">Schusszonen (alle Schüsse)</option>
                     <option data-ng-option value="shot_on_goal_zones">Schusszonen (Torschüsse)</option>
@@ -183,6 +184,36 @@
                 <td class="col-md-1 text-right">{{ stat.opp_goals }}</td>
                 <td class="col-md-1 text-right">{{ stat.save_pctg.toFixed(2) }} %</td>
                 <td class="col-md-1 text-right">{{ stat.pdo.toFixed(1) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="shot_stats_5v5" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'shot_stats_5v5'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.shots_on_goal_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.goals_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.shot_pctg_5v5.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.opp_shots_on_goal_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.opp_goals_5v5 }}</td>
+                <td class="col-md-1 text-right">{{ stat.save_pctg_5v5.toFixed(2) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.pdo_5v5.toFixed(1) }}</td>
             </tr>
         </tbody>
     </table>

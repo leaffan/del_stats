@@ -298,6 +298,14 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 element['rg_og_p'] = parseFloat((0).toFixed(2));
                 element['bl_og_p'] = parseFloat((0).toFixed(2));
             }
+            // calculating shooting and save percentages for shots on goal in 5-on-5 play
+            if (element['shots_on_goal_5v5']) {
+                element['shot_pctg_5v5'] = parseFloat(((element['goals_5v5'] / element['shots_on_goal_5v5']) * 100).toFixed(2));
+                element['opp_save_pctg_5v5'] = parseFloat((((element['shots_on_goal_5v5'] - element['goals_5v5']) / element['shots_on_goal_5v5']) * 100).toFixed(2));
+            } else {
+                element['shot_pct_5v5'] = parseFloat((0).toFixed(2));
+                element['opp_save_pct_5v5'] = parseFloat((0).toFixed(2));
+            }
             // calculating opponent shooting, save and zone percentages for shots on goal against
             if (element['opp_shots_on_goal']) {
                 element['opp_shot_pctg'] = parseFloat(((element['opp_goals'] / element['opp_shots_on_goal']) * 100).toFixed(2));
@@ -314,9 +322,20 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 element['rg_og_p_a'] = parseFloat((0).toFixed(2));
                 element['bl_og_p_a'] = parseFloat((0).toFixed(2));
             }
+            // calculating opponent shooting and save percentages for shots on goal against in 5-on-5 play
+            if (element['opp_shots_on_goal_5v5']) {
+                element['opp_shot_pctg_5v5'] = parseFloat(((element['opp_goals_5v5'] / element['opp_shots_on_goal_5v5']) * 100).toFixed(2));
+                element['save_pctg_5v5'] = parseFloat((((element['opp_shots_on_goal_5v5'] - element['opp_goals_5v5']) / element['opp_shots_on_goal_5v5']) * 100).toFixed(2));
+            } else {
+                element['opp_shot_pct_5v5'] = parseFloat((0).toFixed(2));
+                element['save_pct_5v5'] = parseFloat((0).toFixed(2));
+            }
             // calculating PDO
             element['pdo'] = parseFloat((parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(2));
             element['opp_pdo'] = parseFloat((parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(2));
+            // calculating PDO in 5-on-5 play
+            element['pdo_5v5'] = parseFloat((parseFloat(element['shot_pctg_5v5']) + parseFloat(element['save_pctg_5v5'])).toFixed(2));
+            element['opp_pdo_5v5'] = parseFloat((parseFloat(element['opp_shot_pctg_5v5']) + parseFloat(element['opp_save_pctg_5v5'])).toFixed(2));
             // calculating shots on goal for percentage
             if (element['shots_on_goal'] + element['opp_shots_on_goal']) {
                 element['shot_for_pctg'] = parseFloat((element['shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
