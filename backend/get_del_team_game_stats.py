@@ -277,6 +277,14 @@ def get_single_game_team_data(game, grouped_shot_data):
                 game_stat_line['opp_sh_opps'] * 100., 1)
         else:
             game_stat_line['opp_pk_pctg'] = 0
+        game_stat_line['ev_goals'] = (
+            game_stat_line['goals'] -
+            game_stat_line['pp_goals'] -
+            game_stat_line['sh_goals'])
+        game_stat_line['opp_ev_goals'] = (
+            game_stat_line['opp_goals'] -
+            game_stat_line['opp_pp_goals'] -
+            game_stat_line['opp_sh_goals'])
         # faceoffs are treated separately since each of the team game stats
         # datasets only contains the number of won faceoffs and sometimes this
         # one is stored as a string (wtf?)
@@ -308,6 +316,11 @@ def get_single_game_team_data(game, grouped_shot_data):
         game_stat_line['gw_goal_last_name'] = game['gw_goal_last_name']
 
         shot_zones_to_retain = ['slot', 'left', 'right', 'blue_line']
+        # TODO: rename items
+        shot_situations_to_retain = [
+            'shots_ev', 'shots_oo', 'shots_sh', 'shots_unblocked',
+            'shots_unblocked_ev', 'shots_unblocked_pp', 'shots_unblocked_sh',
+            'shots_on_goal_ev', 'shots_on_goal_pp', 'shots_on_goal_sh']
 
         # retrieving shot data for current game and team
         shot_data = grouped_shot_data.get(
@@ -318,6 +331,8 @@ def get_single_game_team_data(game, grouped_shot_data):
                 for zone_key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
                     abbr_item = abbr_item.replace(zone_key, replacement)
                 game_stat_line[abbr_item] = shot_data[item]
+            elif item in shot_situations_to_retain:
+                game_stat_line[item] = shot_data[item]
 
         # retrieving shots against data for current game and team
         shot_against_data = grouped_shot_data.get(
@@ -328,6 +343,13 @@ def get_single_game_team_data(game, grouped_shot_data):
                 for zone_key, replacement in SHOT_ZONE_ABBREVIATIONS.items():
                     abbr_item = abbr_item.replace(zone_key, replacement)
                 game_stat_line["%s_a" % abbr_item] = shot_against_data[item]
+            elif item in shot_situations_to_retain:
+                game_stat_line["opp_%s" % item] = shot_against_data[item]
+
+        game_stat_line['ev_cf_pctg'] = round(
+            game_stat_line['shots_ev'] / (
+                game_stat_line['shots_ev'] + game_stat_line['opp_shots_ev']
+            ) * 100, 2)
 
         for penalty_duration in [2, 5, 10, 20]:
             if penalty_counts[key] and penalty_duration in penalty_counts[key]:
@@ -409,6 +431,56 @@ def group_shot_data_by_game_team(shots):
             grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
                 grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
             ) * 100., 2)
+
+    for key in grouped_shot_data:
+        game_id, team = key
+        per_team_game_shots = list(filter(
+            lambda d:
+            d['game_id'] == game_id and
+            d['team'] == team, shots))
+        grouped_shot_data[key]['shots'] = len(per_team_game_shots)
+        per_team_game_ev_shots = list(filter(
+            lambda d: d['situation'] == 'EV', per_team_game_shots))
+        grouped_shot_data[key]['shots_ev'] = len(per_team_game_ev_shots)
+        per_team_game_pp_shots = list(filter(
+            lambda d: d['situation'] == 'PP', per_team_game_shots))
+        grouped_shot_data[key]['shots_pp'] = len(per_team_game_pp_shots)
+        per_team_game_sh_shots = list(filter(
+            lambda d: d['situation'] == 'SH', per_team_game_shots))
+        grouped_shot_data[key]['shots_sh'] = len(per_team_game_sh_shots)
+        per_team_game_unblocked_shots = list(filter(
+            lambda d: d['target_type'] in ['on_goal', 'missed'],
+            per_team_game_shots))
+        grouped_shot_data[key]['shots_unblocked'] = len(
+            per_team_game_unblocked_shots)
+        per_team_game_unblocked_ev_shots = list(filter(
+            lambda d: d['situation'] == 'EV', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_ev'] = len(
+            per_team_game_unblocked_ev_shots)
+        per_team_game_unblocked_pp_shots = list(filter(
+            lambda d: d['situation'] == 'PP', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_pp'] = len(
+            per_team_game_unblocked_pp_shots)
+        per_team_game_unblocked_sh_shots = list(filter(
+            lambda d: d['situation'] == 'SH', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_sh'] = len(
+            per_team_game_unblocked_sh_shots)
+        per_team_game_shots_on_goal = list(filter(
+            lambda d: d['target_type'] == 'on_goal', per_team_game_shots))
+        grouped_shot_data[key]['shots_on_goal'] = len(
+            per_team_game_shots_on_goal)
+        per_team_game_ev_shots_on_goal = list(filter(
+            lambda d: d['situation'] == 'EV', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_ev'] = len(
+            per_team_game_ev_shots_on_goal)
+        per_team_game_pp_shots_on_goal = list(filter(
+            lambda d: d['situation'] == 'PP', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_pp'] = len(
+            per_team_game_pp_shots_on_goal)
+        per_team_game_sh_shots_on_goal = list(filter(
+            lambda d: d['situation'] == 'SH', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_sh'] = len(
+            per_team_game_sh_shots_on_goal)
 
     return grouped_shot_data
 
