@@ -7,6 +7,20 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $scope.tableSelect = 'standings';
     $scope.seasonTypeSelect = 'RS'
     $scope.isStandingsView = true;
+    $scope.sort_def = {
+        "points": ['points', 'score_diff', 'score'],
+        "games_played": ['games_played', '-team'],
+        "opp_shots_on_goal": ['-opp_shots_on_goal', '-games_played'],
+        "opp_shots": ['-opp_shots', '-games_played'],
+        "shots_on_goal": ['shots_on_goal', 'goals', '-games_played'],
+        "shots": ['-shots', '-games_played'],
+        "faceoff_pctg": ['faceoff_pctg', 'faceoffs'],
+        "pp_pctg": ['pp_pctg', '-pp_opps'],
+        "corsi_for_pctg": ['corsi_for_pctg', 'shots'],
+        "shots_on_goal_5v5": ['shots_on_goal_5v5', 'goals_5v5', '-games_played'],
+        "goals_diff": ['goals_diff', 'goals', '-games_played'],
+        "pt_pctg": ['pt_pctg', 'points', 'goals_diff', '-games_played']
+    };
     $scope.sortConfig = {
         'sortKey': 'points',
         'sortCriteria': ['points', 'score_diff', 'score'],
@@ -27,30 +41,36 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
     });
  
+    // starting to watch filter selection lists
+    // from date filter
     $scope.$watch('ctrl.fromDate', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
     }, true);
 
+    // to date filter
     $scope.$watch('ctrl.toDate', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
     }, true);
 
+    // situation filter, i.e. leading after 20, 40, etc.
     $scope.$watch('situationSelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
     }, true);
 
+    // home/road filter
     $scope.$watch('homeAwaySelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
         }
     }, true);
 
+    // regular season/playoff filter
     $scope.$watch('seasonTypeSelect', function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
@@ -394,6 +414,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         return filtered_team_stats;
     };
 
+    // event function to call after table change
     $scope.changeTable = function () {
         if ($scope.tableSelect === 'standings') {
             if ($scope.situationSelect) {
@@ -445,7 +466,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         } else if ($scope.tableSelect === 'special_team_stats') {
             $scope.sortConfig = {
                 'sortKey': 'pp_pctg',
-                'sortCriteria': ['pp_pctg', 'shots'],
+                'sortCriteria': ['pp_pctg', '-pp_opps'],
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
@@ -484,18 +505,13 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_on_goal_zones_against') {
             $scope.sortConfig = {
-                'sortKey': 'shots_on_goal',
-                'sortCriteria': ['shots_on_goal'],
+                'sortKey': 'opp_shots_on_goal',
+                'sortCriteria': ['opp_shots_on_goal'],
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
         }
-    };
-
-    $scope.sort_def = {
-        "points": ['points', 'score_diff', 'score'],
-        "games_played": ['games_played', '-team']
     };
 
     $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
