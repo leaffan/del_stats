@@ -426,6 +426,14 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             }
             $scope.isStandingsView = false;
             $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_stats_5v5') {
+            $scope.sortConfig = {
+                'sortKey': 'shots_on_goal_5v5',
+                'sortCriteria': ['shots_on_goal_5v5', 'goals_5v5'],
+                'sortDescending': true
+            }
+            $scope.isStandingsView = false;
+            $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_shares') {
             $scope.sortConfig = {
                 'sortKey': 'corsi_for_pctg',
