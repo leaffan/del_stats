@@ -78,7 +78,7 @@ if __name__ == '__main__':
             position = full_name = ''
             position = doc.xpath("//span[@class='position']/text()")
             if position:
-                position = POSITIONS[position.pop(0)]
+                position = POSITIONS.get(position.pop(0), 'NA')
             full_name = doc.xpath("//span[@class='name']/text()")
             if full_name:
                 full_name = full_name.pop(0)
