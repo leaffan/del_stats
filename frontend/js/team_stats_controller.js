@@ -8,14 +8,33 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $scope.seasonTypeSelect = 'RS'
     $scope.isStandingsView = true;
     $scope.sort_def = {
+        // standings
         "points": ['points', 'score_diff', 'score'],
         "games_played": ['games_played', '-team'],
-        "opp_shots_on_goal": ['-opp_shots_on_goal', '-games_played'],
-        "opp_shots": ['-opp_shots', '-games_played'],
-        "shots_on_goal": ['shots_on_goal', 'goals', '-games_played'],
-        "shots": ['-shots', '-games_played'],
+        // goal stats
+        "goals_diff": ['goals_diff', 'goals'],
+        "goals_diff_1": ['goals_diff_1', 'goals_1'],
+        "goals_diff_2": ['goals_diff_2', 'goals_2'],
+        "goals_diff_3": ['goals_diff_3', 'goals_3'],
+        "goals_1": ['goals_1', 'goals_diff_1'],
+        "goals_2": ['goals_2', 'goals_diff_2'],
+        "goals_3": ['goals_3', 'goals_diff_3'],
+        "opp_goals_1": ['opp_goals_1', '-goals_diff_1'],
+        "opp_goals_2": ['opp_goals_2', '-goals_diff_2'],
+        "opp_goals_3": ['opp_goals_3', '-goals_diff_3'],
+        // shots
+        "opp_shots_on_goal": ['opp_shots_on_goal', 'games_played'],
+        "opp_shots": ['opp_shots', 'games_played'],
+        "shots_on_goal": ['shots_on_goal', 'goals', 'games_played'],
+        "shots": ['shots', 'games_played'],
         "faceoff_pctg": ['faceoff_pctg', 'faceoffs'],
+        // special team stats
         "pp_pctg": ['pp_pctg', '-pp_opps'],
+        "pp_goals": ['pp_goals', 'pp_pctg'],
+        "sh_goals": ['sh_goals', '-sh_opps'],
+        "opp_pp_goals": ['opp_pp_goals', '-pk_pctg'],
+        "opp_sh_goals": ['opp_sh_goals', '-sh_opps'],
+        // shot shares
         "corsi_for_pctg": ['corsi_for_pctg', 'shots'],
         "shots_on_goal_5v5": ['shots_on_goal_5v5', 'goals_5v5', '-games_played'],
         "goals_diff": ['goals_diff', 'goals', '-games_played'],
@@ -45,35 +64,35 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     // from date filter
     $scope.$watch('ctrl.fromDate', function() {
         if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
     }, true);
 
     // to date filter
     $scope.$watch('ctrl.toDate', function() {
         if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
     }, true);
 
     // situation filter, i.e. leading after 20, 40, etc.
     $scope.$watch('situationSelect', function() {
         if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
     }, true);
 
     // home/road filter
     $scope.$watch('homeAwaySelect', function() {
         if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
     }, true);
 
     // regular season/playoff filter
     $scope.$watch('seasonTypeSelect', function() {
         if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
     }, true);
 
@@ -81,11 +100,11 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $http.get('data/' + $scope.season + '/del_team_game_stats.json').then(function (res) {
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
-        $scope.filtered_team_stats = $scope.filter_stats($scope.team_stats);
+        $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
     });
 
     // TODO: move to out-of-controller location
-    $scope.filter_stats = function (stats) {
+    $scope.filterStats = function (stats) {
         filtered_team_stats = {};
         if ($scope.team_stats === undefined)
             return filtered_team_stats;
@@ -514,7 +533,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         }
     };
 
-    $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
+    $scope.setSortOrder = function(sortKey, oldSortConfig) {
         ascendingAttrs = ['team'];
         // if previous sort key equals the new one
         if (oldSortConfig['sortKey'] == sortKey) {
@@ -525,22 +544,21 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': !oldSortConfig['sortDescending']
             }
         } else {
-            // ascending for a few columns
+            // ascending sort order for a few columns
             if (ascendingAttrs.indexOf(sortKey) !== -1) {
-                sortCriteria = $scope.sort_def[sortKey] || sortKey;
-                return {
-                    'sortKey': sortKey,
-                    'sortCriteria': sortCriteria,
-                    'sortDescending': false
-                }
+                sort_descending = false;
+            // otherwise descending sort order
             } else {
-                // otherwise descending sort order
-                sortCriteria = $scope.sort_def[sortKey] || sortKey;
-                return {
-                    'sortKey': sortKey,
-                    'sortCriteria': sortCriteria,
-                    'sortDescending': true
-                }
+                sort_descending = true;
+            }
+            // retrieving actual (and minor) sort criteria from scope-wide
+            // definition of sort criteria
+            // use plain sort key if nothing has been defined otherwise
+            sort_criteria = $scope.sort_def[sortKey] || sortKey;
+            return {
+                'sortKey': sortKey,
+                'sortCriteria': sort_criteria,
+                'sortDescending': sort_descending
             }
         }
     }
