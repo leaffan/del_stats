@@ -83,10 +83,27 @@
         {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
         {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
         {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies", "expl_en": "Faceoff Percentage"},
-        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
-        {"data_key": "pim_per_game", "col_header": "PIM/G", "expl_de": "Strafminuten pro Spiel", "expl_en": "Penalties in Minutes per Game"},
         {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse am Tor vorbei", "expl_en": "Missed Shots"},
         {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots"}
+    ],
+    "attendance_stats": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "Heimspiele", "expl_de": null, "expl_en": null},
+        {"data_key": "attendance", "col_header": "Zuschauer gesamt", "expl_de": null, "expl_en": null},
+        {"data_key": "avg_attendance", "col_header": "Schnitt", "expl_de": null, "expl_en": null},
+        {"data_key": "util_capacity_pctg", "col_header": "Auslastung", "expl_de": null, "expl_en": null},
+        {"data_key": "avg_attendance_last_season", "col_header": "Schnitt Vorsaison", "expl_de": null, "expl_en": null},
+        {"data_key": "avg_attendance_delta", "col_header": "Veränderung", "expl_de": null, "expl_en": null}
+    ],
+    "penalty_stats": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+        {"data_key": "pim_per_game", "col_header": "PIM/G", "expl_de": "Strafminuten pro Spiel", "expl_en": "Penalties in Minutes per Game"},
+        {"data_key": "penalty_2", "col_header": "2 Min.", "expl_de": "Zwei-Minuten-Strafen", "expl_en": "Two-minute penalties"},
+        {"data_key": "penalty_5", "col_header": "5 Min.", "expl_de": "Fünf-Minuten-Strafen", "expl_en": "Five-minute penalties"},
+        {"data_key": "penalty_10", "col_header": "10 Min.", "expl_de": "Zehn-Minuten-Strafen", "expl_en": "Ten-minute penalties"},
+        {"data_key": "penalty_20", "col_header": "20 Min.", "expl_de": "Zwanzig-Minuten-Strafen", "expl_en": "Twenty-minute penalties"}
     ],
     "shot_zones": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},

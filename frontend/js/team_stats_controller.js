@@ -7,6 +7,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $scope.tableSelect = 'standings';
     $scope.seasonTypeSelect = 'RS'
     $scope.isStandingsView = true;
+    $scope.isAttendanceView = false;
     $scope.sort_def = {
         // standings
         "points": ['points', 'score_diff', 'score'],
@@ -102,6 +103,14 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         $scope.team_stats = res.data[1];
         $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
     });
+
+    // setting average attendance for previous season
+    // TODO: move to external file (arenas.json?)
+    $scope.avg_attendance_last_season = {
+        'EBB': 12026, 'KEC': 11573, 'MAN': 11422, 'DEG': 8531, 'AEV': 5481,
+        'NIT': 5163, 'RBM': 4819, 'KEV': 4814, 'BHV': 4438, 'IEC': 4344,
+        'STR': 4129, 'ING': 3883, 'SWW': 3576, 'WOB': 2815
+    }
 
     // TODO: move to out-of-controller location
     $scope.filterStats = function (stats) {
@@ -428,6 +437,21 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             } else {
                 element['pim_per_game'] = parseFloat((0).toFixed(2));
             }
+            // calculating average attendance
+            if (element['games_played']) {
+                element['avg_attendance'] = parseFloat((element['attendance'] / element['games_played']).toFixed(0));
+            } else {
+                element['avg_attendance'] = 0;
+            }
+            // retrieving last year's average attendance
+            element['avg_attendance_last_season'] = $scope.avg_attendance_last_season[element['team']];
+            element['avg_attendance_delta'] = element['avg_attendance'] - element['avg_attendance_last_season']; 
+            // calculating utilized attendance capacity
+            if (element['capacity']) {
+                element['util_capacity_pctg'] = parseFloat(((element['attendance'] / element['capacity']) * 100).toFixed(2));
+            } else {
+                element['util_capacity_pctg'] = parseFloat((0).toFixed(2));
+            }
         });
         
         return filtered_team_stats;
@@ -450,6 +474,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 }
             }
             $scope.isStandingsView = true;
+            $scope.isAttendanceView = false;
         } else if ($scope.tableSelect === 'goal_stats') {
             $scope.sortConfig = {
                 'sortKey': 'goals_diff',
@@ -457,6 +482,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_stats') {
             $scope.sortConfig = {
@@ -465,6 +491,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_stats_5v5') {
             $scope.sortConfig = {
@@ -473,6 +500,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_shares') {
             $scope.sortConfig = {
@@ -481,6 +509,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'attendance_stats') {
+            $scope.sortConfig = {
+                'sortKey': 'util_capacity_pctg',
+                'sortCriteria': ['util_capacity_pctg', 'attendance'],
+                'sortDescending': true
+            }
+            $scope.isStandingsView = false;
+            $scope.isAttendanceView = true;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'special_team_stats') {
             $scope.sortConfig = {
@@ -489,6 +527,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'additional_stats') {
             $scope.sortConfig = {
@@ -497,6 +536,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'penalty_stats') {
+            $scope.sortConfig = {
+                'sortKey': 'pim_per_game',
+                'sortCriteria': ['pim_per_game', 'penalties'],
+                'sortDescending': true
+            }
+            $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_zones') {
             $scope.sortConfig = {
@@ -505,6 +554,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_on_goal_zones') {
             $scope.sortConfig = {
@@ -513,6 +563,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_zones_against') {
             $scope.sortConfig = {
@@ -521,6 +572,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         } else if ($scope.tableSelect === 'shot_on_goal_zones_against') {
             $scope.sortConfig = {
@@ -529,6 +581,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
             $scope.situationSelect = undefined;
         }
     };
