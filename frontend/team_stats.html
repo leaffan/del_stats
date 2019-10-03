@@ -44,6 +44,8 @@
                     <option data-ng-option value="shot_zones_against">Schusszonen des Gegners (alle Schüsse)</option>
                     <option data-ng-option value="shot_on_goal_zones_against">Schusszonen des Gegners (Torschüsse)</option>
                     <option data-ng-option value="additional_stats">Zusätzliche Statistiken</option>
+                    <option data-ng-option value="penalty_stats">Strafzeitstatistiken</option>
+                    <option data-ng-option value="attendance_stats">Zuschauerdaten</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
@@ -435,12 +437,67 @@
                 <td class="col-md-1 text-right">{{ stat.faceoffs_won }}</td>
                 <td class="col-md-1 text-right">{{ stat.faceoffs_lost }}</td>
                 <td class="col-md-1 text-right">{{ stat.faceoff_pctg.toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ stat.pim }}</td>
-                <td class="col-md-1 text-right">{{ stat.pim_per_game.toFixed(2) }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_missed }}</td>
                 <td class="col-md-1 text-right">{{ stat.shots_blocked }}</td>
         </tr>
             </tbody>
     </table>
-    
+
+    <table id="attendance_stats" class="table table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'attendance_stats'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%;">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.attendance }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.util_capacity_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance_last_season }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance_delta }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="penalty_stats" class="table table-condensed table-bordered table-striped"  data-ng-if="tableSelect == 'penalty_stats'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pim }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pim_per_game.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_2 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_5 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_10 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_20 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
 </div>
