@@ -4,6 +4,7 @@
 import os
 import json
 import yaml
+import argparse
 import operator
 
 from collections import namedtuple, defaultdict
@@ -18,9 +19,6 @@ Streak = namedtuple('Streak', [
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
-
-TGT_DIR = os.path.join(
-    CONFIG['tgt_processing_dir'], str(CONFIG['default_season']))
 
 GAME_SRC = 'del_games.json'
 PLAYER_STATS_SRC = 'del_player_game_stats.json'
@@ -206,9 +204,22 @@ def combine_single_player_streaks(
 
 if __name__ == '__main__':
 
-    src_path = os.path.join(TGT_DIR, GAME_SRC)
+    # retrieving arguments specified on command line
+    parser = argparse.ArgumentParser(
+        description='Retrieve DEL scoring streaks.')
+    parser.add_argument(
+        '-s', '--season', dest='season', required=False, default=2019,
+        type=int, choices=[2016, 2017, 2018, 2019],
+        metavar='season to process games for',
+        help="The season information will be processed for")
+
+    args = parser.parse_args()
+    season = args.season
+
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
+    src_path = os.path.join(tgt_dir, GAME_SRC)
     player_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLAYER_SRC)
-    player_stats_src_path = os.path.join(TGT_DIR, PLAYER_STATS_SRC)
+    player_stats_src_path = os.path.join(tgt_dir, PLAYER_STATS_SRC)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -240,5 +251,5 @@ if __name__ == '__main__':
             all_streaks.extend(completed_task.result())
 
     # dumping results to JSON
-    tgt_streak_path = os.path.join(TGT_DIR, STREAK_DATA_TGT)
+    tgt_streak_path = os.path.join(tgt_dir, STREAK_DATA_TGT)
     open(tgt_streak_path, 'w').write(json.dumps(all_streaks, indent=2))
