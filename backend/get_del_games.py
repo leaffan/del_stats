@@ -423,9 +423,16 @@ if __name__ == '__main__':
     else:
         to_date = parse(to_date).date()
 
+    # determining end date of target season
+    season_end_date = datetime.date(tgt_season + 1, 5, 31)
+    previous_season_end_date = datetime.date(tgt_season, 5, 31)
+
     # setting up list of all game dates
     game_dates = list(rrule(DAILY, dtstart=from_date, until=to_date))
-    game_dates = [game_date.date() for game_date in game_dates]
+    game_dates = [
+        game_date.date() for game_date in game_dates if
+        game_date.date() <= season_end_date and
+        game_date.date() > previous_season_end_date]
 
     # setting up target path
     tgt_path = os.path.join(TGT_DIR, str(tgt_season), TGT_FILE)
