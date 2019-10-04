@@ -88,7 +88,7 @@
     ],
     "attendance_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
-        {"data_key": "games_played", "col_header": "Heimspiele", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "Spiele", "expl_de": null, "expl_en": null},
         {"data_key": "attendance", "col_header": "Zuschauer gesamt", "expl_de": null, "expl_en": null},
         {"data_key": "avg_attendance", "col_header": "Schnitt", "expl_de": null, "expl_en": null},
         {"data_key": "util_capacity_pctg", "col_header": "Auslastung", "expl_de": null, "expl_en": null},

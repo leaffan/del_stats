@@ -465,8 +465,8 @@
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.attendance }}</td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance }}</td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.util_capacity_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance_last_season }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance_delta }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ homeAwaySelect == 'home' ? stat.avg_attendance_last_season : ''}}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ homeAwaySelect == 'home' ? stat.avg_attendance_delta : '' }}</td>
             </tr>
         </tbody>
     </table>
