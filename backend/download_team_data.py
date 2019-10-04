@@ -24,7 +24,7 @@ def get_download_targets(args, config):
         seasons = [tgt_season]
     # setting target game type(s)
     tgt_game_type = args.game_type
-    if not tgt_game_type:
+    if not tgt_game_type or tgt_game_type == 'ALL':
         game_types = list(config['game_types'].keys())
     else:
         game_types = {
@@ -54,7 +54,7 @@ if __name__ == '__main__':
         help="The season for which information will be downloaded for")
     parser.add_argument(
         '-g', '--game_type', dest='game_type', required=False,
-        metavar='game type to download data for', choices=['RS', 'PO'],
+        metavar='game type to download data for', choices=['RS', 'PO', 'ALL'],
         help="The game type for which information will be downloaded for")
     parser.add_argument(
         'category', metavar='information category',
