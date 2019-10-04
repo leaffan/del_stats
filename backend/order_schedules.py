@@ -16,10 +16,10 @@ if __name__ == '__main__':
 
     # retrieving arguments specified on command line
     parser = argparse.ArgumentParser(
-        description='Aggregate DEL player stats.')
+        description='Order DEL team schedules.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for', default=2019,
+        metavar='season to order schedules for', default=2019,
         choices=[2016, 2017, 2018, 2019],
         help="The season for which data  will be aggregated")
 
