@@ -284,6 +284,7 @@ if __name__ == '__main__':
                     skr_situation[shot['team_against']],
                     skr_situation[shot['team']])
 
+                # retrieving players on ice via event data in case of a goal
                 if shot['scored'] and goals:
                     goal = goals[shot['time']]
                     shot['players_on_for'] = sorted(
