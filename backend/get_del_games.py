@@ -319,17 +319,18 @@ def get_game_events(game_id, season, game_type):
     empty_net_goals_per_team = {'home': 0, 'road': 0}
     extra_attacker_goals_per_team = {'home': 0, 'road': 0}
 
-    # collecting all goals scored in the game
-    for period in game_events:
+    # collecting all goals scored in the game in order to
+    # retrieve the team that scored the first goal of the game
+    for period in sorted(game_events):
         for event in game_events[period]:
-            # retrieving team that scored the first goal of the game
             if event['type'] == 'goal':
                 all_goals.append(event)
                 home_road = event['data']['team'].replace('visitor', 'road')
                 goals_per_team[home_road].append(event)
 
     # retrieving first goal of the game
-    first_goal = all_goals[0]
+    # making sure the goals are sorted by time
+    first_goal = sorted(all_goals, key=lambda d: d['time'])[0]
 
     single_game_events['first_goal'] = first_goal[
         'data']['team'].replace('visitor', 'road')
