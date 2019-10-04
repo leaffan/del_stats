@@ -202,7 +202,7 @@ app.factory('svc', function() {
                 'rg_sh_a', 'bl_sh_a', 'sl_og_a', 'lf_og_a', 'rg_og_a', 'bl_og_a',
                 'attendance', 'penalty_2', 'penalty_5', 'penalty_10', 'penalty_20',
                 'shots_on_goal_5v5', 'goals_5v5', 'opp_shots_on_goal_5v5', 'opp_goals_5v5',
-                'capacity'
+                'capacity', 'sl_g'
             ];    
         },
         pad: function pad(num, size) {
