@@ -10,7 +10,49 @@
     <div class="alert alert-info main-bg">
         <p><a href="#!"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Startseite</b></a></p>
     </div>
-    
+
+    <form>
+        <div class="form-group">
+            <div class="input-group">
+                <div class="input-group-addon"><i class="fa fa-search"></i></div>
+                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="nameFilter" />
+            </div>
+        </div>
+    </form>
+    <form>
+        <div class="form-group">
+            <div style="width: 100%;" class="input-group">
+                <label for="position_select">Position:</label>
+                <select class="form-control" id="position_select" data-ng-model="position">
+                    <option data-ng-option value selected="selected">alle</option>
+                    <!-- <option data-ng-option value="GK">Torhüter</option> -->
+                    <option data-ng-option value="DE">Verteidiger</option>
+                    <option data-ng-option value="FO">Stürmer</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <label for="team_select">Team:</label>
+                <select class="form-control" id="team_select" data-ng-model="team" data-ng-options="team for team in all_teams">
+                    <option data-ng-option value selected="selected">alle</option>
+                </select>                
+                <span class="input-group-addon form_spacer"></span>
+                <label for="from_select">Von:</label>
+                <select class="form-control" id="from_select" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                </select>                
+                <span class="input-group-addon form_spacer"></span>
+                <label for="to_select">Bis:</label>
+                <select class="form-control" id="to_select" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <label for="season_type_select">Saisonphasen:</label>
+                <select class="form-control" id="season_type_select" data-ng-model="season_type">
+                    <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
+                    <option data-ng-option value="RS">Hauptrunde</option>
+                    <option data-ng-option value="PO">Playoffs</option>
+                </select>
+            </div>
+        </div>
+    </form>
+
     <table id="career_stats_skaters" class="table table-condensed table-bordered table-striped table-hover">
         <thead>
             <tr>
@@ -26,7 +68,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in full_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter: {position: '!GK'}">
+            <tr data-ng-repeat="stat in filtered_season_player_stats | filter:nameFilter | filter: {position: '!GK'} | filter:greaterThanFilter('gp', 0) | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.gp }}</td>
