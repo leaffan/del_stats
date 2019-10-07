@@ -24,6 +24,7 @@ coaches = [
 
 name_corrections = {
     # coaches
+    'Kurt Kleindorst': 'Kurt Kleinendorst',
     'Tray Toumie': 'Tray Tuomie',
     'Herold Kreis': 'Harold Kreis',
     'MIke Stewart': 'Mike Stewart',
