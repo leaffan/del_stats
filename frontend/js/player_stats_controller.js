@@ -46,6 +46,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'power_play_stats': 'time_on_ice_pp_seconds',
         'penalty_stats': 'pim_from_events',
         'additional_stats': 'faceoff_pctg',
+        'on_ice_stats': 'plus_minus',
         'per_60_stats': 'points_per_60',
         'goalie_stats': 'save_pctg',
         'goalie_stats_ev': 'save_pctg_5v5',
@@ -83,7 +84,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'time_on_ice_seconds': ['time_on_ice_seconds', 'shifts'],
         'time_on_ice_pp_seconds': ['time_on_ice_pp_seconds', 'pp_goals_per_60'],
         'pim_from_events': ['pim_from_events', '-games_played'],
-        'faceoff_pctg': ['faceoff_pctg', 'faceoffs']
+        'faceoff_pctg': ['faceoff_pctg', 'faceoffs'],
+        'plus_minus': ['plus_minus']
     };
 
     // changing sorting criteria according to table selected for display
@@ -99,6 +101,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             'sortCriteria': $scope.sortCriteria[sortKey],
             'sortDescending': sortDescending
         };
+        console.log($scope.sortConfig);
     };
 
     // function to change sort order, actually just a wrapper around a service
