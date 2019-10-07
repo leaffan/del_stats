@@ -104,6 +104,14 @@
         {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"},
         {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"}
     ],
+    "on_ice_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "plus", "col_header": "+", "expl_de": "Plus-Wertung", "expl_en": "Plus"},
+        {"data_key": "minus", "col_header": "-", "expl_de": "Minus-Wertung", "expl_en": "Minus"},
+        {"data_key": "plus_minus", "col_header": "+/-", "expl_de": "Plus/Minus-Wertung", "expl_en": "Plus/Minus"}
+    ],
     "power_play_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
