@@ -24,6 +24,9 @@ coaches = [
 
 name_corrections = {
     # coaches
+    'Thomas Popisch': 'Thomas Popiesch',
+    'Tom Pokle': 'Tom Pokel',
+    'Paul Thompsen': 'Paul Thompson',
     'Kurt Kleindorst': 'Kurt Kleinendorst',
     'Tray Toumie': 'Tray Tuomie',
     'Herold Kreis': 'Harold Kreis',
