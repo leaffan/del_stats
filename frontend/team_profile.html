@@ -1,8 +1,8 @@
 <div class="container" data-ng-app="delStatsApp">
     <div class="alert alert-info main-bg">
         <div class="inline-headers">
-                <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{model.team}}.png" alt="Team logo" width="40" height="40"/></span>
-                <h2 style="margin-left: .5em;">{{ team_full_name_lookup[model.team] }} {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h2>
+                <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{current_team}}.png" alt="Team logo" width="40" height="40"/></span>
+                <h2 style="margin-left: .5em;">{{ team_full_name_lookup[current_team] }} {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h2>
         </div>
     </div>
         
@@ -22,7 +22,7 @@
         <div class="form_group">
             <div class="input-group" style="width: 100%">
                 <label for="team_select">Team:</label>
-                <select class="form-control" id="team_select" data-ng-model="model.team" data-ng-change="changeTeam()">
+                <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
@@ -40,7 +40,7 @@
 
     <form>
         <div class="form-group">
-            <div class="input-group">
+            <div class="input-group" style="width: 100%">
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
                     <option data-ng-option value="game_goals">Torstatistiken</option>
@@ -63,20 +63,44 @@
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle Gegner</option>
-                    <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + model.team}" value="{{team.abbr}}">{{team.full_name}}</option>
+                    <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + current_team}" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
+            </div>
+        </div>
+    </form>
+
+    <form>
+        <div class="form-group">
+            <div class="input-group" style="width: 100%">
+                <!-- <span class="input-group-addon form_spacer"></span> -->
+                <!-- <label for="from_date_select">Von Datum:</label> -->
+                <div class="input-group" id="from_date_select">
+                    <span class="input-group-addon">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
                 <span class="input-group-addon form_spacer"></span>
-                <span class="input-group-addon">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                    data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                <!-- <label for="from_date_select">Bis Datum:</label> -->
+                <div class="input-group" id="to_date_select">
+                    <span class="input-group-addon">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
                 <span class="input-group-addon form_spacer"></span>
-                <span class="input-group-addon">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                    data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                <!-- <label for="round_select">Spieltage:</label> -->
+                <div class="input-group" id="round_select" style="width: 100%">
+                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                    <span class="input-group-addon form_spacer"></span>
+                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
             </div>
         </div>
     </form>
@@ -95,7 +119,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter: dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
@@ -142,7 +166,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
@@ -191,7 +215,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
@@ -240,7 +264,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
                         game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
@@ -285,7 +309,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
@@ -326,7 +350,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
                         === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
@@ -369,7 +393,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:game_date:true | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:game_date:true | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%">
@@ -423,7 +447,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
@@ -470,7 +494,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
@@ -517,7 +541,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
@@ -564,7 +588,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
