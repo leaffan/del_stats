@@ -28,7 +28,7 @@ app.config(['$routeProvider', function($routeProvider){
             controller: 'plrProfileController as ctrl',
             reloadOnSearch: false
         })
-        .when('/team_profile/:season/:team',
+        .when('/team_profile/:season/:team/:table_select?',
         {
             title: 'Teamprofil',
             templateUrl: 'team_profile.html',
@@ -68,6 +68,7 @@ app.config(['momentPickerProvider', function(momentPickerProvider){
 
 app.run(['$rootScope', function($rootScope) {
     $rootScope.$on('$routeChangeSuccess', function (event, current, previous) {
+        // TODO: set page title dynamically to include current teams
         $rootScope.title = current.$$route.title;
     });
 }]);
@@ -130,9 +131,10 @@ app.factory('svc', function() {
         },
         // gets total sum of filtered attribute values
         getFilteredTotal: function(list, attribute, dataSource) {
-            if (dataSource === undefined) {
-                return
-            }
+            if (dataSource === undefined)
+                return;
+            if (list === undefined)
+                return;
             var total = 0;
             for(var i = 0; i < list.length; i++){
                 total += list[i][attribute];
