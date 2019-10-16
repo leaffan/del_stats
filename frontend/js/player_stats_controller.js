@@ -6,6 +6,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     $scope.tableSelect = 'basic_stats';
     $scope.seasonTypeFilter = 'RS';
     $scope.scoringStreakTypeFilter = 'points';
+    $scope.showStrictStreaks = true;
     $scope.u23Check = false;
     // setting default sort configuration
     $scope.sortConfig = {
@@ -20,9 +21,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         $scope.stats = res.data[1];
     });
 
-    // loading player scoring streaks from external json file
-    $http.get('data/' + $scope.season + '/del_streaks.json').then(function (res) {
-        $scope.streaks = res.data;
+    // loading strictly defined player scoring streaks from external json file
+    $http.get('data/' + $scope.season + '/del_streaks_strict.json').then(function (res) {
+        $scope.strict_streaks = res.data;
+        $scope.streaks = $scope.strict_streaks;
+    });
+    // loading loosely defined player scoring streaks from external json file
+    $http.get('data/' + $scope.season + '/del_streaks_loose.json').then(function (res) {
+        $scope.loose_streaks = res.data;
     });
 
     // retrieving column headers (and abbreviations + explanations)
@@ -101,7 +107,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             'sortCriteria': $scope.sortCriteria[sortKey],
             'sortDescending': sortDescending
         };
-        console.log($scope.sortConfig);
     };
 
     // function to change sort order, actually just a wrapper around a service
@@ -158,7 +163,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         } else {
             return true;
         }
-    }
+    };
 
     $scope.maximumAgeFilter = function (a) {
         if ($scope.maximumAge) {
@@ -170,5 +175,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         } else {
             return true;
         }
-    }
+    };
+
+    $scope.changeStreakType = function() {
+        if ($scope.showStrictStreaks) {
+            $scope.streaks = $scope.strict_streaks;
+        } else {
+            $scope.streaks = $scope.loose_streaks;
+        }
+    };
+
 });

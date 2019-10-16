@@ -148,6 +148,13 @@
                 Nur aktuelle Streaks anzeigen
             </label>
         </div>
+        <div data-ng-if="tableSelect == 'streaks'" class="checkbox">
+            <label for="strictStreak">
+                <input type="checkbox" id="strictStreak" data-ng-model="$parent.showStrictStreaks" data-ng-change="changeStreakType()" value="">
+                <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
+                Spiele nicht im Kader unterbrechen eine andauernde Streak
+            </label>
+        </div>
     </form>
 
     <table id="penalty_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'penalty_stats'">
