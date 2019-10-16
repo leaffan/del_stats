@@ -24,7 +24,8 @@ GAME_SRC = 'del_games.json'
 PLAYER_STATS_SRC = 'del_player_game_stats.json'
 PLAYER_SRC = 'del_players.json'
 
-STREAK_DATA_TGT = 'del_streaks.json'
+STREAK_DATA_STRICT_TGT = 'del_streaks_strict.json'
+STREAK_DATA_LOOSE_TGT = 'del_streaks_loose.json'
 
 
 def collect_team_games(games, teams):
@@ -106,14 +107,69 @@ def post_process_streak(
             max_streak_lengths[component] = streak.length
 
 
-def single_task(plr_id, plr_team, team_games, player_stats, players):
+def get_streaks_for_player(plr_id, plr_team, player_stats, players):
+    """
+    Retrieves scorings streaks for specified player only regardles of the team
+    and whether he was dressed for all the team's games during the streak.
+    """
+    plr_name = " ".join((
+        players[plr_id]['first_name'], players[plr_id]['last_name']))
+    print("+ Collecting loosely defined scoring streaks by %s" % plr_name)
+    # setting container for all of a player's streaks
+    single_player_streaks = defaultdict(list)
+    # setting container to hold maximum length of player's streaks
+    max_streak_lengths = defaultdict(int)
+    # temporary container to hold raw streak data
+    raw_streaks = dict()
+    # initializing temporary container
+    for component in ['goals', 'assists', 'points']:
+        raw_streaks[component] = {
+            'length': 0, 'goals': 0, 'assists': 0, 'points': 0,
+            'range': list()
+        }
+
+    single_player_stats = list(filter(
+        lambda d: d['player_id'] == plr_id, player_stats))
+    single_player_stats = sorted(
+        single_player_stats, key=lambda d: d['game_date'])
+
+    for plr_game in single_player_stats:
+        for component in ['goals', 'assists', 'points']:
+            if plr_game[component]:
+                raw_streaks[component]['length'] += 1
+                raw_streaks[component][
+                    'goals'] += plr_game['goals']
+                raw_streaks[component][
+                    'assists'] += plr_game['assists']
+                raw_streaks[component][
+                    'points'] += plr_game['points']
+                raw_streaks[component][
+                    'range'].append(plr_game['game_date'])
+            else:
+                post_process_streak(
+                    single_player_streaks, raw_streaks, component,
+                    plr_id, plr_team, max_streak_lengths)
+    else:
+        for component in ['goals', 'assists', 'points']:
+            post_process_streak(
+                single_player_streaks, raw_streaks, component,
+                plr_id, plr_team, max_streak_lengths)
+
+    last_plr_game_date = single_player_stats[-1]['game_date']
+
+    return combine_single_player_streaks(
+        single_player_streaks, max_streak_lengths, last_plr_game_date)
+
+
+def get_streaks_for_team_and_player(
+        plr_id, plr_team, team_games, player_stats, players):
     """
     Retrieves scorings streaks for specified player and team using provided
     team games and player statistics.
     """
     plr_name = " ".join((
         players[plr_id]['first_name'], players[plr_id]['last_name']))
-    print("Collecting scoring streaks by %s" % plr_name)
+    print("+ Collecting strictly defined scoring streaks for %s" % plr_name)
     # setting container for all of a player's streaks
     single_player_streaks = defaultdict(list)
     # setting container to hold maximum length of player's streaks
@@ -187,9 +243,6 @@ def combine_single_player_streaks(
                 players[streak.player_id]['first_name'],
                 players[streak.player_id]['last_name']
             ))
-            streak_d['position'] = players[streak.player_id]['position']
-            streak_d['age'] = players[streak.player_id]['age']
-            streak_d['iso_country'] = players[streak.player_id]['iso_country']
             # setting default indicators for longest and current streaks
             streak_d['longest'] = False
             streak_d['current'] = False
@@ -239,17 +292,29 @@ if __name__ == '__main__':
     # collecting indivudual team games
     team_games = collect_team_games(games, teams)
 
-    all_streaks = list()
+    all_streaks_strict = list()
+    all_streaks_loose = list()
 
     # retrieving scoring streaks in parallel threads
     with ThreadPoolExecutor(max_workers=8) as threads:
         tasks = {threads.submit(
-            single_task, plr_id, plr_team, team_games, player_stats, players
+            get_streaks_for_team_and_player,
+            plr_id, plr_team, team_games, player_stats, players
         ): (
             plr_id, plr_team) for plr_id, plr_team in player_teams}
         for completed_task in as_completed(tasks):
-            all_streaks.extend(completed_task.result())
+            all_streaks_strict.extend(completed_task.result())
+
+    with ThreadPoolExecutor(max_workers=8) as threads:
+        tasks = {threads.submit(
+            get_streaks_for_player, plr_id, plr_team, player_stats, players
+        ): (
+            plr_id, plr_team) for plr_id, plr_team in player_teams}
+        for completed_task in as_completed(tasks):
+            all_streaks_loose.extend(completed_task.result())
 
     # dumping results to JSON
-    tgt_streak_path = os.path.join(tgt_dir, STREAK_DATA_TGT)
-    open(tgt_streak_path, 'w').write(json.dumps(all_streaks, indent=2))
+    tgt_streak_path = os.path.join(tgt_dir, STREAK_DATA_STRICT_TGT)
+    open(tgt_streak_path, 'w').write(json.dumps(all_streaks_strict, indent=2))
+    tgt_streak_path = os.path.join(tgt_dir, STREAK_DATA_LOOSE_TGT)
+    open(tgt_streak_path, 'w').write(json.dumps(all_streaks_loose, indent=2))
