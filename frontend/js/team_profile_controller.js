@@ -2,8 +2,13 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     var ctrl = this;
     $scope.svc = svc;
     $scope.season = $routeParams.season;
-    $scope.currentTeam = $routeParams.team;
-    $scope.tableSelect = 'basic_game_by_game';
+    $scope.current_team = $routeParams.team;
+    if ($routeParams.table_select) {
+        $scope.tableSelect = $routeParams.table_select;
+    } else {
+        $scope.tableSelect = 'basic_game_by_game';
+    }
+    $scope.fromRoundSelect = '1';
     $scope.sortCriterion = 'date';
     $scope.statsSortDescending = true;
 
@@ -12,8 +17,12 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
         $scope.game_log = $scope.team_stats.filter(function(value, index, arr) {
-            return value['team'] == $scope.currentTeam;
+            return value['team'] == $scope.current_team;
         });
+        // retrieving maximum round played
+        $scope.maxRoundPlayed = Math.max.apply(Math, $scope.game_log.map(function(o) { return o.round; })).toString();
+        // setting to round selection to maximum round played
+        $scope.toRoundSelect = $scope.maxRoundPlayed;
     });
 
     // retrieving column headers (and abbreviations + explanations)
@@ -35,14 +44,13 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     });
 
     $scope.model = {
-        team: $routeParams.team,
-        // attributes to use ascending sort order per default 
         ascendingAttrs: [
             'opp_team', 'arena', 'coach', 'opp_coach', 'date', 'ref_1',
             'ref_2', 'lma_1', 'lma_2', 'round']
     }
 
     $scope.changeTable = function () {
+        // $location.path('/team_profile/' + $scope.season + '/' + $scope.current_team + '/' + $scope.tableSelect);
         if ($scope.tableSelect === 'basic_game_by_game') {
             $scope.sortCriterion = 'date';
             $scope.statsSortDescending = false;
@@ -106,7 +114,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         });
 
         // returning actual table position of current team in sorted rankings
-        return team_table.map(function(e) { return e.team}).indexOf($scope.currentTeam) + 1;
+        return team_table.map(function(e) { return e.team}).indexOf($scope.current_team) + 1;
     };
 
     $scope.dayFilter = function (a) {
@@ -134,8 +142,32 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         }
     };
 
+    $scope.fromRoundFilter = function (a) {
+        if ($scope.fromRoundSelect) {
+            if (a.round >= $scope.fromRoundSelect) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    $scope.toRoundFilter = function (a) {
+        if ($scope.toRoundSelect) {
+            if (a.round <= $scope.toRoundSelect) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
     $scope.changeTeam = function() {
-        $location.path('/team_profile/' + $scope.season + '/' + $scope.model.team);
+        $location.path('/team_profile/' + $scope.season + '/' + $scope.current_team + '/' + $scope.tableSelect);
     };
 
 });
