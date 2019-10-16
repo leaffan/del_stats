@@ -2,6 +2,7 @@
 # -*- coding: utf-8 -*-
 
 import os
+import csv
 import json
 import yaml
 import argparse
@@ -317,4 +318,22 @@ if __name__ == '__main__':
         if limit and cnt >= limit:
             break
 
+    CSV_OUT_FIELDS = [
+        'player_id', 'jersey', 'first_name', 'last_name', 'team_id', 'time',
+        'coordinate_x', 'coordinate_y', 'polygon', 'game_id', 'season_type',
+        'x', 'y', 'team', 'team_against', 'distance', 'shot_zone',
+        'target_type', 'scored', 'period', 'situation', 'plr_situation',
+        'plr_situation_against', 'goalie'
+    ]
+
+    tgt_csv_path = os.path.join(tgt_dir, SHOTS_DATA_TGT.replace("json", "csv"))
+
     open(tgt_path, 'w').write(json.dumps(all_shots, indent=2, default=str))
+
+    with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
+        output_file.write('\ufeff')
+        dict_writer = csv.DictWriter(
+            output_file, CSV_OUT_FIELDS, delimiter=';', lineterminator='\n',
+            extrasaction='ignore')
+        dict_writer.writeheader()
+        dict_writer.writerows(all_shots)
