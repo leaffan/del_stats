@@ -72,8 +72,6 @@
     <form>
         <div class="form-group">
             <div class="input-group" style="width: 100%">
-                <!-- <span class="input-group-addon form_spacer"></span> -->
-                <!-- <label for="from_date_select">Von Datum:</label> -->
                 <div class="input-group" id="from_date_select">
                     <span class="input-group-addon">
                         <i class="far fa-calendar-alt"></i>
@@ -82,7 +80,6 @@
                         data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
-                <!-- <label for="from_date_select">Bis Datum:</label> -->
                 <div class="input-group" id="to_date_select">
                     <span class="input-group-addon">
                         <i class="far fa-calendar-alt"></i>
@@ -91,7 +88,6 @@
                         data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
-                <!-- <label for="round_select">Spieltage:</label> -->
                 <div class="input-group" id="round_select" style="width: 100%">
                     <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
                         <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
