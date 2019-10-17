@@ -5,6 +5,7 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
 
     $scope.season = $routeParams.season;
     $scope.player_id = $routeParams.player_id;
+    $scope.fromRoundSelect = '1';
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_profile_columns.json').then(function (res) {
@@ -25,6 +26,10 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         } else {
             $scope.tableSelect = 'basic_game_by_game'
         }
+        // retrieving maximum round played
+        $scope.maxRoundPlayed = Math.max.apply(Math, $scope.player_stats.map(function(o) { return o.round; })).toString();
+        // setting to round selection to maximum round played
+        $scope.toRoundSelect = $scope.maxRoundPlayed;
     });
 
     // loading goalie stats
@@ -121,6 +126,30 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
             }
         } else if (ctrl.toDate) {
             if (date_to_test <= ctrl.toDate.startOf('day')) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    $scope.fromRoundFilter = function (a) {
+        if ($scope.fromRoundSelect) {
+            if (a.round >= $scope.fromRoundSelect) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
+    $scope.toRoundFilter = function (a) {
+        if ($scope.toRoundSelect) {
+            if (a.round <= $scope.toRoundSelect) {
                 return true;
             } else {
                 return false;
