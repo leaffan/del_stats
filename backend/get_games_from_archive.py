@@ -17,12 +17,12 @@ from dateutil.parser import parse
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
-
 user = CONFIG['del_archive_user']
 pwd = CONFIG['del_archive_pass']
 
-BASE_URL = "https://datenarchiv.del.org/spielplan_%d.html"
-SEASON_BASE_URL = "https://datenarchiv.del.org/spielplan_%d_%02d__.html"
+SCHEDULE_URL = "/".join((CONFIG['del_archive_base_url'], "spielplan_%d.html"))
+MONTHLY_SCHEDULE_URL = "/".join((
+    CONFIG['del_archive_base_url'], "spielplan_%d_%02d__.html"))
 MONTHS = [9, 10, 11, 12, 1, 2, 3, 4, 5, 6, 7, 8]
 
 TEAM_ABBRS_BY_ID = {
@@ -41,8 +41,8 @@ def get_regular_season(season_id):
     games = list()
 
     for month in MONTHS:
-        url = SEASON_BASE_URL % (season_id, month)
-        print(url)
+        url = MONTHLY_SCHEDULE_URL % (season_id, month)
+        print("\t+ Working on %s" % url)
 
         r = requests.get(url, auth=(user, pwd))
         doc = html.fromstring(r.text)
@@ -68,8 +68,13 @@ def get_single_game(tr, season, season_type):
     single_game = dict()
 
     tds = tr.xpath("td")
+    season_id, game_id = [
+        int(x) for
+        x in tds[7].xpath("a/@href")[0].replace(".html", "").split("_")[1:]]
     game_date, game_time = [td.xpath("text()").pop(0) for td in tds[:2]]
     game_date = parse(game_date.split()[-1], dayfirst=True).date()
+    single_game['game_id'] = game_id
+    single_game['season_id'] = season_id
     single_game['season'] = season
     single_game['season_type'] = season_type
     match_day = tds[6].xpath("text()").pop(0).strip()
@@ -111,16 +116,17 @@ def get_playoff_games(season_id):
 
     games = list()
 
-    url = BASE_URL % season_id
+    url = SCHEDULE_URL % season_id
     r = requests.get(url, auth=(user, pwd))
     doc = html.fromstring(r.text)
+
+    print("\t+ Working on %s" % url)
 
     season_info = doc.xpath("//button[@id='btnGroupDrop1']/text()")
     season = int(season_info[0].split()[-1].split("/")[0])
     season_type = season_info[1].strip()
 
     rounds = doc.xpath("//h2/text()")
-    # print(rounds)
 
     for i in range(len(rounds)):
         round_divs = doc.xpath(
@@ -146,6 +152,15 @@ def get_playoff_games(season_id):
             for round_game_div in round_game_divs:
                 game_cnt += 1
                 single_game = dict()
+
+                season_id, game_id = [
+                    int(x) for x in
+                    round_game_div.xpath(
+                        "div[@class='col-sm-3']/descendant-or-self::a/@href"
+                    )[0].replace(".html", "").split("_")[1:]]
+
+                single_game['game_id'] = game_id
+                single_game['season_id'] = season_id
                 single_game['season'] = season
                 single_game['season_type'] = season_type
                 single_game['round'] = round_title
@@ -194,8 +209,7 @@ if __name__ == '__main__':
     games_per_season = defaultdict(list)
 
     for season_id in range(1, 65):
-        url = BASE_URL % season_id
-        print(url)
+        url = SCHEDULE_URL % season_id
         r = requests.get(url, auth=(user, pwd))
         doc = html.fromstring(r.text)
 
@@ -206,7 +220,7 @@ if __name__ == '__main__':
             print("+ Unable to retrieve season from page content")
             continue
         season_type = season_info[1].strip()
-        print(season, season_type)
+        print("+ Collecting games for %s %d" % (season_type, season))
 
         if season_type in [
             'Hauptrunde', 'Qualifikationsrunde',
