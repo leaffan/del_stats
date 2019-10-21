@@ -67,6 +67,7 @@ name_corrections = {
     'Fritzmeier': 'Franz-David Fritzmeier',
     'Pienne Beaulieu': 'Brandon Reid',
     'Pierre Beaulieu': 'Brandon Reid',
+    'Pierre Beaulie': 'Brandon Reid',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
