@@ -28,6 +28,10 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         }
         // retrieving maximum round played
         $scope.maxRoundPlayed = Math.max.apply(Math, $scope.player_stats.map(function(o) { return o.round; })).toString();
+        // retrieving all weekdays a game was played by the current team
+        $scope.weekdaysPlayed = [...new Set($scope.player_stats.map(item => item.weekday))].sort();
+        // retrieving all months a game was played by the current team
+        $scope.monthsPlayed = [...new Set($scope.player_stats.map(item => moment(item.game_date).month()))];
         // setting to round selection to maximum round played
         $scope.toRoundSelect = $scope.maxRoundPlayed;
     });
@@ -159,8 +163,37 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         }
     };
 
+    $scope.weekdayFilter = function (a) {
+        if ($scope.weekdaySelect) {
+            if (a.weekday == $scope.weekdaySelect) {
+                return true;
+            } else {
+                return false;
+            }
+        } else {
+            return true;
+        }
+    };
+
     $scope.changePlayer = function() {
         $scope.model.player_id = $scope.model.new_player_id;
         $location.path('/player_profile/' + $scope.season + '/' + $scope.model.new_team + '/' + $scope.model.player_id);
     };
+
+    $scope.changeTimespan = function() {
+        if (!$scope.timespanSelect) {
+            ctrl.fromDate = null;
+            ctrl.toDate = null;
+            return;
+        }
+        timespanSelect = parseInt($scope.timespanSelect) + 1;
+        if (timespanSelect < 9) {
+            season = parseInt($scope.season) + 1;
+        } else {
+            season = parseInt($scope.season);
+        }
+        ctrl.fromDate = moment(season + '-' + timespanSelect + '-1');
+        ctrl.toDate = moment(season + '-' + timespanSelect + '-1').endOf('month');
+    }
+
 });
