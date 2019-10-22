@@ -219,6 +219,12 @@ app.factory('svc', function() {
             var s = num+"";
             while (s.length < size) s = "0" + s;
             return s;
+        },
+        germanDays: function() {
+            return [0, 1, 2, 3, 4, 5, 6].map(day => moment().locale('de').weekday(day).format('dddd'));
+        },
+        germanMonths: function() {
+            return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(month => moment().locale('de').month(month).format('MMMM'));
         }
     }
 });
