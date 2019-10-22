@@ -80,6 +80,7 @@ def get_games_for_date(date, existing_games=None):
         single_game_data = dict()
         # setting game date and round information
         single_game_data['date'] = date
+        single_game_data['weekday'] = date.weekday()
         season = get_season(date)
         single_game_data['season'] = season
         if date < PLAYOFF_DATES[season]:
