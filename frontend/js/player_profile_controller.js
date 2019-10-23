@@ -192,8 +192,8 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         } else {
             season = parseInt($scope.season);
         }
-        ctrl.fromDate = moment(season + '-' + timespanSelect + '-1');
-        ctrl.toDate = moment(season + '-' + timespanSelect + '-1').endOf('month');
+        ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
+        ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
     }
 
 });
