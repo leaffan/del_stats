@@ -303,6 +303,19 @@ def get_game_rosters(game_id, season, game_type):
     return roster_data
 
 
+def get_time_tied_leading_trailing(event, previous_score, last_goal_time):
+    """
+    Calculate time of previous score state according to current event time
+    and time of last goal scored.
+    """
+    if previous_score['home'] == previous_score['road']:
+        return 'tied', event['time'] - last_goal_time
+    elif previous_score['home'] > previous_score['road']:
+        return 'home_leading', event['time'] - last_goal_time
+    elif previous_score['home'] < previous_score['road']:
+        return 'road_leading', event['time'] - last_goal_time
+
+
 def get_game_events(game_id, season, game_type):
     """
     Register game events for current game from separate data source.
@@ -320,6 +333,11 @@ def get_game_events(game_id, season, game_type):
     empty_net_goals_per_team = {'home': 0, 'road': 0}
     extra_attacker_goals_per_team = {'home': 0, 'road': 0}
 
+    # setting up score state container and helper variables
+    tied_leading_trailing = defaultdict(int)
+    last_goal_time = 0
+    current_score = {'home': 0, 'road': 0}
+
     # collecting all goals scored in the game in order to
     # retrieve the team that scored the first goal of the game
     for period in sorted(game_events):
@@ -328,6 +346,30 @@ def get_game_events(game_id, season, game_type):
                 all_goals.append(event)
                 home_road = event['data']['team'].replace('visitor', 'road')
                 goals_per_team[home_road].append(event)
+                # calculating timespan of previous score state
+                score_state, timespan = get_time_tied_leading_trailing(
+                    event, current_score, last_goal_time)
+                tied_leading_trailing[score_state] += timespan
+                # re-setting helper variables for score state time retrieval
+                # setting time of previous goal to current time
+                last_goal_time = event['time']
+                # adjusting score
+                current_score['home'], current_score['road'] = [
+                    int(x) for x in event['data']['currentScore'].split(":")]
+    else:
+        # calculating timespan of score state between last goal scored in game
+        # and end of game
+        score_state, timespan = get_time_tied_leading_trailing(
+            event, current_score, last_goal_time)
+        tied_leading_trailing[score_state] += timespan
+
+        # finally storing score state timespans
+        time_played = 0
+        for sit in ['tied', 'home_leading', 'road_leading']:
+            single_game_events[sit] = tied_leading_trailing[sit]
+            time_played += tied_leading_trailing[sit]
+        else:
+            single_game_events['time_played'] = time_played
 
     # retrieving first goal of the game
     # making sure the goals are sorted by time
