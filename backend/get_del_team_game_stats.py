@@ -220,6 +220,16 @@ def get_single_game_team_data(game, grouped_shot_data):
         elif score_diff > 3:
             game_stat_line['four_goal'] = True
 
+        # retrieving score state time spans for current team
+        game_stat_line['time_played'] = game['time_played']
+        game_stat_line['tied'] = game['tied']
+        if key == 'home':
+            game_stat_line['leading'] = game['home_leading']
+            game_stat_line['trailing'] = game['road_leading']
+        else:
+            game_stat_line['leading'] = game['road_leading']
+            game_stat_line['trailing'] = game['home_leading']
+
         # retrieving raw stats for team and opposing team
         for category, raw_category in RAW_STATS_MAPPING:
             game_stat_line[category] = raw_stats[key].get(raw_category, None)
