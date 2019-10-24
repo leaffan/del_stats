@@ -156,6 +156,16 @@
         {"data_key": "rg_og_p_a", "col_header": "Right%", "expl_de": "Anteil der gegnerischen Torschüsse von rechts", "expl_en": "Shots On Goal From Right Against Percentage"},
         {"data_key": "bl_og_a", "col_header": "Point", "expl_de": "Gegnerische Torschüsse von der blauen Linie", "expl_en": "Point Shots On Goal Against"},
         {"data_key": "bl_og_p_a", "col_header": "Point%", "expl_de": "Anteil der gegnerischen Torschüsse von der blauen Linie", "expl_en": "Point Shot On Goal Against Percentage"}
+    ],
+    "score_state_stats": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "time_played", "col_header": "Spielzeit", "expl_de": "Gesamte Spielzeit", "expl_en": null},
+        {"data_key": "leading", "col_header": "Führung", "expl_de": "Zeit in Führung", "expl_en": null},
+        {"data_key": "leading_pctg", "col_header": "Führung [%]", "expl_de": "Anteil der Zeit in Führung", "expl_en": null},
+        {"data_key": "trailing", "col_header": "Rückstand", "expl_de": "Zeit in Rückstand", "expl_en": null},
+        {"data_key": "trailing_pctg", "col_header": "Rückstand [%]", "expl_de": "Anteil der Zeit in Rückstand", "expl_en": null},
+        {"data_key": "tied", "col_header": "Gleichstand", "expl_de": "Gleichstand", "expl_en": null},
+        {"data_key": "tied_pctg", "col_header": "Gleichstand [%]", "expl_de": "Anteil der Zeit im Gleichstand", "expl_en": null}
     ]
-    
 }

@@ -452,6 +452,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             } else {
                 element['util_capacity_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating score state percentages
+            if (element['time_played']) {
+                element['leading_pctg'] = parseFloat(((element['leading'] / element['time_played']) * 100).toFixed(2));
+                element['trailing_pctg'] = parseFloat(((element['trailing'] / element['time_played']) * 100).toFixed(2));
+                element['tied_pctg'] = parseFloat(((element['tied'] / element['time_played']) * 100).toFixed(2));
+            } else {
+                element['leading_pctg'] = parseFloat((0).toFixed(2));
+                element['trailing_pctg'] = parseFloat((0).toFixed(2));
+                element['tied_pctg'] = parseFloat((0).toFixed(2));
+            }
         });
         
         return filtered_team_stats;
@@ -578,6 +588,15 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             $scope.sortConfig = {
                 'sortKey': 'opp_shots_on_goal',
                 'sortCriteria': ['opp_shots_on_goal'],
+                'sortDescending': true
+            }
+            $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'score_state_stats') {
+            $scope.sortConfig = {
+                'sortKey': 'leading_pctg',
+                'sortCriteria': ['leading_pctg'],
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
