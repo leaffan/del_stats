@@ -223,12 +223,18 @@ def get_single_game_team_data(game, grouped_shot_data):
         # retrieving score state time spans for current team
         game_stat_line['time_played'] = game['time_played']
         game_stat_line['tied'] = game['tied']
+        game_stat_line['tied_pctg'] = round(
+            game['tied'] / game['time_played'] * 100, 2)
         if key == 'home':
             game_stat_line['leading'] = game['home_leading']
             game_stat_line['trailing'] = game['road_leading']
         else:
             game_stat_line['leading'] = game['road_leading']
             game_stat_line['trailing'] = game['home_leading']
+        game_stat_line['leading_pctg'] = round(
+            game_stat_line['leading'] / game['time_played'] * 100, 2)
+        game_stat_line['trailing_pctg'] = round(
+            game_stat_line['trailing'] / game['time_played'] * 100, 2)
 
         # retrieving raw stats for team and opposing team
         for category, raw_category in RAW_STATS_MAPPING:
