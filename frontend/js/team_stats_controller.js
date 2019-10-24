@@ -462,6 +462,22 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 element['trailing_pctg'] = parseFloat((0).toFixed(2));
                 element['tied_pctg'] = parseFloat((0).toFixed(2));
             }
+            // calculating 5-on-5 shot share percentages
+            if (element['shots_5v5'] + element['opp_shots_5v5']) {
+                element['shots_5v5_pctg'] = parseFloat(((element['shots_5v5'] / (element['shots_5v5'] + element['opp_shots_5v5'])) * 100).toFixed(2));
+            } else {
+                element['shots_5v5_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5']) {
+                element['shots_unblocked_5v5_pctg'] = parseFloat(((element['shots_unblocked_5v5'] / (element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5'])) * 100).toFixed(2));
+            } else {
+                element['shots_unblocked_5v5_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5']) {
+                element['shots_on_goal_5v5_pctg'] = parseFloat(((element['shots_on_goal_5v5'] / (element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5'])) * 100).toFixed(2));
+            } else {
+                element['shots_on_goal_5v5_pctg'] = parseFloat((0).toFixed(2));
+            }
         });
         
         return filtered_team_stats;
@@ -516,6 +532,15 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             $scope.sortConfig = {
                 'sortKey': 'corsi_for_pctg',
                 'sortCriteria': ['corsi_for_pctg', 'shots'],
+                'sortDescending': true
+            }
+            $scope.isStandingsView = false;
+            $scope.isAttendanceView = false;
+            $scope.situationSelect = undefined;
+        } else if ($scope.tableSelect === 'shot_shares_5v5') {
+            $scope.sortConfig = {
+                'sortKey': 'shots_5v5_pctg',
+                'sortCriteria': ['shots_5v5_pctg', 'shots_5v5'],
                 'sortDescending': true
             }
             $scope.isStandingsView = false;
