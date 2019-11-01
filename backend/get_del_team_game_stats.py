@@ -18,6 +18,7 @@ CONFIG = yaml.safe_load(open(os.path.join(
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
+PP_SIT_SRC = 'del_pp_sits_goals.json'
 TEAM_GAME_STATS_TGT = 'del_team_game_stats.json'
 
 SHOT_ZONE_CATEGORIES = [
@@ -51,7 +52,7 @@ RAW_STATS_MAPPING = {
 }
 
 
-def get_single_game_team_data(game, grouped_shot_data):
+def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
     """
     Retrieves statistics for both teams participating in specified game.
     """
@@ -382,6 +383,21 @@ def get_single_game_team_data(game, grouped_shot_data):
             else:
                 game_stat_line["penalty_%d" % penalty_duration] = 0
 
+        game_stat_line['pp_5v4'] = pp_sit_data[key]['pp_sits']['5v4']
+        game_stat_line['pp_5v3'] = pp_sit_data[key]['pp_sits']['5v3']
+        game_stat_line['pp_4v3'] = pp_sit_data[key]['pp_sits']['4v3']
+        game_stat_line['ppg_5v4'] = pp_sit_data[key]['pp_goals']['5v4']
+        game_stat_line['ppg_5v3'] = pp_sit_data[key]['pp_goals']['5v3']
+        game_stat_line['ppg_4v3'] = pp_sit_data[key]['pp_goals']['4v3']
+
+        # opp_diff = game_stat_line['pp_opps'] - (
+        #     game_stat_line['pp_5v4'] +
+        #     game_stat_line['pp_5v3'] +
+        #     game_stat_line['pp_4v3']
+        # )
+        # if opp_diff:
+        #     print("\tpp opp discrepancy of %d for %s" % (opp_diff, key))
+
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
@@ -596,6 +612,7 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(tgt_dir, GAME_SRC)
     shots_src_path = os.path.join(tgt_dir, SHOT_SRC)
+    pp_sit_src_path = os.path.join(tgt_dir, PP_SIT_SRC)
     tgt_path = os.path.join(tgt_dir, TEAM_GAME_STATS_TGT)
 
     # loading games and shots
@@ -603,6 +620,8 @@ if __name__ == '__main__':
     shots = json.loads(open(shots_src_path).read())
     # grouping shot data by game and team
     grouped_shot_data = group_shot_data_by_game_team(shots)
+    # loading power play situations/goals per game data
+    pp_sit_data = json.loads(open(pp_sit_src_path).read())
 
     # loading existing player game stats
     if not initial and os.path.isfile(tgt_path):
@@ -621,7 +640,7 @@ if __name__ == '__main__':
             continue
         print("+ Retrieving team stats for game %s" % get_game_info(game))
         single_team_game_stats = get_single_game_team_data(
-            game, grouped_shot_data)
+            game, grouped_shot_data, pp_sit_data[str(game['game_id'])])
         team_game_stats.extend(single_team_game_stats)
 
         if limit and cnt >= limit:
