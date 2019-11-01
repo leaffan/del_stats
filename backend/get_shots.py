@@ -6,6 +6,7 @@ import csv
 import json
 import yaml
 import argparse
+from collections import defaultdict
 
 from shapely.geometry import Point
 from intervaltree import IntervalTree
@@ -20,6 +21,7 @@ CONFIG = yaml.safe_load(open(os.path.join(
 
 GAME_SRC = 'del_games.json'
 SHOTS_DATA_TGT = 'del_shots.json'
+PP_SITS_DATA_TGT = 'del_pp_sits_goals.json'
 
 SHOT_RESULTS = {
     1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal'
@@ -34,7 +36,7 @@ def correct_time_of_shot(shot, goal_times):
     time of the shot when a non-zero minimum difference was found.
     """
     # initiating minimum difference and minimum difference index
-    min_diff = min_diff_idx = 10000
+    min_diff = min_diff_time = 10000
 
     for goal_time in goal_times:
         # calculating time difference between current shot and goal time
@@ -42,12 +44,12 @@ def correct_time_of_shot(shot, goal_times):
         # updating minimum difference and minimum difference index
         if diff < min_diff:
             min_diff = diff
-            min_diff_idx = goal_times.index(goal_time)
+            min_diff_time = goal_time
 
     # correcting current shot's time if a difference to the time a goal scored
     # was found
     if min_diff:
-        shot['time'] = goal_times[min_diff_idx]
+        shot['time'] = min_diff_time
 
     return shot
 
@@ -155,6 +157,7 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(tgt_dir, GAME_SRC)
     tgt_path = os.path.join(tgt_dir, SHOTS_DATA_TGT)
+    pp_tgt_path = os.path.join(tgt_dir, PP_SITS_DATA_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -165,6 +168,8 @@ if __name__ == '__main__':
     # or preparing empty container for all shots
     else:
         all_shots = list()
+
+    all_pp_situations_goals = dict()
 
     # retrieving set of games we already have retrieved player stats for
     registered_games = set([shot['game_id'] for shot in all_shots])
@@ -317,6 +322,53 @@ if __name__ == '__main__':
 
         if limit and cnt >= limit:
             break
+
+        # retrieving power play opportunities and goals grouped by
+        # skater situation
+        # not perfect yet, need to do this whilst reconstructing skater
+        # situation
+        pp_situations = defaultdict(int)
+        pp_goals = defaultdict(int)
+        prev_situation = (5, 5)
+
+        for time in times:
+            curr_situation = (
+                times[time]['home'], times[time]['road'])
+            if curr_situation != prev_situation:
+                pp_situations[curr_situation] += 1
+                prev_situation = curr_situation
+            if time in goal_times and goal_times[time].startswith("PP"):
+                pp_goals[curr_situation] += 1
+                # print("Goal at", time, "in", curr_situation)
+
+        pp_situations_goals = dict()
+        pp_situations_goals['game_id'] = game['game_id']
+        pp_situations_goals['home'] = defaultdict(dict)
+        pp_situations_goals['road'] = defaultdict(dict)
+
+        for situation in [(5, 4), (5, 3), (4, 3), (4, 5), (3, 5), (3, 4)]:
+            sit_key = "%dv%d" % situation
+            pp_situations_goals['home']['pp_sits'][sit_key] = 0
+            pp_situations_goals['home']['pp_goals'][sit_key] = 0
+            pp_situations_goals['road']['pp_sits'][sit_key] = 0
+            pp_situations_goals['road']['pp_goals'][sit_key] = 0
+
+        for situation in pp_situations:
+            sit_key = "%dv%d" % situation
+            pp_situations_goals['home']['pp_sits'][sit_key] = (
+                pp_situations[situation])
+            pp_situations_goals['road']['pp_sits'][sit_key[::-1]] = (
+                pp_situations[situation])
+        for situation in pp_goals:
+            sit_key = "%dv%d" % situation
+            pp_situations_goals['home']['pp_goals'][sit_key] = (
+                pp_goals[situation])
+            pp_situations_goals['road']['pp_goals'][sit_key[::-1]] = (
+                pp_goals[situation])
+
+        all_pp_situations_goals[game['game_id']] = pp_situations_goals
+
+    open(pp_tgt_path, 'w').write(json.dumps(all_pp_situations_goals, indent=2))
 
     CSV_OUT_FIELDS = [
         'player_id', 'jersey', 'first_name', 'last_name', 'team_id', 'time',
