@@ -45,7 +45,7 @@ def build_interval_tree(game):
     # setting up list to contain all end of period times and all times a goal
     # has been scored
     end_period_times = list()
-    goal_times = list()
+    goal_times = dict()
     # setting up dictionary for goalie changes
     goalie_changes = {'home': list(), 'road': list()}
 
@@ -67,7 +67,7 @@ def build_interval_tree(game):
 
             # adding time of goal to list of times a goal has been scored
             if event_type == 'goal':
-                goal_times.append(event['time'])
+                goal_times[event['time']] = event['data']['balance']
 
             # registering goalie changes
             if event_type == 'goalkeeperChange':
@@ -703,3 +703,41 @@ if __name__ == '__main__':
 
     # for x in skr_sit:
     #     print(x, skr_sit[x])
+    # print()
+    # sits = defaultdict(int)
+    # goals = defaultdict(int)
+    # prev_sit = (5, 5)
+
+    # for x in skr_sit:
+    #     curr_sit = (skr_sit[x]['home'], skr_sit[x]['road'])
+    #     if curr_sit != prev_sit:
+    #         sits[curr_sit] += 1
+    #         print(x, skr_sit[x])
+    #         prev_sit = curr_sit
+    #     if x in goal_times and goal_times[x].startswith("PP"):
+    #         goals[curr_sit] += 1
+    #         print("Goal at", x, "in", curr_sit)
+
+    # final_home_sits = dict()
+    # final_road_sits = dict()
+    # final_home_goals = dict()
+    # final_road_goals = dict()
+
+    # for sit in [(5, 4), (5, 3), (4, 3), (4, 5), (3, 5), (3, 4)]:
+    #     if sit in sits:
+    #         final_home_sits[sit] = sits[sit]
+    #         final_road_sits[sit[::-1]] = sits[sit]
+    #     else:
+    #         final_home_sits[sit] = 0
+    #         final_road_sits[sit[::-1]] = 0
+    #     if sit in goals:
+    #         final_home_goals[sit] = goals[sit]
+    #         final_road_goals[sit[::-1]] = goals[sit]
+    #     else:
+    #         final_home_goals[sit] = 0
+    #         final_road_goals[sit[::-1]] = 0
+
+    # print(final_home_sits)
+    # print(final_home_goals)
+    # print(final_road_sits)
+    # print(final_road_goals)
