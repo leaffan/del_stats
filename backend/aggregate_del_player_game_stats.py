@@ -413,6 +413,12 @@ if __name__ == '__main__':
                 item['faceoffs_won'] / float(item['faceoffs']) * 100., 4)
         else:
             item['faceoff_pctg'] = 0.
+        # calculating power play point share among all points
+        if item['points']:
+            item['pp_pts_pctg'] = round(
+                item['pp_points'] / item['points'] * 100, 4)
+        else:
+            item['pp_pts_pctg'] = 0.
         # calculating per-game relative values
         for attr in PER_GAME_ATTRS:
             per_game_attr = item[attr] / float(item['games_played'])
