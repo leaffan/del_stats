@@ -39,6 +39,7 @@ name_corrections = {
     'Rob Willson': 'Rob Wilson',
     'Pet Cortina': 'Pat Cortina',
     'Jason O Leary': "Jason O'Leary",
+    'Jason O´Leary': "Jason O'Leary",
     'Cortina': 'Pat Cortina',
     'Stewart': 'Mike Stewart',
     'Larry Mitchel': 'Larry Mitchell',
