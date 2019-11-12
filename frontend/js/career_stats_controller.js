@@ -10,6 +10,10 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
     $scope.sort_def = {
         "pts": ['pts', 'ptspg', 'g', '-gp'],
         "ptspg": ['ptspg', '-gp', 'sog'],
+        "w": ['w', '-gp'],
+        "l": ['l', 'gp'],
+        "ga": ['ga', 'gp'],
+        "teams_cnt": ['teams_cnt', '-teams[0]']
     };
 
     // retrieving column headers (and abbreviations + explanations)
@@ -41,7 +45,7 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
         }
     }, true);
 
-    $scope.to_aggregate = ['gp', 'g', 'a', 'pts', 'plus_minus', 'pim', 'ppg', 'shg', 'gwg', 'sog']
+    $scope.to_aggregate = ['gp', 'g', 'a', 'pts', 'plus_minus', 'pim', 'ppg', 'shg', 'gwg', 'sog', 'toi', 'w', 'l', 'sa', 'ga', 'so'];
 
     $scope.filterCareerStats = function() {
         filtered_career_stats = [];
@@ -55,9 +59,11 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
                 'last_name': player['last_name'],
                 'position': player['position'],
                 'sh_pctg': 0.0,
+                'sv_pctg': 0.0,
                 'gpg': 0.0,
                 'apg': 0.0,
-                'ptspg': 0.0
+                'ptspg': 0.0,
+                'teams': new Set()
             };
             $scope.to_aggregate.forEach(category => {
                 filtered_stat_line[category] = 0;
@@ -95,6 +101,7 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
                 }
                 // finally aggregating values of all season stat lines that have been filtered
                 if (in_season_range && in_season_types && is_selected_team && is_selected_position) {
+                    filtered_stat_line['teams'].add(season_stat_line['team']);
                     $scope.to_aggregate.forEach(category => {
                         filtered_stat_line[category] += season_stat_line[category];
                     });
@@ -102,13 +109,21 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
             });
             // calculating shooting percentage
             if (filtered_stat_line['sog'])
-                filtered_stat_line['sh_pctg'] = filtered_stat_line['g'] / filtered_stat_line['sog'] * 100.
+                filtered_stat_line['sh_pctg'] = filtered_stat_line['g'] / filtered_stat_line['sog'] * 100.;
+            // calculating save percentage
+            if (filtered_stat_line['sa'])
+                filtered_stat_line['sv_pctg'] = 100 - (filtered_stat_line['ga'] / filtered_stat_line['sa'] * 100.);
+            // calculating goals against average
+            if (filtered_stat_line['toi'])
+                filtered_stat_line['gaa'] = filtered_stat_line['ga'] * 3600. / filtered_stat_line['toi'];
             // calculating per-game statistics
             if (filtered_stat_line['gp']) {
                 filtered_stat_line['gpg'] = filtered_stat_line['g'] / filtered_stat_line['gp'];
                 filtered_stat_line['apg'] = filtered_stat_line['a'] / filtered_stat_line['gp'];
                 filtered_stat_line['ptspg'] = filtered_stat_line['pts'] / filtered_stat_line['gp'];
             };
+            filtered_stat_line['teams'] = Array.from(filtered_stat_line['teams']);
+            filtered_stat_line['teams_cnt'] = filtered_stat_line['teams'].length;
             filtered_career_stats.push(filtered_stat_line);
         });
         return filtered_career_stats;
