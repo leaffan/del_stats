@@ -46,6 +46,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         'sortCriteria': ['points', 'score_diff', 'score'],
         'sortDescending': true
     }
+    $scope.fromRoundSelect = '1';
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_stats_columns.json').then(function (res) {
@@ -60,38 +61,12 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         // ...for playoff participation indicator
         $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
     });
- 
+
     // starting to watch filter selection lists
-    // from date filter
-    $scope.$watch('ctrl.fromDate', function() {
-        if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
-        }
-    }, true);
-
-    // to date filter
-    $scope.$watch('ctrl.toDate', function() {
-        if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
-        }
-    }, true);
-
-    // situation filter, i.e. leading after 20, 40, etc.
-    $scope.$watch('situationSelect', function() {
-        if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
-        }
-    }, true);
-
-    // home/road filter
-    $scope.$watch('homeAwaySelect', function() {
-        if ($scope.team_stats) {
-            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
-        }
-    }, true);
-
-    // regular season/playoff filter
-    $scope.$watch('seasonTypeSelect', function() {
+    $scope.$watchGroup([
+            'situationSelect', 'homeAwaySelect', 'seasonTypeSelect', 'ctrl.fromDate', 'ctrl.toDate',
+            'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
+        ], function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
         }
@@ -101,8 +76,17 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $http.get('data/' + $scope.season + '/del_team_game_stats.json').then(function (res) {
         $scope.last_modified = res.data[0];
         $scope.team_stats = res.data[1];
+        // retrieving maximum round played
+        $scope.maxRoundPlayed = Math.max.apply(Math, $scope.team_stats.map(function(o) { return o.round; })).toString();
+        // retrieving all weekdays a game was played by the current team
+        $scope.weekdaysPlayed = [...new Set($scope.team_stats.map(item => item.weekday))].sort();
+        // retrieving all months a game was played by the current team
+        $scope.monthsPlayed = [...new Set($scope.team_stats.map(item => moment(item.game_date).month()))];
+        // setting to round selection to maximum round played
+        $scope.toRoundSelect = $scope.maxRoundPlayed;
         $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
     });
+
 
     // setting average attendance for previous season
     // TODO: move to external file (arenas.json?)
@@ -129,163 +113,74 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                     });
                 }
             }
-            // determining for each team game element whether it will be
-            // included (is_filtered = true) in display or not (is_filtered =
-            // false)
-            // element not included per default
-            var is_filtered = false;
+            is_equal_past_from_date = false;
+            is_prior_equal_to_date = false;
+            is_selected_home_away_type = false;
+            is_selected_game_situation = false;
+            is_selected_season_type = false;
+            is_selected_weekday = false;
+            is_equal_past_from_round = false;
+            is_prior_equal_to_round = false;
+
             // retrieving game date as moment structure
             date_to_test = moment(element.game_date);
-            // if both a start and end date for a range have been set
-            if (ctrl.fromDate && ctrl.toDate) {
-                // checking if game date is located within selected time range
-                if ((date_to_test >= ctrl.fromDate.startOf('day')) && (date_to_test <= ctrl.toDate.startOf('day'))) {
-                    // checking additional filters
-                    // if each home/road-game filter, game-situation filterm and season-type filter have been activated
-                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    // if home/road-game filter and game-situation filter have been activated
-                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    // if game-situation filter and season-type filter have been activated
-                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
-                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    // if home/road-game filter and season-type filter have been activated
-                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    // if only situation-type filter has been activated
-                    else if ($scope.situationSelect) {
-                        if (element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    // if only home/road-game filter has been activated
-                    else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
-                            is_filtered = true;
-                    }
-                    // if only season-type filter has been activated
-                    else if ($scope.seasonTypeSelect) {
-                        if ($scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else {
-                        is_filtered = true;
-                    }
-                }
-            // if only a start date for a range has been set
-            } else if (ctrl.fromDate) {
-                // checking if game date is located within selected time range
-                if (date_to_test >= ctrl.fromDate.startOf('day')) {
-                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
-                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.situationSelect) {
-                        if (element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
-                            is_filtered = true;
-                    }
-                    else if ($scope.seasonTypeSelect) {
-                        if ($scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else {
-                        is_filtered = true;
-                    }
-                }
-            // if only an end date for a range has been set
-            } else if (ctrl.toDate) {
-                // checking if game date is located within selected time range
-                if (date_to_test <= ctrl.toDate.startOf('day')) {
-                    if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect && $scope.situationSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    else if ($scope.situationSelect && $scope.seasonTypeSelect) {
-                        if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
-                        if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else if ($scope.situationSelect) {
-                        if (element[$scope.situationSelect])
-                            is_filtered = true;
-                    }
-                    else if ($scope.homeAwaySelect) {
-                        if ($scope.homeAwaySelect === element.home_road)
-                            is_filtered = true;
-                    }
-                    else if ($scope.seasonTypeSelect) {
-                        if ($scope.seasonTypeSelect === element.season_type)
-                            is_filtered = true;
-                    }
-                    else {
-                        is_filtered = true;
-                    }
-                }
+
+            if (ctrl.fromDate) {
+                if (date_to_test >= ctrl.fromDate.startOf('day'))
+                    is_equal_past_from_date = true;
             } else {
-                if ($scope.homeAwaySelect && $scope.situationSelect && $scope.seasonTypeSelect) {
-                    if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                        is_filtered = true;
-                }
-                else if ($scope.homeAwaySelect && $scope.situationSelect) {
-                    if ($scope.homeAwaySelect === element.home_road && element[$scope.situationSelect])
-                        is_filtered = true;
-                }
-                else if ($scope.situationSelect && $scope.seasonTypeSelect) {
-                    if (element[$scope.situationSelect] && $scope.seasonTypeSelect === element.season_type)
-                        is_filtered = true;
-                }
-                else if ($scope.homeAwaySelect && $scope.seasonTypeSelect) {
-                    if ($scope.homeAwaySelect === element.home_road && $scope.seasonTypeSelect === element.season_type)
-                        is_filtered = true;
-                }
-                else if ($scope.situationSelect) {
-                    if (element[$scope.situationSelect])
-                        is_filtered = true;
-                }
-                else if ($scope.homeAwaySelect) {
-                    if ($scope.homeAwaySelect === element.home_road)
-                        is_filtered = true;
-                }
-                else if ($scope.seasonTypeSelect) {
-                    if ($scope.seasonTypeSelect === element.season_type)
-                        is_filtered = true;
-                }
-                else {
-                    is_filtered = true;
-                }
-        }
-            if (is_filtered) {
+                is_equal_past_from_date = true;
+            }
+            if (ctrl.toDate) {
+                if (date_to_test <= ctrl.toDate.startOf('day'))
+                    is_prior_equal_to_date = true;
+            } else {
+                is_prior_equal_to_date = true;
+            }
+            if ($scope.homeAwaySelect) {
+                if ($scope.homeAwaySelect === element.home_road)
+                    is_selected_home_away_type = true;
+            } else {
+                is_selected_home_away_type = true;
+            }
+            if ($scope.situationSelect) {
+                if (element[$scope.situationSelect])
+                    is_selected_game_situation = true;
+            } else {
+                is_selected_game_situation = true;
+            }
+            if ($scope.seasonTypeSelect) {
+                if ($scope.seasonTypeSelect === element.season_type)
+                    is_selected_season_type = true;
+            } else {
+                is_selected_season_type = true;
+            }
+            if ($scope.weekdaySelect) {
+                if ($scope.weekdaySelect == element.weekday)
+                    is_selected_weekday = true;
+            } else {
+                is_selected_weekday = true;
+            }
+            if ($scope.fromRoundSelect) {
+                if (element.round >= parseFloat($scope.fromRoundSelect))
+                    is_equal_past_from_round = true;
+            } else {
+                is_equal_past_from_round = true;
+            }
+            if ($scope.toRoundSelect) {
+                if (element.round <= parseFloat($scope.toRoundSelect))
+                    is_prior_equal_to_round = true;
+            } else {
+                is_prior_equal_to_round = true;
+            }
+
+            // finally aggregating values of all season stat lines that have been filtered
+            if (
+                is_equal_past_from_date && is_prior_equal_to_date &&
+                is_selected_home_away_type && is_selected_game_situation &&
+                is_selected_season_type && is_selected_weekday &&
+                is_equal_past_from_round && is_prior_equal_to_round
+            ) {
                 $scope.svc.stats_to_aggregate().forEach(category => {
                     filtered_team_stats[team][category] += element[category];
                 })
@@ -658,6 +553,22 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
                 'sortDescending': sort_descending
             }
         }
+    }
+
+    $scope.changeTimespan = function() {
+        if (!$scope.timespanSelect) {
+            ctrl.fromDate = null;
+            ctrl.toDate = null;
+            return;
+        }
+        timespanSelect = parseInt($scope.timespanSelect) + 1;
+        if (timespanSelect < 9) {
+            season = parseInt($scope.season) + 1;
+        } else {
+            season = parseInt($scope.season);
+        }
+        ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
+        ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
     }
 
 });

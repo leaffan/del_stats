@@ -55,6 +55,12 @@
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
+                <span class="input-group-addon form_spacer"></span>
+                <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
+                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                    <option data-ng-option value="home">Heimspiele</option>
+                    <option data-ng-option value="road">Auswärtsspiele</option>
+                </select>
                 <span data-ng-show="isStandingsView" class="input-group-addon form_spacer"></span>
                 <select data-ng-show="isStandingsView" class="form-control" data-ng-model="situationSelect" data-ng-change="changeTable()">
                     <option data-ng-option value selected="selected">Nach voller Spielzeit</option>
@@ -75,24 +81,42 @@
         </div>
 
         <div class="form-group">
-            <div class="input-group">
-                <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
-                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
-                    <option data-ng-option value="home">Heimspiele</option>
-                    <option data-ng-option value="road">Auswärtsspiele</option>
+            <div class="input-group" style="width: 100%">
+                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                    <option data-ng-option value selected="selected">alle Zeiträume</option>
+                    <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
-                <span class="input-group-addon">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                    data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
-                    <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="from_date_select">
                     <span class="input-group-addon">
-                    <i class="far fa-calendar-alt"></i>
-                </span>
-                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                    data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="to_date_select">
+                    <span class="input-group-addon">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <span class="input-group-addon form_spacer"></span>
+                <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
+                    <option data-ng-option value selected="selected">alle Wochentage</option>
+                    <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="round_select" style="width: 100%">
+                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                    <span class="input-group-addon form_spacer"></span>
+                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
             </div>
         </div>
     </form>
