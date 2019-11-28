@@ -49,6 +49,21 @@ app.config(['$routeProvider', function($routeProvider){
             controller: 'plrCareerController as ctrl',
             reloadOnSearch: false
         })
+        // preview controllers
+        .when('/previews/:season/:round?',
+        {
+            title: 'Vorschaumappen',
+            templateUrl: 'previews.html',
+            controller: 'previewsController as ctrl',
+            reloadOnSearch: false
+        })
+        .when('/preview/:season/:game_id/:anchor?',
+        {
+            title: 'Vorschaumappe',
+            templateUrl: 'preview.html',
+            controller: 'previewController as ctrl',
+            reloadOnSearch: false
+        })
         .otherwise({
             redirectTo: '/home'
         })
