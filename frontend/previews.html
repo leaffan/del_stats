@@ -1,0 +1,76 @@
+<div class="container" data-ng-app="delStatsApp">
+    <div class="alert alert-info main-bg">
+        <div class="inline-headers">
+            <h2>Vorschaumappen zur DEL-Saison {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h2>
+        </div>
+    </div>
+
+    <div class="alert alert-info main-bg">
+        <p><a href="#!"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Startseite</b></a></p>
+    </div>
+
+    <!-- <div class="alert alert-danger">
+        <h4 style="margin-bottom: 0;"><b></b></h4>
+    </div> -->
+
+    <form>
+        <div class="form_group">
+            <div class="input-group" style="width: 100%">
+                <label for="round_select">Spieltag:</label>
+                <select class="form-control" id="round_select" data-ng-model="roundFilter" data-ng-change="changeRound()">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, 52)" value="{{round}}">{{round}}</option>
+                </select>
+            </div>
+        </div>        
+    </form>
+
+    <br/>
+
+    <div class="alert alert-info main-bg">
+        <ul class="list-inline">
+            <li class="personal_stuff"><a data-ng-if="(svc.parseFloat(roundFilter) - 1) > 0" data-ng-href="#!/previews/{{season}}/{{prev_round = svc.parseFloat(roundFilter) - 1}}"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Vorheriger Spieltag ({{prev_round}})</b></a></li>
+            <li class="personal_stuff" style="text-align: center"><a data-ng-href="#!/previews/{{season}}/{{next_round}}"><b>Aktueller Spieltag ({{next_round}})</b> <i class="fas fa-star" aria-hidden="true"></i></a></li>
+            <li class="personal_stuff" style="text-align: right"><a data-ng-if="(svc.parseFloat(roundFilter) + 1) < 53" data-ng-href="#!/previews/{{season}}/{{following_round = svc.parseFloat(roundFilter) + 1}}"><b>Nachfolgender Spieltag ({{following_round}})</b> <i class="fas fa-arrow-right" aria-hidden="true"></i></a></li>
+        </ul>
+    </div>
+
+    <hr/>
+
+    <table class="table table-bordered table-striped table-condensed">
+        <thead>
+            <td class="text-center"><span class="rank">Spieltag</span></td>
+            <td class="text-center"><span class="rank">Datum</span></td>
+            <td class="text-center"><span class="rank">Uhrzeit</span></td>
+            <td class="text-center"><span class="rank">Heimteam</span></td>
+            <td class="text-center"><span class="rank">Gastteam</span></td>
+            <td class="text-center"><span class="rank">Ergebnis</span></td>
+            <td class="text-center"><span class="rank">Status</span></td>
+            <td class="text-center"><span class="rank">Vorschaumappe</span></td>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
+                <td class="col-md-1 text-right">{{ game.round }}</td>
+                <td class="col-md-1 hidden-xs">
+                    <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YYYY' }}
+                    </a>
+                </td>
+                <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
+                    <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <td class="col-md-1">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
+                <td class="col-md-2"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
+                <td class="col-md-2"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
+                <td class="col-md-1">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
+                <td class="col-md-1">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
+                <td class="col-md-2">
+                    <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                    <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+</div>
