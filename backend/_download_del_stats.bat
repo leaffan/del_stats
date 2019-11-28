@@ -1,19 +1,33 @@
 @echo off
 
-python download_team_data.py -s 2019 -g RS schedules
-python download_team_data.py -s 2019 -g RS roster_stats
-python download_team_data.py -s 2019 -g RS team_stats
+set SEASON=%1
+set GAME_TYPE=%2
+
+if [%SEASON%] EQU [] (
+    set SEASON=2019
+)
+
+if [%GAME_TYPE%] EQU [] (
+    set GAME_TYPE=ALL
+)
+
+python download_team_data.py -s %SEASON% -g %GAME_TYPE% schedules
+python download_team_data.py -s %SEASON% -g %GAME_TYPE% roster_stats
+python download_team_data.py -s %SEASON% -g %GAME_TYPE% team_stats
 
 python get_all_players.py
-python order_schedules.py
+python order_schedules.py -s %SEASON%
 
-python download_game_data.py -s 2019 -g RS game_info
-python download_game_data.py -s 2019 -g RS game_events
-python download_game_data.py -s 2019 -g RS game_roster
-python download_game_data.py -s 2019 -g RS game_team_stats
-python download_game_data.py -s 2019 -g RS game_player_stats
-python download_game_data.py -s 2019 -g RS game_goalies
-python download_game_data.py -s 2019 -g RS shifts
-python download_game_data.py -s 2019 -g RS shots
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_info
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_events
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_roster
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_team_stats
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_player_stats
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_goalies
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% shifts
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% shots
 
-python download_career_data.py
+if [%SEASON%] EQU [2019] (
+    python download_career_data.py
+)
+
