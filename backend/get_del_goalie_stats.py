@@ -177,14 +177,19 @@ if __name__ == '__main__':
 
         # retrieving goalies dressed from game item
         goalies_dressed = [
-            (game['home_abbr'], game['home_g1'][0]),
-            (game['home_abbr'], game['home_g2'][0]),
-            (game['road_abbr'], game['road_g1'][0]),
-            (game['road_abbr'], game['road_g2'][0]),
+            (game['home_abbr'], game['home_g1'][0] if 'home_g1' in game else None),
+            (game['home_abbr'], game['home_g2'][0] if 'home_g2' in game else None),
+            (game['home_abbr'], game['home_g3'][0] if 'home_g3' in game else None),
+            (game['road_abbr'], game['road_g1'][0] if 'road_g1' in game else None),
+            (game['road_abbr'], game['road_g2'][0] if 'road_g2' in game else None),
+            (game['road_abbr'], game['road_g3'][0] if 'road_g3' in game else None),
         ]
         goalies_in_game, gw_goal_intervals = retrieve_goalies_in_game(game)
 
         for goalie_team, goalie_id in goalies_dressed:
+
+            if goalie_id is None:
+                continue
 
             if str(goalie_id) not in players:
                 print("=> Goalie with id %d not registered" % goalie_id)
