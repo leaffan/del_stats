@@ -24,6 +24,7 @@ coaches = [
 
 name_corrections = {
     # coaches
+    'Steve Walker': 'Don Jackson',
     'Thomas Popisch': 'Thomas Popiesch',
     'Tom Pokle': 'Tom Pokel',
     'Paul Thompsen': 'Paul Thompson',
@@ -69,6 +70,7 @@ name_corrections = {
     'Pienne Beaulieu': 'Brandon Reid',
     'Pierre Beaulieu': 'Brandon Reid',
     'Pierre Beaulie': 'Brandon Reid',
+    'Pierre Beaulien': 'Brandon Reid',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
