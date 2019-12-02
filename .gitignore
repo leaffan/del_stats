@@ -105,7 +105,6 @@ venv.bak/
 
 # user-defined stuff
 backend/data/*
-backend/*.sh
 */.ht*
 frontend/*.csv
 frontend/*.json
