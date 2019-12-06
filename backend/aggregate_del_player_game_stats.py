@@ -250,6 +250,14 @@ if __name__ == '__main__':
     parser = argparse.ArgumentParser(
         description='Aggregate DEL player stats.')
     parser.add_argument(
+        '-f', '--from', dest='from_date', required=False,
+        metavar='first date to aggregate stats for', default=None,
+        help="The first date statistics will be aggregated")
+    parser.add_argument(
+        '-t', '--to', dest='to_date', required=False,
+        metavar='last date to aggregate stats for', default=None,
+        help="The last date statistics will be aggregated")
+    parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
         metavar='season to download data for', default=2019,
         choices=[2016, 2017, 2018, 2019],
@@ -257,6 +265,13 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     season = args.season
+    from_date = args.from_date
+    to_date = args.to_date
+
+    if from_date is not None:
+        from_date = parse(from_date)
+    if to_date is not None:
+        to_date = parse(to_date)
 
     tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
 
@@ -274,14 +289,21 @@ if __name__ == '__main__':
     # loading shot data
     shot_data = json.loads(open(shot_src_path).read())
 
-    print("+ %d player-in-game items collected" % len(player_game_stats))
+    print("+ %d player-in-game items collected overall" % len(player_game_stats))
 
     # setting up data containers
     player_data = dict()
     aggregated_stats = dict()
     aggregate_time_stats = dict()
+    filtered_cnt = 0
 
     for game_stat_line in player_game_stats:
+        # applying optional time filters
+        if from_date and parse(game_stat_line['game_date']) < from_date:
+            continue
+        if to_date and parse(game_stat_line['game_date']) > to_date:
+            continue
+        filtered_cnt += 1
         # constructing reference key
         player_team_key = (
             game_stat_line['player_id'],
@@ -304,6 +326,7 @@ if __name__ == '__main__':
             aggregate_time_stats[player_team_key][attr] += timedelta(
                 seconds=game_stat_line[attr])
     else:
+        print("+ %d player-in-game items after filtering" % filtered_cnt)
         # re-setting games played counter for goaltenders
         for player_id, team, season_type in aggregated_stats:
             if (
@@ -313,7 +336,17 @@ if __name__ == '__main__':
                 aggregated_stats[
                     (player_id, team, season_type)]['games_played'] = 0
 
+    print("+ %d goalie-in-game items collected overall" % len(goalie_game_stats))
+
+    filtered_cnt = 0
+
     for game_stat_line in goalie_game_stats:
+        # applying optional time filters
+        if from_date and parse(game_stat_line['game_date']) < from_date:
+            continue
+        if to_date and parse(game_stat_line['game_date']) > to_date:
+            continue
+        filtered_cnt += 1
         # constructing reference key
         goalie_team_key = (
             game_stat_line['goalie_id'],
@@ -327,6 +360,8 @@ if __name__ == '__main__':
         # aggregating integer attributes for goaltenders
         for attr in TO_AGGREGATE_INTS_GOALIES:
             aggregated_stats[goalie_team_key][attr] += game_stat_line[attr]
+    else:
+        print("+ %d goalie-in-game items after filtering" % filtered_cnt)
 
     # post-processing aggregated attributes
     aggregated_stats_as_list = list()
@@ -460,6 +495,19 @@ if __name__ == '__main__':
     for item in aggregated_stats_as_list:
         if item['position'] == 'GK':
             aggregated_goalie_stats.append(item)
+
+    if from_date is not None or to_date is not None:
+        adjusted_player_stats_tgt = AGGREGATED_PLAYER_STATS_TGT
+        if to_date is not None:
+            to_prefix = "to%s" % to_date.strftime('%Y-%m-%d')
+            adjusted_player_stats_tgt = "%s_%s" % (to_prefix, adjusted_player_stats_tgt)
+        if from_date is not None:
+            from_prefix = "from%s" % from_date.strftime('%Y-%m-%d')
+            adjusted_player_stats_tgt = "%s_%s" % (from_prefix, adjusted_player_stats_tgt)
+        
+        tgt_path = os.path.join(tgt_dir, adjusted_player_stats_tgt)
+        tgt_csv_path = os.path.join(
+            tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
 
     open(tgt_path, 'w').write(
         json.dumps(output, indent=2, default=convert_to_minutes))
