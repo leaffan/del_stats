@@ -21,6 +21,64 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         $scope.stats = res.data[1];
     });
 
+	$scope.readCSV = function() {
+		// http get request to read CSV file content
+        $http.get('/data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
+	};
+
+	$scope.processData = function(allText) {
+        // split content based on new line
+		var allTextLines = allText.data.split(/\r\n|\n/);
+		var headers = allTextLines[0].split(';');
+		var lines = [];
+
+		for ( var i = 0; i < allTextLines.length; i++) {
+			// split content based on separator
+			var data = allTextLines[i].split(';');
+			if (data.length == headers.length) {
+				var tarr = [];
+				for ( var j = 0; j < headers.length; j++) {
+                    tarr.push(data[j]);
+				}
+				lines.push(tarr);
+			}
+        }
+        var headers = lines[0];
+        $scope.player_games = lines.slice(1).map(function(line) {
+            return line.reduce(function(player_game, value, i) {
+                if ($scope.svc.player_stats_to_aggregate().indexOf(headers[i]) !== -1) {
+                    player_game[headers[i]] = parseInt(value);
+                } else {
+                    player_game[headers[i]] = value;
+                }
+                return player_game;
+            }, {})
+        });
+        console.log($scope.player_games);
+	};
+
+    $scope.readCSV();
+
+    $scope.filterStats() = function(stats) {
+        filtered_player_stats = {};
+        if ($scope.player_games === undefined)
+            return filtered_player_stats;
+        $scope.player_games.forEach(element => {
+            plr_id = element['player_id'];
+            if (!filtered_player_stats[plr_id]) {
+                filtered_player_stats[plr_id] = {};
+                filtered_player_stats[plr_id]['first_name'] = element['first_name'];
+                filtered_player_stats[plr_id]['last_name'] = element['last_name'];
+                $scope.svc.player_stats_to_aggregate().forEach(category => {
+                    filtered_player_stats[plr_id][category] = 0;
+                });
+            }
+            // determine filter status
+            
+
+        });
+    }
+
     // loading strictly defined player scoring streaks from external json file
     $http.get('data/' + $scope.season + '/del_streaks_strict.json').then(function (res) {
         $scope.strict_streaks = res.data;
