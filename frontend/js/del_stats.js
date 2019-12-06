@@ -231,6 +231,19 @@ app.factory('svc', function() {
                 'shots_5v5', 'opp_shots_5v5', 'shots_unblocked_5v5', 'opp_shots_unblocked_5v5'
             ];    
         },
+        player_stats_to_aggregate: function() {
+            return [
+                'assists', 'blocked_shots', 'faceoffs', 'faceoffs_lost', 'faceoffs_won',
+                'first_goals', 'games_played', 'goals', 'goals_5v5', 'gw_goals', 'lazy',
+                'minus', 'other', 'penalties', 'penalty_shots', 'pim', 'pim_from_events',
+                'plus', 'plus_minus', 'points', 'pp_assits', 'pp_points', 'pp_goals', 'pp_assists',
+                'pp_primary_assists', 'pp_secondary_assists', 'primary_assists', 'primary_points',
+                'reckless', 'roughing', 'secondary_assists', 'sh_assists', 'sh_goals', 'sh_points',
+                'shifts', 'shots', 'shots_5v5', 'shots_blocked', 'shots_missed', 'shots_missed_5v5',
+                'shots_on_goal', 'shots_on_goal_5v5', 'time_on_ice', 'time_on_ice_pp', 'time_on_ice_sh',
+                '_2min', '_5min', '_10min', '_20min'
+            ];    
+        },
         pad: function pad(num, size) {
             var s = num+"";
             while (s.length < size) s = "0" + s;
