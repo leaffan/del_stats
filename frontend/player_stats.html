@@ -67,14 +67,53 @@
                 <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="nameFilter" />
             </div>
         </div>
+
+        <div class="form-group">
+            <div class="input-group" style="width: 100%">
+                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                    <option data-ng-option value selected="selected">alle Zeiträume</option>
+                    <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="from_date_select">
+                    <span class="input-group-addon">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="to_date_select">
+                    <span class="input-group-addon">
+                        <i class="far fa-calendar-alt"></i>
+                    </span>
+                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <span class="input-group-addon form_spacer"></span>
+                <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
+                    <option data-ng-option value selected="selected">alle Wochentage</option>
+                    <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
+                </select>
+                <span class="input-group-addon form_spacer"></span>
+                <div class="input-group" id="round_select" style="width: 100%">
+                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                    <span class="input-group-addon form_spacer"></span>
+                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
+            </div>
+        </div>
     </form>
             
     <form>
         <div class="form-group">
-            <div class="input-group">
-                <label for="teamSelect">Team:</label>
+            <div class="input-group" style="width: 100%">
                 <select class="form-control" id="teamSelect" data-ng-model="teamFilter">
-                    <option data-ng-option value selected="selected">alle</option>
+                    <option data-ng-option value selected="selected">alle Teams</option>
                     <option data-ng-option value="AEV">Augsburger Panther</option>
                     <option data-ng-option value="EBB">Eisbären Berlin</option>
                     <option data-ng-option value="BHV">Pinguins Bremerhaven</option>
@@ -91,17 +130,15 @@
                     <option data-ng-option value="WOB">Grizzlys Wolfsburg</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
-                <label for="positionSelect">Position:</label>
                 <select id="positionSelect" class="form-control" data-ng-model="positionFilter">
-                    <option data-ng-option value selected="selected">alle</option>
+                    <option data-ng-option value selected="selected">alle Positionen</option>
                     <option data-ng-option value="GK">Torhüter</option>
                     <option data-ng-option value="DE">Verteidiger</option>
                     <option data-ng-option value="FO">Stürmer</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
-                <label for="countrySelect">Land:</label>
                 <select id="countrySelect" class="form-control" data-ng-model="countryFilter">
-                    <option data-ng-option value selected="selected">alle</option>
+                    <option data-ng-option value selected="selected">alle Länder</option>
                     <option data-ng-option value="de">Deutschland</option>
                     <option data-ng-option value="ca">Kanada</option>
                     <option data-ng-option value="us">USA</option>
@@ -119,11 +156,9 @@
                     <option data-ng-option value="hu">Ungarn</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
-                <label for="minimumAgeInput">Untere Altersgrenze:</label>
-                <input id="minimumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="minimumAge" data-ng-minlength="2" />
+                <input id="minimumAgeInput" type="text" class="form-control" placeholder="Untere Altersgrenze (JJ.DDD)" data-ng-model="minimumAge" data-ng-minlength="2" />
                 <span class="input-group-addon form_spacer"></span>
-                <label for="maximumAgeInput">Obere Altersgrenze:</label>
-                <input id="maximumAgeInput" type="text" class="form-control" placeholder="JJ.DDD" data-ng-model="maximumAge" data-ng-minlength="2" />
+                <input id="maximumAgeInput" type="text" class="form-control" placeholder="Obere Altersgrenze (JJ.DDD)" data-ng-model="maximumAge" data-ng-minlength="2" />
             </div>
         </div>
 
