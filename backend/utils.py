@@ -24,7 +24,6 @@ coaches = [
 
 name_corrections = {
     # coaches
-    'Steve Walker': 'Don Jackson',
     'Thomas Popisch': 'Thomas Popiesch',
     'Tom Pokle': 'Tom Pokel',
     'Paul Thompsen': 'Paul Thompson',
