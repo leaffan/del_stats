@@ -61,7 +61,7 @@ OUT_FIELDS = [
     "time_on_ice", "time_on_ice_pp", "time_on_ice_sh", "shifts", "penalties",
     "pim_from_events", "penalty_shots", "first_goals", "_2min", "_5min",
     "_10min", "_20min", "lazy", "roughing", "reckless", "other", "shots_5v5",
-    "shots_missed_5v5", "shots_on_goal_5v5", "goals_5v5", "line"
+    "shots_missed_5v5", "shots_on_goal_5v5", "goals_5v5", "line", "weekday"
 ]
 
 # default empty line
