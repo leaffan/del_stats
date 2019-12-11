@@ -289,7 +289,8 @@ if __name__ == '__main__':
     # loading shot data
     shot_data = json.loads(open(shot_src_path).read())
 
-    print("+ %d player-in-game items collected overall" % len(player_game_stats))
+    print("+ %d player-in-game items collected overall" % len(
+        player_game_stats))
 
     # setting up data containers
     player_data = dict()
@@ -336,7 +337,8 @@ if __name__ == '__main__':
                 aggregated_stats[
                     (player_id, team, season_type)]['games_played'] = 0
 
-    print("+ %d goalie-in-game items collected overall" % len(goalie_game_stats))
+    print("+ %d goalie-in-game items collected overall" % len(
+        goalie_game_stats))
 
     filtered_cnt = 0
 
@@ -500,11 +502,13 @@ if __name__ == '__main__':
         adjusted_player_stats_tgt = AGGREGATED_PLAYER_STATS_TGT
         if to_date is not None:
             to_prefix = "to%s" % to_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (to_prefix, adjusted_player_stats_tgt)
+            adjusted_player_stats_tgt = "%s_%s" % (
+                to_prefix, adjusted_player_stats_tgt)
         if from_date is not None:
             from_prefix = "from%s" % from_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (from_prefix, adjusted_player_stats_tgt)
-        
+            adjusted_player_stats_tgt = "%s_%s" % (
+                from_prefix, adjusted_player_stats_tgt)
+
         tgt_path = os.path.join(tgt_dir, adjusted_player_stats_tgt)
         tgt_csv_path = os.path.join(
             tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
