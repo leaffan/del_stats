@@ -64,7 +64,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
 
     // starting to watch filter selection lists
     $scope.$watchGroup([
-            'situationSelect', 'homeAwaySelect', 'seasonTypeSelect', 'ctrl.fromDate', 'ctrl.toDate',
+            'situationSelect', 'homeAwaySelect', 'seasonTypeSelect',
             'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
         ], function() {
         if ($scope.team_stats) {
@@ -569,6 +569,12 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         }
         ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
         ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
+    }
+
+    $scope.changeDate = function() {
+        if ($scope.team_stats) {
+            $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
+        };
     }
 
 });
