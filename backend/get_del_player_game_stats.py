@@ -50,18 +50,25 @@ U23_CUTOFF_DATES = {
 OUT_FIELDS = [
     "game_id", "player_id", "no", "position", "first_name", "last_name",
     "country", "shoots", "weight", "height", "date_of_birth",
-    "u23", "home_road", "game_date", "season", "season_type", "round", "team",
-    "score", "opp_team", "opp_score", "game_type", "games_played", "goals",
-    "assists", "primary_assists", "secondary_assists", "points",
-    "primary_points", "pim", "plus", "minus", "plus_minus", "pp_goals",
-    "pp_assists", "pp_primary_assists", "pp_secondary_assists", "pp_points",
+    "u23", "home_road", "game_date", "season", "season_type", "round",
+    "team", "score", "opp_team", "opp_score", "game_type",
+    "games_played", "goals", "assists", "primary_assists",
+    "secondary_assists", "points", "primary_points", "pim", "plus",
+    "minus", "plus_minus", "pp_goals", "pp_assists",
+    "pp_primary_assists", "pp_secondary_assists", "pp_points",
     "sh_goals", "sh_assists", "sh_points", "gw_goals", "shots",
-    "shots_on_goal", "shots_missed", "shots_blocked", "shot_pctg", "faceoffs",
-    "faceoffs_won", "faceoffs_lost", "faceoff_pctg", "blocked_shots",
-    "time_on_ice", "time_on_ice_pp", "time_on_ice_sh", "shifts", "penalties",
-    "pim_from_events", "penalty_shots", "first_goals", "_2min", "_5min",
-    "_10min", "_20min", "lazy", "roughing", "reckless", "other", "shots_5v5",
-    "shots_missed_5v5", "shots_on_goal_5v5", "goals_5v5", "line", "weekday"
+    "shots_on_goal", "shots_missed", "shots_blocked", "shot_pctg",
+    "faceoffs", "faceoffs_won", "faceoffs_lost", "faceoff_pctg",
+    "blocked_shots", "time_on_ice", "time_on_ice_pp", "time_on_ice_sh",
+    "shifts", "penalties", "pim_from_events", "penalty_shots",
+    "first_goals", "_2min", "_5min", "_10min", "_20min", "lazy",
+    "roughing", "reckless", "other", "shots_5v5", "shots_missed_5v5",
+    "shots_on_goal_5v5", "goals_5v5", "line", "weekday", "slot_shots",
+    "slot_on_goal", "slot_goals", "left_shots", "left_on_goal",
+    "left_goals", "right_shots", "right_on_goal", "right_goals",
+    "blue_line_shots", "blue_line_on_goal", "blue_line_goals",
+    "neutral_zone_shots", "neutral_zone_on_goal", "neutral_zone_goals",
+    "behind_goal_shots", "behind_goal_on_goal", "behind_goal_goals"
 ]
 
 # default empty line
@@ -157,6 +164,29 @@ def get_single_game_player_data(game, shots):
         gsl['line'] = line
         gsl['defense'] = defense_linemates
         gsl['forwards'] = forward_linemates
+        for shot_zone in [
+            'slot', 'left', 'right', 'blue_line',
+            'neutral_zone', 'behind_goal'
+        ]:
+            shots_from_zone = list(filter(
+                lambda d: d['shot_zone'] == shot_zone.upper(),
+                per_player_game_shots))
+            gsl["%s_shots" % shot_zone] = len(shots_from_zone)
+            missed_from_zone = list(filter(
+                lambda d: d['target_type'] == 'missed',
+                shots_from_zone))
+            gsl["%s_missed" % shot_zone] = len(missed_from_zone)
+            blocked_from_zone = list(filter(
+                lambda d: d['target_type'] == 'blocked',
+                shots_from_zone))
+            gsl["%s_blocked" % shot_zone] = len(blocked_from_zone)
+            shots_on_goal_from_zone = list(filter(
+                lambda d: d['target_type'] == 'on_goal',
+                shots_from_zone))
+            gsl["%s_on_goal" % shot_zone] = len(shots_on_goal_from_zone)
+            goals_from_zone = list(filter(
+                lambda d: d['scored'], shots_on_goal_from_zone))
+            gsl["%s_goals" % shot_zone] = len(goals_from_zone)
 
     return game_stat_lines
 
