@@ -243,6 +243,9 @@ def combine_single_player_streaks(
                 players[streak.player_id]['first_name'],
                 players[streak.player_id]['last_name']
             ))
+            streak_d['position'] = players[streak.player_id]['position']
+            streak_d['iso_country'] = players[streak.player_id]['iso_country']
+            streak_d['age'] = players[streak.player_id]['age']
             # setting default indicators for longest and current streaks
             streak_d['longest'] = False
             streak_d['current'] = False
