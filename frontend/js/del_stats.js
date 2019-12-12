@@ -232,6 +232,17 @@ app.factory('svc', function() {
                 'behind_goal_on_goal', 'behind_goal_goals'
             ];    
         },
+        goalie_stats_to_aggregate: function() {
+            return [
+                'games_dressed', 'games_played', 'games_started', 'toi', 'of_record',
+                'w', 'rw', 'ow', 'sw', 'l', 'rl', 'ol', 'sl', 'shots_against', 'goals_against',
+                'sa_5v5', 'sa_4v4', 'sa_3v3', 'sa_5v4', 'sa_5v3', 'sa_4v3', 'sa_4v5', 'sa_3v4', 'sa_3v5',
+                'ga_5v5', 'ga_4v4', 'ga_3v3', 'ga_5v4', 'ga_5v3', 'ga_4v3', 'ga_4v5', 'ga_3v4', 'ga_3v5',
+                'sa_blue_line', 'sa_left', 'sa_right', 'sa_slot', 'sa_neutral_zone',
+                'ga_blue_line', 'ga_left', 'ga_right', 'ga_slot', 'ga_neutral_zone',
+                'sa_ev', 'ga_ev', 'sa_sh', 'ga_sh', 'sa_pp', 'ga_pp', 'so'
+            ];    
+        },
         pad: function pad(num, size) {
             var s = num+"";
             while (s.length < size) s = "0" + s;
