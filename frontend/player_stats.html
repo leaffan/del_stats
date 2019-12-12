@@ -52,7 +52,7 @@
                     <option data-ng-option value="goalie_zone_stats_far">Torhüterstatistiken (Fangquoten Fernschüsse)</option>
                     <option data-ng-option value="player_information">Spielerinformationen</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
+                <span data-ng-if="tableSelect != 'streaks'" class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="table_select" data-ng-if="tableSelect != 'streaks'" data-ng-model="$parent.seasonTypeSelect">
                     <option data-ng-option value="RS" selected="selected">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
@@ -76,8 +76,8 @@
         </div>
 
         <div class="form-group">
-            <div class="input-group" style="width: 100%">
-                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+            <div data-ng-if="tableSelect != 'streaks'" class="input-group" style="width: 100%">
+                <select class="form-control" id="time_span_select" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                 </select>
@@ -87,7 +87,7 @@
                         <i class="far fa-calendar-alt"></i>
                     </span>
                     <input class="form-control" placeholder="Anfangsdatum" moment-picker="stringFromDate" format="DD.MM.YYYY"
-                        data-ng-model="fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+                        data-ng-model="$parent.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
                 <div class="input-group" id="to_date_select">
@@ -95,20 +95,20 @@
                         <i class="far fa-calendar-alt"></i>
                     </span>
                     <input class="form-control" placeholder="Enddatum" moment-picker="stringToDate" format="DD.MM.YYYY"
-                        data-ng-model="toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+                        data-ng-model="$parent.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
+                <select class="form-control" id="week_day_select" data-ng-model="$parent.weekdaySelect">
                     <option data-ng-option value selected="selected">alle Wochentage</option>
                     <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <div class="input-group" id="round_select" style="width: 100%">
-                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
+                    <select class="form-control" id="from_round_select" data-ng-model="$parent.fromRoundSelect">
                         <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                     </select>
                     <span class="input-group-addon form_spacer"></span>
-                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                    <select class="form-control" id="to_round_select" data-ng-model="$parent.toRoundSelect">
                         <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                     </select>
                 </div>
@@ -214,15 +214,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.pim_from_events }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat._2min }}</td>
@@ -252,15 +252,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.shots_on_goal }}</td>
@@ -290,15 +290,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter } | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.plus }}</td>
@@ -323,15 +323,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_pp', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_pp', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.goals }}</td>
@@ -363,15 +363,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
@@ -401,15 +401,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.goals_per_game.toFixed(2) }}</td>
@@ -439,15 +439,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team}}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
                 <td class="col-md-1 text-right">{{ stat.goals_per_60.toFixed(2) }}</td>
@@ -478,14 +478,15 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:u23Filter | filter:{team: teamFilter} | filter:greaterThanFilter('games_played', 0)">
-                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+            <!-- <tr data-ng-repeat="stat in filtered_player_stats"> -->
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 8%">{{ stat.goals }}</td>
@@ -515,15 +516,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-left">{{ stat.position }}</td>
                 <td class="col-md-1 text-left">{{ stat.shoots }}</td>
@@ -551,15 +552,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots_on_goal }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_on_goal }}</td>
@@ -590,15 +591,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.slot_shots }}</td>
@@ -629,15 +630,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
-                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:greaterThanFilter('toi', 0)">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_played }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_started }}</td>
@@ -668,15 +669,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v5 }}</td>
@@ -706,15 +707,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_4v5 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_4v5 }}</td>
@@ -744,15 +745,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v4 }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v4 }}</td>
@@ -782,15 +783,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_slot }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_slot }}</td>
@@ -820,15 +821,15 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:{season_type: seasonTypeFilter}">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter  | filter:greaterThanFilter('toi', 0)">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
-                    <a data-ng-if="stat.teams.size == 1" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.full_name }}</span>
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
                 <td class="col-md-1" style="width: 5%">
-                    <a data-ng-if="stat.teams.size == 1" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
-                    <span data-ng-if="stat.teams.size != 1">{{ stat.team }}</span>
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_blue_line }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_blue_line }}</td>
