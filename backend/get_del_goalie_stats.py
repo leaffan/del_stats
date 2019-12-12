@@ -177,12 +177,18 @@ if __name__ == '__main__':
 
         # retrieving goalies dressed from game item
         goalies_dressed = [
-            (game['home_abbr'], game['home_g1'][0] if 'home_g1' in game else None),
-            (game['home_abbr'], game['home_g2'][0] if 'home_g2' in game else None),
-            (game['home_abbr'], game['home_g3'][0] if 'home_g3' in game else None),
-            (game['road_abbr'], game['road_g1'][0] if 'road_g1' in game else None),
-            (game['road_abbr'], game['road_g2'][0] if 'road_g2' in game else None),
-            (game['road_abbr'], game['road_g3'][0] if 'road_g3' in game else None),
+            (game['home_abbr'], game['home_g1'][0]
+                if 'home_g1' in game else None),
+            (game['home_abbr'], game['home_g2'][0]
+                if 'home_g2' in game else None),
+            (game['home_abbr'], game['home_g3'][0]
+                if 'home_g3' in game else None),
+            (game['road_abbr'], game['road_g1'][0]
+                if 'road_g1' in game else None),
+            (game['road_abbr'], game['road_g2'][0]
+                if 'road_g2' in game else None),
+            (game['road_abbr'], game['road_g3'][0]
+                if 'road_g3' in game else None),
         ]
         goalies_in_game, gw_goal_intervals = retrieve_goalies_in_game(game)
 
@@ -202,6 +208,7 @@ if __name__ == '__main__':
             # TODO: reactivate when schedule game id is available again
             # goalie_dict['schedule_game_id'] = game['schedule_game_id']
             goalie_dict['game_date'] = game['date']
+            goalie_dict['weekday'] = game['weekday']
             goalie_dict['season'] = game['season']
             goalie_dict['season_type'] = game['season_type']
             goalie_dict['round'] = game['round']
