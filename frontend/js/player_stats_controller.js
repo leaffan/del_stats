@@ -15,16 +15,32 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'sortDescending': true
     }
     $scope.fromRoundSelect = '1';
+    // default filter values
+    $scope.nameFilter = ''; // empty name filter
+    $scope.teamFilter = ''; // empty name filter
+
+    // retrieving column headers (and abbreviations + explanations)
+    $http.get('./js/player_stats_columns.json').then(function (res) {
+        $scope.stats_cols = res.data;
+    });
 
     // starting to watch filter selection lists
     $scope.$watchGroup([
-        'situationSelect', 'homeAwaySelect', 'seasonTypeSelect',
+        'homeAwaySelect', 'seasonTypeSelect',
         'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
     ], function () {
         if ($scope.player_games) {
             $scope.filtered_player_stats = $scope.filterStats($scope.player_games);
         }
+        if ($scope.goalie_games) {
+            $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
+        }
     }, true);
+
+    // loading all players from external json file
+    $http.get('data/del_players.json').then(function (res) {
+        $scope.all_players = res.data;
+    });
 
     // loading stats from external json file
     $http.get('data/' + $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
@@ -32,11 +48,12 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         $scope.stats = res.data[1];
     });
 
-    // loading all players from external json file
-    $http.get('data/del_players.json').then(function (res) {
-        $scope.all_players = res.data;
+    // loading goalie stats from external json file
+    $http.get('data/' + $scope.season + '/del_goalie_game_stats.json').then(function (res) {
+        $scope.goalie_games = res.data;
+        $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
     });
-
+    
 	$scope.readCSV = function() {
 		// http get request to read CSV file content
         $http.get('/data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
@@ -89,102 +106,317 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
 
     $scope.readCSV();
 
+    $scope.filterGoalieStats = function(stats) {
+        filtered_goalie_stats = {};
+        goalie_teams = {};
+        if ($scope.goalie_games === undefined)
+            return filtered_goalie_stats;
+        $scope.goalie_games.forEach(element => {
+            plr_id = element['goalie_id'];
+            team = element['team'];
+            key = [plr_id, team];
+            if (!filtered_goalie_stats[key]) {
+                filtered_goalie_stats[key] = {};
+                filtered_goalie_stats[key]['player_id'] = plr_id;
+                filtered_goalie_stats[key]['first_name'] = element['first_name'];
+                filtered_goalie_stats[key]['last_name'] = element['last_name'];
+                filtered_goalie_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
+                filtered_goalie_stats[key]['age'] = $scope.all_players[plr_id]['age'];
+                filtered_goalie_stats[key]['u23'] = element['u23'];
+                filtered_goalie_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
+                filtered_goalie_stats[key]['position'] = $scope.all_players[plr_id]['position'];
+                filtered_goalie_stats[key]['team'] = element['team'];
+                filtered_goalie_stats[key]['single_team'] = true;
+                $scope.svc.goalie_stats_to_aggregate().forEach(category => {
+                    filtered_goalie_stats[key][category] = 0;
+                });
+            }
+            // checking whether current element passes all filters
+            if ($scope.elementPassedFilters(element))
+            {
+                // adding values
+                $scope.svc.goalie_stats_to_aggregate().forEach(category => {
+                    filtered_goalie_stats[key][category] += element[category];
+                });
+                // registering player's team
+                if (!goalie_teams[plr_id]) {
+                    goalie_teams[plr_id] = new Set();
+                }
+                goalie_teams[plr_id].add(team);
+            }
+        });
+
+        $scope.processMultiTeamPlayers(filtered_goalie_stats, goalie_teams, true);
+        filtered_goalie_stats = Object.values(filtered_goalie_stats);
+
+        filtered_goalie_stats.forEach(element => {
+            // calculating standard save percentage
+            if (element['shots_against']) {
+                element['save_pctg'] = (1 - element['goals_against'] / element['shots_against']) * 100.;
+            } else {
+                element['save_pctg'] = parseFloat(0);
+            }
+            if (element['toi']) {
+                element['gaa'] = (element['goals_against'] * 3600.) / element['toi'];
+            } else {
+                element['gaa'] = parseFloat(0);
+            }
+            // calculating grouped save percentages in even strength
+            if (element['sa_5v5']) {
+                element['save_pctg_5v5'] = (1 - element['ga_5v5'] / element['sa_5v5']) * 100.;
+            } else {
+                element['save_pctg_5v5'] = null;
+            }
+            if (element['sa_4v4']) {
+                element['save_pctg_4v4'] = (1 - element['ga_4v4'] / element['sa_4v4']) * 100.;
+            } else {
+                element['save_pctg_4v4'] = null;
+            }
+            if (element['sa_3v3']) {
+                element['save_pctg_3v3'] = (1 - element['ga_3v3'] / element['sa_3v3']) * 100.;
+            } else {
+                element['save_pctg_3v3'] = null;
+            }
+            // calculating grouped shorthanded save percentages
+            if (element['sa_4v5']) {
+                element['save_pctg_4v5'] = (1 - element['ga_4v5'] / element['sa_4v5']) * 100.;
+            } else {
+                element['save_pctg_4v5'] = null;
+            }
+            if (element['sa_3v4']) {
+                element['save_pctg_3v4'] = (1 - element['ga_3v4'] / element['sa_3v4']) * 100.;
+            } else {
+                element['save_pctg_3v4'] = null;
+            }
+            if (element['sa_3v5']) {
+                element['save_pctg_3v5'] = (1 - element['ga_3v5'] / element['sa_3v5']) * 100.;
+            } else {
+                element['save_pctg_3v5'] = null;
+            }
+            // calculating grouped powerplay save percentages
+            if (element['sa_5v4']) {
+                element['save_pctg_5v4'] = (1 - element['ga_5v4'] / element['sa_5v4']) * 100.;
+            } else {
+                element['save_pctg_5v4'] = null;
+            }
+            if (element['sa_4v3']) {
+                element['save_pctg_4v3'] = (1 - element['ga_4v3'] / element['sa_4v3']) * 100.;
+            } else {
+                element['save_pctg_4v3'] = null;
+            }
+            if (element['sa_5v3']) {
+                element['save_pctg_5v3'] = (1 - element['ga_5v3'] / element['sa_5v3']) * 100.;
+            } else {
+                element['save_pctg_5v3'] = null;
+            }
+            // calculating save percentages by shot zone
+            if (element['sa_slot']) {
+                element['save_pctg_slot'] = (1 - element['ga_slot'] / element['sa_slot']) * 100.;
+            } else {
+                element['save_pctg_slot'] = null;
+            }
+            if (element['sa_left']) {
+                element['save_pctg_left'] = (1 - element['ga_left'] / element['sa_left']) * 100.;
+            } else {
+                element['save_pctg_left'] = null;
+            }
+            if (element['sa_right']) {
+                element['save_pctg_right'] = (1 - element['ga_right'] / element['sa_right']) * 100.;
+            } else {
+                element['save_pctg_right'] = null;
+            }
+            if (element['sa_blue_line']) {
+                element['save_pctg_blue_line'] = (1 - element['ga_blue_line'] / element['sa_blue_line']) * 100.;
+            } else {
+                element['save_pctg_blue_line'] = null;
+            }
+            if (element['sa_neutral_zone']) {
+                element['save_pctg_neutral_zone'] = (1 - element['ga_neutral_zone'] / element['sa_neutral_zone']) * 100.;
+            } else {
+                element['save_pctg_neutral_zone'] = null;
+            }
+        });
+
+        return filtered_goalie_stats;
+    }
+
+    $scope.elementPassedFilters = function(element) {
+        is_equal_past_from_date = false;
+        is_prior_equal_to_date = false;
+        is_selected_home_away_type = false;
+        is_selected_game_situation = false;
+        is_selected_season_type = false;
+        is_selected_weekday = false;
+        is_equal_past_from_round = false;
+        is_prior_equal_to_round = false;
+
+        // retrieving game date as moment structure
+        date_to_test = moment(element.game_date);
+
+        // testing selected from date
+        if ($scope.fromDate) {
+            if (date_to_test >= $scope.fromDate.startOf('day'))
+                is_equal_past_from_date = true;
+        } else {
+            is_equal_past_from_date = true;
+        }
+        // testing selected to date
+        if ($scope.toDate) {
+            if (date_to_test <= $scope.toDate.startOf('day'))
+                is_prior_equal_to_date = true;
+        } else {
+            is_prior_equal_to_date = true;
+        }
+        // testing home/away selection
+        if ($scope.homeAwaySelect) {
+            if ($scope.homeAwaySelect === element.home_road)
+                is_selected_home_away_type = true;
+        } else {
+            is_selected_home_away_type = true;
+        }
+        // testing selected game situation
+        if ($scope.situationSelect) {
+            if (element[$scope.situationSelect])
+                is_selected_game_situation = true;
+        } else {
+            is_selected_game_situation = true;
+        }
+        // testing selected season type
+        if ($scope.seasonTypeSelect) {
+            if ($scope.seasonTypeSelect === element.season_type)
+                is_selected_season_type = true;
+        } else {
+            is_selected_season_type = true;
+        }
+        // testing selected weekday
+        if ($scope.weekdaySelect) {
+            if ($scope.weekdaySelect == element.weekday)
+                is_selected_weekday = true;
+        } else {
+            is_selected_weekday = true;
+        }
+        // testing selected from round
+        if ($scope.fromRoundSelect) {
+            if (element.round >= parseFloat($scope.fromRoundSelect))
+                is_equal_past_from_round = true;
+        } else {
+            is_equal_past_from_round = true;
+        }
+        // testing selected to round
+        if ($scope.toRoundSelect) {
+            if (element.round <= parseFloat($scope.toRoundSelect))
+                is_prior_equal_to_round = true;
+        } else {
+            is_prior_equal_to_round = true;
+        }
+
+        // finally aggregating values of all season stat lines that have been filtered
+        if (
+            is_equal_past_from_date && is_prior_equal_to_date &&
+            is_selected_home_away_type && is_selected_game_situation &&
+            is_selected_season_type && is_selected_weekday &&
+            is_equal_past_from_round && is_prior_equal_to_round
+        ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    $scope.processMultiTeamPlayers = function(filtered_stats, player_teams, goalies=false) {
+        // identifying multi-team players
+        var multiTeamPlayers = Object.keys(player_teams).reduce((p, plr_id) => {
+            if (player_teams[plr_id].size > 1) p[plr_id] = player_teams[plr_id];
+            return p;
+        }, {});
+
+        // combining single-team stats of players that have dressed for multiple teams 
+        Object.keys(multiTeamPlayers).forEach(plr_id => {
+            teams = multiTeamPlayers[plr_id];
+            key = [plr_id, teams.size];
+            multiTeamPlayerStats = {}
+            if (goalies) {
+                svc.goalie_stats_to_aggregate().forEach(category => {
+                    multiTeamPlayerStats[category] = 0;
+                });
+            } else {
+                svc.player_stats_to_aggregate().forEach(category => {
+                    multiTeamPlayerStats[category] = 0;
+                });
+            }
+            // aggregating numeric attributes
+            teams.forEach(team => {
+                plr_team_stats = filtered_stats[[plr_id, team]];
+                if (goalies) {
+                    svc.goalie_stats_to_aggregate().forEach(category => {
+                        multiTeamPlayerStats[category] += plr_team_stats[category];
+                    });
+                } else {
+                    svc.player_stats_to_aggregate().forEach(category => {
+                        multiTeamPlayerStats[category] += plr_team_stats[category];
+                    });
+                }
+            });
+            // finally setting non-numeric attributes
+            multiTeamPlayerStats['team'] = teams.size + " Tms";
+            multiTeamPlayerStats['player_id'] = plr_id;
+            multiTeamPlayerStats['first_name'] = plr_team_stats['first_name'];
+            multiTeamPlayerStats['last_name'] = plr_team_stats['last_name'];
+            multiTeamPlayerStats['full_name'] = plr_team_stats['first_name'] + ' ' + plr_team_stats['last_name'];
+            multiTeamPlayerStats['age'] = plr_team_stats['age'];
+            multiTeamPlayerStats['u23'] = plr_team_stats['u23'];
+            multiTeamPlayerStats['iso_country'] = plr_team_stats['iso_country'];
+            multiTeamPlayerStats['position'] = plr_team_stats['position'];
+            // setting flag to make current dataset identifiable for multi-team content
+            multiTeamPlayerStats['single_team'] = false;
+            filtered_stats[[plr_id, teams]] = multiTeamPlayerStats;
+        });
+    }
+
     $scope.filterStats = function(stats) {
         filtered_player_stats = {};
+        player_teams = {};
         if ($scope.player_games === undefined)
             return filtered_player_stats;
         $scope.player_games.forEach(element => {
             plr_id = element['player_id'];
-            if (!filtered_player_stats[plr_id]) {
-                filtered_player_stats[plr_id] = {};
-                filtered_player_stats[plr_id]['first_name'] = element['first_name'];
-                filtered_player_stats[plr_id]['last_name'] = element['last_name'];
-                filtered_player_stats[plr_id]['full_name'] = element['first_name'] + ' ' + element['last_name'];
-                filtered_player_stats[plr_id]['age'] = $scope.all_players[plr_id]['age'];
-                filtered_player_stats[plr_id]['u23'] = element['u23'];
-                filtered_player_stats[plr_id]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
-                filtered_player_stats[plr_id]['position'] = $scope.all_players[plr_id]['position'];
-                filtered_player_stats[plr_id]['teams'] = new Set();
+            team = element['team'];
+            key = [plr_id, team]
+            if (!filtered_player_stats[key]) {
+                filtered_player_stats[key] = {};
+                filtered_player_stats[key]['player_id'] = plr_id;
+                filtered_player_stats[key]['first_name'] = element['first_name'];
+                filtered_player_stats[key]['last_name'] = element['last_name'];
+                filtered_player_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
+                filtered_player_stats[key]['age'] = $scope.all_players[plr_id]['age'];
+                filtered_player_stats[key]['u23'] = element['u23'];
+                filtered_player_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
+                filtered_player_stats[key]['position'] = $scope.all_players[plr_id]['position'];
+                filtered_player_stats[key]['team'] = element['team'];
+                filtered_player_stats[key]['single_team'] = true;
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
-                    filtered_player_stats[plr_id][category] = 0;
+                    filtered_player_stats[key][category] = 0;
                 });
             }
-            is_equal_past_from_date = false;
-            is_prior_equal_to_date = false;
-            is_selected_home_away_type = false;
-            is_selected_game_situation = false;
-            is_selected_season_type = false;
-            is_selected_weekday = false;
-            is_equal_past_from_round = false;
-            is_prior_equal_to_round = false;
-
-            // retrieving game date as moment structure
-            date_to_test = moment(element.game_date);
-
-            if ($scope.fromDate) {
-                if (date_to_test >= $scope.fromDate.startOf('day'))
-                    is_equal_past_from_date = true;
-            } else {
-                is_equal_past_from_date = true;
-            }
-            if ($scope.toDate) {
-                if (date_to_test <= $scope.toDate.startOf('day'))
-                    is_prior_equal_to_date = true;
-            } else {
-                is_prior_equal_to_date = true;
-            }
-            if ($scope.homeAwaySelect) {
-                if ($scope.homeAwaySelect === element.home_road)
-                    is_selected_home_away_type = true;
-            } else {
-                is_selected_home_away_type = true;
-            }
-            if ($scope.situationSelect) {
-                if (element[$scope.situationSelect])
-                    is_selected_game_situation = true;
-            } else {
-                is_selected_game_situation = true;
-            }
-            if ($scope.seasonTypeSelect) {
-                if ($scope.seasonTypeSelect === element.season_type)
-                    is_selected_season_type = true;
-            } else {
-                is_selected_season_type = true;
-            }
-            if ($scope.weekdaySelect) {
-                if ($scope.weekdaySelect == element.weekday)
-                    is_selected_weekday = true;
-            } else {
-                is_selected_weekday = true;
-            }
-            if ($scope.fromRoundSelect) {
-                if (element.round >= parseFloat($scope.fromRoundSelect))
-                    is_equal_past_from_round = true;
-            } else {
-                is_equal_past_from_round = true;
-            }
-            if ($scope.toRoundSelect) {
-                if (element.round <= parseFloat($scope.toRoundSelect))
-                    is_prior_equal_to_round = true;
-            } else {
-                is_prior_equal_to_round = true;
-            }
-
-            // finally aggregating values of all season stat lines that have been filtered
-            if (
-                is_equal_past_from_date && is_prior_equal_to_date &&
-                is_selected_home_away_type && is_selected_game_situation &&
-                is_selected_season_type && is_selected_weekday &&
-                is_equal_past_from_round && is_prior_equal_to_round
-            ) {
+            // checking whether current element passes all filters
+            if ($scope.elementPassedFilters(element))
+            {
+                // adding values
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
-                    filtered_player_stats[plr_id][category] += element[category];
+                    filtered_player_stats[key][category] += element[category];
                 });
-                filtered_player_stats[plr_id]['teams'].add(element['team']);
+                // registering player's team
+                if (!player_teams[plr_id]) {
+                    player_teams[plr_id] = new Set();
+                }
+                player_teams[plr_id].add(team);
             }
         });
+
+        $scope.processMultiTeamPlayers(filtered_player_stats, player_teams);
+        // flattening filtered player stats
         filtered_player_stats = Object.values(filtered_player_stats);
-        
+
         filtered_player_stats.forEach(element => {
             // calculating points per game
             if (element['games_played']) {
@@ -197,11 +429,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
             } else {
                 element['shot_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['teams'].size == 1) {
-                element['team'] = element['teams'].values().next().value;
-            } else {
-                element['team'] = element['teams'].size + ' Teams';
             }
             // calculating team faceoff percentage
             if (element['faceoffs']) {
@@ -232,7 +459,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['shifts_per_game'] = parseFloat((0).toFixed(2));
             }
             // calculating goals, assists, points, shots, shots on goal per 60 minutes of time on ice
-            // calculating goals, assists, points, shots, shots on goal per game
             if (element['time_on_ice']) {
                 element['goals_per_60'] = element['goals'] / (element['time_on_ice'] / 60) * 60;
                 element['assists_per_60'] = element['assists'] / (element['time_on_ice'] / 60) * 60;
@@ -252,6 +478,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['shots_per_60'] = parseFloat((0).toFixed(2));
                 element['shots_on_goal_per_60'] = parseFloat((0).toFixed(2));
             }
+            // calculating goals, assists, points, shots, shots on goal per game
             if (element['games_played']) {
                 element['goals_per_game'] = element['goals'] / element['games_played'];
                 element['assists_per_game'] = element['assists'] / element['games_played'];
@@ -307,7 +534,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             }
 
         });
-        // console.log(filtered_player_stats);
         return filtered_player_stats;
     };
 
@@ -320,15 +546,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     $http.get('data/' + $scope.season + '/del_streaks_loose.json').then(function (res) {
         $scope.loose_streaks = res.data;
     });
-
-    // retrieving column headers (and abbreviations + explanations)
-    $http.get('./js/player_stats_columns.json').then(function (res) {
-        $scope.stats_cols = res.data;
-    });
-
-    // default filter values
-    $scope.nameFilter = ''; // empty name filter
-    $scope.teamFilter = ''; // empty name filter
 
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {
@@ -489,12 +706,16 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         }
         $scope.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
         $scope.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
+        $scope.changeDate();
     };
 
     $scope.changeDate = function() {
         if ($scope.player_games) {
             $scope.filtered_player_stats = $scope.filterStats($scope.player_games);
         };
+        if ($scope.goalie_games) {
+            $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
+        }
     }
 
 });
