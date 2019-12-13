@@ -56,7 +56,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     
 	$scope.readCSV = function() {
 		// http get request to read CSV file content
-        $http.get('/data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
+        $http.get('data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
 	};
 
 	$scope.processData = function(allText) {
