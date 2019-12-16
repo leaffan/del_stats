@@ -2,7 +2,7 @@
 
 set SEASON=%1
 set TGT_BASE_DIR=C:\dev\del_stats\frontend\data
-set TGT_EXTENDED_DIR=C:\dev\del_stats_extended\frontend\data\
+set TGT_EXTENDED_DIR=C:\dev\del_stats\frontend\data\
 
 set DEL_DATA_BASE_DIR=c:\del
 
@@ -23,7 +23,7 @@ copy data\%SEASON%\del_shots.csv %TGT_BASE_DIR%\%SEASON%
 xcopy /i /y /d data\%SEASON%\per_player %TGT_BASE_DIR%\%SEASON%\per_player
 
 copy %DEL_DATA_BASE_DIR%\career_stats\career_stats.json %TGT_BASE_DIR%\career_stats
-xcopy /i /y /d %DEL_DATA_BASE_DIR%\career_stats\per_player %TGT_BASE_DIR%\per_player
+xcopy /i /y /d %DEL_DATA_BASE_DIR%\career_stats\per_player %TGT_BASE_DIR%\career_stats\per_player
 xcopy /i /y /d data\career_stats\per_team %TGT_BASE_DIR%\career_stats\per_team
 
 :: Daten für Extended-Version
