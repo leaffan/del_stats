@@ -56,19 +56,20 @@ OUT_FIELDS = [
     "secondary_assists", "points", "primary_points", "pim", "plus",
     "minus", "plus_minus", "pp_goals", "pp_assists",
     "pp_primary_assists", "pp_secondary_assists", "pp_points",
-    "sh_goals", "sh_assists", "sh_points", "gw_goals", "shots",
-    "shots_on_goal", "shots_missed", "shots_blocked", "shot_pctg",
-    "faceoffs", "faceoffs_won", "faceoffs_lost", "faceoff_pctg",
-    "blocked_shots", "time_on_ice", "time_on_ice_pp", "time_on_ice_sh",
-    "shifts", "penalties", "pim_from_events", "penalty_shots",
-    "first_goals", "_2min", "_5min", "_10min", "_20min", "lazy",
-    "roughing", "reckless", "other", "shots_5v5", "shots_missed_5v5",
-    "shots_on_goal_5v5", "goals_5v5", "line", "weekday", "slot_shots",
-    "slot_on_goal", "slot_goals", "left_shots", "left_on_goal",
+    "sh_goals", "sh_assists", "sh_points", "assists_5v5",
+    "primary_assists_5v5", "points_5v5", "primary_points_5v5", "gw_goals",
+    "shots", "shots_on_goal", "shots_missed", "shots_blocked",
+    "faceoffs", "faceoffs_won", "faceoffs_lost", "blocked_shots",
+    "time_on_ice", "time_on_ice_pp", "time_on_ice_sh", "shifts", "penalties",
+    "pim_from_events", "penalty_shots", "first_goals", "_2min", "_5min",
+    "_10min", "_20min", "lazy", "roughing", "reckless", "other", "shots_5v5",
+    "shots_missed_5v5", "shots_on_goal_5v5", "goals_5v5", "line", "weekday",
+    "slot_shots", "slot_on_goal", "slot_goals", "left_shots", "left_on_goal",
     "left_goals", "right_shots", "right_on_goal", "right_goals",
     "blue_line_shots", "blue_line_on_goal", "blue_line_goals",
     "neutral_zone_shots", "neutral_zone_on_goal", "neutral_zone_goals",
-    "behind_goal_shots", "behind_goal_on_goal", "behind_goal_goals"
+    "behind_goal_shots", "behind_goal_on_goal", "behind_goal_goals",
+    "goals_5v5_from_events"
 ]
 
 # default empty line
@@ -116,7 +117,8 @@ def get_single_game_player_data(game, shots):
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
-    assistants = retrieve_assistants_from_event_data(period_events)
+    assistants, scorers_5v5 = retrieve_assistants_from_event_data(
+        period_events)
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
@@ -136,6 +138,9 @@ def get_single_game_player_data(game, shots):
         goals_5v5 = list(filter(
             lambda d: d['scored'] is True, shots_on_goal_5v5))
         gsl['goals_5v5'] = len(goals_5v5)
+        gsl['goals_5v5_from_events'] = 0
+        if gsl['player_id'] in scorers_5v5:
+            gsl['goals_5v5_from_events'] = scorers_5v5[gsl['player_id']]
         if gsl['player_id'] in assistants:
             single_assist_dict = assistants[gsl['player_id']]
             gsl['primary_assists'] = single_assist_dict.get('A1', 0)
@@ -146,8 +151,14 @@ def get_single_game_player_data(game, shots):
             gsl['pp_points'] += gsl['pp_assists']
             gsl['sh_assists'] = single_assist_dict.get('SHA', 0)
             gsl['sh_points'] += gsl['sh_assists']
+            gsl['assists_5v5'] = single_assist_dict.get('5v5A', 0)
+            gsl['primary_assists_5v5'] = single_assist_dict.get('5v5A1', 0)
+            gsl['secondary_assists_5v5'] = single_assist_dict.get('5v5A2', 0)
         # calculating primary points
         gsl['primary_points'] = gsl['goals'] + gsl['primary_assists']
+        gsl['points_5v5'] = gsl['goals_5v5_from_events'] + gsl['assists_5v5']
+        gsl['primary_points_5v5'] = (
+            gsl['goals_5v5_from_events'] + gsl['primary_assists_5v5'])
         # adding penalty information to player's game stat line
         if gsl['player_id'] in penalties:
             single_penalty_dict = penalties[gsl['player_id']]
@@ -251,10 +262,12 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['games_played'] = stat_dict['games']
     single_player_game['goals'] = stat_dict['goals'][key]
     single_player_game['assists'] = stat_dict['assists'][key]
+    single_player_game['assists_5v5'] = 0
     single_player_game['primary_assists'] = 0
     single_player_game['secondary_assists'] = 0
     single_player_game['points'] = stat_dict['points'][key]
     single_player_game['primary_points'] = 0
+    single_player_game['points_5v5'] = 0
     single_player_game['pim'] = stat_dict['penaltyMinutes']
     single_player_game['plus'] = stat_dict['positive']
     single_player_game['minus'] = stat_dict['negative']
@@ -264,6 +277,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['pp_assists'] = 0
     single_player_game['pp_primary_assists'] = 0
     single_player_game['pp_secondary_assists'] = 0
+    single_player_game['primary_assists_5v5'] = 0
+    single_player_game['secondary_assists_5v5'] = 0
     single_player_game['pp_points'] = single_player_game['pp_goals']
     single_player_game['sh_goals'] = stat_dict['shGoals']
     single_player_game['sh_assists'] = 0
@@ -313,6 +328,7 @@ def retrieve_assistants_from_event_data(period_events):
     """
     Retrieves primary and secondary assists from game event data.
     """
+    goals_5v5_dict = dict()
     assists_dict = dict()
 
     for period in period_events:
@@ -321,6 +337,18 @@ def retrieve_assistants_from_event_data(period_events):
             if event['type'] != 'goal':
                 continue
             assist_cnt = 0
+            # retrieving goals in 5v5
+            scorer_plr_id = event['data']['scorer']['playerId']
+            if event['data']['balance'] == 'EQ':
+                if (
+                    not event['data']['ea'] and
+                    len(event['data']['attendants']['positive']) == 6 and
+                    len(event['data']['attendants']['negative']) == 6
+                ):
+                    if scorer_plr_id not in goals_5v5_dict:
+                        goals_5v5_dict[scorer_plr_id] = 0
+                    goals_5v5_dict[scorer_plr_id] += 1
+            # retrieving assists
             for assistant in event['data']['assistants']:
                 assist_cnt += 1
                 assist_plr_id = assistant['playerId']
@@ -333,8 +361,15 @@ def retrieve_assistants_from_event_data(period_events):
                 if 'SH' in event['data']['balance']:
                     assists_dict[assist_plr_id]["SHA"] += 1
                     # assists_dict[assist_plr_id]["SHA%d" % assist_cnt] += 1
+                if event['data']['balance'] == 'EQ':
+                    if (
+                        len(event['data']['attendants']['positive']) == 6 and
+                        len(event['data']['attendants']['negative']) == 6
+                    ):
+                        assists_dict[assist_plr_id]["5v5A"] += 1
+                        assists_dict[assist_plr_id]["5v5A%d" % assist_cnt] += 1
 
-    return assists_dict
+    return assists_dict, goals_5v5_dict
 
 
 def retrieve_penalties_from_event_data(period_events):
