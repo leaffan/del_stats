@@ -269,7 +269,10 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         else:
             game_stat_line['opp_save_pctg'] = None
         # calculating pdo values
-        if all([game_stat_line['shot_pctg'], game_stat_line['save_pctg']]):
+        if (
+            game_stat_line['shot_pctg'] is not None and
+            game_stat_line['save_pctg'] is not None
+        ):
             game_stat_line['pdo'] = round((
                 game_stat_line['shot_pctg'] +
                 game_stat_line['save_pctg']), 1)
