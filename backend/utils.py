@@ -18,7 +18,8 @@ coaches = [
     'Marian Bazany', 'Jari Pasanen', 'Fabian Dahlem', 'Tobias Abstreiter',
     'Larry Mitchell', 'Kevin Gaudet', 'Pekka Tirkkonen', 'Martin Jiranek',
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
-    'Christoph Kreutzer',
+    'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
+    'Niklas Sundblad'
 ]
 
 
@@ -66,10 +67,14 @@ name_corrections = {
     'Pasanen Jari': 'Jari Pasanen',
     'Franz Fritzmeier': 'Franz-David Fritzmeier',
     'Fritzmeier': 'Franz-David Fritzmeier',
-    'Pienne Beaulieu': 'Brandon Reid',
-    'Pierre Beaulieu': 'Brandon Reid',
-    'Pierre Beaulie': 'Brandon Reid',
-    'Pierre Beaulien': 'Brandon Reid',
+    # at times former assistants become head coaches and therefore their names
+    # no lotherefore no longer need to be adjusted
+    # hence: the following name corrections are only valid until the date
+    # specified after the pipe symbol
+    'Pienne Beaulieu': 'Brandon Reid|2019-12-12',
+    'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
+    'Pierre Beaulie': 'Brandon Reid|2019-12-12',
+    'Pierre Beaulien': 'Brandon Reid|2019-12-12',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
