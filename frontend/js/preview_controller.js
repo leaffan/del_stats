@@ -28,7 +28,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         });
         $scope.current_home_vs_road_fixtures = $scope.current_home_team_fixtures.filter(function(value, index, arr) {
             return value['home']['name'] == $scope.current_game.guest.name || value['guest']['name'] == $scope.current_game.guest.name;
-    	        });
+    	});
         $scope.current_road_team_fixtures = $scope.games.filter(function(value, index, arr) {
             return value['status'] == 'BEFORE_MATCH' && ($scope.current_game.guest.name == value['home']['name'] || $scope.current_game.guest.name == value['guest']['name']);
         });
@@ -368,14 +368,14 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             // calculating average attendance per game
             if (home_road_type == 'home' && team_game['games_played']) {
                 team_game['avg_attendance'] = parseFloat((team_game['attendance'] / team_game['games_played']).toFixed(0));
-                console.log(team_game['team'], home_road_type, team_game['avg_attendance'], team_game['capacity']);
+                // console.log(team_game['team'], home_road_type, team_game['avg_attendance'], team_game['capacity']);
             } else {
                 team_game['avg_attendance'] = parseFloat((0).toFixed(2));
             }
             // calculating utilized capacity
             if (home_road_type == 'home' && team_game['games_played']) {
                 team_game['util_capacity'] = parseFloat(((team_game['attendance'] / team_game['capacity']) * 100).toFixed(2));
-                console.log(home_road_type, team_game['util_capacity']);
+                // console.log(home_road_type, team_game['util_capacity']);
             } else {
                 team_game['util_capacity'] = parseFloat((0).toFixed(2));
             }
