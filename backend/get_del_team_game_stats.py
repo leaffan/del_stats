@@ -8,6 +8,7 @@ import argparse
 
 from collections import defaultdict
 from datetime import datetime
+from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
 from utils import name_corrections, coaches, capacities
@@ -106,14 +107,15 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             game_stat_line['capacity'] = 0
         # coaches and referees
         if "%s_coach" % key in game:
-            game_stat_line['coach'] = correct_name(game["%s_coach" % key])
+            game_stat_line['coach'] = correct_name(
+                game["%s_coach" % key], game['date'])
             if game_stat_line['coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['coach'])
         else:
             game_stat_line['coach'] = None
         if "%s_coach" % opp_key in game:
             game_stat_line['opp_coach'] = correct_name(
-                game["%s_coach" % opp_key])
+                game["%s_coach" % opp_key], game['date'])
             if game_stat_line['opp_coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['opp_coach'])
         else:
@@ -543,7 +545,7 @@ def group_shot_data_by_game_team(shots):
     return grouped_shot_data
 
 
-def correct_name(name, corrections=name_corrections):
+def correct_name(name, game_date=None, corrections=name_corrections):
     for delimiter in [',', ';']:
         if delimiter in name:
             name = " ".join(
@@ -551,7 +553,17 @@ def correct_name(name, corrections=name_corrections):
     if name.upper() == name:
         name = name.title()
     if name in name_corrections:
-        name = name_corrections[name]
+        corrected_name, *valid_to_date = name_corrections[name].split("|")
+        # checking whether a game date was provided and the current correction
+        # has an expiration date
+        if game_date and valid_to_date:
+            game_date = parse(game_date)
+            valid_to_date = parse(valid_to_date[0])
+            # checking if game had been played before expiration date
+            if game_date <= valid_to_date:
+                name = corrected_name
+        else:
+            name = corrected_name
     return name
 
 
