@@ -223,7 +223,7 @@ def reconstruct_skater_situation(game, verbose=False):
 
     # retrieving game end (in seconds) from interval tree
     game_end = - it.range().begin
-    goalies_on_ice = reconstruct_goalie_situation(it)
+    goalies_on_ice, extra_attackers = reconstruct_goalie_situation(it)
 
     # setting up dictionary to hold skater situations for each second
     # of the game
@@ -547,6 +547,7 @@ def reconstruct_goalie_situation(interval_tree):
     """
     game_end = - interval_tree.range().begin
     goalies_on_ice = dict()
+    extra_attackers = dict()
 
     for t in range(0, game_end + 1):
         # retrieving currently ongoing goalie shifts
@@ -558,14 +559,21 @@ def reconstruct_goalie_situation(interval_tree):
                 interval_tree, -t - 1, GoalieShift)
         # container for current goalies
         current_goalies = {'home_goalie': None, 'road_goalie': None}
+        # container for extra attacker info
+        current_extra_attacker = {'home': False, 'road': False}
         # setting current goalies according to ongoing goalie shifts
         for goalie_shift in goalie_shift_intervals:
             current_goalies[
                 "%s_goalie" % goalie_shift.home_road] = goalie_shift.player_id
+        if current_goalies['home_goalie'] is None:
+            current_extra_attacker['home'] = True
+        if current_goalies['road_goalie'] is None:
+            current_extra_attacker['road'] = True
 
         goalies_on_ice[t] = current_goalies
+        extra_attackers[t] = current_extra_attacker
 
-    return goalies_on_ice
+    return goalies_on_ice, extra_attackers
 
 
 def query_interval_tree_by_type(interval_tree, time, type):
