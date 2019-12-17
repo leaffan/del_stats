@@ -8,6 +8,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     $scope.scoringStreakTypeFilter = 'points';
     $scope.showStrictStreaks = true;
     $scope.u23Check = false;
+    $scope._5v5Check = false;
     // setting default sort configuration
     $scope.sortConfig = {
         'sortKey': 'points',
@@ -421,14 +422,22 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             // calculating points per game
             if (element['games_played']) {
                 element['points_per_game'] = parseFloat((element['points'] / (element['games_played'])).toFixed(2));
+                element['points_per_game_5v5'] = parseFloat((element['points_5v5'] / (element['games_played'])).toFixed(2));
             } else {
                 element['points_per_game'] = parseFloat((0).toFixed(2));
+                element['points_per_game_5v5'] = parseFloat((0).toFixed(2));
             }
             // calculating shooting percentage
             if (element['shots_on_goal']) {
                 element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
             } else {
                 element['shot_pctg'] = parseFloat((0).toFixed(2));
+            }
+            // calculating 5v5 shooting percentage
+            if (element['shots_on_goal_5v5']) {
+                element['shot_pctg_5v5'] = parseFloat(((element['goals_5v5'] / element['shots_on_goal_5v5']) * 100).toFixed(2));
+            } else {
+                element['shot_pctg_5v5'] = parseFloat((0).toFixed(2));
             }
             // calculating team faceoff percentage
             if (element['faceoffs']) {
@@ -552,6 +561,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'player_information': 'last_name',
         'streaks': 'length',
         'basic_stats': 'points',
+        'basic_stats_5v5': 'points_5v5',
         'on_goal_shot_zones': 'shots_on_goal',
         'shot_zones': 'shots',
         'per_game_stats': 'points_per_game',
@@ -580,6 +590,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     $scope.sortCriteria = {
         "last_name": ['last_name', 'team'],
         "points": ['points', '-games_played', 'goals', 'primary_points'],
+        "points_5v5": ['points_5v5', '-games_played', 'goals_5v5_from_events', 'primary_points_5v5'],
         "assists": ['assists', '-games_played', 'primary_assists'],
         "goals": ['goals', '-games_played', 'points'],
         "games_played": ['games_played', '-team'],
@@ -601,9 +612,16 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'plus_minus': ['plus_minus']
     };
 
+    $scope.change5v5Check = function() {
+        // console.log("5v5 check");
+    }
+
     // changing sorting criteria according to table selected for display
     $scope.changeTable = function() {
         sortKey = $scope.tableSortCriteria[$scope.tableSelect];
+        if ($scope._5v5Check && $scope.tableSelect == 'basic_stats')
+            sortKey = $scope.tableSortCriteria['basic_stats_5v5'];
+        // console.log(sortKey);
         if ($scope.ascendingAttrs.indexOf(sortKey) !== -1) {
             sortDescending = false;
         } else {
