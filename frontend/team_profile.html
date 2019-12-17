@@ -1,13 +1,13 @@
 <div class="container" data-ng-app="delStatsApp">
     <div class="alert alert-info main-bg">
         <div class="inline-headers">
-                <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{current_team}}.png" alt="Team logo" width="40" height="40"/></span>
-                <h2 style="margin-left: .5em;">{{ team_full_name_lookup[current_team] }} {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h2>
+                <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{::current_team}}.png" alt="Team logo" width="40" height="40"/></span>
+                <h2 style="margin-left: .5em;">{{ ::team_full_name_lookup[current_team] }} {{ ::season }}/{{ ::svc.parseFloat(season) + 1 - 2000 }}</h2>
         </div>
     </div>
         
     <div class="alert alert-info main-bg">
-        <p>Zu den <a href="#!/team_stats/{{season}}"><b>Teamstatistiken</b></a> | Zu den <a href="#!/del_stats/{{season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
+        <p>Zu den <a href="#!/team_stats/{{::season}}"><b>Teamstatistiken</b></a> | Zu den <a href="#!/del_stats/{{::season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
     </div>
     
     <div class="alert alert-info main-bg">
