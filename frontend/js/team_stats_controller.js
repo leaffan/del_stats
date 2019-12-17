@@ -52,6 +52,13 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $http.get('./js/team_stats_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
     });
+
+    // retrieving significant dates and previous year's attendance from external file
+    $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
+        $scope.dcup_date = moment(res.data['dates']['dcup_date']);
+        $scope.avg_attendance_last_season = res.data['avg_attendance_last_season'];
+    });
+
     // retrieving teams
     $http.get('./js/teams.json').then(function (res) {
         $scope.teams = res.data;
@@ -65,7 +72,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     // starting to watch filter selection lists
     $scope.$watchGroup([
             'situationSelect', 'homeAwaySelect', 'seasonTypeSelect',
-            'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
+            'fromRoundSelect', 'toRoundSelect', 'weekdaySelect', 'timespanSelect'
         ], function() {
         if ($scope.team_stats) {
             $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
@@ -86,15 +93,6 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         $scope.toRoundSelect = $scope.maxRoundPlayed;
         $scope.filtered_team_stats = $scope.filterStats($scope.team_stats);
     });
-
-
-    // setting average attendance for previous season
-    // TODO: move to external file (arenas.json?)
-    $scope.avg_attendance_last_season = {
-        'EBB': 12026, 'KEC': 11573, 'MAN': 11422, 'DEG': 8531, 'AEV': 5481,
-        'NIT': 5163, 'RBM': 4819, 'KEV': 4814, 'BHV': 4438, 'IEC': 4344,
-        'STR': 4129, 'ING': 3883, 'SWW': 3576, 'WOB': 2815
-    }
 
     // TODO: move to out-of-controller location
     $scope.filterStats = function (stats) {
@@ -561,14 +559,24 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             ctrl.toDate = null;
             return;
         }
-        timespanSelect = parseInt($scope.timespanSelect) + 1;
-        if (timespanSelect < 9) {
-            season = parseInt($scope.season) + 1;
+        if ($scope.timespanSelect == 'pre_dcup')
+        {
+            ctrl.fromDate = moment($scope.season + '-09-01');
+            ctrl.toDate = $scope.dcup_date;
+        } else if ($scope.timespanSelect == 'post_dcup') {
+            ctrl.fromDate = $scope.dcup_date;
+            var nextSeason = parseFloat($scope.season) + 1;
+            ctrl.toDate = moment(nextSeason + '-05-01');
         } else {
-            season = parseInt($scope.season);
-        }
-        ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
-        ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
+            timespanSelect = parseInt($scope.timespanSelect) + 1;
+            if (timespanSelect < 9) {
+                season = parseInt($scope.season) + 1;
+            } else {
+                season = parseInt($scope.season);
+            }
+            ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
+            ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
+            }
     }
 
     $scope.changeDate = function() {
