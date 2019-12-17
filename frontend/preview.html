@@ -218,7 +218,7 @@
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1" style="width: 11%">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ team_location_lookup[game.opp_team] }}</a></td>
+                <td class="col-md-1" style="width: 11%">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'road' ? '@' : ''}} {{team_location_lookup[game.opp_team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ game.score }}</td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ game.opp_score }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }} text-center">
@@ -256,6 +256,7 @@
                 </td>
                 <td class="col-md-1">{{ fixture.round }}:
                     <a href="#!/team_profile/{{season}}/{{ current_home_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
+                        {{ current_home_team == fixture.home.name ? '' : '@' }}
                         {{ current_home_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
@@ -288,7 +289,7 @@
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1" style="width: 11%">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ team_location_lookup[game.opp_team] }}</a></td>
+                <td class="col-md-1" style="width: 11%">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'road' ? '@' : ''}} {{ team_location_lookup[game.opp_team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ game.score }}</td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ game.opp_score }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }} text-center">
@@ -326,6 +327,7 @@
                 </td>
                 <td class="col-md-1">{{ fixture.round }}:
                     <a href="#!/team_profile/{{season}}/{{ current_road_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
+                        {{ current_road_team == fixture.home.name ? '' : '@' }}
                         {{ current_road_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
@@ -354,11 +356,11 @@
             <tr class="{{game.home_road == 'home' ? 'info' : game.home_road == 'road' ? 'warning' : ''}}" data-ng-repeat="game in game_log_home | orderBy:sorting_config['game_log_table']">
                 <td class="col-md-1 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
-                        {{ game.game_date }}
+                        {{ game.game_date| amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ team_location_lookup[game.opp_team] }}</a></td>
+                <td class="col-md-1" style="width: 11%"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'home' ? '' : '@' }} {{ team_location_lookup[game.opp_team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ game.score }}</td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ game.opp_score }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }} text-center">
@@ -390,12 +392,13 @@
             <tr class="{{ current_home_team == fixture.home.name ? 'info' : 'warning' }}" data-ng-repeat="fixture in current_home_team_fixtures | orderBy:sorting_config['game_log_table']">
                 <td class="col-md-1 text-center">
                     <a href="https://www.del.org/spielplan/{{ fixture.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
-                        {{ fixture.game_date | amDateFormat:'YYYY-MM-DD' }}
+                        {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
                 <td class="col-md-1 text-right" style="width: 2%">{{ fixture.round }}</td>
                 <td class="col-md-1">
                     <a href="#!/team_profile/{{season}}/{{ current_home_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
+                        {{ current_home_team == fixture.home.name ? '' : '@' }}
                         {{ current_home_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
@@ -424,11 +427,11 @@
             <tr class="{{game.home_road == 'home' ? 'info' : game.home_road == 'road' ? 'warning' : ''}}" data-ng-repeat="game in game_log_road | orderBy:sorting_config['game_log_table']">
                 <td class="col-md-1 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
-                        {{ game.game_date }}
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ team_location_lookup[game.opp_team] }}</a></td>
+                <td class="col-md-1" style="width: 11%"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{game.home_road == 'home' ? '' : '@'}} {{ team_location_lookup[game.opp_team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ game.score }}</td>
                 <td class="col-md-1 text-right" style="width: 3%">{{ game.opp_score }}</td>
                 <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }} text-center">
@@ -460,12 +463,13 @@
             <tr class="{{ current_road_team == fixture.home.name ? 'info' : 'warning' }}" data-ng-repeat="fixture in current_road_team_fixtures | orderBy:sorting_config['game_log_table']">
                 <td class="col-md-1 text-center">
                     <a href="https://www.del.org/spielplan/{{ fixture.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
-                        {{ fixture.game_date | amDateFormat:'YYYY-MM-DD' }}
+                        {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
                 <td class="col-md-1 text-right" style="width: 2%">{{ fixture.round }}</td>
                 <td class="col-md-1">
                     <a href="#!/team_profile/{{season}}/{{ current_road_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
+                        {{ current_road_team == fixture.home.name ? '' : '@' }}
                         {{ current_road_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
