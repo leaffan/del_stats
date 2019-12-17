@@ -85,6 +85,9 @@
                 <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    <option data-ng-option>-----------</option>
+                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
                 <span class="input-group-addon form_spacer"></span>
                 <div class="input-group" id="from_date_select">
@@ -92,7 +95,7 @@
                         <i class="far fa-calendar-alt"></i>
                     </span>
                     <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="onDateChange()">
+                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
                 <div class="input-group" id="to_date_select">
@@ -100,7 +103,7 @@
                         <i class="far fa-calendar-alt"></i>
                     </span>
                     <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="onDateChange()">
+                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
                 </div>
                 <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
