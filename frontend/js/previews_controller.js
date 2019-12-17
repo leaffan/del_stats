@@ -11,7 +11,7 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
             fixture['game_date'] = moment(fixture['start_date']);
             // calculating days left until current fixture
             fixture['days_left'] = fixture['game_date'].diff(moment(), 'days');
-            if (fixture['days_left'] > 0 && fixture['days_left'] < $scope.min_days_left) {
+            if (fixture['days_left'] >= 0 && fixture['days_left'] < $scope.min_days_left) {
                 $scope.next_round = fixture['round'];
                 $scope.min_days_left = fixture['days_left'];
             }
