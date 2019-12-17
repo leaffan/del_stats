@@ -234,9 +234,10 @@ app.factory('svc', function() {
         player_stats_to_aggregate: function() {
             return [
                 'assists', 'blocked_shots', 'faceoffs', 'faceoffs_lost', 'faceoffs_won',
-                'first_goals', 'games_played', 'goals', 'goals_5v5', 'gw_goals', 'lazy',
+                'first_goals', 'games_played', 'goals', 'goals_5v5', 'assists_5v5', 'points_5v5',
+                'primary_assists_5v5', 'primary_points_5v5', 'gw_goals', 'lazy',
                 'minus', 'other', 'penalties', 'penalty_shots', 'pim', 'pim_from_events',
-                'plus', 'plus_minus', 'points', 'pp_assists', 'pp_points', 'pp_goals', 'pp_assists',
+                'plus', 'plus_minus', 'points', 'pp_points', 'pp_goals', 'pp_assists',
                 'pp_primary_assists', 'pp_secondary_assists', 'primary_assists', 'primary_points',
                 'reckless', 'roughing', 'secondary_assists', 'sh_assists', 'sh_goals', 'sh_points',
                 'shifts', 'shots', 'shots_5v5', 'shots_blocked', 'shots_missed', 'shots_missed_5v5',
@@ -244,7 +245,7 @@ app.factory('svc', function() {
                 '_2min', '_5min', '_10min', '_20min', 'slot_shots', 'left_shots', 'right_shots',
                 'blue_line_shots', 'slot_on_goal', 'left_on_goal', 'right_on_goal', 'blue_line_on_goal',
                 'neutral_zone_shots', 'neutral_zone_on_goal', 'neutral_zone_goals', 'behind_goal_shots',
-                'behind_goal_on_goal', 'behind_goal_goals'
+                'behind_goal_on_goal', 'behind_goal_goals', 'goals_5v5_from_events'
             ];    
         },
         goalie_stats_to_aggregate: function() {
