@@ -108,6 +108,11 @@ def create_goalie_shifts(goalie_changes, game, interval_tree):
             goalie_in_change = goalie_changes[home_road][i]
             goalie_out_change = goalie_changes[home_road][i + 1]
 
+            # dirty workaround to avoid situations where goaltenders are put
+            # into a game at its end (c.f. game_id 1626)
+            if goalie_in_change.time == goalie_out_change.time:
+                continue
+
             # ...create a goalie shift item
             goalie_shift = GoalieShift(
                 goalie_in_change.player_id, goalie_in_change.team,
