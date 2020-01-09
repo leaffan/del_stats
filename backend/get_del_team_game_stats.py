@@ -546,24 +546,28 @@ def group_shot_data_by_game_team(shots):
 
 
 def correct_name(name, game_date=None, corrections=name_corrections):
+    # parsing game date here to avoid parsing it twice below
+    if game_date:
+        game_date = parse(game_date)
     for delimiter in [',', ';']:
         if delimiter in name:
             name = " ".join(
                 [token.strip() for token in name.split(delimiter)][::-1])
     if name.upper() == name:
         name = name.title()
-    if name in name_corrections:
+    tries = 0
+    while name in name_corrections and tries < 3:
         corrected_name, *valid_to_date = name_corrections[name].split("|")
         # checking whether a game date was provided and the current correction
         # has an expiration date
         if game_date and valid_to_date:
-            game_date = parse(game_date)
             valid_to_date = parse(valid_to_date[0])
             # checking if game had been played before expiration date
             if game_date <= valid_to_date:
                 name = corrected_name
         else:
             name = corrected_name
+        tries += 1
     return name
 
 
