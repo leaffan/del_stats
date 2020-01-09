@@ -457,9 +457,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             }
             // calculating time on ice and shifts per game
             if (element['games_played']) {
-                element['time_on_ice_per_game'] = (element['time_on_ice'] / element['games_played']).toFixed(2);
-                element['time_on_ice_pp_per_game'] = (element['time_on_ice_pp'] / element['games_played']).toFixed(2);
-                element['time_on_ice_sh_per_game'] = (element['time_on_ice_sh'] / element['games_played']).toFixed(2);
+                element['time_on_ice_per_game'] = (element['time_on_ice'] / element['games_played']);
+                element['time_on_ice_pp_per_game'] = (element['time_on_ice_pp'] / element['games_played']);
+                element['time_on_ice_sh_per_game'] = (element['time_on_ice_sh'] / element['games_played']);
                 element['shifts_per_game'] = element['shifts'] / element['games_played'];
             } else {
                 element['time_on_ice_per_game'] = parseFloat((0).toFixed(2));
