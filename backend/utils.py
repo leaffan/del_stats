@@ -2,7 +2,6 @@
 # -*- coding: utf-8 -*-
 
 import math
-import calendar
 from datetime import date, timedelta
 
 from dateutil.parser import parse
@@ -29,6 +28,7 @@ name_corrections = {
     'Tom Pokle': 'Tom Pokel',
     'Paul Thompsen': 'Paul Thompson',
     'Kurt Kleindorst': 'Kurt Kleinendorst',
+    'Manuell Kofler': 'Kurt Kleinendorst',
     'Tray Toumie': 'Tray Tuomie',
     'Herold Kreis': 'Harold Kreis',
     'MIke Stewart': 'Mike Stewart',
@@ -62,6 +62,7 @@ name_corrections = {
     'Robert Daum': 'Rob Daum',
     'Pokel Tom': 'Tom Pokel',
     'Daum Rob': 'Rob Daum',
+    'Shedden Doug': 'Doug Shedden',
     'Mark Draisaitl': 'Peter Draisaitl',
     'Kreutzer Christoph': 'Christoph Kreutzer',
     'Pasanen Jari': 'Jari Pasanen',
@@ -71,10 +72,10 @@ name_corrections = {
     # no lotherefore no longer need to be adjusted
     # hence: the following name corrections are only valid until the date
     # specified after the pipe symbol
-    'Pienne Beaulieu': 'Brandon Reid|2019-12-12',
+    'Pienne Beaulieu': 'Pierre Beaulieu',
+    'Pierre Beaulie': 'Pierre Beaulieu',
+    'Pierre Beaulien': 'Pierre Beaulieu',
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
-    'Pierre Beaulie': 'Brandon Reid|2019-12-12',
-    'Pierre Beaulien': 'Brandon Reid|2019-12-12',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
@@ -174,11 +175,9 @@ def calculate_age(dob):
     # retrieving today's date
     today = date.today()
     # projecting player's date of birth to this year
-    # checking if player was born in a leap year and this year isn't one first
+    # checking if player was born in a leap year first
     if (
-        dob.month == 2 and
-        dob.day == 29 and
-        not calendar.isleap(today.year)
+        dob.month == 2 and dob.day == 29
     ):
         # moving player's date of birth forward then
         dob = dob + timedelta(days=1)
