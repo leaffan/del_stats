@@ -520,8 +520,13 @@ if __name__ == '__main__':
         if game['game_id'] in registered_games:
             continue
 
+        # retrieving shots for current game
+        game_shots = list(
+            filter(lambda d: d['game_id'] == game['game_id'], shots))
+
         print("+ Retrieving player stats for game %s" % get_game_info(game))
-        single_player_game_stats = get_single_game_player_data(game, shots)
+        single_player_game_stats = get_single_game_player_data(
+            game, shots)
         player_game_stats.extend(single_player_game_stats)
 
         # collecting stat lines on a per-player basis
