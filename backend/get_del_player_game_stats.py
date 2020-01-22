@@ -69,7 +69,12 @@ OUT_FIELDS = [
     "blue_line_shots", "blue_line_on_goal", "blue_line_goals",
     "neutral_zone_shots", "neutral_zone_on_goal", "neutral_zone_goals",
     "behind_goal_shots", "behind_goal_on_goal", "behind_goal_goals",
-    "goals_5v5_from_events"
+    "goals_5v5_from_events", "on_ice_sh_f", "on_ice_unblocked_sh_f",
+    "on_ice_sog_f", "on_ice_goals_f", "on_ice_sh_f_5v5",
+    "on_ice_unblocked_sh_f_5v5", "on_ice_sog_f_5v5", "on_ice_goals_f_5v5",
+    "on_ice_sh_a", "on_ice_unblocked_sh_a", "on_ice_sog_a", "on_ice_goals_a",
+    "on_ice_sh_a_5v5", "on_ice_unblocked_sh_a_5v5", "on_ice_sog_a_5v5",
+    "on_ice_goals_a_5v5",
 ]
 
 # default empty line
@@ -79,6 +84,147 @@ LINES = ['1', '2', '3', '4']
 POSITIONS = ['d', 'f']
 POS_LINES = list(
     map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
+
+
+def retrieve_on_ice_stats(gsl, shots):
+
+    # retrieving on-ice shots for (all situations)
+    on_ice_shots_for = list(filter(
+        lambda d: gsl['player_id'] in d['players_on_for'], shots))
+    gsl['on_ice_sh_f'] = len(on_ice_shots_for)
+    on_ice_shots_for_unblocked = list(filter(
+        lambda d: d['target_type'] != 'blocked', on_ice_shots_for))
+    gsl['on_ice_unblocked_sh_f'] = len(on_ice_shots_for_unblocked)
+    on_ice_shots_for_on_goal = list(filter(
+        lambda d: d['target_type'] == 'on_goal', on_ice_shots_for))
+    gsl['on_ice_sog_f'] = len(on_ice_shots_for_on_goal)
+    on_ice_goals_for = list(filter(
+        lambda d: d['scored'] is True, on_ice_shots_for))
+    gsl['on_ice_goals_f'] = len(on_ice_goals_for)
+
+    # retrieving on-ice shots against (all situations)
+    on_ice_shots_against = list(filter(
+        lambda d: gsl['player_id'] in d['players_on_against'], shots))
+    gsl['on_ice_sh_a'] = len(on_ice_shots_against)
+    on_ice_shots_against_unblocked = list(filter(
+        lambda d: d['target_type'] != 'blocked', on_ice_shots_against))
+    gsl['on_ice_unblocked_sh_a'] = len(on_ice_shots_against_unblocked)
+    on_ice_shots_against_on_goal = list(filter(
+        lambda d: d['target_type'] == 'on_goal', on_ice_shots_against))
+    gsl['on_ice_sog_a'] = len(on_ice_shots_against_on_goal)
+    on_ice_goals_against = list(filter(
+        lambda d: d['scored'] is True, on_ice_shots_against))
+    gsl['on_ice_goals_a'] = len(on_ice_goals_against)
+
+    # calculating percentages (all situations)
+    on_ice_shots = gsl['on_ice_sh_f'] + gsl['on_ice_sh_a']
+    if on_ice_shots:
+        gsl['on_ice_sh_pctg'] = round(
+            gsl['on_ice_sh_f'] / on_ice_shots * 100, 2)
+    else:
+        gsl['on_ice_sh_pctg'] = 0.
+    on_ice_unblocked_shots = (
+        gsl['on_ice_unblocked_sh_f'] + gsl['on_ice_unblocked_sh_a'])
+    if on_ice_unblocked_shots:
+        gsl['on_ice_unblocked_sh_pctg'] = round(
+            gsl['on_ice_unblocked_sh_f'] / on_ice_unblocked_shots * 100, 2)
+    else:
+        gsl['on_ice_unblocked_sh_pctg'] = 0.
+    on_ice_shots_on_goal = gsl['on_ice_sog_f'] + gsl['on_ice_sog_a']
+    if on_ice_shots_on_goal:
+        gsl['on_ice_sog_pctg'] = round(
+            gsl['on_ice_sog_f'] / on_ice_shots_on_goal * 100, 2)
+    else:
+        gsl['on_ice_sog_pctg'] = 0.
+    on_ice_goals = gsl['on_ice_goals_f'] + gsl['on_ice_goals_a']
+    if on_ice_goals:
+        gsl['on_ice_goals_pctg'] = round(
+            gsl['on_ice_goals_f'] / on_ice_goals * 100, 2)
+    else:
+        gsl['on_ice_goals_pctg'] = 0.
+    if gsl['on_ice_sog_f']:
+        gsl['on_ice_shooting_pctg'] = round(
+            gsl['on_ice_goals_f'] / gsl['on_ice_sog_f'] * 100, 2)
+    else:
+        gsl['on_ice_shooting_pctg'] = 0.
+    if gsl['on_ice_sog_a']:
+        gsl['on_ice_save_pctg'] = round(100 -
+            gsl['on_ice_goals_a'] / gsl['on_ice_sog_a'] * 100, 2)
+    else:
+        gsl['on_ice_save_pctg'] = 0.
+    gsl['on_ice_pdo'] = gsl['on_ice_shooting_pctg'] + gsl['on_ice_save_pctg']
+
+    # retrieving on-ice shots for (5v5)
+    on_ice_shots_for_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for))
+    gsl['on_ice_sh_f_5v5'] = len(on_ice_shots_for_5v5)
+    on_ice_shots_for_unblocked_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_unblocked))
+    gsl['on_ice_unblocked_sh_f_5v5'] = len(on_ice_shots_for_unblocked_5v5)
+    on_ice_shots_for_on_goal_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_on_goal))
+    gsl['on_ice_sog_f_5v5'] = len(on_ice_shots_for_on_goal_5v5)
+    on_ice_goals_for_5v5 = list(filter(
+        lambda d: d['scored'] is True, on_ice_shots_for_5v5))
+    gsl['on_ice_goals_f_5v5'] = len(on_ice_goals_for_5v5)
+
+    # retrieving on-ice shots against (5v5)
+    on_ice_shots_against_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_against))
+    gsl['on_ice_sh_a_5v5'] = len(on_ice_shots_against_5v5)
+    on_ice_shots_against_unblocked_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_against_unblocked))
+    gsl['on_ice_unblocked_sh_a_5v5'] = len(
+        on_ice_shots_against_unblocked_5v5)
+    on_ice_shots_against_on_goal_5v5 = list(filter(
+        lambda d: d['plr_situation'] == '5v5', on_ice_shots_against_on_goal))
+    gsl['on_ice_sog_a_5v5'] = len(on_ice_shots_against_on_goal_5v5)
+    on_ice_goals_against_5v5 = list(filter(
+        lambda d: d['scored'] is True, on_ice_shots_against_5v5))
+    gsl['on_ice_goals_a_5v5'] = len(on_ice_goals_against_5v5)
+
+    # calculating percentages (5v5)
+    on_ice_shots_5v5 = gsl['on_ice_sh_f_5v5'] + gsl['on_ice_sh_a_5v5']
+    if on_ice_shots_5v5:
+        gsl['on_ice_sh_pctg_5v5'] = round(
+            gsl['on_ice_sh_f_5v5'] / on_ice_shots_5v5 * 100, 2)
+    else:
+        gsl['on_ice_sh_pctg_5v5'] = 0.
+    on_ice_unblocked_shots_5v5 = (
+        gsl['on_ice_unblocked_sh_f_5v5'] + gsl['on_ice_unblocked_sh_a_5v5'])
+    if on_ice_unblocked_shots_5v5:
+        gsl['on_ice_unblocked_sh_pctg_5v5'] = round(
+            gsl['on_ice_unblocked_sh_f_5v5'] /
+            on_ice_unblocked_shots_5v5 * 100, 2)
+    else:
+        gsl['on_ice_unblocked_sh_pctg_5v5'] = 0.
+    on_ice_shots_on_goal_5v5 = (
+        gsl['on_ice_sog_f_5v5'] + gsl['on_ice_sog_a_5v5'])
+    if on_ice_shots_on_goal_5v5:
+        gsl['on_ice_sog_pctg_5v5'] = round(
+            gsl['on_ice_sog_f_5v5'] / on_ice_shots_on_goal_5v5 * 100, 2)
+    else:
+        gsl['on_ice_sog_pctg_5v5'] = 0.
+    on_ice_goals_5v5 = gsl['on_ice_goals_f_5v5'] + gsl['on_ice_goals_a_5v5']
+    if on_ice_goals_5v5:
+        gsl['on_ice_goals_pctg_5v5'] = round(
+            gsl['on_ice_goals_f_5v5'] / on_ice_goals_5v5 * 100, 2)
+    else:
+        gsl['on_ice_goals_pctg_5v5'] = 0.
+    if gsl['on_ice_sog_f_5v5']:
+        gsl['on_ice_shooting_pctg_5v5'] = round(
+            gsl['on_ice_goals_f_5v5'] / gsl['on_ice_sog_f_5v5'] * 100, 2)
+    else:
+        gsl['on_ice_shooting_pctg_5v5'] = 0.
+    if gsl['on_ice_sog_a_5v5']:
+        gsl['on_ice_save_pctg_5v5'] = round(100 - 
+            gsl['on_ice_goals_a_5v5'] / gsl['on_ice_sog_a_5v5'] * 100, 2)
+    else:
+        gsl['on_ice_save_pctg_5v5'] = 0.
+    gsl['on_ice_pdo_5v5'] = (
+        gsl['on_ice_shooting_pctg_5v5'] + gsl['on_ice_save_pctg_5v5'])
+
+    return gsl
 
 
 def get_single_game_player_data(game, shots):
@@ -122,10 +268,11 @@ def get_single_game_player_data(game, shots):
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
+        # retrieving on-ice statistics
+        gsl = retrieve_on_ice_stats(gsl, shots)
+        # retrieving actual shots
         per_player_game_shots = list(filter(
-            lambda d:
-                d['game_id'] == game_id and
-                d['player_id'] == gsl['player_id'], shots))
+            lambda d: d['player_id'] == gsl['player_id'], shots))
         shots_5v5 = list(filter(
             lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
         gsl['shots_5v5'] = len(shots_5v5)
@@ -526,7 +673,7 @@ if __name__ == '__main__':
 
         print("+ Retrieving player stats for game %s" % get_game_info(game))
         single_player_game_stats = get_single_game_player_data(
-            game, shots)
+            game, game_shots)
         player_game_stats.extend(single_player_game_stats)
 
         # collecting stat lines on a per-player basis
