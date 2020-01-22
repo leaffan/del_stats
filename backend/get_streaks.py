@@ -129,7 +129,8 @@ def get_streaks_for_player(plr_id, plr_team, player_stats, players):
         }
 
     single_player_stats = list(filter(
-        lambda d: d['player_id'] == plr_id, player_stats))
+        lambda d: d['player_id'] == plr_id and
+        d['team'] == plr_team, player_stats))
     single_player_stats = sorted(
         single_player_stats, key=lambda d: d['game_date'])
 
