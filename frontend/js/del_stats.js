@@ -230,7 +230,11 @@ app.factory('svc', function() {
                 '_2min', '_5min', '_10min', '_20min', 'slot_shots', 'left_shots', 'right_shots',
                 'blue_line_shots', 'slot_on_goal', 'left_on_goal', 'right_on_goal', 'blue_line_on_goal',
                 'neutral_zone_shots', 'neutral_zone_on_goal', 'neutral_zone_goals', 'behind_goal_shots',
-                'behind_goal_on_goal', 'behind_goal_goals', 'goals_5v5_from_events'
+                'behind_goal_on_goal', 'behind_goal_goals', 'goals_5v5_from_events',
+                'on_ice_sh_f', 'on_ice_sh_a', 'on_ice_unblocked_sh_f', 'on_ice_unblocked_sh_a',
+                'on_ice_sh_f_5v5', 'on_ice_sh_a_5v5', 'on_ice_unblocked_sh_f_5v5', 'on_ice_unblocked_sh_a_5v5',
+                'on_ice_sog_f', 'on_ice_sog_a', 'on_ice_goals_f', 'on_ice_goals_a',
+                'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5', 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5'
             ];    
         },
         goalie_stats_to_aggregate: function() {
