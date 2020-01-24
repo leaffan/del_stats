@@ -374,6 +374,15 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         });
     }
 
+    $scope.calculateShareOfSum = function(element, for_component, against_component) {
+        sum = element[for_component] + element[against_component];
+        if (sum) {
+            return (element[for_component] / sum) * 100.;
+        } else {
+            return 0.;
+        }
+    };
+
     $scope.filterStats = function(stats) {
         filtered_player_stats = {};
         player_teams = {};
@@ -541,7 +550,38 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             } else {
                 element['time_on_ice_per_shift'] = parseFloat((0).toFixed(2));
             }
-
+            // calculating shot shares
+            element['on_ice_sh_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_sh_f', 'on_ice_sh_a')
+            element['on_ice_unblocked_sh_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_unblocked_sh_f', 'on_ice_unblocked_sh_a')
+            element['on_ice_sog_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_sog_f', 'on_ice_sog_a')
+            element['on_ice_goals_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_goals_f', 'on_ice_goals_a')
+            element['on_ice_sh_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_sh_f_5v5', 'on_ice_sh_a_5v5')
+            element['on_ice_unblocked_sh_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_unblocked_sh_f_5v5', 'on_ice_unblocked_sh_a_5v5')
+            element['on_ice_sog_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5')
+            element['on_ice_goals_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5')
+            // calculating on-ice shooting and save percentages
+            if (element['on_ice_sog_f']) {
+                element['on_ice_shooting_pctg'] = (element['on_ice_goals_f'] / element['on_ice_sog_f']) * 100;
+            } else {
+                element['on_ice_shooting_pctg'] = 0.0;
+            }
+            if (element['on_ice_sog_a']) {
+                element['on_ice_save_pctg'] = (1 - element['on_ice_goals_a'] / element['on_ice_sog_a']) * 100;
+            } else {
+                element['on_ice_save_pctg'] = 0.0;
+            }
+            element['on_ice_pdo'] = element['on_ice_shooting_pctg'] + element['on_ice_save_pctg']; 
+            if (element['on_ice_sog_f_5v5']) {
+                element['on_ice_shooting_pctg_5v5'] = (element['on_ice_goals_f_5v5'] / element['on_ice_sog_f_5v5']) * 100;
+            } else {
+                element['on_ice_shooting_pctg_5v5'] = 0.0;
+            }
+            if (element['on_ice_sog_a_5v5']) {
+                element['on_ice_save_pctg_5v5'] = (1 - element['on_ice_goals_a_5v5'] / element['on_ice_sog_a_5v5']) * 100;
+            } else {
+                element['on_ice_save_pctg_5v5'] = 0.0;
+            }
+            element['on_ice_pdo_5v5'] = element['on_ice_shooting_pctg_5v5'] + element['on_ice_save_pctg_5v5']; 
         });
         return filtered_player_stats;
     };
@@ -570,6 +610,10 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'penalty_stats': 'pim_from_events',
         'additional_stats': 'faceoff_pctg',
         'on_ice_stats': 'plus_minus',
+        'on_ice_shot_stats': 'on_ice_sh_pctg',
+        'on_ice_shot_on_goal_stats': 'on_ice_sog_pctg',
+        'on_ice_shot_stats_5v5': 'on_ice_sh_pctg_5v5',
+        'on_ice_shot_on_goal_stats_5v5': 'on_ice_sog_pctg_5v5',
         'per_60_stats': 'points_per_60',
         'goalie_stats': 'save_pctg',
         'goalie_stats_ev': 'save_pctg_5v5',
@@ -609,7 +653,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'time_on_ice_pp': ['time_on_ice_pp', 'pp_goals_per_60'],
         'pim_from_events': ['pim_from_events', '-games_played'],
         'faceoff_pctg': ['faceoff_pctg', 'faceoffs'],
-        'plus_minus': ['plus_minus']
+        'plus_minus': ['plus_minus'],
+        'on_ice_sh_pctg': ['on_ice_sh_pctg'],
+        'on_ice_sh_pctg_5v5': ['on_ice_sh_pctg_5v5'],
+        'on_ice_sog_pctg': ['on_ice_sog_pctg'],
+        'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5']
     };
 
     $scope.change5v5Check = function() {
