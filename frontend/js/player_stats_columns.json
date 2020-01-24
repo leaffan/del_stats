@@ -113,6 +113,56 @@
         {"data_key": "minus", "col_header": "-", "expl_de": "Minus-Wertung", "expl_en": "Minus"},
         {"data_key": "plus_minus", "col_header": "+/-", "expl_de": "Plus/Minus-Wertung", "expl_en": "Plus/Minus"}
     ],
+    "on_ice_shot_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "on_ice_sh_f", "col_header": "SHFOI", "expl_de": "Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Shots with Player on Ice, i.e Corsi For"},
+        {"data_key": "on_ice_sh_a", "col_header": "SHFAOI", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Shots Against with Player on Ice, i.e. Corsi Against"},
+        {"data_key": "on_ice_sh_pctg", "col_header": "SFOI%", "expl_de": "Anteil der Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Shots with Player on Ice, i.e. Corsi For Percentage"},
+        {"data_key": "on_ice_unblocked_sh_f", "col_header": "USHFOI", "expl_de": "Ungeblockte Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Unblocked Shots with Player on Ice, i.e. Fenwick For"},
+        {"data_key": "on_ice_unblocked_sh_a", "col_header": "USHAOI", "expl_de": "Ungeblockte gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Unblocked Shots Against with Player on Ice, i.e. Fenwick Against"},
+        {"data_key": "on_ice_unblocked_sh_pctg", "col_header": "USHFOI%", "expl_de": "Anteil der ungeblockten Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Unblocked Shots with Player on Ice, i.e. Fenwick For Percentage"}
+    ],
+    "on_ice_shot_stats_5v5": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "on_ice_sh_f_5v5", "col_header": "SHFOI 5v5", "expl_de": "Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots with Player on Ice, i.e Corsi For"},
+        {"data_key": "on_ice_sh_a_5v5", "col_header": "SHFAOI 5v5", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots Against with Player on Ice, i.e. Corsi Against"},
+        {"data_key": "on_ice_sh_pctg_5v5", "col_header": "SFOI% 5v5", "expl_de": "Anteil der Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "Percentage of 5v5 Shots with Player on Ice, i.e. Corsi For Percentage"},
+        {"data_key": "on_ice_unblocked_sh_f_5v5", "col_header": "USHFOI 5v5", "expl_de": "Ungeblockte Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Unblocked Shots with Player on Ice, i.e. Fenwick For"},
+        {"data_key": "on_ice_unblocked_sh_a_5v5", "col_header": "USHAOI 5v5", "expl_de": "Ungeblockte gegnerische Schüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Unblocked Shots Against with Player on Ice, i.e. Fenwick Against"},
+        {"data_key": "on_ice_unblocked_sh_pctg_5v5", "col_header": "USHFOI% 5v5", "expl_de": "Anteil der ungeblockten Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "Percentage of 5v5 Unblocked Shots with Player on Ice, i.e. Fenwick For Percentage"}
+    ],
+    "on_ice_shot_on_goal_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "on_ice_sog_f", "col_header": "SOGFOI", "expl_de": "Torschüsse des Teams mit Spieler auf dem Eis", "expl_en": "Shots on Goal with Player on Ice, i.e Corsi For"},
+        {"data_key": "on_ice_sog_a", "col_header": "SOGAOI", "expl_de": "Gegnerische Torschüsse mit Spieler auf dem Eis", "expl_en": "Shots on Goal Against with Player on Ice, i.e. Corsi Against"},
+        {"data_key": "on_ice_sog_pctg", "col_header": "SOGOI%", "expl_de": "Anteil der Torschüsse des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Shots on Goal with Player on Ice"},
+        {"data_key": "on_ice_goals_f", "col_header": "GFOI", "expl_de": "Tore des Teams mit Spieler auf dem Eis", "expl_en": "Goals For with Player on Ice"},
+        {"data_key": "on_ice_goals_a", "col_header": "GAOI", "expl_de": "Gegnerische Tore mit Spieler auf dem Eis", "expl_en": "Goals Against with Player on Ice"},
+        {"data_key": "on_ice_goals_pctg", "col_header": "GOI%", "expl_de": "Anteil der Tore des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Goals with Player on Ice"},
+        {"data_key": "on_ice_shooting_pctg", "col_header": "OISH%", "expl_de": "Schussquote des Teams mit Spieler auf dem Eis", "expl_en": "Shooting Percentage with Player on Ice"},
+        {"data_key": "on_ice_save_pctg", "col_header": "OISV%", "expl_de": "Fangquote des Teams mit Spieler auf dem Eis", "expl_en": "Save Percentage with Player on Ice"},
+        {"data_key": "on_ice_pdo", "col_header": "OI PDO", "expl_de": "PDO-Wert mit Spieler auf dem Eis", "expl_en": "PDO with Player on Ice"}
+    ],
+    "on_ice_shot_on_goal_stats_5v5": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "on_ice_sog_f_5v5", "col_header": "SOGFOI 5v5", "expl_de": "Torschüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots on Goal with Player on Ice"},
+        {"data_key": "on_ice_sog_a_5v5", "col_header": "SOGAOI 5v5", "expl_de": "Gegnerische Torschüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots on Goal Against with Player on Ice"},
+        {"data_key": "on_ice_sog_pctg_5v5", "col_header": "SOGOI% 5v5", "expl_de": "Anteil der Torschüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "Percentage of 5v5 Shots on Goal with Player on Ice"},
+        {"data_key": "on_ice_goals_f_5v5", "col_header": "GFOI 5v5", "expl_de": "Tore des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Goals For with Player on Ice"},
+        {"data_key": "on_ice_goals_a_5v5", "col_header": "GAOI 5v5", "expl_de": "Gegnerische Tore mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Goals Against with Player on Ice"},
+        {"data_key": "on_ice_goals_pctg_5v5", "col_header": "GOI% 5v5", "expl_de": "Anteil der Tore des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "Percentage of 5v5 Goals with Player on Ice"},
+        {"data_key": "on_ice_shooting_pctg_5v5", "col_header": "OISH% 5v5", "expl_de": "Schussquote des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shooting Percentage with Player on Ice"},
+        {"data_key": "on_ice_save_pctg_5v5", "col_header": "OISV% 5v5", "expl_de": "Fangquote des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Save Percentage with Player on Ice"},
+        {"data_key": "on_ice_pdo_5v5", "col_header": "OI PDO 5v5", "expl_de": "PDO-Wert mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 PDO with Player on Ice"}
+    ],
     "power_play_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
