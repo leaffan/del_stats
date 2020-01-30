@@ -105,6 +105,20 @@
         {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"},
         {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"}
     ],
+    "game_score_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
+        {"data_key": "primary_assists", "col_header": "A1", "expl_de": "Direkte Vorlagen", "expl_en": "Primary Assists"},
+        {"data_key": "secondary_assists", "col_header": "A2", "expl_de": "Indirekte Vorlagen", "expl_en": "Secondary Assists"},
+        {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
+        {"data_key": "faceoffs_diff", "col_header": "FAC DIFF", "expl_de": "Differenz zwischen gewonnenen und verlorenen Bullies", "expl_en": "Won/Lost Faceoff Differential"},
+        {"data_key": "on_ice_sh_diff", "col_header": "SHFOI DIFF", "expl_de": "Differenz zwischen eigenen und gegnerischen Schüssen mit Spieler auf dem Eis", "expl_en": "On Ice Shot Differentials with Player on Ice, i.e Corsi For"},
+        {"data_key": "on_ice_goals_diff", "col_header": "GFOI FIFF", "expl_de": "Differenz zwischen eigenen und gegnerischen Toren mit Spieler auf dem Eis", "expl_en": "Goal Differential with Player on Ice"},
+        {"data_key": "game_score", "col_header": "GS", "expl_de": "Game-Score", "expl_en": "Game Score"},
+        {"data_key": "game_score_per_game", "col_header": "GS/G", "expl_de": "Game-Score pro Spiel", "expl_en": "Game Score/Game"},
+        {"data_key": "game_score_per_60", "col_header": "GS/60", "expl_de": "Game-Score pro 60 Minuten Eiszeit", "expl_en": "Game Score/60"}
+    ],
     "on_ice_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
@@ -118,7 +132,7 @@
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "on_ice_sh_f", "col_header": "SHFOI", "expl_de": "Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Shots with Player on Ice, i.e Corsi For"},
-        {"data_key": "on_ice_sh_a", "col_header": "SHFAOI", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Shots Against with Player on Ice, i.e. Corsi Against"},
+        {"data_key": "on_ice_sh_a", "col_header": "SHAOI", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Shots Against with Player on Ice, i.e. Corsi Against"},
         {"data_key": "on_ice_sh_pctg", "col_header": "SFOI%", "expl_de": "Anteil der Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Shots with Player on Ice, i.e. Corsi For Percentage"},
         {"data_key": "on_ice_unblocked_sh_f", "col_header": "USHFOI", "expl_de": "Ungeblockte Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Unblocked Shots with Player on Ice, i.e. Fenwick For"},
         {"data_key": "on_ice_unblocked_sh_a", "col_header": "USHAOI", "expl_de": "Ungeblockte gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Unblocked Shots Against with Player on Ice, i.e. Fenwick Against"},
@@ -129,7 +143,7 @@
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "on_ice_sh_f_5v5", "col_header": "SHFOI 5v5", "expl_de": "Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots with Player on Ice, i.e Corsi For"},
-        {"data_key": "on_ice_sh_a_5v5", "col_header": "SHFAOI 5v5", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots Against with Player on Ice, i.e. Corsi Against"},
+        {"data_key": "on_ice_sh_a_5v5", "col_header": "SHAOI 5v5", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shots Against with Player on Ice, i.e. Corsi Against"},
         {"data_key": "on_ice_sh_pctg_5v5", "col_header": "SFOI% 5v5", "expl_de": "Anteil der Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "Percentage of 5v5 Shots with Player on Ice, i.e. Corsi For Percentage"},
         {"data_key": "on_ice_unblocked_sh_f_5v5", "col_header": "USHFOI 5v5", "expl_de": "Ungeblockte Schüsse des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Unblocked Shots with Player on Ice, i.e. Fenwick For"},
         {"data_key": "on_ice_unblocked_sh_a_5v5", "col_header": "USHAOI 5v5", "expl_de": "Ungeblockte gegnerische Schüsse mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Unblocked Shots Against with Player on Ice, i.e. Fenwick Against"},
