@@ -250,7 +250,10 @@ app.factory('svc', function() {
                 'on_ice_sh_f_5v5', 'on_ice_sh_a_5v5', 'on_ice_unblocked_sh_f_5v5', 'on_ice_unblocked_sh_a_5v5',
                 'on_ice_sog_f', 'on_ice_sog_a', 'on_ice_goals_f', 'on_ice_goals_a',
                 'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5', 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5'
-            ];    
+            ];
+        },
+        player_float_stats_to_aggregate: function() {
+            return ['game_score'];
         },
         goalie_stats_to_aggregate: function() {
             return [
