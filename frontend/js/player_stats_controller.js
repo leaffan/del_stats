@@ -82,6 +82,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             return line.reduce(function(player_game, value, i) {
                 if ($scope.svc.player_stats_to_aggregate().indexOf(headers[i]) !== -1) {
                     player_game[headers[i]] = parseInt(value);
+                } else if ($scope.svc.player_float_stats_to_aggregate().indexOf(headers[i]) !== -1 ) {
+                    player_game[headers[i]] = parseFloat(value);
                 } else if (headers[i] == 'u23') {
                     if (value == 'True') {
                         player_game[headers[i]] = true;
@@ -344,6 +346,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 svc.player_stats_to_aggregate().forEach(category => {
                     multiTeamPlayerStats[category] = 0;
                 });
+                svc.player_float_stats_to_aggregate().forEach(category => {
+                    multiTeamPlayerStats[category] = 0.0;
+                });
             }
             // aggregating numeric attributes
             teams.forEach(team => {
@@ -354,6 +359,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                     });
                 } else {
                     svc.player_stats_to_aggregate().forEach(category => {
+                        multiTeamPlayerStats[category] += plr_team_stats[category];
+                    });
+                    svc.player_float_stats_to_aggregate().forEach(category => {
                         multiTeamPlayerStats[category] += plr_team_stats[category];
                     });
                 }
@@ -407,6 +415,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
                     filtered_player_stats[key][category] = 0;
                 });
+                svc.player_float_stats_to_aggregate().forEach(category => {
+                    filtered_player_stats[key][category] = 0.0;
+                });
             }
             // checking whether current element passes all filters
             if ($scope.elementPassedFilters(element))
@@ -414,6 +425,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 // adding values
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
                     filtered_player_stats[key][category] += element[category];
+                });
+                $scope.svc.player_float_stats_to_aggregate().forEach(category => {
+                    filtered_player_stats[key][category] += parseFloat(element[category]);
                 });
                 // registering player's team
                 if (!player_teams[plr_id]) {
@@ -470,11 +484,13 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['time_on_ice_pp_per_game'] = (element['time_on_ice_pp'] / element['games_played']);
                 element['time_on_ice_sh_per_game'] = (element['time_on_ice_sh'] / element['games_played']);
                 element['shifts_per_game'] = element['shifts'] / element['games_played'];
+                element['game_score_per_game'] = element['game_score'] / element['games_played'];
             } else {
                 element['time_on_ice_per_game'] = parseFloat((0).toFixed(2));
                 element['time_on_ice_pp_per_game'] = parseFloat((0).toFixed(2));
                 element['time_on_ice_sh_per_game'] = parseFloat((0).toFixed(2));
                 element['shifts_per_game'] = parseFloat((0).toFixed(2));
+                element['game_score_per_game'] = 0.;
             }
             // calculating goals, assists, points, shots, shots on goal per 60 minutes of time on ice
             if (element['time_on_ice']) {
@@ -486,6 +502,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['primary_points_per_60'] = element['primary_points'] / (element['time_on_ice'] / 60) * 60;
                 element['shots_per_60'] = element['shots'] / (element['time_on_ice'] / 60) * 60;
                 element['shots_on_goal_per_60'] = element['shots_on_goal'] / (element['time_on_ice'] / 60) * 60;
+                element['game_score_per_60'] = element['game_score'] / (element['time_on_ice'] / 60) * 60;
             } else {
                 element['goals_per_60'] = parseFloat((0).toFixed(2));
                 element['assists_per_60'] = parseFloat((0).toFixed(2));
@@ -495,6 +512,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['primary_points_per_60'] = parseFloat((0).toFixed(2));
                 element['shots_per_60'] = parseFloat((0).toFixed(2));
                 element['shots_on_goal_per_60'] = parseFloat((0).toFixed(2));
+                element['game_score_per_60'] = 0.;
             }
             // calculating goals, assists, points, shots, shots on goal per game
             if (element['games_played']) {
@@ -581,7 +599,13 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             } else {
                 element['on_ice_save_pctg_5v5'] = 0.0;
             }
-            element['on_ice_pdo_5v5'] = element['on_ice_shooting_pctg_5v5'] + element['on_ice_save_pctg_5v5']; 
+            element['on_ice_pdo_5v5'] = element['on_ice_shooting_pctg_5v5'] + element['on_ice_save_pctg_5v5'];
+            // calculating differentials for display of game score stats
+            element['faceoffs_diff'] = element['faceoffs_won'] - element['faceoffs_lost'];
+            element['on_ice_sh_diff'] = element['on_ice_sh_f'] - element['on_ice_sh_a'];
+            element['on_ice_goals_diff'] = element['on_ice_goals_f'] - element['on_ice_goals_a'];
+
+
         });
         return filtered_player_stats;
     };
@@ -620,7 +644,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'goalie_stats_sh': 'save_pctg_4v5',
         'goalie_stats_pp': 'save_pctg_5v4',
         'goalie_zone_stats_near': 'save_pctg_slot',
-        'goalie_zone_stats_far': 'save_pctg_blue_line'
+        'goalie_zone_stats_far': 'save_pctg_blue_line',
+        'game_score_stats': 'game_score'
     }
 
     // sorting attributes to be used in ascending order
@@ -657,7 +682,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'on_ice_sh_pctg': ['on_ice_sh_pctg'],
         'on_ice_sh_pctg_5v5': ['on_ice_sh_pctg_5v5'],
         'on_ice_sog_pctg': ['on_ice_sog_pctg'],
-        'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5']
+        'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5'],
+        'game_score': ['game_score', 'goals', 'primary_assists']
     };
 
     $scope.change5v5Check = function() {

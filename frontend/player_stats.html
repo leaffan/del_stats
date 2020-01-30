@@ -41,6 +41,7 @@
                     <option data-ng-option value="penalty_stats">Strafzeit-Statistiken</option>
                     <option data-ng-option value="on_goal_shot_zones">Schusszonen-Statistiken (Torschüsse)</option>
                     <option data-ng-option value="shot_zones">Schusszonen-Statistiken (alle Schüsse)</option>
+                    <option data-ng-option value="game_score_stats">Game-Score-Statistiken</option>
                     <option data-ng-option value="streaks">Scoringstreaks</option>
                     <option data-ng-option value="additional_stats">Weitere Statistiken</option>
                     <option data-ng-option value="on_ice_stats">On-Ice-Statistiken</option>
@@ -508,6 +509,44 @@
         </tbody>
     </table>
 
+    <table id="game_score_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'game_score_stats'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">Rang</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_pp', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-2">
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
+                </td>
+                <td class="col-md-1" style="width: 5%">
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
+                </td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.primary_assists }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.secondary_assists }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_diff }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.on_ice_sh_diff }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.on_ice_goals_diff }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.game_score.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.game_score_per_game.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.game_score_per_60.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
 
     <table id="time_on_ice_shift_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
         <thead>
