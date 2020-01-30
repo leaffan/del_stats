@@ -74,7 +74,7 @@ OUT_FIELDS = [
     "on_ice_unblocked_sh_f_5v5", "on_ice_sog_f_5v5", "on_ice_goals_f_5v5",
     "on_ice_sh_a", "on_ice_unblocked_sh_a", "on_ice_sog_a", "on_ice_goals_a",
     "on_ice_sh_a_5v5", "on_ice_unblocked_sh_a_5v5", "on_ice_sog_a_5v5",
-    "on_ice_goals_a_5v5",
+    "on_ice_goals_a_5v5", 'game_score'
 ]
 
 # default empty line
@@ -345,6 +345,15 @@ def get_single_game_player_data(game, shots):
             goals_from_zone = list(filter(
                 lambda d: d['scored'], shots_on_goal_from_zone))
             gsl["%s_goals" % shot_zone] = len(goals_from_zone)
+
+        gsl['game_score'] = round(
+            0.75 * gsl['goals'] + 0.7 * gsl['primary_assists'] +
+            0.55 * gsl['secondary_assists'] + 0.075 * gsl['shots_on_goal'] +
+            0.05 * gsl['blocked_shots'] - 0.15 * gsl['penalties'] +
+            0.01 * gsl['faceoffs_won'] - 0.01 * gsl['faceoffs_lost'] +
+            0.05 * gsl['on_ice_sh_f'] - 0.05 * gsl['on_ice_sh_a'] +
+            0.15 * gsl['on_ice_goals_f'] - 0.15 * gsl['on_ice_goals_a'], 2
+        )
 
     return game_stat_lines
 
