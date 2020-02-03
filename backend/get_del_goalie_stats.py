@@ -342,6 +342,12 @@ if __name__ == '__main__':
             else:
                 goalie_dict['so'] = 0
 
+            goalie_dict['game_score'] = round(
+                -0.75 * goalie_dict['goals_against'] +
+                0.1 * (
+                    goalie_dict['shots_against'] -
+                    goalie_dict['goals_against']), 2)
+
             goalies_per_game.append(goalie_dict)
 
     # dumping collected and calculated data to target file
