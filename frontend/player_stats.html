@@ -50,6 +50,7 @@
                     <option data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussstatistiken (alle Situationen)</option>
                     <option data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussstatistiken (5-gegen-5)</option>
                     <option data-ng-option value="goalie_stats">Torhüterstatistiken</option>
+                    <option data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
                     <option data-ng-option value="goalie_stats_ev">Torhüterstatistiken (Fangquoten)</option>
                     <option data-ng-option value="goalie_stats_sh">Torhüterstatistiken (Fangquoten Unterzahl)</option>
                     <option data-ng-option value="goalie_stats_pp">Torhüterstatistiken (Fangquoten Überzahl)</option>
@@ -850,6 +851,45 @@
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.gaa.toFixed(2) }}</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.save_pctg.toFixed(2) }} %</td>
                 <td class="col-md-1 text-right" style="width: 6%">{{ stat.so }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_against_avg_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">Rang</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:greaterThanFilter('toi', 0)">
+                    <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-2">
+                    <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
+                </td>
+                <td class="col-md-1" style="width: 5%">
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
+                </td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.games_started }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.shots_against }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.goals_against }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_avg.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.gsaa.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.sa_5v5 }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_5v5 }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.ga_avg_5v5.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 6%">{{ stat.gsaa_5v5.toFixed(2) }}</td>
             </tr>
         </tbody>
     </table>
