@@ -15,6 +15,7 @@ python get_del_games.py --initial -s %SEASON% -f "Sep 1, %SEASON%" -t "%CURRENT_
 python get_shots.py --initial -s %SEASON%
 python get_del_team_game_stats.py --initial -s %SEASON%
 python get_del_player_game_stats.py --initial -s %SEASON%
+python get_league_wide_stats.py --initial -s %SEASON%
 python get_del_goalie_stats.py --initial -s %SEASON%
 python aggregate_del_player_game_stats.py -s %SEASON%
 python get_streaks.py -s %SEASON%

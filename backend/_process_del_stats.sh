@@ -7,6 +7,7 @@ python3 /home/pacs/mre00/users/markus/_del/get_del_games.py -s "$season" --initi
 python3 /home/pacs/mre00/users/markus/_del/get_shots.py -s "$season" --initial
 python3 /home/pacs/mre00/users/markus/_del/get_del_team_game_stats.py -s "$season" --initial
 python3 /home/pacs/mre00/users/markus/_del/get_del_player_game_stats.py -s "$season" --initial
+python3 /home/pacs/mre00/users/markus/_del/get_league_wide_stats.py -s "$season" --initial
 python3 /home/pacs/mre00/users/markus/_del/get_del_goalie_stats.py -s "$season" --initial
 python3 /home/pacs/mre00/users/markus/_del/aggregate_del_player_game_stats.py -s "$season"
 python3 /home/pacs/mre00/users/markus/_del/get_streaks.py -s "$season"
