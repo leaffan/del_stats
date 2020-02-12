@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteCond %{SERVER_PORT} !=443
+RewriteRule ^(.*)$ https://www.leaffan.net/$1 [R=301,L]
+
+# Deflate Compression by FileType
+<IfModule mod_deflate.c>
+ AddOutputFilterByType DEFLATE application/json
+ AddOutputFilterByType DEFLATE application/csv
+</IfModule>
