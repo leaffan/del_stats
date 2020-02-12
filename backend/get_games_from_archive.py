@@ -13,6 +13,9 @@ from lxml import html
 
 from dateutil.parser import parse
 
+from utils import read_del_team_names
+
+
 # loading configuration from external file
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
@@ -35,6 +38,8 @@ TEAM_ABBRS_BY_ID = {
 }
 TEAM_IDS_BY_ABBR = {abbr: t_id for t_id, abbr in TEAM_ABBRS_BY_ID.items()}
 
+TEAM_LOOKUP = read_del_team_names()
+
 
 def get_regular_season(season_id):
 
@@ -54,8 +59,8 @@ def get_regular_season(season_id):
         trs = doc.xpath("//table/tbody/tr")
         for tr in trs:
             single_game = get_single_game(tr, season, season_type)
-            # print(single_game)
-            games.append(single_game)
+            if single_game:
+                games.append(single_game)
 
         time.sleep(0.5)
 
@@ -68,9 +73,13 @@ def get_single_game(tr, season, season_type):
     single_game = dict()
 
     tds = tr.xpath("td")
-    season_id, game_id = [
-        int(x) for
-        x in tds[7].xpath("a/@href")[0].replace(".html", "").split("_")[1:]]
+    try:
+        season_id, game_id = [
+            int(x) for
+            x in tds[7].xpath("a/@href")[0].replace(".html", "").split("_")[1:]
+        ]
+    except Exception:
+        return
     game_date, game_time = [td.xpath("text()").pop(0) for td in tds[:2]]
     game_date = parse(game_date.split()[-1], dayfirst=True).date()
     single_game['game_id'] = game_id
@@ -103,11 +112,14 @@ def get_single_game(tr, season, season_type):
     overtime_shootout = tds[7].xpath("text()").pop(0).strip()
     single_game['overtime'] = False
     single_game['shootout'] = False
+    single_game['armchair'] = False
     if overtime_shootout == '(OT)':
         single_game['overtime'] = True
     elif overtime_shootout == '(SO)':
         single_game['overtime'] = True
         single_game['shootout'] = True
+    elif overtime_shootout == '(OR)':
+        single_game['armchair'] = True
 
     return single_game
 
@@ -181,12 +193,20 @@ def get_playoff_games(season_id):
                 score_home, score_road = [
                     int(token) for token in game_result[0].split(":")]
                 single_game['home_id'] = TEAM_IDS_BY_ABBR[game_home]
-                single_game['home_team'] = game_home
-                single_game['home_abbr'] = game_home
+
+                home_team_abbr, home_team_name = TEAM_LOOKUP[
+                    (single_game['home_id'], season)]
+
+                single_game['home_team'] = home_team_name
+                single_game['home_abbr'] = home_team_abbr
                 single_game['home_score'] = score_home
                 single_game['road_id'] = TEAM_IDS_BY_ABBR[game_road]
-                single_game['road_team'] = game_road
-                single_game['road_abbr'] = game_road
+
+                road_team_abbr, road_team_name = TEAM_LOOKUP[
+                    (single_game['road_id'], season)]
+
+                single_game['road_team'] = road_team_name
+                single_game['road_abbr'] = road_team_abbr
                 single_game['road_score'] = score_road
                 single_game['overtime'] = False
                 single_game['shootout'] = False
