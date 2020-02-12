@@ -15,6 +15,7 @@ from reconstruct_skater_situation import GoalieShift
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 PLR_SRC = 'del_players.json'
+LEAGUE_SRC = 'del_league_stats.json'
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -45,6 +46,21 @@ def retrieve_goalies_in_game(game):
     intervals_at_gw_goal_time = interval_tree[-game['gw_goal_time']]
 
     return dict(goalie_seconds), intervals_at_gw_goal_time
+
+
+def calculate_goals_saved_above_average(goalie_dict, league_data):
+    """
+    Calculates goals saved above average using previously retrieved league-wide
+    save percentage data.
+    """
+    # calculating goals saved above average
+    ga_avg = goalie_dict['shots_against'] * (1 - league_data['save_pctg'])
+    goalie_dict['ga_avg'] = round(ga_avg, 3)
+    goalie_dict['gsaa'] = round(ga_avg - goalie_dict['goals_against'], 3)
+    # calculating 5v5 goals saved above average
+    ga_avg_5v5 = goalie_dict['sa_5v5'] * (1 - league_data['save_pctg_5v5'])
+    goalie_dict['ga_avg_5v5'] = round(ga_avg_5v5, 3)
+    goalie_dict['gsaa_5v5'] = round(ga_avg_5v5 - goalie_dict['ga_5v5'], 3)
 
 
 def calculate_save_pctg(goalie_dict, type=''):
@@ -105,7 +121,7 @@ def is_shutout(goalie_dict, goalies_in_game):
         if len(goalies_in_game) > 2:
             # counting goalies per team
             goalies_per_team_cnt = 0
-            for team, id in goalies_in_game:
+            for team, _ in goalies_in_game:
                 if team == goalie_dict['team']:
                     goalies_per_team_cnt += 1
             # if current team had more than one goalie in the game, this can't
@@ -151,12 +167,14 @@ if __name__ == '__main__':
     src_path = os.path.join(tgt_dir, GAME_SRC)
     shot_src_path = os.path.join(tgt_dir, SHOT_SRC)
     plr_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLR_SRC)
+    league_src_path = os.path.join(tgt_dir, LEAGUE_SRC)
     tgt_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_TGT)
 
     # loading games and shots
     games = json.loads(open(src_path).read())
     shots = json.loads(open(shot_src_path).read())
     players = json.loads(open(plr_src_path).read())
+    league_data = json.loads(open(league_src_path).read())
 
     # loading existing player game stats
     if not initial and os.path.isfile(tgt_path):
@@ -168,6 +186,11 @@ if __name__ == '__main__':
     registered_games = set([gpg['game_id'] for gpg in goalies_per_game])
 
     for game in games[:]:
+
+        game_shots = list(filter(
+            lambda d: d['game_id'] == game['game_id'] and
+            d['target_type'] == 'on_goal', shots
+        ))
 
         # skipping already processed games
         if game['game_id'] in registered_games:
@@ -298,7 +321,7 @@ if __name__ == '__main__':
             for shot_zone in SHOT_ZONES:
                 goalie_dict["ga_%s" % shot_zone] = 0
 
-            for shot in shots:
+            for shot in game_shots:
                 # skipping shot if not from current game or not on goal
                 if (
                     shot['game_id'] != game['game_id'] or
@@ -341,6 +364,8 @@ if __name__ == '__main__':
                 goalie_dict['so'] = 1
             else:
                 goalie_dict['so'] = 0
+
+            calculate_goals_saved_above_average(goalie_dict, league_data)
 
             goalie_dict['game_score'] = round(
                 -0.75 * goalie_dict['goals_against'] +
