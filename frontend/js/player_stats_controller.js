@@ -640,6 +640,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'on_ice_shot_on_goal_stats_5v5': 'on_ice_sog_pctg_5v5',
         'per_60_stats': 'points_per_60',
         'goalie_stats': 'save_pctg',
+        'goalie_against_avg_stats': 'gsaa',
         'goalie_stats_ev': 'save_pctg_5v5',
         'goalie_stats_sh': 'save_pctg_4v5',
         'goalie_stats_pp': 'save_pctg_5v4',
@@ -683,7 +684,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'on_ice_sh_pctg_5v5': ['on_ice_sh_pctg_5v5'],
         'on_ice_sog_pctg': ['on_ice_sog_pctg'],
         'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5'],
-        'game_score': ['game_score', 'goals', 'primary_assists']
+        'game_score': ['game_score', 'goals', 'primary_assists'],
+        'gsaa': ['gsaa']
     };
 
     $scope.change5v5Check = function() {
