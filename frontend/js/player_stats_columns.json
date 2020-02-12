@@ -216,6 +216,20 @@
         {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
         {"data_key": "so", "col_header": "SO", "expl_de": "Spiele ohne Gegentor", "expl_en": "Shutouts"}
     ],
+    "goalie_against_avg_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "games_started", "col_header": "GS", "expl_de": "Spiele begonnen", "expl_en": "Games Started"},
+        {"data_key": "shots_against", "col_header": "SA", "expl_de": "Schüsse auf das Tor", "expl_en": "Shots Against"},
+        {"data_key": "goals_against", "col_header": "GA", "expl_de": "Zugelassene Tore", "expl_en": "Goals Against"},
+        {"data_key": "ga_avg", "col_header": "Avg GA", "expl_de": "Angenommene zugelassene Tore (Ligaschnitt)", "expl_en": "League-Average Goals Against"},
+        {"data_key": "gsaa", "col_header": "GSAA", "expl_de": "Verhinderte Tore über Ligaschnitt", "expl_en": "Goals Saved Above Average"},
+        {"data_key": "sa_5v5", "col_header": "5v5 SA", "expl_de": "Abzuwehrende Torschüsse im 5-gegen-5", "expl_en": "5v5 Shots Against"},
+        {"data_key": "ga_5v5", "col_header": "5v5 GA", "expl_de": "Zugelassene Tore im 5-gegen-5", "expl_en": "5v5 Goals Against"},
+        {"data_key": "ga_avg_5v5", "col_header": "5v5 Avg GA", "expl_de": "Angenommene zugelassene Tore (Ligaschnitt) im 5-gegen-5", "expl_en": "5v5 League-Average Goals Against"},
+        {"data_key": "gsaa_5v5", "col_header": "5v5 GSAA", "expl_de": "Verhinderte Tore über Ligaschnitt im 5-gegen-5", "expl_en": "5v5 Goals Saved Above Average"}
+    ],
     "goalie_stats_ev": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
