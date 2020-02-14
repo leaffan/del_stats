@@ -4,6 +4,12 @@
 import os
 import csv
 import json
+import yaml
+
+# loading external configuration
+CONFIG = yaml.safe_load(open(os.path.join(
+    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+
 
 SRC_DATA_DIR = "data"
 SRC_GAME_STATS_FILE = "del_games.json"
@@ -95,7 +101,8 @@ if __name__ == '__main__':
 
     out_fields = list(out_dict.keys())
 
-    tgt_csv_path = os.path.join("data", "sorted_game_scores.csv")
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'])
+    tgt_csv_path = os.path.join(tgt_dir, "sorted_game_scores.csv")
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
         dict_writer = csv.DictWriter(
