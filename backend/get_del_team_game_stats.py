@@ -555,8 +555,20 @@ def correct_name(name, game_date=None, corrections=name_corrections):
                 [token.strip() for token in name.split(delimiter)][::-1])
     if name.upper() == name:
         name = name.title()
+    if name in name_corrections:
+        single_date_correction, *valid_on_date = (
+            name_corrections[name].split("//"))
+        if game_date and valid_on_date:
+            valid_on_date = parse(valid_on_date[0])
+            # checking if game had been played before expiration date
+            if game_date == valid_on_date:
+                name = single_date_correction
+        else:
+            name = name
     tries = 0
     while name in name_corrections and tries < 3:
+        if "//" in name_corrections[name]:
+            break
         corrected_name, *valid_to_date = name_corrections[name].split("|")
         # checking whether a game date was provided and the current correction
         # has an expiration date
@@ -568,6 +580,7 @@ def correct_name(name, game_date=None, corrections=name_corrections):
         else:
             name = corrected_name
         tries += 1
+
     return name
 
 
