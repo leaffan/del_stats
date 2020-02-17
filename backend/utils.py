@@ -69,14 +69,17 @@ name_corrections = {
     'Pasanen Jari': 'Jari Pasanen',
     'Franz Fritzmeier': 'Franz-David Fritzmeier',
     'Fritzmeier': 'Franz-David Fritzmeier',
-    # at times former assistants become head coaches and therefore their names
-    # no lotherefore no longer need to be adjusted
+    # at times former assistants become head coaches and
+    # therefore their names no longer need to be adjusted
     # hence: the following name corrections are only valid until the date
     # specified after the pipe symbol
     'Pienne Beaulieu': 'Pierre Beaulieu',
     'Pierre Beaulie': 'Pierre Beaulieu',
     'Pierre Beaulien': 'Pierre Beaulieu',
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
+    # following are individual corrections valid only for the accompanying
+    # game date
+    'Don Jackson': 'Steve Walker//2020-01-19',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
