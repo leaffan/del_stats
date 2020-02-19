@@ -4,6 +4,7 @@ season="${1:-2019}"
 
 # copying data sets to standard site location
 cp -v /home/pacs/mre00/users/markus/_del/_data/del_players.json /home/doms/leaffan.net/subs/www/del/data/del_players.json
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_league_stats.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats_aggregated.* /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats.csv /home/doms/leaffan.net/subs/www/del/data/$season
@@ -23,6 +24,7 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/del_players.json /home/doms/leaff
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/coaches.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/h2h.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/full_schedule.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_league_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats_aggregated.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats_aggregated.* /home/doms/leaffan.net/subs/www/del_extended/data/$season
