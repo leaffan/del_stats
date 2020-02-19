@@ -148,8 +148,8 @@ def retrieve_on_ice_stats(gsl, shots):
     else:
         gsl['on_ice_shooting_pctg'] = 0.
     if gsl['on_ice_sog_a']:
-        gsl['on_ice_save_pctg'] = round(100 -
-            gsl['on_ice_goals_a'] / gsl['on_ice_sog_a'] * 100, 2)
+        gsl['on_ice_save_pctg'] = round(
+            100 - gsl['on_ice_goals_a'] / gsl['on_ice_sog_a'] * 100, 2)
     else:
         gsl['on_ice_save_pctg'] = 0.
     gsl['on_ice_pdo'] = gsl['on_ice_shooting_pctg'] + gsl['on_ice_save_pctg']
@@ -217,8 +217,8 @@ def retrieve_on_ice_stats(gsl, shots):
     else:
         gsl['on_ice_shooting_pctg_5v5'] = 0.
     if gsl['on_ice_sog_a_5v5']:
-        gsl['on_ice_save_pctg_5v5'] = round(100 - 
-            gsl['on_ice_goals_a_5v5'] / gsl['on_ice_sog_a_5v5'] * 100, 2)
+        gsl['on_ice_save_pctg_5v5'] = round(
+            100 - gsl['on_ice_goals_a_5v5'] / gsl['on_ice_sog_a_5v5'] * 100, 2)
     else:
         gsl['on_ice_save_pctg_5v5'] = 0.
     gsl['on_ice_pdo_5v5'] = (
