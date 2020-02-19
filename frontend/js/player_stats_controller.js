@@ -43,6 +43,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         $scope.all_players = res.data;
     });
 
+    // loading league-wide stats from external json file
+    $http.get('data/' + $scope.season + '/del_league_stats.json').then(function (res) {
+        $scope.league_data = res.data;
+    });
+
     // loading stats from external json file
     $http.get('data/' + $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
         $scope.last_modified = res.data[0];

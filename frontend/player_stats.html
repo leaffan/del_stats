@@ -831,7 +831,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:greaterThanFilter('toi', 0)">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
                     <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
@@ -855,6 +855,19 @@
         </tbody>
     </table>
 
+    <div class="alert alert-info main-bg" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
+        <table id="league_wide_stats" class="table-condensed table-bordered table-striped" >
+            <tbody>
+                <tr>
+                    <td class="col-md-4">Fangqoute im Ligaschnitt (alle Situationen):</td>
+                    <td class="col-md-2 text-right"><b>{{ (league_data.save_pctg * 100).toFixed(2) }} %</b></td>
+                    <td class="col-md-4">Fangqoute im Ligaschnitt (5-gegen-5):</td>
+                    <td class="col-md-2 text-right"><b>{{ (league_data.save_pctg_5v5 * 100).toFixed(2) }} %</b></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
     <table id="goalie_against_avg_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
         <thead>
             <tr>
@@ -870,7 +883,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:greaterThanFilter('toi', 0)">
+            <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
                     <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-2">
                     <a data-ng-if="stat.single_team" href='#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}'>{{ stat.full_name }}</a>
