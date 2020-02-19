@@ -55,6 +55,7 @@ name_corrections = {
     'Stewart Mike': 'Mike Stewart',
     'Roos Matthias': 'Matthias Roos',
     'Jason O`Leary': "Jason O'Leary",
+    'J. O`Leary': "Jason O'Leary",
     'Pellegrims Mike': 'Mike Pellegrims',
     'Krupp Uwe': 'Uwe Krupp',
     'Jackson Don': 'Don Jackson',
@@ -79,6 +80,13 @@ name_corrections = {
     # following are individual corrections valid only for the accompanying
     # game date
     'Don Jackson': 'Steve Walker//2020-01-19',
+    # following are individual corrections valid only for the specified
+    # combination of game id and team abbreviation as a workaround for
+    # entirely missing coach information
+    '1738_IEC': "Jason O'Leary",
+    '1738_KEV': 'Pierre Beaulieu',
+    '1691_STR': 'Tom Pokel',
+    '1691_WOB': 'Pat Cortina',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
