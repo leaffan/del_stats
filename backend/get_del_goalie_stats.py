@@ -7,6 +7,7 @@ import yaml
 import argparse
 
 from collections import defaultdict
+from dateutil.parser import parse
 
 from utils import get_game_info
 from reconstruct_skater_situation import build_interval_tree
@@ -27,6 +28,13 @@ SKR_SITUATIONS = [
     '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
 SHOT_ZONES = [
     'blue_line', 'left', 'right', 'slot', 'neutral_zone']
+
+U23_CUTOFF_DATES = {
+    2016: parse("1994-01-01"),
+    2017: parse("1995-01-01"),
+    2018: parse("1996-01-01"),
+    2019: parse("1997-01-01")
+}
 
 
 def retrieve_goalies_in_game(game):
@@ -256,6 +264,16 @@ if __name__ == '__main__':
             goalie_dict['goalie_id'] = goalie_id
             goalie_dict['first_name'] = players[str(goalie_id)]['first_name']
             goalie_dict['last_name'] = players[str(goalie_id)]['last_name']
+            goalie_dict['country'] = players[str(goalie_id)]['iso_country']
+            # setting u23 status
+            if (
+                goalie_dict['country'] == 'de' and
+                parse(players[str(goalie_id)]['dob']) >= U23_CUTOFF_DATES[
+                    game['season']]
+            ):
+                goalie_dict['u23'] = True
+            else:
+                goalie_dict['u23'] = False
 
             print("\t+ Retrieving goalie stats for %s %s (%s)" % (
                 goalie_dict['first_name'], goalie_dict['last_name'],
