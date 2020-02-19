@@ -94,6 +94,10 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         game_stat_line['season_type'] = game['season_type']
         game_stat_line['round'] = game['round']
         game_stat_line['game_id'] = game_id
+        game_stat_line['team_id'] = game["%s_id" % key]
+        game_stat_line['team'] = game["%s_abbr" % key]
+        game_stat_line['opp_team_id'] = game["%s_id" % opp_key]
+        game_stat_line['opp_team'] = game["%s_abbr" % opp_key]
         # TODO: reactivate when schedule game id is available again
         # game_stat_line['schedule_game_id'] = game['schedule_game_id']
         game_stat_line['arena'] = correct_name(game['arena'])
@@ -112,14 +116,23 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             if game_stat_line['coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['coach'])
         else:
-            game_stat_line['coach'] = None
+            print("\t+ No coach information found for %s in game %d" % (
+                game_stat_line['team'], game_id))
+            game_stat_line['coach'] = correct_name(
+                "%d_%s" % (game_id, game_stat_line['team']))
+            print("\t+ Adjusted to '%s'" % game_stat_line['coach'])
         if "%s_coach" % opp_key in game:
             game_stat_line['opp_coach'] = correct_name(
                 game["%s_coach" % opp_key], game['date'])
             if game_stat_line['opp_coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['opp_coach'])
         else:
-            game_stat_line['opp_coach'] = None
+            print(
+                "\t+ No opposition coach information found " +
+                "for %s in game %d" % (game_stat_line['opp_team'], game_id))
+            game_stat_line['opp_coach'] = correct_name(
+                "%d_%s" % (game_id, game_stat_line['opp_team']))
+            print("\t+ Adjusted to '%s'" % game_stat_line['opp_coach'])
         game_stat_line['ref_1'] = correct_name(game['referee_1'])
         game_stat_line['ref_2'] = correct_name(game['referee_2'])
         game_stat_line['lma_1'] = correct_name(game['linesman_1'])
@@ -127,12 +140,8 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         # outcomes
         game_stat_line['games_played'] = 1
         game_stat_line['home_road'] = key
-        game_stat_line['team_id'] = game["%s_id" % key]
-        game_stat_line['team'] = game["%s_abbr" % key]
         game_stat_line['score'] = game["%s_score" % key]
         game_stat_line['goals'] = game["%s_score" % key]
-        game_stat_line['opp_team_id'] = game["%s_id" % opp_key]
-        game_stat_line['opp_team'] = game["%s_abbr" % opp_key]
         game_stat_line['opp_score'] = game["%s_score" % opp_key]
         game_stat_line['opp_goals'] = game["%s_score" % opp_key]
         if game['shootout_game']:
@@ -549,6 +558,11 @@ def correct_name(name, game_date=None, corrections=name_corrections):
     # parsing game date here to avoid parsing it twice below
     if game_date:
         game_date = parse(game_date)
+    # correcting coach's name for specific combinations of game id and team
+    # abbreviation, e.g. 1738_IEC (used in case of missing information about
+    # coaches)
+    if "_" in name and name[0].isdigit():
+        return name_corrections[name]
     for delimiter in [',', ';']:
         if delimiter in name:
             name = " ".join(
