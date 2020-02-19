@@ -13,6 +13,7 @@ if [%SEASON%] EQU [] (
 echo %SEASON%
 
 copy data\del_players.json %TGT_BASE_DIR%
+copy data\%SEASON%\del_league_stats.json %TGT_BASE_DIR%\%SEASON%
 copy data\%SEASON%\del_goalie_game_stats.json %TGT_BASE_DIR%\%SEASON%
 copy data\%SEASON%\del_player_game_stats_aggregated.* %TGT_BASE_DIR%\%SEASON%
 copy data\%SEASON%\del_player_game_stats.csv %TGT_BASE_DIR%\%SEASON%
@@ -32,6 +33,7 @@ copy %DEL_DATA_BASE_DIR%\del_facts\facts.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\full_schedule.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\coaches.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\h2h.json %TGT_EXTENDED_DIR%\%SEASON%
+copy data\%SEASON%\del_league_stats.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\del_goalie_game_stats.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\del_goalie_game_stats_aggregated.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\del_player_game_stats_aggregated.* %TGT_EXTENDED_DIR%\%SEASON%
