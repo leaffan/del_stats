@@ -16,4 +16,5 @@ python3 /home/pacs/mre00/users/markus/_del/download_game_data.py -s "$season" -g
 python3 /home/pacs/mre00/users/markus/_del/download_game_data.py -s "$season" -g "$game_type" game_goalies
 python3 /home/pacs/mre00/users/markus/_del/download_game_data.py -s "$season" -g "$game_type" shifts
 python3 /home/pacs/mre00/users/markus/_del/download_game_data.py -s "$season" -g "$game_type" shots
+python3 /home/pacs/mre00/users/markus/_del/download_game_data.py -s "$season" -g "$game_type" faceoffs
 python3 /home/pacs/mre00/users/markus/_del/download_career_data.py
