@@ -41,7 +41,8 @@ if __name__ == '__main__':
     SEASON_SEASON_TYPE_TEAM_ID_REGEX = re.compile(
         R"(\d+)\%s(\d)\%s(\d+)\.json" % (os.sep, os.sep))
 
-    for src_dir, _, fnames in os.walk(roster_stats_src_dir):
+    for src_dir, dirs, fnames in os.walk(roster_stats_src_dir):
+        dirs.sort()
         for fname in fnames:
             src_path = os.path.join(src_dir, fname)
             match = re.search(SEASON_SEASON_TYPE_TEAM_ID_REGEX, src_path)
