@@ -27,6 +27,7 @@ url_components:
   game_team_stats: team-stats
   game_goalies: top-goalies
   shifts: shifts
+  faceoffs: faceoffs
   shots: live-ticker/visualization/shots
   team_profile: teamprofil
 # available game type ids and their meaning
