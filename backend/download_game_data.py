@@ -45,7 +45,7 @@ def get_game_ids_and_teams(schedule_dir, season='', game_type='', team=''):
     '''
     game_ids_team_ids = defaultdict(set)
 
-    for dirpath, dirnames, filenames in os.walk(schedule_dir):
+    for dirpath, _, filenames in os.walk(schedule_dir):
         # checking for specified season
         if season and str(season) not in dirpath:
             continue
@@ -129,7 +129,8 @@ if __name__ == '__main__':
         help='information category to be downloaded',
         choices=[
             'game_info', 'game_events', 'game_roster', 'game_team_stats',
-            'game_goalies', 'shifts', 'game_player_stats', 'shots'])
+            'game_goalies', 'shifts', 'game_player_stats', 'shots', 'faceoffs'
+        ])
 
     # loading external configuration
     config = yaml.safe_load(open(os.path.join(
