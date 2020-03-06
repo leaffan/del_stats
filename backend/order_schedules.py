@@ -10,8 +10,6 @@ CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 
-game_types = [1, 3]
-
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -21,20 +19,21 @@ if __name__ == '__main__':
         '-s', '--season', dest='season', required=False, type=int,
         metavar='season to order schedules for', default=2019,
         choices=[2016, 2017, 2018, 2019],
-        help="The season for which data  will be aggregated")
+        help="The season for which team schedules will be ordered")
 
     args = parser.parse_args()
     seasons = [args.season]
 
     teams = CONFIG['teams']
+    game_types = CONFIG['game_types']
 
     games = list()
     game_ids = set()
 
     for season in seasons:
-        print(
-            "+ Aggregating schedules for season %d-%d" % (season, season + 1))
         for game_type in game_types:
+            print("+ Aggregating schedules for %s season %d-%d" % (
+                game_types[game_type], season, season + 1))
             for team_id in teams:
                 team_schedule_src_path = os.path.join(
                     CONFIG['base_data_dir'], 'schedules', str(season),
@@ -49,8 +48,7 @@ if __name__ == '__main__':
                         del(game['id'])
                         games.append(game)
 
-    tgt_dir = os.path.join(
-        CONFIG['tgt_processing_dir'], str(season))
+    tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
     if not os.path.isdir(tgt_dir):
         os.makedirs(tgt_dir)
     tgt_path = os.path.join(tgt_dir, 'full_schedule.json')
