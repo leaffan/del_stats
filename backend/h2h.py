@@ -16,7 +16,8 @@ from collections import defaultdict
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
-SEASON_FILE_REGEX = re.compile(R"(\d{4})\.json")
+SEASON_FILE_REGEX = re.compile(R"games_(\d{4})\.json")
+# SEASON_FILE_REGEX = re.compile(R"games_(2010)\.json")
 
 TEAM_ABBRS_BY_ID = {
     1: 'KEC', 2: 'WOB', 3: 'HHF', 4: 'EBB', 5: 'KEV', 6: 'IEC', 7: 'DEG',
@@ -34,7 +35,47 @@ CURRENT_TEAMS = [
 
 PO_SEASON_TYPES = ['PO-Qualifikation', 'Playoffs', 'Playdowns']
 
-h2h = defaultdict(dict)
+CURRENT_SEASON = 2019
+
+
+def create_update_playoff_series(h2h_series, series_key, game):
+
+    if series_key not in h2h_series:
+        print(series_key)
+        h2h_series[series_key] = dict()
+        h2h_series[series_key]['season'] = game['season']
+        h2h_series[series_key]['round'] = game['round']
+        h2h_series[series_key]['round_type'] = game['round_type']
+        h2h_series[series_key]['s_home'] = home
+        h2h_series[series_key]['s_road'] = road
+        h2h_series[series_key]['s_games_played'] = 0
+        h2h_series[series_key]['s_home_games_won'] = 0
+        h2h_series[series_key]['s_road_games_won'] = 0
+        h2h_series[series_key]['s_score'] = "%d-%d" % (
+            h2h_series[series_key]['s_home_games_won'],
+            h2h_series[series_key]['s_road_games_won'])
+        h2h_series[series_key]['s_home_goals'] = 0
+        h2h_series[series_key]['s_road_goals'] = 0
+
+    h2h_series[series_key]['s_games_played'] += 1
+    if h2h_series[series_key]['s_home'] == home:
+        h2h_series[series_key]['s_home_goals'] += game['home_score']
+        h2h_series[series_key]['s_road_goals'] += game['road_score']
+        if game['home_score'] > game['road_score']:
+            h2h_series[series_key]['s_home_games_won'] += 1
+        else:
+            h2h_series[series_key]['s_road_games_won'] += 1
+    elif h2h_series[series_key]['s_home'] == road:
+        h2h_series[series_key]['s_home_goals'] += game['road_score']
+        h2h_series[series_key]['s_road_goals'] += game['home_score']
+        if game['road_score'] > game['home_score']:
+            h2h_series[series_key]['s_home_games_won'] += 1
+        else:
+            h2h_series[series_key]['s_road_games_won'] += 1
+    h2h_series[series_key]['s_score'] = "%d-%d" % (
+        h2h_series[series_key]['s_home_games_won'],
+        h2h_series[series_key]['s_road_games_won'])
+
 
 if __name__ == '__main__':
 
@@ -42,6 +83,7 @@ if __name__ == '__main__':
     season_types = set()
 
     h2h = dict()
+    h2h_series = dict()
 
     for season_file in season_files[:]:
         match = re.search(SEASON_FILE_REGEX, season_file)
@@ -51,6 +93,10 @@ if __name__ == '__main__':
             CONFIG['base_data_dir'], 'archive', season_file)
         season_games = json.loads(open(season_path).read())
 
+        # skipping current season since we're retrieving pre-season data
+        if int(match.group(1)) == CURRENT_SEASON:
+            continue
+
         print(
             "+ Processing %d games from the %s/%d season" % (
                 len(season_games), match.group(1), int(match.group(1)) + 1))
@@ -59,6 +105,7 @@ if __name__ == '__main__':
             season_type = game['season_type']
             home = game['home_abbr']
             road = game['road_abbr']
+            sorted_teams = sorted([home, road])
 
             categories = [
                 'games_played', 'wins', 'losses', 'ties',
@@ -67,7 +114,8 @@ if __name__ == '__main__':
                 'po_games_played', 'po_wins', 'po_losses', 'po_ot_ties',
                 'po_ot_games_played', 'po_ot_wins', 'po_ot_losses',
                 'po_so_games_played', 'po_so_wins', 'po_so_losses',
-                'goals_for', 'goals_against'
+                'goals_for', 'goals_against',
+                'goals_for_po', 'goals_against_po',
             ]
 
             # setting up head-to-head-configuration (if necessary)
@@ -101,6 +149,10 @@ if __name__ == '__main__':
                 h2h[road][home]['road']['so_games_played'] += 1
             # registering game as playoff game (if applicable)
             if season_type in PO_SEASON_TYPES:
+                series_key = "_".join(
+                    (str(game['season']), *sorted_teams, game['round']))
+                create_update_playoff_series(h2h_series, series_key, game)
+
                 h2h[home][road]['home']['po_games_played'] += 1
                 h2h[road][home]['road']['po_games_played'] += 1
                 if game['overtime']:
@@ -115,6 +167,14 @@ if __name__ == '__main__':
             h2h[home][road]['home']['goals_against'] += game['road_score']
             h2h[road][home]['road']['goals_for'] += game['road_score']
             h2h[road][home]['road']['goals_against'] += game['home_score']
+
+            if season_type in PO_SEASON_TYPES:
+                h2h[home][road]['home']['goals_for_po'] += game['home_score']
+                h2h[home][road]['home'][
+                    'goals_against_po'] += game['road_score']
+                h2h[road][home]['road']['goals_for_po'] += game['road_score']
+                h2h[road][home]['road'][
+                    'goals_against_po'] += game['home_score']
 
             # registering game outcome
             if game['home_score'] == game['road_score']:
@@ -207,6 +267,10 @@ if __name__ == '__main__':
             if opp_key == key:
                 continue
             curr_h2h[key][opp_key] = dict()
+            if key not in h2h:
+                continue
+            if opp_key not in h2h[key]:
+                continue
             for home_road_overall in h2h[key][opp_key]:
                 # setting up prefix for final dictionary keys
                 prefix = ''
@@ -221,14 +285,60 @@ if __name__ == '__main__':
     tgt_path = os.path.join(CONFIG['base_data_dir'], 'archive', 'h2h.json')
     open(tgt_path, 'w').write(json.dumps(h2h, indent=2))
     tgt_path = os.path.join(
-        CONFIG['tgt_processing_dir'], '2019', 'pre_season_h2h.json')
+        CONFIG['tgt_processing_dir'],
+        str(CURRENT_SEASON),
+        'pre_season_h2h.json')
     open(tgt_path, 'w').write(json.dumps(curr_h2h, indent=2))
+
+    final_series = defaultdict(list)
+
+    for series_key in h2h_series:
+        series = h2h_series[series_key]
+        print(series)
+        home, road = series['s_home'], series['s_road']
+        if home in CURRENT_TEAMS:
+            home_series = dict()
+            home_series['season'] = series['season']
+            home_series['round'] = series['round']
+            home_series['round_type'] = series['round_type']
+            home_series['team'] = home
+            home_series['opp_team'] = road
+            home_series['score'] = series['s_score']
+            home_series['games_played'] = series['s_games_played']
+            home_series['wins'] = series['s_home_games_won']
+            home_series['losses'] = series['s_road_games_won']
+            home_series['goals_for'] = series['s_home_goals']
+            home_series['goals_against'] = series['s_road_goals']
+            home_series['home_advantage'] = True
+            final_series[home].append(home_series)
+
+        if road in CURRENT_TEAMS:
+            road_series = dict()
+            road_series['season'] = series['season']
+            road_series['round'] = series['round']
+            road_series['round_type'] = series['round_type']
+            road_series['team'] = road
+            road_series['opp_team'] = home
+            road_series['score'] = "-".join(series['s_score'].split("-")[::-1])
+            road_series['games_played'] = series['s_games_played']
+            road_series['wins'] = series['s_road_games_won']
+            road_series['losses'] = series['s_home_games_won']
+            road_series['goals_for'] = series['s_road_goals']
+            road_series['goals_against'] = series['s_home_goals']
+            road_series['home_advantage'] = False
+            final_series[road].append(road_series)
+
+    tgt_path = os.path.join(
+        CONFIG['base_data_dir'], 'archive', 'po_series.json')
+    open(tgt_path, 'w').write(json.dumps(final_series, indent=2))
 
     # preparing CSV dataset with h2h records of current DEL teams
     records = list()
     for key in CURRENT_TEAMS:
         for opp_key in CURRENT_TEAMS:
             if key == opp_key:
+                continue
+            if not curr_h2h[key][opp_key]:
                 continue
             record = dict()
             record['team'] = key
