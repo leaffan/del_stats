@@ -10,6 +10,27 @@
         {"data_key": "overtimes", "col_header": "Overtime", "expl_de": null, "expl_en": null},
         {"data_key": "shootouts", "col_header": "Shootout", "expl_de": null, "expl_en": null}
     ],
+    "h2h_table_playoffs": [
+        {"data_key": "record", "col_header": "Bilanz", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "Spiele", "expl_de": null, "expl_en": null},
+        {"data_key": "wins", "col_header": "Siege", "expl_de": null, "expl_en": null},
+        {"data_key": "losses", "col_header": "Niederlagen", "expl_de": null, "expl_en": null},
+        {"data_key": "win_pctg", "col_header": "Siegquote", "expl_de": null, "expl_en": null},
+        {"data_key": "goals", "col_header": "Tore", "expl_de": null, "expl_en": null},
+        {"data_key": "overtimes", "col_header": "Overtime", "expl_de": null, "expl_en": null},
+        {"data_key": "shootouts", "col_header": "Shootout", "expl_de": null, "expl_en": null}
+    ],
+    "h2h_table_playoffs_series": [
+        {"data_key": "season", "col_header": "Saison", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Runde", "expl_de": null, "expl_en": null},
+        {"data_key": "round_type", "col_header": "Typ", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "Spiele", "expl_de": null, "expl_en": null},
+        {"data_key": "wins", "col_header": "Siege", "expl_de": null, "expl_en": null},
+        {"data_key": "losses", "col_header": "Niederlagen", "expl_de": null, "expl_en": null},
+        {"data_key": "score", "col_header": "Serienausgang", "expl_de": null, "expl_en": null},
+        {"data_key": "goals_for", "col_header": "Tore", "expl_de": null, "expl_en": null},
+        {"data_key": "goals_against", "col_header": "Gegentore", "expl_de": null, "expl_en": null}
+    ],
     "h2h_recent_table": [
         {"data_key": "game_date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "opp_team", "col_header": "Spieltag / Gegner", "expl_de": null, "expl_en": null},

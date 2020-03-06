@@ -174,6 +174,11 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.h2h = res.data;
     });
 
+    // loading playoff series from external json file
+    $http.get('data/po_series.json').then(function (res) {
+        $scope.po_series = res.data;
+    });
+    
     // loading player scoring streaks from external json file
     $http.get('data/'+ $scope.season + '/del_streaks_loose.json').then(function (res) {
         $scope.streaks = res.data;

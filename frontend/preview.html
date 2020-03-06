@@ -21,6 +21,7 @@
                 <h5><b>Direktvergleich</b></h5>
                     <ul>
                         <li><a href data-ng-click="scrollTo('h2h_all_time')">All-Time-DEL</a></li>
+                        <li><a href data-ng-click="scrollTo('h2h_all_time_playoffs')">All-Time-DEL-Playoffs</a></li>
                         <li><a href data-ng-click="scrollTo('h2h_recent_home')">Aktuelle Saison (Heimteam)</a></li>
                         <li><a href data-ng-click="scrollTo('h2h_recent_road')">Aktuelle Saison (Auswärtsteam)</a></li>
                     </ul>
@@ -190,6 +191,85 @@
                 <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_goals_for'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_goals_against'] }}</td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_ot_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_ot_losses'] }}</td>
                 <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_so_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_so_losses'] }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="h2h_all_time_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/h2h_all_time_playoffs">Direktvergleich All-Time-DEL-Playoffs:</a></h4>
+        <p>(aus der Sicht des Heimteams {{ current_home_team }})</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table id="h2h_table_playoffs_series" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td colspan="12" class="text-center" style="border: 0"><span class="rank">Serienbilanz</span></td>
+            </tr>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols['h2h_table_playoffs_series']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}{{ col.data_key == 'wins' || col.data_key == 'losses' || col.data_key == 'win_pctg' ? ' ' + team_location_lookup[current_game.home.shortcut] : ''}}</span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{series.home_advantage ? 'info' : 'warning'}}" data-ng-repeat="series in po_series[current_game.home.shortcut] | filter:{opp_team: current_game.guest.shortcut} ">
+                <td class="col-md-1 text-center">{{ series['season']}}/{{ svc.pad((svc.parseFloat(series['season']) + 1) % 100, 2) }}</td>
+                <td class="col-md-2"><b>{{ series['round'] }}</b></td>
+                <td class="col-md-1">{{ series['round_type'] }}</td>
+                <td class="col-md-1 text-right">{{ series['games_played'] }}</td>
+                <td class="col-md-2 text-right">{{ series['wins'] }}</td>
+                <td class="col-md-2 text-right">{{ series['losses'] }}</td>
+                <td class="col-md-1 text-center"><b>{{ series['score'] }}</b></td>
+                <td class="col-md-1 text-right">{{ series['goals_for'] }}</td>
+                <td class="col-md-1 text-right">{{ series['goals_against'] }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="h2h_table_playoffs" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td colspan="8" class="text-center" style="border: 0"><span class="rank">Spielebilanz</span></td>
+            </tr>
+            <tr>
+                <td class="text-center" data-ng-repeat="col in stats_cols['h2h_table_playoffs']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}{{ col.data_key == 'wins' || col.data_key == 'losses' || col.data_key == 'win_pctg' ? ' ' + team_location_lookup[current_game.home.shortcut] : ''}}</span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td class="col-md-1" style="width: 5%"><b>Gesamt</b></td>
+                <td class="col-md-1 text-right"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_games_played'] }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_wins'] }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_losses'] }}</b></td>
+                <td class="col-md-1 text-right"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['win_pctg_po'].toFixed(0) }} %</b></td>
+                <td class="col-md-1 text-right" style="width: 5%"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['goals_for_po'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['goals_against_po'] }}</b></td>
+                <td class="col-md-1 text-right" style="width: 5%"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_ot_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_ot_losses'] }}</b></td>
+                <td class="col-md-1 text-right" style="width: 5%"><b>{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_so_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['po_so_losses'] }}</b></td>
+            </tr>
+            <tr class="info">
+                <td class="col-md-1" style="width: 5%">Heim</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_games_played'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_wins'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_losses'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_win_pctg_po'].toFixed(0) }} %</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_goals_for_po'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_goals_against_po'] }}</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_ot_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_ot_losses'] }}</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_so_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['home_po_so_losses'] }}</td>
+            </tr>
+            <tr class="warning">
+                <td class="col-md-1" style="width: 5%">Auswärts</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_games_played'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_wins'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_losses'] }}</td>
+                <td class="col-md-1 text-right">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_win_pctg_po'].toFixed(0) }} %</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_goals_for_po'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_goals_against_po'] }}</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_ot_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_ot_losses'] }}</td>
+                <td class="col-md-1 text-right" style="width: 5%">{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_so_wins'] }}-{{ h2h[current_game.home.shortcut][current_game.guest.shortcut]['road_po_so_losses'] }}</td>
             </tr>
         </tbody>
     </table>
