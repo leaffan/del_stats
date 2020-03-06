@@ -89,6 +89,7 @@ if __name__ == '__main__':
                 for key in [
                     'games_played', 'wins', 'losses',
                     'goals_for', 'goals_against',
+                    'goals_for_po', 'goals_against_po',
                     'ot_games_played', 'ot_wins', 'ot_losses', 'ot_ties',
                     'so_games_played', 'so_wins', 'so_losses',
                     'po_games_played', 'po_wins', 'po_losses',
@@ -109,17 +110,47 @@ if __name__ == '__main__':
                 ]:
                     h2h_all_time[team][opp_team][key] += (
                         h2h_records[team][opp_team][key])
-                h2h_all_time[team][opp_team]['win_pctg'] = round(
-                    h2h_all_time[team][opp_team]['wins'] /
-                    h2h_all_time[team][opp_team]['games_played'] * 100, 2)
-                h2h_all_time[team][opp_team]['home_win_pctg'] = round(
-                    h2h_all_time[team][opp_team]['home_wins'] /
-                    h2h_all_time[team][opp_team]['home_games_played'] *
-                    100, 2)
-                h2h_all_time[team][opp_team]['road_win_pctg'] = round(
-                    h2h_all_time[team][opp_team]['road_wins'] /
-                    h2h_all_time[team][opp_team]['road_games_played'] *
-                    100, 2)
+                if h2h_all_time[team][opp_team]['games_played']:
+                    h2h_all_time[team][opp_team]['win_pctg'] = round(
+                        h2h_all_time[team][opp_team]['wins'] /
+                        h2h_all_time[team][opp_team]['games_played'] * 100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['win_pctg'] = None
+                if h2h_all_time[team][opp_team]['home_games_played']:
+                    h2h_all_time[team][opp_team]['home_win_pctg'] = round(
+                        h2h_all_time[team][opp_team]['home_wins'] /
+                        h2h_all_time[team][opp_team]['home_games_played'] *
+                        100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['home_win_pctg'] = None
+                if h2h_all_time[team][opp_team]['road_games_played']:
+                    h2h_all_time[team][opp_team]['road_win_pctg'] = round(
+                        h2h_all_time[team][opp_team]['road_wins'] /
+                        h2h_all_time[team][opp_team]['road_games_played'] *
+                        100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['road_win_pctg'] = None
+                if h2h_all_time[team][opp_team]['po_games_played']:
+                    h2h_all_time[team][opp_team]['win_pctg_po'] = round(
+                        h2h_all_time[team][opp_team]['po_wins'] /
+                        h2h_all_time[team][opp_team]['po_games_played'] *
+                        100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['win_pctg_po'] = None
+                if h2h_all_time[team][opp_team]['home_po_games_played']:
+                    h2h_all_time[team][opp_team]['home_win_pctg_po'] = round(
+                        h2h_all_time[team][opp_team]['home_po_wins'] /
+                        h2h_all_time[team][opp_team]['home_po_games_played'] *
+                        100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['home_win_pctg_po'] = None
+                if h2h_all_time[team][opp_team]['road_po_games_played']:
+                    h2h_all_time[team][opp_team]['road_win_pctg_po'] = round(
+                        h2h_all_time[team][opp_team]['road_po_wins'] /
+                        h2h_all_time[team][opp_team]['road_po_games_played'] *
+                        100, 2)
+                else:
+                    h2h_all_time[team][opp_team]['road_win_pctg_po'] = None
 
     tgt_h2h_path = os.path.join(tgt_dir, SEASON_HEAD2HEAD_TGT)
     open(tgt_h2h_path, 'w').write(json.dumps(h2h_all_time, indent=2))
