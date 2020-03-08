@@ -5,7 +5,11 @@
         "full_name": "Augsburger Panther",
         "location": "Augsburg",
         "id": 13,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "EBB",
@@ -13,7 +17,11 @@
         "full_name": "Eisbären Berlin",
         "location": "Berlin",
         "id": 3,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "BHV",
@@ -21,7 +29,11 @@
         "full_name": "Pinguins Bremerhaven",
         "location": "Bremerhaven",
         "id": 9,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "DEG",
@@ -29,7 +41,11 @@
         "full_name": "Düsseldorfer EG",
         "location": "Düsseldorf",
         "id": 4,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "ING",
@@ -37,7 +53,11 @@
         "full_name": "ERC Ingolstadt",
         "location": "Ingolstadt",
         "id": 3,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "IEC",
@@ -45,7 +65,11 @@
         "full_name": "Iserlohn Roosters",
         "location": "Iserlohn",
         "id": 7,
-        "po": false
+        "po":
+        {
+            "2018": false,
+            "2019": false
+        }
     },
     {
         "abbr": "KEC",
@@ -53,7 +77,11 @@
         "full_name": "Kölner Haie",
         "location": "Köln",
         "id": 11,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": false
+        }
     },
     {
         "abbr": "KEV",
@@ -61,7 +89,11 @@
         "full_name": "Krefeld Pinguine",
         "location": "Krefeld",
         "id": 5,
-        "po": false
+        "po":
+        {
+            "2018": false,
+            "2019": false
+        }
     },
     {
         "abbr": "MAN",
@@ -69,7 +101,11 @@
         "full_name": "Adler Mannheim",
         "location": "Mannheim",
         "id": 2,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "RBM",
@@ -77,7 +113,11 @@
         "full_name": "EHC Red Bull München",
         "location": "München",
         "id": 12,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "NIT",
@@ -85,7 +125,11 @@
         "full_name": "Thomas Sabo Ice Tigers",
         "location": "Nürnberg",
         "id": 14,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "SWW",
@@ -93,7 +137,11 @@
         "full_name": "Schwenninger Wild Wings",
         "location": "Schwenningen",
         "id": 15,
-        "po": false
+        "po":
+        {
+            "2018": false,
+            "2019": false
+        }
     },
     {
         "abbr": "STR",
@@ -101,7 +149,11 @@
         "full_name": "Straubing Tigers",
         "location": "Straubing",
         "id": 6,
-        "po": true
+        "po":
+        {
+            "2018": true,
+            "2019": true
+        }
     },
     {
         "abbr": "WOB",
@@ -109,6 +161,10 @@
         "full_name": "Grizzlys Wolfsburg",
         "location": "Wolfsburg",
         "id": 8,
-        "po": false
+        "po":
+        {
+            "2018": false,
+            "2019": true
+        }
     }
 ]
