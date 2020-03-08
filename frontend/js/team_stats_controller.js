@@ -66,7 +66,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
         // ...for playoff participation indicator
-        $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
+        $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po[$scope.season]}), {});
     });
 
     // starting to watch filter selection lists
