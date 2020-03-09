@@ -9,6 +9,13 @@ import argparse
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
+ROUND_MAPPING = {
+    '1. Playoff-Runde': 'first_round',
+    'Viertelfinale': 'quarter_finals',
+    'Halbfinale': 'semi_finals',
+    'Finale': 'finals'
+}
+
 
 if __name__ == '__main__':
 
@@ -45,6 +52,10 @@ if __name__ == '__main__':
                     if not game['id'] in game_ids:
                         game_ids.add(game['id'])
                         game['game_id'] = game['id']
+                        if not game['round'].isdigit():
+                            rnd_type, rnd = game['round'].rsplit(maxsplit=1)
+                            rnd_type = ROUND_MAPPING[rnd_type]
+                            game['round'] = "_".join((rnd_type, rnd))
                         del(game['id'])
                         games.append(game)
 
