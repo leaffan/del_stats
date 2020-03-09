@@ -80,7 +80,8 @@ if __name__ == '__main__':
     out_fields = final_list[0].keys()
 
     tgt_csv_path = os.path.join(
-        CONFIG['tgt_processing_dir'], "%d_scorer_combos.csv" % SEASON)
+        CONFIG['tgt_processing_dir'],
+        '_analysis', "%d_scorer_combos.csv" % SEASON)
 
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
