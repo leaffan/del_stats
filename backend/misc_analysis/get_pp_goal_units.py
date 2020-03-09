@@ -12,11 +12,11 @@ CONFIG = yaml.safe_load(open(os.path.join(
 
 ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-SEASON = 2018
+SEASON = 2019
 
 
 def get_power_play_combos_in_period(
-    period, game, pp_goals_by_team, pp_goals_by_team_forwards
+    period, game, pp_goals_by_team, pp_goals_by_team_forwards, all_players
 ):
     """
     Gets power play player/forward combos in specified period of given game.
@@ -72,6 +72,9 @@ if __name__ == '__main__':
     pp_goals_by_team = dict()
     pp_goals_by_team_forwards = dict()
 
+    # loading list of all players
+    all_players = json.loads(open(ALL_PLAYERS).read())
+
     # retrieving power play line combinations from goals in game events
     for game_type in CONFIG['game_types']:
         games_dir = os.path.join(
@@ -95,14 +98,12 @@ if __name__ == '__main__':
                 pp_goals_by_team, pp_goals_by_team_forwards = (
                     get_power_play_combos_in_period(
                         events[period_key], game,
-                        pp_goals_by_team, pp_goals_by_team_forwards))
+                        pp_goals_by_team, pp_goals_by_team_forwards,
+                        all_players))
 
     # consolidating lists
     final_players = list()
     final_forwards = list()
-
-    # loading list of all players
-    all_players = json.loads(open(ALL_PLAYERS).read())
 
     for team in pp_goals_by_team:
         for plr_ids in pp_goals_by_team[team]:
