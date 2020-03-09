@@ -177,6 +177,26 @@ app.factory('svc', function() {
         parseFloat: function(floatAsString) {
             return parseFloat(floatAsString);
         },
+        parseInt: function(intAsString) {
+            return parseInt(intAsString);
+        },
+        isNumeric: function(num) {
+            return !isNaN(num);
+        },
+        replaceRoundNames: function(roundName) {
+            if (roundName === undefined)
+                return;
+            if (!isNaN(roundName))
+                return roundName;
+            return roundName.replace(
+                "first_round_", "1. Playoff-Runde "
+            ).replace(
+                "quarter_finals_", "Viertelfinale "
+            ).replace(
+                "semi_finals_", "Halbfinale "
+            ).replace(
+                "finals_", "Finale ");
+        },     
         setTextColor: function(score, opp_score) {
             if (score > opp_score) {
                 return " green";
