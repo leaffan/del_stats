@@ -2,6 +2,7 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
     $scope.svc = svc;
     $scope.season = $routeParams.season;
     $scope.round_from_url = $routeParams.round;
+    $scope.playoff_rounds = new Set();
     $scope.next_round = "0";
     $scope.min_days_left = 365;
     // loading schedule from external json file
@@ -18,12 +19,21 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
                 $scope.next_round = fixture['round'];
                 $scope.min_days_left = fixture['days_left'];
             }
+            // registering current round as playoff round if it is not numeric
+            if (!svc.isNumeric(fixture['round'])) {
+                $scope.playoff_rounds.add(fixture['round']);
+            };
         });
         if ($scope.round_from_url === undefined) {
             $scope.roundFilter = $scope.next_round;
         } else {
             $scope.roundFilter = $scope.round_from_url.toString();
         }
+        // converting set of playoff round names to an array
+        $scope.playoff_rounds = Array.from($scope.playoff_rounds);
+        // determining previous and following round for table view navigation
+        $scope.previous_round = $scope.getPreviousRound();
+        $scope.following_round = $scope.getFollowingRound();
     });
 
     // // restoring previously set round filter, if possible
@@ -33,9 +43,41 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
     //     $scope.roundFilter = '1';
     // }
 
+    $scope.getPreviousRound = function() {
+        if ($scope.roundFilter == 1) {
+            return;
+        } 
+        if ($scope.roundFilter == 'first_round_1') {
+            return 52;
+        }
+        if (svc.isNumeric($scope.roundFilter)) {
+            return svc.parseFloat($scope.roundFilter) - 1;
+        }
+        else {
+            return $scope.playoff_rounds[$scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) - 1];
+        }
+    };
+
+    $scope.getFollowingRound = function() {
+        if ($scope.roundFilter == 52) {
+            return $scope.playoff_rounds[0];
+        }
+        if ($scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1 === $scope.playoff_rounds.length)
+            return;
+        if (svc.isNumeric($scope.roundFilter)) {
+            return svc.parseFloat($scope.roundFilter) + 1;
+        }
+        else {
+            return $scope.playoff_rounds[$scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1];
+        }
+    };
+
     $scope.changeRound = function() {
         // storing round filter set by user
         $localStorage.roundFilter = $scope.roundFilter;
+        // adjusting previous and following round for table view navigation
+        $scope.previous_round = $scope.getPreviousRound();
+        $scope.following_round = $scope.getFollowingRound();
     };
 
 });
