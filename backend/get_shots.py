@@ -23,6 +23,8 @@ GAME_SRC = 'del_games.json'
 SHOTS_DATA_TGT = 'del_shots.json'
 PP_SITS_DATA_TGT = 'del_pp_sits_goals.json'
 
+ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
+
 SHOT_RESULTS = {
     1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal'
 }
@@ -161,6 +163,8 @@ if __name__ == '__main__':
 
     # loading games
     games = json.loads(open(src_path).read())
+    # loading players
+    all_players = json.loads(open(ALL_PLAYERS).read())
 
     # loading existing shots
     if not initial and os.path.isfile(tgt_path):
@@ -326,6 +330,10 @@ if __name__ == '__main__':
                     shot['goalie'] = times[shot['time']]['home_goalie']
                 else:
                     shot['goalie'] = times[shot['time']]['road_goalie']
+
+                # retrieving handedness of shooter
+                if str(shot['player_id']) in all_players:
+                    shot['hand'] = all_players[str(shot['player_id'])]['hand']
 
                 # deleting unnecessary shot properties
                 shot = delete_shot_properties(shot)
