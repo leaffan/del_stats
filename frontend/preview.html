@@ -21,7 +21,7 @@
                 <h5><b>Direktvergleich</b></h5>
                     <ul>
                         <li><a href data-ng-click="scrollTo('h2h_all_time')">All-Time-DEL</a></li>
-                        <li><a href data-ng-click="scrollTo('h2h_all_time_playoffs')">All-Time-DEL-Playoffs</a></li>
+                        <li data-ng-if="is_playoff_game"><a href data-ng-click="scrollTo('h2h_all_time_playoffs')">All-Time-DEL-Playoffs</a></li>
                         <li><a href data-ng-click="scrollTo('h2h_recent_home')">Aktuelle Saison (Heimteam)</a></li>
                         <li><a href data-ng-click="scrollTo('h2h_recent_road')">Aktuelle Saison (Auswärtsteam)</a></li>
                     </ul>
@@ -41,54 +41,54 @@
                     </ul>
                 <h5><b>Tabelle</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('full')">Gesamttabelle</a></li>
-                        <li><a href data-ng-click="scrollTo('home')">Heimtabelle</a></li>
-                        <li><a href data-ng-click="scrollTo('road')">Auswärtstabelle</a></li>
+                        <li><a href data-ng-click="scrollTo('full')">Gesamtabelle</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('full_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('home')">Heimtabelle</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('home_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('road')">Auswärtstabelle</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('road_playoffs')">Playoffs</a></span></li>
                     </ul>
             </div>
             <div class="col-md-4">
                 <h5><b>Überzahl</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('powerplay')">Überzahl gesamt</a></li>
-                        <li><a href data-ng-click="scrollTo('powerplay_home')">Überzahl heim</a></li>
-                        <li><a href data-ng-click="scrollTo('powerplay_road')">Überzahl auswärts</a></li>
+                        <li><a href data-ng-click="scrollTo('powerplay')">Überzahl gesamt</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('powerplay_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('powerplay_home')">Überzahl heim</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('powerplay_playoffs_home')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('powerplay_road')">Überzahl auswärts</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('powerplay_playoffs_road')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Unterzahl</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('penalty_killing')">Unterzahl gesamt</a></li>
-                        <li><a href data-ng-click="scrollTo('penalty_killing_home')">Unterzahl heim</a></li>
-                        <li><a href data-ng-click="scrollTo('penalty_killing_road')">Unterzahl auswärts</a></li>
+                        <li><a href data-ng-click="scrollTo('penalty_killing')">Unterzahl gesamt</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('penalty_killing_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('penalty_killing_home')">Unterzahl heim</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('penalty_killing_home_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('penalty_killing_road')">Unterzahl auswärts</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('penalty_killing_road_playoffs')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Tore nach Dritteln</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('goals_by_period_1')">Tore 1. Drittel</a></li>
-                        <li><a href data-ng-click="scrollTo('goals_by_period_2')">Tore 2. Drittel</a></li>
-                        <li><a href data-ng-click="scrollTo('goals_by_period_3')">Tore 3. Drittel</a></li>
+                        <li><a href data-ng-click="scrollTo('goals_by_period_1')">Tore 1. Drittel</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('goals_by_period_1_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('goals_by_period_2')">Tore 2. Drittel</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('goals_by_period_2_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('goals_by_period_3')">Tore 3. Drittel</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('goals_by_period_3_playoffs')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Faceoffs</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('faceoffs')">Faceoffs gesamt</a></li>
-                        <li><a href data-ng-click="scrollTo('faceoffs_home')">Faceoffs heim</a></li>
-                        <li><a href data-ng-click="scrollTo('faceoffs_road')">Faceoffs auswärts</a></li>
+                        <li><a href data-ng-click="scrollTo('faceoffs')">Faceoffs gesamt</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('faceoffs_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('faceoffs_home')">Faceoffs heim</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('faceoffs_home_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('faceoffs_road')">Faceoffs auswärts</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('faceoffs_road_playoffs')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Torschüsse</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('shots_for')">Torschüsse gesamt</a></li>
-                        <li><a href data-ng-click="scrollTo('shots_for_home')">Torschüsse heim</a></li>
-                        <li><a href data-ng-click="scrollTo('shots_for_road')">Torschüsse auswärts</a></li>
+                        <li><a href data-ng-click="scrollTo('shots_for')">Torschüsse gesamt</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('shots_for_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('shots_for_home')">Torschüsse heim</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('shots_for_home_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('shots_for_road')">Torschüsse auswärts</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('shots_for_road_playoffs')">Playoffs</a></span></li>
                     </ul>
             </div>
             <div class="col-md-4">
                 <h5><b>Torschusszonen</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('shots_on_goal_for_zones')">Torschusszonen (eigene Torschüsse)</a></li>
-                        <li><a href data-ng-click="scrollTo('shots_on_goal_against_zones')">Torschusszonen (zugelassene Torschüsse)</a></li>
+                        <li><a href data-ng-click="scrollTo('shots_on_goal_for_zones')">Torschusszonen (eigene)</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('shots_on_goal_for_zones_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('shots_on_goal_against_zones')">Torschusszonen (zugelassene)</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('shots_on_goal_against_zones_playoffs')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Sonstiges</b></h5>
                     <ul>
-                        <li><a href data-ng-click="scrollTo('slot_shots')">Tore und Torschüsse aus dem Slot</a></li>
-                        <li><a href data-ng-click="scrollTo('attendance')">Zuschauer</a></li>
-                        <li><a href data-ng-click="scrollTo('penalties')">Disziplin</a></li>
+                        <li><a href data-ng-click="scrollTo('slot_shots')">Tore und Torschüsse aus dem Slot</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('slot_shots_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('attendance')">Zuschauer</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('attendance_playoffs')">Playoffs</a></span></li>
+                        <li><a href data-ng-click="scrollTo('penalties')">Disziplin</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('penalties_playoffs')">Playoffs</a></span></li>
                     </ul>
                 <h5><b>Top 20 Spielerrankings</b></h5>
                     <ul>
@@ -195,13 +195,13 @@
         </tbody>
     </table>
 
-    <div id="h2h_all_time_playoffs" class="alert alert-info main-bg">
+    <div data-ng-if="is_playoff_game" id="h2h_all_time_playoffs" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/h2h_all_time_playoffs">Direktvergleich All-Time-DEL-Playoffs:</a></h4>
         <p>(aus der Sicht des Heimteams {{ current_home_team }})</p>
         <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
     </div>
 
-    <table id="h2h_table_playoffs_series" class="table table-condensed table-bordered table-striped table-hover">
+    <table data-ng-if="is_playoff_game" id="h2h_table_playoffs_series" class="table table-condensed table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <td colspan="12" class="text-center" style="border: 0"><span class="rank">Serienbilanz</span></td>
@@ -214,7 +214,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{series.home_advantage ? 'info' : 'warning'}}" data-ng-repeat="series in po_series[current_game.home.shortcut] | filter:{opp_team: current_game.guest.shortcut} ">
+            <tr class="{{series.home_advantage ? 'info' : 'warning'}}" data-ng-repeat="series in filtered_po_series">
                 <td class="col-md-1 text-center">{{ series['season']}}/{{ svc.pad((svc.parseFloat(series['season']) + 1) % 100, 2) }}</td>
                 <td class="col-md-2"><b>{{ series['round'] }}</b></td>
                 <td class="col-md-1">{{ series['round_type'] }}</td>
@@ -225,10 +225,14 @@
                 <td class="col-md-1 text-right">{{ series['goals_for'] }}</td>
                 <td class="col-md-1 text-right">{{ series['goals_against'] }}</td>
             </tr>
+            <tr>
+                <td></td>
+                <td colspan="8" class="text-center"><b>{{ filtered_po_series.length }} Serien &#8210; {{ series_wins }} Seriensiege &#8210; {{ series_losses }} Serienniederlagen</b></td>
+            </tr>
         </tbody>
     </table>
 
-    <table id="h2h_table_playoffs" class="table table-condensed table-bordered table-striped table-hover">
+    <table data-ng-if="is_playoff_game" id="h2h_table_playoffs" class="table table-condensed table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <td colspan="8" class="text-center" style="border: 0"><span class="rank">Spielebilanz</span></td>
@@ -334,13 +338,12 @@
                         {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1">{{ fixture.round }}:
+                <td colspan="11">{{ svc.replaceRoundNames(fixture.round) }}:
                     <a href="#!/team_profile/{{season}}/{{ current_home_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
                         {{ current_home_team == fixture.home.name ? '' : '@' }}
                         {{ current_home_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
-                <td colspan="10"></td>
             </tr>
         </tbody>
     </table>
@@ -405,13 +408,12 @@
                         {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1">{{ fixture.round }}:
+                <td colspan="11">{{ svc.replaceRoundNames(fixture.round) }}:
                     <a href="#!/team_profile/{{season}}/{{ current_road_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
                         {{ current_road_team == fixture.home.name ? '' : '@' }}
                         {{ current_road_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
-                <td colspan="10"></td>
             </tr>
         </tbody>
     </table>
@@ -475,14 +477,12 @@
                         {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1 text-right" style="width: 2%">{{ fixture.round }}</td>
-                <td class="col-md-1">
+                <td colspan="11">{{ svc.replaceRoundNames(fixture.round) }}:
                     <a href="#!/team_profile/{{season}}/{{ current_home_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
                         {{ current_home_team == fixture.home.name ? '' : '@' }}
                         {{ current_home_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
-                <td colspan="9"></td>
             </tr>
         </tbody>
     </table>
@@ -546,14 +546,12 @@
                         {{ fixture.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td>
-                <td class="col-md-1 text-right" style="width: 2%">{{ fixture.round }}</td>
-                <td class="col-md-1">
+                <td colspan="11">{{ svc.replaceRoundNames(fixture.round) }}:
                     <a href="#!/team_profile/{{season}}/{{ current_road_team == fixture.home.name ? fixture.guest.shortcut : fixture.home.shortcut }}">
                         {{ current_road_team == fixture.home.name ? '' : '@' }}
                         {{ current_road_team == fixture.home.name ? team_location_lookup[fixture.guest.shortcut] : team_location_lookup[fixture.home.shortcut] }}
                     </a>
                 </td>
-                <td colspan="9"></td>
             </tr>
         </tbody>
     </table>
@@ -854,6 +852,42 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="full_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/full_playoffs">Gesamttabelle (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+    
+    <table data-ng-if="is_playoff_game" id="full_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && !sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.points }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ow }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ol }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="home" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/home">Heimtabelle:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -874,6 +908,42 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_season_stats | orderBy:sorting_config['standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.points }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ow }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ol }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="home_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/home">Heimtabelle (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+    
+    <table data-ng-if="is_playoff_game" id="home_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && !sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -926,6 +996,42 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="road_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/road">Auswärtstabelle (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+    
+    <table data-ng-if="is_playoff_game" id="road_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && !sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.points }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ow }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sw }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ol }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="powerplay" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/powerplay">Überzahl gesamt:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -946,6 +1052,39 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['powerplay_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="powerplay_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/powerplay">Überzahl gesamt (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="powerplay_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['powerplay_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && !sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['powerplay_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -992,6 +1131,39 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="powerplay_playoffs_home" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/powerplay_home">Überzahl heim (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+    
+    <table data-ng-if="is_playoff_game" id="powerplay_playoffs_home_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['powerplay_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && !sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['powerplay_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="powerplay_road" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/powerplay_road">Überzahl auswärts:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1024,7 +1196,40 @@
             </tr>
         </tbody>
     </table>
+
+    <div data-ng-if="is_playoff_game" id="powerplay_playoffs_road" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/powerplay_road">Überzahl auswärts (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
     
+    <table data-ng-if="is_playoff_game" id="powerplay_playoffs_road_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['powerplay_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['powerplay_standings'][0].endsWith(col.data_key) && !sorting_config['powerplay_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['powerplay_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pp_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pp_time_per_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="penalty_killing" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalty_killing">Unterzahl gesamt:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1045,6 +1250,39 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['penalty_killing_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pk_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_opp_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="penalty_killing_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalty_killing">Unterzahl gesamt (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="penalty_killing_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['penalty_killing_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && !sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['penalty_killing_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1091,6 +1329,39 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="penalty_killing_home_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalty_killing_home">Unterzahl heim (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="penalty_killing_home_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['penalty_killing_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && !sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['penalty_killing_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pk_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_opp_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="penalty_killing_road" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalty_killing_road">Unterzahl auswärts:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1111,6 +1382,39 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_season_stats | orderBy:sorting_config['penalty_killing_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pk_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_pp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_opps }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_game) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.pk_time_per_opp_pp_goal) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="penalty_killing_road_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalty_killing_road">Unterzahl auswärts (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="penalty_killing_road_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['penalty_killing_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['penalty_killing_standings'][0].endsWith(col.data_key) && !sorting_config['penalty_killing_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['penalty_killing_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1158,7 +1462,42 @@
             </tr>
         </tbody>
     </table>
-    
+
+    <div data-ng-if="is_playoff_game" id="goals_by_period_1_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/goals_by_period_1">Tore 1. Drittel (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="goals_by_period_1_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['goals_by_period_1_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['goals_by_period_1_standings'][0].endsWith(col.data_key) && sorting_config['goals_by_period_1_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['goals_by_period_1_standings'][0].endsWith(col.data_key) && !sorting_config['goals_by_period_1_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['goals_by_period_1_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_1 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals_1 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff_1 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.goals_1 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_goals_1 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="goals_by_period_2" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/goals_by_period_2">Tore 2. Drittel:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1179,6 +1518,41 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['goals_by_period_2_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_2 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals_2 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff_2 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.goals_2 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_goals_2 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="goals_by_period_2_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/goals_by_period_2">Tore 2. Drittel (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="goals_by_period_2_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['goals_by_period_2_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['goals_by_period_2_standings'][0].endsWith(col.data_key) && sorting_config['goals_by_period_2_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['goals_by_period_2_standings'][0].endsWith(col.data_key) && !sorting_config['goals_by_period_2_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['goals_by_period_2_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1229,6 +1603,41 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="goals_by_period_3_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/goals_by_period_3">Tore 3. Drittel (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="goals_by_period_3_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['goals_by_period_3_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['goals_by_period_3_standings'][0].endsWith(col.data_key) && sorting_config['goals_by_period_3_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['goals_by_period_3_standings'][0].endsWith(col.data_key) && !sorting_config['goals_by_period_3_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['goals_by_period_3_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_3 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals_3 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff_3 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.goals_3 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_goals_3 / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals_diff }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="faceoffs" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/faceoffs">Faceoffs:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1249,6 +1658,37 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['faceoffs_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoff_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_won }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_lost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="faceoffs_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/faceoffs">Faceoffs (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="faceoffs_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['faceoffs_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && !sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['faceoffs_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1291,6 +1731,37 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="faceoffs_home_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/faceoffs_home">Faceoffs heim (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="faceoffs_home_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['faceoffs_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && !sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['faceoffs_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoff_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_won }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_lost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="faceoffs_road" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/faceoffs_road">Faceoffs auswärts:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1322,6 +1793,37 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="faceoffs_road_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/faceoffs_road">Faceoffs auswärts (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="faceoffs_road_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['faceoffs_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['faceoffs_standings'][0].endsWith(col.data_key) && !sorting_config['faceoffs_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['faceoffs_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoff_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_won }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.faceoffs_lost }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="shots_for" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_for">Torschüsse gesamt:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1342,6 +1844,42 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['shots_for_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shot_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.save_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_blocked }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="shots_for_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_for">Torschüsse gesamt (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="shots_for_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['shots_for_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && !sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['shots_for_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1393,7 +1931,43 @@
             </tr>
         </tbody>
     </table>
-        
+
+    <div data-ng-if="is_playoff_game" id="shots_for_home_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_for_home">Torschüsse heim:</a></h4>
+        <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="shots_for_home_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['shots_for_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && !sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['shots_for_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shot_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.save_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_blocked }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="shots_for_road" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_for_road">Torschüsse auswärts:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1429,7 +2003,43 @@
             </tr>
         </tbody>
     </table>
-    
+
+    <div data-ng-if="is_playoff_game" id="shots_for_road_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_for_road">Torschüsse auswärts (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="shots_for_road_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['shots_for_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['shots_for_standings'][0].endsWith(col.data_key) && !sorting_config['shots_for_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['shots_for_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shot_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_goals }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.save_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ (stat.opp_shots_on_goal / stat.games_played).toFixed(1) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_blocked }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="shots_on_goal_for_zones" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_on_goal_for_zones">Torschusszonen (eigene Torschüsse):</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1450,6 +2060,42 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['shots_on_goal_for_zones_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl_og }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl_og_p.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.lf_og }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.lf_og_p.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rg_og }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rg_og_p.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.bl_og }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.bl_og_p.toFixed(1) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="shots_on_goal_for_zones_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_on_goal_for_zones">Torschusszonen (eigene Torschüsse, Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="shots_on_goal_for_zones_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['shots_on_goal_for_zones_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['shots_on_goal_for_zones_standings'][0].endsWith(col.data_key) && sorting_config['shots_on_goal_for_zones_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['shots_on_goal_for_zones_standings'][0].endsWith(col.data_key) && !sorting_config['shots_on_goal_for_zones_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['shots_on_goal_for_zones_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
@@ -1502,13 +2148,49 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="shots_on_goal_against_zones_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/shots_on_goal_against_zones">Torschusszonen (zugelassene Torschüsse, Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="shots_on_goal_against_zones_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['shots_on_goal_against_zones_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['shots_on_goal_against_zones_standings'][0].endsWith(col.data_key) && sorting_config['shots_on_goal_against_zones_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['shots_on_goal_against_zones_standings'][0].endsWith(col.data_key) && !sorting_config['shots_on_goal_against_zones_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['shots_on_goal_against_zones_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.opp_shots_on_goal }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl_og_a }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sl_og_p_a.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.lf_og_a }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.lf_og_p_a.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rg_og_a }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.rg_og_p_a.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.bl_og_a }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.bl_og_p_a.toFixed(1) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="slot_shots" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/slot_shots">Tore und Torschüsse aus dem Slot:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
         <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
     </div>
 
-    <table id="slot_shots_goals" class="table table-condensed table-bordered table-striped table-hover">
+    <table id="slot_shots_standings" class="table table-condensed table-bordered table-striped table-hover">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -1522,6 +2204,41 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['slot_shots_goals']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right">{{ stat.goals }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_g }}</td>
+                <td class="col-md-1 text-right">{{ (stat.sl_g / stat.goals * 100).toFixed(1) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.shots_on_goal }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og }}</td>
+                <td class="col-md-1 text-right">{{ stat.sl_og_p.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right">{{ stat.shot_pctg.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right">{{ (stat.sl_g / stat.sl_og * 100).toFixed(1) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="slot_shots_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/slot_shots">Tore und Torschüsse aus dem Slot:</a></h4>
+        <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="slot_shots_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['slot_shots_goals']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['slot_shots_goals'][0].endsWith(col.data_key) && sorting_config['slot_shots_goals'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['slot_shots_goals'][0].endsWith(col.data_key) && !sorting_config['slot_shots_goals'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['slot_shots_goals']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right">{{ stat.games_played }}</td>
@@ -1569,6 +2286,38 @@
         </tbody>
     </table>
 
+    <div data-ng-if="is_playoff_game" id="attendance_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/attendance">Zuschauer (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="attendance_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['attendance_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['attendance_standings'][0].endsWith(col.data_key) && sorting_config['attendance_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['attendance_standings'][0].endsWith(col.data_key) && !sorting_config['attendance_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['attendance_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%;">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.attendance }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.util_capacity.toFixed(1) }} %</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ avg_attendance_last_season[stat.team] }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.avg_attendance - avg_attendance_last_season[stat.team] }}</td>
+            </tr>
+        </tbody>
+    </table>
+
     <div id="penalties" class="alert alert-info main-bg">
         <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalties">Disziplin:</a></h4>
         <p>(Unter Berücksichtigung aller Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
@@ -1589,6 +2338,39 @@
         </thead>
         <tbody>
             <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['penalties_standings']">
+                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
+                <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pim }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pim_per_game.toFixed(2) }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_2 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_5 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_10 }}</td>
+                <td class="col-md-1 text-right" style="width: 7%">{{ stat.penalty_20 }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div data-ng-if="is_playoff_game" id="penalties_playoffs" class="alert alert-info main-bg">
+        <h4><a href="#!/preview/{{season}}/{{ current_game.game_id }}/penalties">Disziplin (Playoffs):</a></h4>
+        <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
+        <p><i class="fas fa-arrow-up" aria-hidden="true"></i> <a href data-ng-click="scrollTo('contents')">Zurück nach oben</a></p>
+    </div>
+
+    <table data-ng-if="is_playoff_game" id="penalties_playoffs_standings" class="table table-condensed table-bordered table-striped table-hover">
+        <thead>
+            <tr>
+                <td class="text-center"><span class="rank">#</span></td>
+                <td class="text-center" data-ng-repeat="col in stats_cols['penalties_standings']">
+                    <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['penalties_standings'][0].endsWith(col.data_key) && sorting_config['penalties_standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['penalties_standings'][0].endsWith(col.data_key) && !sorting_config['penalties_standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </td>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'info' : current_game.guest.shortcut == stat.team ? 'warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['penalties_standings']">
                 <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
                 <td class="col-md-1"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="col-md-1 text-right" style="width: 7%">{{ stat.games_played }}</td>
