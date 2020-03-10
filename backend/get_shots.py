@@ -208,6 +208,8 @@ if __name__ == '__main__':
         goals = retrieve_goals(events_src_path)
         match_data = json.loads(open(shots_src_path).read())
 
+        home_score_diff, road_score_diff = 0, 0
+
         for shot in match_data['match']['shots'][:]:
 
             shot['game_id'] = game['game_id']
@@ -226,10 +228,14 @@ if __name__ == '__main__':
             if shot['team_id'] == game['road_id']:
                 shot['team'] = game['road_abbr']
                 shot['team_against'] = game['home_abbr']
+                shot['home_road'] = 'road'
+                shot['score_diff'] = road_score_diff
                 dst = rd.HOME_GOAL.distance(shot_pnt)
             elif shot['team_id'] == game['home_id']:
                 shot['team'] = game['home_abbr']
                 shot['team_against'] = game['road_abbr']
+                shot['home_road'] = 'home'
+                shot['score_diff'] = home_score_diff
                 dst = rd.ROAD_GOAL.distance(shot_pnt)
             shot['distance'] = round(dst, 2)
             # determining shot zone
@@ -293,13 +299,19 @@ if __name__ == '__main__':
                 # retrieving players on ice via event data in case of a goal
                 if shot['scored'] and goals:
                     goal = goals[shot['time']]
+                    # re-calculating home and road score differentials
+                    home_score, road_score = [
+                        int(x) for x in goal['currentScore'].split(":")]
+                    home_score_diff = home_score - road_score
+                    road_score_diff = road_score - home_score
+                    # retrieving players on ice for goal from events data
                     shot['players_on_for'] = sorted(
                         [plr['playerId'] for plr in goal[
                             'attendants']['positive']])
                     shot['players_on_against'] = sorted(
                         [plr['playerId'] for plr in goal[
                             'attendants']['negative']])
-                # retrieving players on ice via shift data
+                # retrieving players on ice from shifts data
                 elif shifts:
                     skaters = shifts[-shot['time']]
                     shot['players_on_for'] = sorted([
