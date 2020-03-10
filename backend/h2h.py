@@ -310,6 +310,12 @@ if __name__ == '__main__':
             home_series['goals_for'] = series['s_home_goals']
             home_series['goals_against'] = series['s_road_goals']
             home_series['home_advantage'] = True
+            if home_series['wins'] > home_series['losses']:
+                home_series['series_win'] = 1
+                home_series['series_loss'] = 0
+            else:
+                home_series['series_win'] = 0
+                home_series['series_loss'] = 1
             final_series[home].append(home_series)
 
         if road in CURRENT_TEAMS:
@@ -326,6 +332,12 @@ if __name__ == '__main__':
             road_series['goals_for'] = series['s_road_goals']
             road_series['goals_against'] = series['s_home_goals']
             road_series['home_advantage'] = False
+            if road_series['wins'] > road_series['losses']:
+                road_series['series_win'] = 1
+                road_series['series_loss'] = 0
+            else:
+                road_series['series_win'] = 0
+                road_series['series_loss'] = 1
             final_series[road].append(road_series)
 
     tgt_path = os.path.join(
