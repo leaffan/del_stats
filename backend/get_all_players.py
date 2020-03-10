@@ -62,6 +62,7 @@ if __name__ == '__main__':
                 single_plr['first_name'] = plr['firstname']
                 single_plr['last_name'] = plr['surname']
                 single_plr['position'] = plr['position']
+                single_plr['hand'] = plr['stick']
                 if 'dateOfBirth' in plr:
                     single_plr['dob'] = plr['dateOfBirth']
                     single_plr['age'] = calculate_age(single_plr['dob'])
