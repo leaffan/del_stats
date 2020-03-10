@@ -14,6 +14,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.current_game = $scope.games.find(function(game) {
             return game['game_id'] == $scope.current_game_id;
         });
+        $scope.is_playoff_game = !svc.isNumeric($scope.current_game.round);
         // retrieving the date before game date
         // moment needs to be cloned first (by calling moment() on it) before subtracting a day
         $scope.previous_date = moment($scope.current_game['game_date']).subtract(1, 'days');
@@ -49,6 +50,11 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             $scope.full_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS');
             $scope.home_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'home');
             $scope.road_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'road');
+            if (!svc.isNumeric($scope.current_game.round)) {
+                $scope.full_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO');
+                $scope.home_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO', 'home');
+                $scope.road_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO', 'road');
+            }
             $scope.game_log_home = $scope.team_stats.filter(function(value, index, arr) {
                 // returning only regular season games of current home team
                 // return value['season_type'] == 'RS' && value['team'] == $scope.current_game.home.shortcut;
@@ -91,6 +97,16 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
                 });
             }
         });
+
+        // loading playoff series from external json file
+        $http.get('data/po_series.json').then(function (res) {
+            $scope.po_series = res.data;
+            $scope.filtered_po_series = $scope.filterPlayoffSeries($scope.po_series);
+            $scope.series_total_games= svc.getFilteredTotal($scope.filtered_po_series, 'games_played', null); 
+            $scope.series_wins = $scope.filtered_po_series.filter(series => series.series_win === 1).length;
+            $scope.series_losses = $scope.filtered_po_series.filter(series => series.series_loss === 1).length;
+        });
+        
     });
 
 
@@ -172,11 +188,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     // loading h2h data from external json file
     $http.get('data/'+ $scope.season + '/h2h.json').then(function (res) {
         $scope.h2h = res.data;
-    });
-
-    // loading playoff series from external json file
-    $http.get('data/po_series.json').then(function (res) {
-        $scope.po_series = res.data;
     });
     
     // loading player scoring streaks from external json file
@@ -432,5 +443,12 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         };
         return true;
     };
+
+    $scope.filterPlayoffSeries = function(all_po_series) {
+        if (all_po_series === undefined)
+            return all_po_series;
+        return $scope.po_series[$scope.current_game.home.shortcut].filter(series => series.opp_team === $scope.current_game.guest.shortcut);
+    }
+
 
 });
