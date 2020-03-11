@@ -467,7 +467,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             } else {
                 element['shot_pctg_5v5'] = parseFloat((0).toFixed(2));
             }
-            // calculating team faceoff percentage
+            // calculating faceoff percentage
             if (element['faceoffs']) {
                 element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
             } else {
