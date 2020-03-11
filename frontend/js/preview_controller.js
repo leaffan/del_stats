@@ -50,7 +50,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             $scope.full_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS');
             $scope.home_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'home');
             $scope.road_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'road');
-            if (!svc.isNumeric($scope.current_game.round)) {
+            if ($scope.is_playoff_game) {
                 $scope.full_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO');
                 $scope.home_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO', 'home');
                 $scope.road_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO', 'road');
@@ -148,7 +148,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         'scoring_rankings': ['-points', '-points_per_game', '-goals', '-primary_points'],
         'scoring_powerplay_rankings': ['-pp_points', '-pp_points_per_60', '-pp_goals'],
         'scoring_shorthanded_rankings': ['-sh_points', '-sh_points_per_60', '-sh_goals'],
-        'plr_time_on_ice_shift_rankings': ['-time_on_ice_per_game_seconds', '-time_on_ice_seconds'],
+        'plr_time_on_ice_shift_rankings': ['-time_on_ice_per_game', '-time_on_ice_seconds'],
         'plr_on_goal_shot_zones_rankings': ['-shots_on_goal', '-slot_on_goal'],
         'plr_faceoffs_rankings': ['-faceoff_pctg', '-faceoffs'],
         'plr_blocks_rankings': ['-blocked_shots', '-blocked_shots_per_game'],
@@ -205,6 +205,166 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.last_modified = res.data[0];
         $scope.plr_stats = res.data[1];
     });
+
+	$scope.readCSV = function() {
+		// http get request to read CSV file content
+        $http.get('data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
+        // console.log($scope.player_games.length);
+	};
+
+	$scope.processData = function(allText) {
+        // split content based on new line
+		var allTextLines = allText.data.split(/\r\n|\n/);
+		var headers = allTextLines[0].split(';');
+		var lines = [];
+
+		for ( var i = 0; i < allTextLines.length; i++) {
+			// split content based on separator
+			var data = allTextLines[i].split(';');
+			if (data.length == headers.length) {
+				var tarr = [];
+				for ( var j = 0; j < headers.length; j++) {
+                    tarr.push(data[j]);
+				}
+				lines.push(tarr);
+			}
+        }
+        var headers = lines[0];
+        $scope.player_games = lines.slice(1).map(function(line) {
+            return line.reduce(function(player_game, value, i) {
+                if ($scope.svc.player_stats_to_aggregate().indexOf(headers[i]) !== -1) {
+                    player_game[headers[i]] = parseInt(value);
+                } else if ($scope.svc.player_float_stats_to_aggregate().indexOf(headers[i]) !== -1 ) {
+                    player_game[headers[i]] = parseFloat(value);
+                } else if (headers[i] == 'u23') {
+                    if (value == 'True') {
+                        player_game[headers[i]] = true;
+                    } else {
+                        player_game[headers[i]] = false;
+                    }
+                } else {
+                    player_game[headers[i]] = value;
+                }
+                return player_game;
+            }, {})
+        });
+        // grouping retrieved player games by season type
+        player_games_grouped_by_season_type = groupBy($scope.player_games, 'season_type');
+        // retrieving regular season player stats from before current game
+        full_player_stats = $scope.getPlayerSeasonStats(player_games_grouped_by_season_type['RS'], $scope.current_game);
+        $scope.full_season_player_stats = Object.values(player_stats['full']);
+        // checking whether we're looking at a playoff game
+        if ($scope.is_playoff_game) {
+            // if playoff games have been played previously...
+            if ('PO' in player_games_grouped_by_season_type) {
+                // retrieving playoff player stats from before current game
+                full_playoffs_player_stats = $scope.getPlayerSeasonStats(player_games_grouped_by_season_type['PO'], $scope.current_game);
+                $scope.full_playoffs_player_stats = Object.values(full_playoffs_player_stats['full']);
+            }
+            else {
+                $scope.full_playoffs_player_stats = [];
+            }
+        }
+	};
+
+    $scope.readCSV();
+
+    var groupBy = function(xs, key) {
+        return xs.reduce(function(rv, x) {
+            (rv[x[key]] = rv[x[key]] || []).push(x);
+            return rv;
+        }, {});
+    };
+
+    $scope.getPlayerSeasonStats = function(player_games, current_game) {
+        if (player_games === undefined)
+            return [];
+        // not including current team game element if game date was after the previewed game
+        player_games_before_current_game = player_games.filter(function(pg) {
+            return moment(pg['game_date']).diff(current_game['game_date'], 'days') < 0;
+        });
+        // preparing container for player stats
+        player_stats = {
+            'full': {}, 'home': {}, 'road': {}
+        }
+        player_games_before_current_game.forEach(player_game => {
+            player_id = player_game['player_id'];
+            if (!player_stats['full'][player_id]) {
+                ['full', 'home', 'road'].map(key => {
+                    player_stats[key][player_id] = {};
+                    player_stats[key][player_id]['full_name'] = player_game['first_name'] + ' ' + player_game['last_name'];
+                    player_stats[key][player_id]['position'] = player_game['position'];
+                    player_stats[key][player_id]['team'] = player_game['team'];
+                    $scope.svc.player_stats_to_aggregate().forEach(category => {
+                        player_stats[key][player_id][category] = 0;
+                    });
+                });
+            };
+            $scope.svc.player_stats_to_aggregate().forEach(category => {
+                player_stats['full'][player_id][category] += player_game[category];
+                player_stats[player_game['home_road']][player_id][category] += player_game[category];
+            });
+        });
+
+        Object.values(player_stats['full']).forEach(element => {
+            // calculating points per game
+            if (element['games_played']) {
+                element['points_per_game'] = parseFloat((element['points'] / (element['games_played'])).toFixed(2));
+            } else {
+                element['points_per_game'] = parseFloat((0).toFixed(2));
+            }
+            // calculating shooting percentage
+            if (element['shots_on_goal']) {
+                element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
+            } else {
+                element['shot_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['faceoffs']) {
+                element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
+            } else {
+                element['faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            // calculating time on ice and shifts per game
+            if (element['games_played']) {
+                element['time_on_ice_per_game'] = (element['time_on_ice'] / element['games_played']);
+                element['time_on_ice_pp_per_game'] = (element['time_on_ice_pp'] / element['games_played']);
+                element['time_on_ice_sh_per_game'] = (element['time_on_ice_sh'] / element['games_played']);
+                element['shifts_per_game'] = element['shifts'] / element['games_played'];
+            } else {
+                element['time_on_ice_per_game'] = parseFloat((0).toFixed(2));
+                element['time_on_ice_pp_per_game'] = parseFloat((0).toFixed(2));
+                element['time_on_ice_sh_per_game'] = parseFloat((0).toFixed(2));
+                element['shifts_per_game'] = parseFloat((0).toFixed(2));
+            }
+            // calculating shot-on-goal zone percentages
+            if (element['shots_on_goal']) {
+                element['slot_on_goal_pctg'] = (element['slot_on_goal'] / element['shots_on_goal']) * 100.; 
+                element['left_on_goal_pctg'] = (element['left_on_goal'] / element['shots_on_goal']) * 100.; 
+                element['right_on_goal_pctg'] = (element['right_on_goal'] / element['shots_on_goal']) * 100.; 
+                element['blue_line_on_goal_pctg'] = (element['blue_line_on_goal'] / element['shots_on_goal']) * 100.; 
+            } else {
+                element['slot_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
+                element['left_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
+                element['right_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
+                element['blue_line_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
+            }
+            // calculating blocked/missed shots per game
+            if (element['games_played']) {
+                element['blocked_shots_per_game'] = (element['blocked_shots'] / element['games_played']);
+                element['shots_missed_per_game'] = (element['shots_missed'] / element['games_played']);
+            } else {
+                element['blocked_shots_per_game'] = 0;
+                element['shots_missed_per_game'] = 0;
+            }
+            // calculating powerplay points percentage
+            if (element['points']) {
+                element['pp_pts_pctg'] = (element['pp_points'] / element['points']) * 100.;
+            } else {
+                element['pp_pts_pctg'] = 0;
+            }
+        });
+        return player_stats;
+    };
 
     $scope.getSeasonStats = function(stats, current_game, season_type, home_road_type) {
         full_team_stats = {};
