@@ -109,7 +109,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         
     });
 
-
     // loading game facts
     $http.get('data/'+ $scope.season + '/facts.json').then(function (res) {
         facts = res.data;
@@ -122,13 +121,10 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         }
     });
 
-    // setting average attendance for previous season
-    // TODO: move to external file (arenas.json?)
-    $scope.avg_attendance_last_season = {
-        'EBB': 12026, 'KEC': 11573, 'MAN': 11422, 'DEG': 8531, 'AEV': 5481,
-        'NIT': 5163, 'RBM': 4819, 'KEV': 4814, 'BHV': 4438, 'IEC': 4344,
-        'STR': 4129, 'ING': 3883, 'SWW': 3576, 'WOB': 2815
-    }
+    // retrieving previous year's attendance from external file
+    $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
+        $scope.avg_attendance_last_season = res.data['avg_attendance_last_season'];
+    });
 
     $scope.sorting_config = {
         'h2h_recent_table': ['game_date'],
@@ -181,7 +177,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     });
 
     // loading arenas from external json file
-    $http.get('./js/arenas.json').then(function (res) {
+    $http.get('data/arenas.json').then(function (res) {
         $scope.arenas = res.data;
     });
 
