@@ -1,6 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+"""
+Creates a new or updates an existing CSV template for registering certain
+interesting facts for each scheduled DEL game.
+"""
+
 import os
 import sys
 import csv
@@ -14,7 +19,8 @@ from dateutil.parser import parse
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
-FACT_TYPES = [
+# defining fact categories
+FACT_CATEGORIES = [
     "Fakt zur All-Time-Bilanz", "Fakt H2H aktuelle Saison",
     "Fakt Heim", "Fakt Auswärts",
     "Fakt Special Teams Heim", "Fakt Special Teams Auswärts",
@@ -25,7 +31,8 @@ FACT_TYPES = [
 
 def get_existing_facts(tgt_path):
     """
-    Retrieves existing facts.
+    Retrieves existing facts, registering all game ids for which they exist
+    in the process.
     """
     game_ids = set()
     existing_facts = list()
@@ -42,7 +49,8 @@ def get_existing_facts(tgt_path):
 def prepare_new_facts(schedule, game_ids):
     """
     Prepares new facts for games in specified schedule that are not already
-    existing in given list of game IDs.
+    existing in given list of game IDs. Skipping fixtures that have not been
+    specifically scheduled.
     """
     new_facts = list()
 
@@ -66,7 +74,7 @@ def prepare_new_facts(schedule, game_ids):
                 continue
             game_date = None
             game_time = None
-        for fact_type in FACT_TYPES:
+        for fact_category in FACT_CATEGORIES:
             line = dict()
             line['Spieltag'] = fixture['round']
             line['Datum'] = game_date
@@ -74,7 +82,7 @@ def prepare_new_facts(schedule, game_ids):
             line['Spiel-ID'] = game_id
             line['Heim'] = fixture['home']['shortcut']
             line['Auswärts'] = fixture['guest']['shortcut']
-            line['Fakt'] = fact_type
+            line['Fakt'] = fact_category
             line['Inhalt'] = ''
             new_facts.append(line)
 
@@ -108,6 +116,8 @@ if __name__ == '__main__':
     print("+ Retrieved %d games from full league schedule" % len(schedule))
 
     if initial:
+        # using a different file name for newly created templates to avoid
+        # overwriting an existing facts file
         tgt_path = os.path.join(facts_tgt_dir, 'facts_template.csv')
     else:
         tgt_path = os.path.join(facts_tgt_dir, 'facts.csv')
@@ -128,7 +138,7 @@ if __name__ == '__main__':
     # preparing new facts
     new_facts = prepare_new_facts(schedule, game_ids)
 
-    print("Prepared %d new facts" % len(new_facts))
+    print("+ Prepared %d new facts" % len(new_facts))
 
     # csv output
     if initial:
