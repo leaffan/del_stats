@@ -19,7 +19,7 @@ from collections import defaultdict
 
 # loading configuration from external file
 CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    os.path.dirname(os.path.realpath(__file__)), '..', 'config.yml')))
 
 SEASON_FILE_REGEX = re.compile(R"games_(\d{4})\.json")
 # SEASON_FILE_REGEX = re.compile(R"games_(2010)\.json")

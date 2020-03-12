@@ -17,7 +17,7 @@ from dateutil.parser import parse
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    os.path.dirname(os.path.realpath(__file__)), '..', 'config.yml')))
 
 # defining fact categories
 FACT_CATEGORIES = [
