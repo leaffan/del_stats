@@ -84,6 +84,9 @@ name_corrections = {
     # following are individual corrections valid only for the specified
     # combination of game id and team abbreviation as a workaround for
     # entirely missing coach information
+    '1315_KEC': 'Peter Draisaitl',
+    '1315_DEG': 'Harold Kreis',
+    '1375_MAN': 'Pavel Gross',
     '1738_IEC': "Jason O'Leary",
     '1738_KEV': 'Pierre Beaulieu',
     '1691_STR': 'Tom Pokel',
