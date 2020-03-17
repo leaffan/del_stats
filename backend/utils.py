@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
+import csv
 import math
 from datetime import date, timedelta
 
@@ -90,6 +91,14 @@ name_corrections = {
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
+}
+
+# defining player name corrections
+player_name_corrections = {
+    1410: {
+        'first_name': 'Patrick Joseph',
+        'full_name': 'Patrick Joseph Alber'
+    }
 }
 
 capacities = {
@@ -222,3 +231,16 @@ def calculate_games_left_till_next_hundred(games):
     else:
         games_left = 100
     return games_left
+
+
+def correct_player_name(single_plr):
+    """
+    Corrects name items in specified player data set.
+    """
+    plr_id = single_plr['player_id']
+    # retrieving all available correction items for current player
+    corrections = player_name_corrections[plr_id]
+    # correcting name items, if applicable
+    for key in ['first_name', 'last_name', 'full_name']:
+        if key in single_plr and key in corrections:
+            single_plr[key] = corrections[key]
