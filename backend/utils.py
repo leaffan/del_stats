@@ -233,6 +233,30 @@ def calculate_games_left_till_next_hundred(games):
     return games_left
 
 
+def read_del_team_names(src=R"data\del_team_names.csv"):
+
+    # retrieving currently on-going season from current date
+    current_season = get_season(date.today())
+    # establishing dictionary for team name/abbreviation lookup
+    team_lookup = dict()
+
+    with open(src) as csvfile:
+        reader = csv.DictReader(csvfile, delimiter=';')
+        for row in reader:
+            valid_from = int(row['valid_from'])
+            team_id = int(row['archive_team_id'])
+            if not row['valid_to']:
+                valid_to = current_season
+            else:
+                valid_to = int(row['valid_to'])
+            # populating lookup for current team
+            for season in range(valid_from, valid_to + 1):
+                team_lookup[(team_id, season)] = (
+                    row['team_abbr'], row['team_name'])
+
+    return team_lookup
+
+
 def correct_player_name(single_plr):
     """
     Corrects name items in specified player data set.
