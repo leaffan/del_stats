@@ -6,7 +6,7 @@ import os
 import yaml
 import json
 
-from utils import calculate_age
+from utils import calculate_age, player_name_corrections, correct_player_name
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -61,6 +61,8 @@ if __name__ == '__main__':
                 single_plr['player_id'] = int(plr['id'])
                 single_plr['first_name'] = plr['firstname']
                 single_plr['last_name'] = plr['surname']
+                if int(plr['id']) in player_name_corrections:
+                    correct_player_name(single_plr)
                 single_plr['position'] = plr['position']
                 single_plr['hand'] = plr['stick']
                 if 'dateOfBirth' in plr:
