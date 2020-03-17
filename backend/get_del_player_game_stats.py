@@ -14,6 +14,7 @@ from collections import defaultdict
 from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
+from utils import player_name_corrections, correct_player_name
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -374,6 +375,8 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['first_name'] = data_dict['firstname']
     single_player_game['last_name'] = data_dict['surname']
     single_player_game['full_name'] = data_dict['name']
+    if single_player_game['player_id'] in player_name_corrections:
+        correct_player_name(single_player_game)
     single_player_game['country'] = data_dict['nationalityShort']
     single_player_game['shoots'] = data_dict['stick']
     single_player_game['weight'] = data_dict['weight']
