@@ -16,8 +16,10 @@ ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
 
 SEASON = 2019
 
+PP_GOALS_ONLY = True
 
-def get_scorers_in_period(scorer_combos, period):
+
+def get_scorers_in_period(scorer_combos, period, pp_goals_only=False):
     """
     Gets scorer/assistant combos in specified period.
     """
@@ -25,6 +27,8 @@ def get_scorers_in_period(scorer_combos, period):
         if event['type'] == 'goal':
             # skipping unassisted goals
             if not event['data']['assistants']:
+                continue
+            if pp_goals_only and not event['data']['balance'].startswith('PP'):
                 continue
             # retrieving scorer id
             scorer = event['data']['scorer']['playerId']
@@ -52,7 +56,7 @@ if __name__ == '__main__':
                 src_dir, event_file)).read())
             for key in ['1', '2', '3', 'overtime']:
                 scorer_combos = get_scorers_in_period(
-                    scorer_combos, periods[key])
+                    scorer_combos, periods[key], PP_GOALS_ONLY)
 
     # sorting scorer combos by number of occurrences
     scorer_combos = sorted(
@@ -79,9 +83,14 @@ if __name__ == '__main__':
     # csv output
     out_fields = final_list[0].keys()
 
+    if PP_GOALS_ONLY:
+        base_tgt_name = "scorer_combos_pp"
+    else:
+        base_tgt_name = "scorer_combos"
+
     tgt_csv_path = os.path.join(
         CONFIG['tgt_processing_dir'],
-        '_analysis', "%d_scorer_combos.csv" % SEASON)
+        '_analysis', "%d_%s.csv" % (SEASON, base_tgt_name))
 
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
