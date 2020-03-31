@@ -415,6 +415,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 filtered_player_stats[key]['u23'] = element['u23'];
                 filtered_player_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
                 filtered_player_stats[key]['position'] = $scope.all_players[plr_id]['position'];
+                filtered_player_stats[key]['shoots'] = element['shoots'];
                 filtered_player_stats[key]['team'] = element['team'];
                 filtered_player_stats[key]['single_team'] = true;
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
@@ -467,11 +468,44 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
             } else {
                 element['shot_pctg_5v5'] = parseFloat((0).toFixed(2));
             }
+            // calculating faceoffs per game
+            if (element['games_played']) {
+                element['faceoffs_per_game'] = element['faceoffs'] / element['games_played'];
+            } else {
+                element['faceoffs_per_game'] = 0;
+            }
             // calculating faceoff percentage
             if (element['faceoffs']) {
                 element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
             } else {
                 element['faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            // calculating faceoff percentages by zone
+            if (element['nzone_faceoffs']) {
+                element['nzone_faceoff_pctg'] = parseFloat(((element['nzone_faceoffs_won'] / element['nzone_faceoffs']) * 100).toFixed(2));
+            } else {
+                element['nzone_faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['ozone_faceoffs']) {
+                element['ozone_faceoff_pctg'] = parseFloat(((element['ozone_faceoffs_won'] / element['ozone_faceoffs']) * 100).toFixed(2));
+            } else {
+                element['ozone_faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['dzone_faceoffs']) {
+                element['dzone_faceoff_pctg'] = parseFloat(((element['dzone_faceoffs_won'] / element['dzone_faceoffs']) * 100).toFixed(2));
+            } else {
+                element['dzone_faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            // calculating faceoff percentages by side
+            if (element['left_side_faceoffs']) {
+                element['left_side_faceoff_pctg'] = parseFloat(((element['left_side_faceoffs_won'] / element['left_side_faceoffs']) * 100).toFixed(2));
+            } else {
+                element['left_side_faceoff_pctg'] = parseFloat((0).toFixed(2));
+            }
+            if (element['right_side_faceoffs']) {
+                element['right_side_faceoff_pctg'] = parseFloat(((element['right_side_faceoffs_won'] / element['right_side_faceoffs']) * 100).toFixed(2));
+            } else {
+                element['right_side_faceoff_pctg'] = parseFloat((0).toFixed(2));
             }
             // calculating power play points per 60
             if (element['time_on_ice_pp']) {
@@ -643,6 +677,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'on_ice_shot_on_goal_stats': 'on_ice_sog_pctg',
         'on_ice_shot_stats_5v5': 'on_ice_sh_pctg_5v5',
         'on_ice_shot_on_goal_stats_5v5': 'on_ice_sog_pctg_5v5',
+        'faceoff_by_zone_stats': 'ozone_faceoff_pctg',
+        'faceoff_by_side_stats': 'left_side_faceoff_pctg',
         'per_60_stats': 'points_per_60',
         'goalie_stats': 'save_pctg',
         'goalie_against_avg_stats': 'gsaa',
@@ -690,7 +726,12 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         'on_ice_sog_pctg': ['on_ice_sog_pctg'],
         'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5'],
         'game_score': ['game_score', 'goals', 'primary_assists'],
-        'gsaa': ['gsaa']
+        'gsaa': ['gsaa'],
+        'left_side_faceoff_pctg': ['left_side_faceoff_pctg', 'left_side_faceoffs'],
+        'right_side_faceoff_pctg': ['right_side_faceoff_pctg', 'right_side_faceoffs'],
+        'nzone_faceoff_pctg': ['nzone_faceoff_pctg', 'nzone_faceoffs'],
+        'ozone_faceoff_pctg': ['ozone_faceoff_pctg', 'ozone_faceoffs'],
+        'dzone_faceoff_pctg': ['dzone_faceoff_pctg', 'dzone_faceoffs']
     };
 
     $scope.change5v5Check = function() {

@@ -177,6 +177,37 @@
         {"data_key": "on_ice_save_pctg_5v5", "col_header": "OISV% 5v5", "expl_de": "Fangquote des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Save Percentage with Player on Ice"},
         {"data_key": "on_ice_pdo_5v5", "col_header": "OI PDO 5v5", "expl_de": "PDO-Wert mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 PDO with Player on Ice"}
     ],
+    "faceoff_by_zone_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "nzone_faceoffs", "col_header": "NZ FAC", "expl_de": "Bullies in der neutralen Zone", "expl_en": "Neutral Zone Faceoffs"},
+        {"data_key": "nzone_faceoffs_won", "col_header": "NZ+", "expl_de": "Gewonnene Bullies in der neutralen Zone", "expl_en": "Neutral Zone Faceoffs Won"},
+        {"data_key": "nzone_faceoffs_lost", "col_header": "NZ-", "expl_de": "Verlorene Bullies in der neutralen Zone", "expl_en": "Neutral Zone Faceoffs Lost"},
+        {"data_key": "nzone_faceoff_pctg", "col_header": "NZ FAC%", "expl_de": "Anteil der gewonnenen Bullies in der neutralen Zone", "expl_en": "Neutral Zone Faceoff Percentage"},
+        {"data_key": "ozone_faceoffs", "col_header": "OZ FAC", "expl_de": "Bullies in der Angriffszone", "expl_en": "Offensive Zone Faceoffs"},
+        {"data_key": "ozone_faceoffs_won", "col_header": "OZ+", "expl_de": "Gewonnene Bullies in der Angriffszone", "expl_en": "Offensive Zone Faceoffs Won"},
+        {"data_key": "ozone_faceoffs_won", "col_header": "OZ-", "expl_de": "Verlorene Bullies in der Angriffszone", "expl_en": "Offensive Zone Faceoffs Lost"},
+        {"data_key": "ozone_faceoff_pctg", "col_header": "OZ FAC%", "expl_de": "Anteil der gewonnenen Bullies in der Angriffszone", "expl_en": "Offensive Zone Faceoff Percentage"},
+        {"data_key": "dzone_faceoffs", "col_header": "DZ FAC", "expl_de": "Bullies in der Verteidigungszone", "expl_en": "Defensive Zone Faceoffs "},
+        {"data_key": "dzone_faceoffs_won", "col_header": "DZ+", "expl_de": "Gewonnene Bullies in der Verteidigungszone", "expl_en": "Defensive Zone Faceoffs Won"},
+        {"data_key": "dzone_faceoffs_lost", "col_header": "DZ-", "expl_de": "Verlorene Bullies in der Verteidigungszone", "expl_en": "Defensive Zone Faceoffs Lost"},
+        {"data_key": "dzone_faceoff_pctg", "col_header": "DZ FAC%", "expl_de": "Anteil der gewonnenen Bullies in der Verteidigungszone", "expl_en": "Defensive Zone Faceoff Percentage"}
+    ],
+    "faceoff_by_side_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "shoots", "col_header": "Stockhand", "expl_de": null, "expl_en": null},
+        {"data_key": "left_side_faceoffs", "col_header": "Left FAC", "expl_de": "Bullies auf der linken Seite", "expl_en": "Left Side Faceoffs"},
+        {"data_key": "left_side_faceoffs_won", "col_header": "L+", "expl_de": "Gewonnene Bullies auf der linken Seite", "expl_en": "Left Side Faceoffs Won"},
+        {"data_key": "left_side_faceoffs_lost", "col_header": "L-", "expl_de": "Verlorene Bullies auf der linken Seite", "expl_en": "Left Side Faceoffs Lost"},
+        {"data_key": "left_side_faceoff_pctg", "col_header": "Left FAC%", "expl_de": "Anteil der gewonnenen Bullies auf der linken Seite", "expl_en": "Left Side Faceoff Percentage"},
+        {"data_key": "right_side_faceoffs", "col_header": "Right FAC", "expl_de": "Bullies auf der rechten Seite", "expl_en": "Right Side Faceoffs"},
+        {"data_key": "right_side_faceoffs_won", "col_header": "R+", "expl_de": "Gewonnene Bullies auf der rechten Seite", "expl_en": "Right Side Faceoffs Won"},
+        {"data_key": "right_side_faceoffs_lost", "col_header": "R-", "expl_de": "Verlorene Bullies auf der rechten Seite", "expl_en": "Right Side Faceoffs Lost"},
+        {"data_key": "right_side_faceoff_pctg", "col_header": "Right FAC%", "expl_de": "Anteil der gewonnenen Bullies auf der rechten Seite", "expl_en": "Right Side Faceoff Percentage"}
+    ],
     "power_play_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
