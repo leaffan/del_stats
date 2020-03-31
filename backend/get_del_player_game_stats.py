@@ -75,7 +75,13 @@ OUT_FIELDS = [
     "on_ice_unblocked_sh_f_5v5", "on_ice_sog_f_5v5", "on_ice_goals_f_5v5",
     "on_ice_sh_a", "on_ice_unblocked_sh_a", "on_ice_sog_a", "on_ice_goals_a",
     "on_ice_sh_a_5v5", "on_ice_unblocked_sh_a_5v5", "on_ice_sog_a_5v5",
-    "on_ice_goals_a_5v5", 'game_score'
+    "on_ice_goals_a_5v5", 'game_score',
+    'nzone_faceoffs', 'nzone_faceoffs_won', 'nzone_faceoffs_lost',
+    'ozone_faceoffs', 'ozone_faceoffs_won', 'ozone_faceoffs_lost',
+    'dzone_faceoffs', 'dzone_faceoffs_won', 'dzone_faceoffs_lost',
+    'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
+    'right_side_faceoffs', 'right_side_faceoffs_won',
+    'right_side_faceoffs_lost',
 ]
 
 # default empty line
@@ -247,10 +253,17 @@ def get_single_game_player_data(game, shots):
     game_events_src_path = os.path.join(
         CONFIG['base_data_dir'], 'game_events',
         str(game['season']), str(game_type), "%d.json" % game['game_id'])
+    faceoffs_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'faceoffs',
+        str(game['season']), str(game_type), "%d.json" % game['game_id'])
 
     home_stats = json.loads(open(home_stats_src_path).read())
     road_stats = json.loads(open(road_stats_src_path).read())
     period_events = json.loads(open(game_events_src_path).read())
+    if os.path.isfile(faceoffs_src_path):
+        faceoffs = json.loads(open(faceoffs_src_path).read())
+    else:
+        faceoffs = list()
 
     for home_stat_line in home_stats:
         player_game = retrieve_single_player_game_stats(
@@ -356,7 +369,176 @@ def get_single_game_player_data(game, shots):
             0.15 * gsl['on_ice_goals_f'] - 0.15 * gsl['on_ice_goals_a'], 2
         )
 
+        gsl = retrieve_detailed_faceoff_stats(gsl, faceoffs)
+
     return game_stat_lines
+
+
+def retrieve_detailed_faceoff_stats(gsl, faceoffs):
+    """
+    Retrieves detailed faceoff statistics for specified game player statictics
+    item.
+    """
+    per_player_game_faceoffs = list(filter(
+        lambda d:
+            d['winner']['id'] == gsl['player_id'] or
+            d['losser']['id'] == gsl['player_id'], faceoffs))
+
+    # retrieving and calculating neutral zone faceoff stats
+    nzone_faceoffs = list(filter(
+        lambda d:
+            d['positionShortcut'] in ['C', 'ABL', 'ABR', 'HBL', 'HBR'],
+            per_player_game_faceoffs))
+    nzone_faceoffs_won = get_won_faceoffs(nzone_faceoffs, gsl['player_id'])
+    nzone_faceoffs_lost = len(nzone_faceoffs) - nzone_faceoffs_won
+
+    gsl['nzone_faceoffs'] = len(nzone_faceoffs)
+    gsl['nzone_faceoffs_won'] = nzone_faceoffs_won
+    gsl['nzone_faceoffs_lost'] = nzone_faceoffs_lost
+    gsl['nzone_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(nzone_faceoffs), nzone_faceoffs_won)
+
+    # retrieving and calculating offensive and defensive zone faceoff stats
+    if gsl['home_road'] == 'home':
+        ozone_faceoffs = list(filter(
+            lambda d:
+                d['positionShortcut'] in ['ADL', 'ADR'],
+                per_player_game_faceoffs))
+        dzone_faceoffs = list(filter(
+            lambda d:
+                d['positionShortcut'] in ['HDL', 'HDR'],
+                per_player_game_faceoffs))
+    elif gsl['home_road'] == 'road':
+        ozone_faceoffs = list(filter(
+            lambda d:
+                d['positionShortcut'] in ['HDL', 'HDR'],
+                per_player_game_faceoffs))
+        dzone_faceoffs = list(filter(
+            lambda d:
+                d['positionShortcut'] in ['ADL', 'ADR'],
+                per_player_game_faceoffs))
+
+    ozone_faceoffs_won = get_won_faceoffs(ozone_faceoffs, gsl['player_id'])
+    ozone_faceoffs_lost = len(ozone_faceoffs) - ozone_faceoffs_won
+    dzone_faceoffs_won = get_won_faceoffs(dzone_faceoffs, gsl['player_id'])
+    dzone_faceoffs_lost = len(dzone_faceoffs) - dzone_faceoffs_won
+
+    gsl['ozone_faceoffs'] = len(ozone_faceoffs)
+    gsl['ozone_faceoffs_won'] = ozone_faceoffs_won
+    gsl['ozone_faceoffs_lost'] = ozone_faceoffs_lost
+    gsl['ozone_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(ozone_faceoffs), ozone_faceoffs_won)
+    gsl['dzone_faceoffs'] = len(dzone_faceoffs)
+    gsl['dzone_faceoffs_won'] = dzone_faceoffs_won
+    gsl['dzone_faceoffs_lost'] = dzone_faceoffs_lost
+    gsl['dzone_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(dzone_faceoffs), dzone_faceoffs_won)
+
+    # retrieving and calculating left and right side faceoff stats
+    if gsl['home_road'] == 'home':
+        left_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'],
+            per_player_game_faceoffs))
+        right_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'],
+            per_player_game_faceoffs))
+    elif gsl['home_road'] == 'road':
+        left_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'],
+            per_player_game_faceoffs))
+        right_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'],
+            per_player_game_faceoffs))
+
+    left_side_faceoffs_won = get_won_faceoffs(
+        left_side_faceoffs, gsl['player_id'])
+    left_side_faceoffs_lost = len(left_side_faceoffs) - left_side_faceoffs_won
+    right_side_faceoffs_won = get_won_faceoffs(
+        right_side_faceoffs, gsl['player_id'])
+    right_side_faceoffs_lost = (
+        len(right_side_faceoffs) - right_side_faceoffs_won)
+
+    gsl['left_side_faceoffs'] = len(left_side_faceoffs)
+    gsl['left_side_faceoffs_won'] = left_side_faceoffs_won
+    gsl['left_side_faceoffs_lost'] = left_side_faceoffs_lost
+    gsl['left_side_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(left_side_faceoffs), left_side_faceoffs_won)
+    gsl['right_side_faceoffs'] = len(right_side_faceoffs)
+    gsl['right_side_faceoffs_won'] = right_side_faceoffs_won
+    gsl['right_side_faceoffs_lost'] = right_side_faceoffs_lost
+    gsl['right_side_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(right_side_faceoffs), right_side_faceoffs_won)
+
+    # retrieving and calculating strong and weak side faceoff stats
+    if gsl['home_road'] == 'home' and gsl['shoots'] == 'left':
+        weak_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
+            per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
+            per_player_game_faceoffs))
+    elif gsl['home_road'] == 'home' and gsl['shoots'] == 'right':
+        weak_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
+            per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
+            per_player_game_faceoffs))
+    elif gsl['home_road'] == 'road' and gsl['shoots'] == 'left':
+        weak_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
+            per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
+            per_player_game_faceoffs))
+    elif gsl['home_road'] == 'road' and gsl['shoots'] == 'right':
+        weak_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
+            per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
+            per_player_game_faceoffs))
+
+    wside_faceoffs_won = get_won_faceoffs(
+        weak_side_faceoffs, gsl['player_id'])
+    wside_faceoffs_lost = len(weak_side_faceoffs) - wside_faceoffs_won
+    sside_faceoffs_won = get_won_faceoffs(
+        strong_side_faceoffs, gsl['player_id'])
+    sside_faceoffs_lost = len(strong_side_faceoffs) - sside_faceoffs_won
+
+    gsl['weak_side_faceoffs'] = len(weak_side_faceoffs)
+    gsl['weak_side_faceoffs_won'] = wside_faceoffs_won
+    gsl['weak_side_faceoffs_lost'] = wside_faceoffs_lost
+    gsl['weak_side_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(weak_side_faceoffs), wside_faceoffs_won)
+    gsl['strong_side_faceoffs'] = len(strong_side_faceoffs)
+    gsl['strong_side_faceoffs_won'] = sside_faceoffs_won
+    gsl['strong_side_faceoffs_lost'] = sside_faceoffs_lost
+    gsl['strong_side_faceoff_pctg'] = calculate_faceoff_percentage(
+        len(strong_side_faceoffs), sside_faceoffs_won)
+
+    return gsl
+
+
+def get_won_faceoffs(list_of_faceoffs, player_id):
+    """
+    Retrieves number of faceoffs in specified list won by player with given id.
+    """
+    return len(list(
+        filter(lambda d: d['winner']['id'] == player_id, list_of_faceoffs)))
+
+
+def calculate_faceoff_percentage(all_faceoffs, faceoffs_won):
+    """
+    Calulates percentage of specified number of won faceoffs among given number
+    of all faceoffs.
+    """
+    if all_faceoffs:
+        faceoff_pctg = round(faceoffs_won / all_faceoffs * 100., 3)
+    else:
+        faceoff_pctg = 0
+
+    return faceoff_pctg
 
 
 def retrieve_single_player_game_stats(data_dict, game, key):
