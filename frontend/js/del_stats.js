@@ -254,7 +254,12 @@ app.factory('svc', function() {
                 'on_ice_sh_f', 'on_ice_sh_a', 'on_ice_unblocked_sh_f', 'on_ice_unblocked_sh_a',
                 'on_ice_sh_f_5v5', 'on_ice_sh_a_5v5', 'on_ice_unblocked_sh_f_5v5', 'on_ice_unblocked_sh_a_5v5',
                 'on_ice_sog_f', 'on_ice_sog_a', 'on_ice_goals_f', 'on_ice_goals_a',
-                'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5', 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5'
+                'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5', 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5',
+                'nzone_faceoffs', 'nzone_faceoffs_won', 'nzone_faceoffs_lost',
+                'ozone_faceoffs', 'ozone_faceoffs_won', 'ozone_faceoffs_lost',
+                'dzone_faceoffs', 'dzone_faceoffs_won', 'dzone_faceoffs_lost',
+                'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
+                'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost'
             ];
         },
         player_float_stats_to_aggregate: function() {
