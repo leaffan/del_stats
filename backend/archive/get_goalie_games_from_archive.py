@@ -10,7 +10,7 @@ from lxml import html
 
 # loading configuration from external file
 CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    os.path.dirname(os.path.realpath(__file__)), '..', 'config.yml')))
 
 user = CONFIG['del_archive_user']
 pwd = CONFIG['del_archive_pass']
