@@ -4,35 +4,28 @@
     </div>
 
     <div class="alert alert-info main-bg">
-        <p>Teamstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.</p>
+        Teamstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.
 
-        <ul class="list-inline">
-            <li  class="personal_stuff"><i class="fa fa-sync-alt" aria-hidden="true"></i><b>Aktualisierung:</b> {{ last_modified | date:
-                'dd.MM.yyyy, HH:mm' }}</li>
+        <ul class="list-group list-group-horizontal my-1">
+            <li class="list-group-item flex-fill border-0 bg-transparent p-1">
+                <i class="fa fa-sync-alt" aria-hidden="true"></i><b>Aktualisierung:</b> {{ last_modified | date: 'dd.MM.yyyy, HH:mm' }}
+            </li>
         </ul>
-        <ul class="list-inline">
-            <li class="personal_stuff"><i class="fa fa-at" aria-hidden="true"></i><b>Kontakt:</b> markus@leaffan.net</li>
-            <li class="personal_stuff"><i class="fab fa-twitter" aria-hidden="true"></i><b>Twitter:</b> <a href="https://twitter.com/le_affan">@le_affan</a></li>
-            <li class="personal_stuff"><i class="fab fa-github" aria-hidden="true"></i><b>GitHub:</b> <a href="https://github.com/leaffan/del_stats">leaffan/del_stats</a></li>
+        <ul class="list-group list-group-horizontal my-1">
+            <li class="list-group-item flex-fill border-0 bg-transparent p-1"><i class="fa fa-at" aria-hidden="true"></i><b>Kontakt:</b> markus@leaffan.net</li>
+            <li class="list-group-item flex-fill border-0 bg-transparent p-1"><i class="fab fa-twitter" aria-hidden="true"></i><b>Twitter:</b> <a href="https://twitter.com/le_affan">@le_affan</a></li>
+            <li class="list-group-item flex-fill border-0 bg-transparent p-1"><i class="fab fa-github" aria-hidden="true"></i><b>GitHub:</b> <a href="https://github.com/leaffan/del_stats">leaffan/del_stats</a></li>
         </ul>
     </div>
 
     <div class="alert alert-info main-bg">
-        <p>Zu den <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
-    </div>
-
-    <div class="alert alert-info main-bg">
-        <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
-            <dl ng-show="toggle" class="dl-horizontal">
-                <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
-                <dd data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
-            </dl>
+        Zu den <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
     <form>
         <div class="form-group">
             <div class="input-group" style="width: 100%">
-                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+                <select class="form-control mr-1" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="standings">Standardtabelle</option>
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
                     <option data-ng-option value="goal_stats">Torstatistiken</option>
@@ -49,20 +42,17 @@
                     <option data-ng-option value="score_state_stats">Zeiten pro Spielstand</option>
                     <option data-ng-option value="attendance_stats">Zuschauerdaten</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
+                <select class="form-control mr-1" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
-                <span data-ng-show="isStandingsView" class="input-group-addon form_spacer"></span>
-                <select data-ng-show="isStandingsView" class="form-control" data-ng-model="situationSelect" data-ng-change="changeTable()">
+                <select data-ng-show="isStandingsView" class="form-control ml-1" data-ng-model="situationSelect" data-ng-change="changeTable()">
                     <option data-ng-option value selected="selected">Nach voller Spielzeit</option>
                     <option data-ng-option value="lead40">Bei Führung nach 40 Minuten</option>
                     <option data-ng-option value="tied40">Bei Unentschieden nach 40 Minuten</option>
@@ -82,47 +72,46 @@
 
         <div class="form-group">
             <div class="input-group" style="width: 100%">
-                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                     <option data-ng-option>-----------</option>
                     <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
                     <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="from_date_select">
-                    <span class="input-group-addon">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
-                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="to_date_select">
-                    <span class="input-group-addon">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
-                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
-                    <option data-ng-option value selected="selected">alle Wochentage</option>
+                <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+
+                <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
+                    <option data-ng-option value selected="selected">alle Tage</option>
                     <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="round_select" style="width: 100%">
-                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
-                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                    </select>
-                    <span class="input-group-addon form_spacer"></span>
-                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
-                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                    </select>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">von</i></span>
                 </div>
+                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                </div>
+                <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
             </div>
         </div>
-    </form>
 
     <table id="standings" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'standings'">
         <thead>
@@ -504,7 +493,7 @@
             </tbody>
     </table>
 
-    <table id="attendance_stats" class="table table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'attendance_stats'">
+    <table id="attendance_stats" class="table-condensed table-bordered table-striped" data-ng-if="tableSelect == 'attendance_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -532,7 +521,7 @@
         </tbody>
     </table>
 
-    <table id="penalty_stats" class="table table-condensed table-bordered table-striped"  data-ng-if="tableSelect == 'penalty_stats'">
+    <table id="penalty_stats" class="table-condensed table-bordered table-striped"  data-ng-if="tableSelect == 'penalty_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -561,7 +550,7 @@
         </tbody>
     </table>
 
-    <table id="score_state_stats" class="table table-condensed table-bordered table-striped"  data-ng-if="tableSelect == 'score_state_stats'">
+    <table id="score_state_stats" class="table-condensed table-bordered table-striped"  data-ng-if="tableSelect == 'score_state_stats'">
         <thead>
             <tr>
                 <td class="text-center"><span class="rank">#</span></td>
@@ -590,5 +579,13 @@
             </tr>
         </tbody>
     </table>
+
+    <div class="alert alert-info main-bg my-3">
+        <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
+            <dl data-ng-show="toggle" class="row mx-2">
+                <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
+                <dd class="col-md-10" data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
+            </dl>
+    </div>
 
 </div>
