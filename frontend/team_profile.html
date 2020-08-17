@@ -7,26 +7,29 @@
     </div>
         
     <div class="alert alert-info main-bg">
-        <p>Zu den <a href="#!/team_stats/{{::season}}"><b>Teamstatistiken</b></a> | Zu den <a href="#!/del_stats/{{::season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a></p>
+        <a href="#!/team_stats/{{::season}}"><b>Teamstatistiken</b></a> | <a href="#!/del_stats/{{::season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
     
     <div class="alert alert-info main-bg">
-        <p ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></p>
-            <dl ng-show="toggle" class="dl-horizontal">
-                <dt data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
-                <dd data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
+        <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
+            <dl data-ng-show="toggle" class="row mx-2">
+                <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
+                <dd class="col-md-10" data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
             </dl>
     </div>
 
     <form>
-        <div class="form_group">
-            <div class="input-group" style="width: 100%">
-                <label for="team_select">Team:</label>
-                <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
+        <div class="form_group mb-1">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Team:</i></span>
+                </div>
+                <select class="form-control mr-1" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <label for="team_select">Saisonphase:</label>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                </div>
                 <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
@@ -34,14 +37,10 @@
                 </select>
             </div>
         </div>
-    </form>
 
-    <br />
-
-    <form>
-        <div class="form-group">
+        <div class="form-group mb-1">
             <div class="input-group" style="width: 100%">
-                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+                <select class="form-control mr-1" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
                     <option data-ng-option value="game_goals">Torstatistiken</option>
                     <option data-ng-option value="game_shots">Schussstatistiken</option>
@@ -55,616 +54,644 @@
                     <option data-ng-option value="game_refs">Schieds-/Linienrichter</option>
                     <option data-ng-option value="development">Entwicklung im Saisonverlauf</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
+                <select class="form-control mr-1" id="home_road_select" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle Gegner</option>
                     <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + current_team}" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
             </div>
         </div>
-    </form>
 
-    <form>
         <div class="form-group">
-            <div class="input-group" style="width: 100%">
-                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+            <div class="w-auto input-group">
+                <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    <option data-ng-option>-----------</option>
+                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="from_date_select">
-                    <span class="input-group-addon">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
-                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="to_date_select">
-                    <span class="input-group-addon">
-                        <i class="far fa-calendar-alt"></i>
-                    </span>
-                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
-                        data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <span class="input-group-addon form_spacer"></span>
-                <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
-                    <option data-ng-option value selected="selected">alle Wochentage</option>
+                <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+
+                <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
+                    <option data-ng-option value selected="selected">alle Tage</option>
                     <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <div class="input-group" id="round_select" style="width: 100%">
-                    <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
-                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                    </select>
-                    <span class="input-group-addon form_spacer"></span>
-                    <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
-                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                    </select>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">von</i></span>
                 </div>
+                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                </div>
+                <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
+
             </div>
         </div>
     </form>
 
-    <table id="game_additional_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_additional_stats'">
-        <thead>
+    <table id="game_additional_stats" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_additional_stats'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter: dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
-                        game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
-                        }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
-                        game.game_type
-                        === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.faceoffs }}</td>
-                <td class="col-md-1 text-right">{{ game.faceoffs_won }}</td>
-                <td class="col-md-1 text-right">{{ game.faceoffs_lost }}</td>
-                <td class="col-md-1 text-right">{{ game.faceoff_pctg.toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ game.shot_pctg.toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ game.save_pctg.toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ game.pdo.toFixed(1) }}</td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-1" style="width: 6%">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ faceoffs_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs', game_log) }} ({{ (faceoffs_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ faceoffs_won_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs_won', game_log) }} ({{ (faceoffs_won_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ faceoffs_lost_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs_lost', game_log) }} ({{ (faceoffs_lost_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((faceoffs_won_total / faceoffs_total) * 100).toFixed(2) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ (shot_pctg_total = (svc.getFilteredTotal(filtered_game_log, 'goals', game_log) / svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log)) * 100).toFixed(2) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ (save_pctg_total = 100 - (svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log)) * 100).toFixed(2) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ (shot_pctg_total + save_pctg_total).toFixed(1) }}</b></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="game_shots" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_shots'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
-                    </a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
-                        game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
-                        }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
-                        game.game_type
-                        === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.shots_on_goal }}</td>
-                <td class="col-md-1 text-right">{{ game.shots_missed }}</td>
-                <td class="col-md-1 text-right">{{ game.shots_blocked }}</td>
-                <td class="col-md-1 text-right">{{ game.shot_pctg.toFixed(2) }} %</td>
-                <td class="col-md-1 text-right">{{ game.opp_shots_on_goal }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_shots_missed }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_shots_blocked }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_shot_pctg.toFixed(2) }} %</td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-1" style="width: 6%">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_missed_total = svc.getFilteredTotal(filtered_game_log, 'shots_missed', game_log) }} ({{ (shots_missed_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_blocked_total = svc.getFilteredTotal(filtered_game_log, 'shots_blocked', game_log) }} ({{ (shots_blocked_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'goals', game_log) / shots_on_goal_total) * 100).toFixed(2) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log) }} ({{ (opp_shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_shots_missed_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_missed', game_log) }} ({{ (opp_shots_missed_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_shots_blocked_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_blocked', game_log) }} ({{ (opp_shots_blocked_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / opp_shots_on_goal_total) * 100).toFixed(2) }} %</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="game_goals" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_goals'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
-                    </a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
-                        game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
-                        }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
-                        game.game_type
-                        === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.goals_1 }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_goals_1 }}</td>
-                <td class="col-md-1 text-right">{{ game.goals_2 }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_goals_2 }}</td>
-                <td class="col-md-1 text-right">{{ game.goals_3 }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_goals_3 }}</td>
-                <td class="col-md-1 text-right">{{ game.goals }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_goals }}</td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-1" style="width: 6%">Gesamt:</td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ goals_1_total = svc.getFilteredTotal(filtered_game_log, 'goals_1', game_log) }} ({{ (goals_1_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_goals_1_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_1', game_log) }} ({{ (opp_goals_1_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ goals_2_total = svc.getFilteredTotal(filtered_game_log, 'goals_2', game_log) }} ({{ (goals_2_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_goals_2_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_2', game_log) }} ({{ (opp_goals_2_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ goals_3_total = svc.getFilteredTotal(filtered_game_log, 'goals_3', game_log) }} ({{ (goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_goals_3_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_3', game_log) }} ({{ (opp_goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ goals_total = svc.getFilteredTotal(filtered_game_log, 'goals', game_log) }} ({{ (goals_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ opp_goals_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) }} ({{ (opp_goals_total / filtered_game_log.length).toFixed(1) }})</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="game_refs" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'game_refs'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
-                    </a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{
-                        game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score
-                        }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' :
-                        game.game_type
-                        === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-2" style="width: 12%">{{ game.ref_1 }}</td>
-                <td class="col-md-2" style="width: 12%">{{ game.ref_2 }}</td>
-                <td class="col-md-2" style="width: 12%">{{ game.lma_1 }}</td>
-                <td class="col-md-2" style="width: 12%">{{ game.lma_2 }}</td>
-                <td class="col-md-1 text-right" style="width: 8%">{{ game.pim }}</td>
-                <td class="col-md-1 text-right" style="width: 8%">{{ game.opp_pim }}</td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-1" style="width: 6%">Gesamt:</td>
-                <td class="col-md-1 text-right" ><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-2" style="width: 12%"></td>
-                <td class="col-md-2" style="width: 12%"></td>
-                <td class="col-md-2" style="width: 12%"></td>
-                <td class="col-md-2" style="width: 12%"></td>
-                <td class="col-md-1 text-right" style="width: 8%"><b>{{ pim_total = svc.getFilteredTotal(filtered_game_log, 'pim', game_log) }} ({{ (pim_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right" style="width: 8%"><b>{{ opp_pim_total = svc.getFilteredTotal(filtered_game_log, 'opp_pim', game_log) }} ({{ (opp_pim_total / filtered_game_log.length).toFixed(1) }})</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="basic_game_by_game" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'basic_game_by_game'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
-                    </a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-2">{{ game.arena }}</td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.attendance }}</td>
-                <td class="col-md-1" style="width: 10%">{{ game.coach }}</td>
-                <td class="col-md-1" style="width: 10%">{{ game.opp_coach }}</td>
-                <td class="col-md-2" style="width: 12%"><a href="#!/player_profile/{{season}}/{{game.team}}/{{game.best_plr_id}}">{{ game.best_plr }}</a></td>
-                <td class="col-md-2" style="width: 12%"><a href="#!/player_profile/{{season}}/{{game.opp_team}}/{{game.opp_best_plr_id}}">{{ game.opp_best_plr }}</a></td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1"></td>
-                <td class="col-md-1" style="width: 6%">Gesamt:</td>
-                <td class="col-md-1 text-right" ><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-2"></td>
-                <td class="col-md-1 text-right" style="width: 6%"><b>{{ attendance_total = svc.getFilteredTotal(filtered_game_log, 'attendance', game_log) }}</b></td>
-                <td class="col-md-1 text-right" style="width: 10%"><b>&#216;: {{ (attendance_total / filtered_game_log.length).toFixed(0) }}</b></td>
-                <td class="col-md-1" style="width: 10%"></td>
-                <td class="col-md-2" style="width: 12%"></td>
-                <td class="col-md-2" style="width: 12%"></td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="special_team_stats" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'special_team_stats'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
-                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
-                    </a>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.pp_time) }}</td>
-                <td class="col-md-1 text-right">{{ game.pp_opps }}</td>
-                <td class="col-md-1 text-right">{{ game.pp_goals }}</td>
-                <td class="col-md-1 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.opp_sh_goals }}</td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.opp_pp_time) }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_pp_opps }}</td>
-                <td class="col-md-1 text-right">{{ game.opp_pp_goals }}</td>
-                <td class="col-md-1 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.sh_goals }}</td>
-            </tr>
-
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(svc.getFilteredTotal(filtered_game_log, 'pp_time', 'game_log')) }}</td>
-                <td class="col-md-1 text-right">{{ total_pp_opps = svc.getFilteredTotal(filtered_game_log, 'pp_opps', 'game_log') }}</td>
-                <td class="col-md-1 text-right">{{ total_pp_goals = svc.getFilteredTotal(filtered_game_log, 'pp_goals', 'game_log') }}</td>
-                <td class="col-md-1 text-right">{{ (total_pp_goals / total_pp_opps * 100).toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ svc.getFilteredTotal(filtered_game_log, 'opp_sh_goals', 'game_log') }}</td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(svc.getFilteredTotal(filtered_game_log, 'opp_pp_time', 'game_log')) }}</td>
-                <td class="col-md-1 text-right">{{ total_opp_pp_opps = svc.getFilteredTotal(filtered_game_log, 'opp_pp_opps', 'game_log') }}</td>
-                <td class="col-md-1 text-right">{{ total_opp_pp_goals = svc.getFilteredTotal(filtered_game_log, 'opp_pp_goals', 'game_log') }}</td>
-                <td class="col-md-1 text-right">{{ (100 - total_opp_pp_goals / total_opp_pp_opps * 100).toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ svc.getFilteredTotal(filtered_game_log, 'sh_goals', 'game_log') }}</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <table id="development" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'development'">
-        <thead>
-            <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                </td>
-            </tr>
-        </thead>
-        <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:game_date:true | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 10%">
-                    <b>{{ game.score}}:{{game.opp_score}} </b>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter: dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
                     <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
                         {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
                     </a>
                 </td>
-                <td class="col-md-1 text-right" style="width: 6%">
+                <td class="w-10 text-right">{{ game.faceoffs }}</td>
+                <td class="w-10 text-right">{{ game.faceoffs_won }}</td>
+                <td class="w-10 text-right">{{ game.faceoffs_lost }}</td>
+                <td class="w-12 text-right">{{ game.faceoff_pctg.toFixed(2) }} %</td>
+                <td class="w-12 text-right">{{ game.shot_pctg.toFixed(2) }} %</td>
+                <td class="w-12 text-right">{{ game.save_pctg.toFixed(2) }} %</td>
+                <td class="w-10 text-right">{{ game.pdo.toFixed(1) }}</td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ faceoffs_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs', game_log) }} ({{ (faceoffs_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ faceoffs_won_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs_won', game_log) }} ({{ (faceoffs_won_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ faceoffs_lost_total = svc.getFilteredTotal(filtered_game_log, 'faceoffs_lost', game_log) }} ({{ (faceoffs_lost_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((faceoffs_won_total / faceoffs_total) * 100).toFixed(2) }} %</b></td>
+                <td class="text-right"><b>{{ (shot_pctg_total = (svc.getFilteredTotal(filtered_game_log, 'goals', game_log) / svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log)) * 100).toFixed(2) }} %</b></td>
+                <td class="text-right"><b>{{ (save_pctg_total = 100 - (svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log)) * 100).toFixed(2) }} %</b></td>
+                <td class="text-right"><b>{{ (shot_pctg_total + save_pctg_total).toFixed(1) }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="game_shots" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_shots'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-10 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-09 text-right">{{ game.shots_missed }}</td>
+                <td class="w-09 text-right">{{ game.shots_blocked }}</td>
+                <td class="w-10 text-right">{{ game.shot_pctg.toFixed(2) }} %</td>
+                <td class="w-10 text-right">{{ game.opp_shots_on_goal }}</td>
+                <td class="w-09 text-right">{{ game.opp_shots_missed }}</td>
+                <td class="w-09 text-right">{{ game.opp_shots_blocked }}</td>
+                <td class="w-10 text-right">{{ game.opp_shot_pctg.toFixed(2) }} %</td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ shots_missed_total = svc.getFilteredTotal(filtered_game_log, 'shots_missed', game_log) }} ({{ (shots_missed_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ shots_blocked_total = svc.getFilteredTotal(filtered_game_log, 'shots_blocked', game_log) }} ({{ (shots_blocked_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'goals', game_log) / shots_on_goal_total) * 100).toFixed(2) }} %</b></td>
+                <td class="text-right"><b>{{ opp_shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log) }} ({{ (opp_shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_shots_missed_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_missed', game_log) }} ({{ (opp_shots_missed_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_shots_blocked_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_blocked', game_log) }} ({{ (opp_shots_blocked_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / opp_shots_on_goal_total) * 100).toFixed(2) }} %</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="game_goals" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_goals'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-09 text-right">{{ game.goals_1 }}</td>
+                <td class="w-10 text-right">{{ game.opp_goals_1 }}</td>
+                <td class="w-09 text-right">{{ game.goals_2 }}</td>
+                <td class="w-10 text-right">{{ game.opp_goals_2 }}</td>
+                <td class="w-09 text-right">{{ game.goals_3 }}</td>
+                <td class="w-10 text-right">{{ game.opp_goals_3 }}</td>
+                <td class="w-09 text-right">{{ game.goals }}</td>
+                <td class="w-10 text-right">{{ game.opp_goals }}</td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ goals_1_total = svc.getFilteredTotal(filtered_game_log, 'goals_1', game_log) }} ({{ (goals_1_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_goals_1_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_1', game_log) }} ({{ (opp_goals_1_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ goals_2_total = svc.getFilteredTotal(filtered_game_log, 'goals_2', game_log) }} ({{ (goals_2_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_goals_2_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_2', game_log) }} ({{ (opp_goals_2_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ goals_3_total = svc.getFilteredTotal(filtered_game_log, 'goals_3', game_log) }} ({{ (goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_goals_3_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_3', game_log) }} ({{ (opp_goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ goals_total = svc.getFilteredTotal(filtered_game_log, 'goals', game_log) }} ({{ (goals_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_goals_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) }} ({{ (opp_goals_total / filtered_game_log.length).toFixed(1) }})</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="game_refs" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_refs'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-15">{{ game.ref_1 }}</td>
+                <td class="w-15">{{ game.ref_2 }}</td>
+                <td class="w-15">{{ game.lma_1 }}</td>
+                <td class="w-15">{{ game.lma_2 }}</td>
+                <td class="w-08 text-right">{{ game.pim }}</td>
+                <td class="w-08 text-right">{{ game.opp_pim }}</td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td class="text-right"><b>{{ pim_total = svc.getFilteredTotal(filtered_game_log, 'pim', game_log) }} ({{ (pim_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_pim_total = svc.getFilteredTotal(filtered_game_log, 'opp_pim', game_log) }} ({{ (opp_pim_total / filtered_game_log.length).toFixed(1) }})</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="basic_game_by_game" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_game_by_game'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-18">{{ game.arena }}</td>
+                <td class="w-08 text-right">{{ game.attendance }}</td>
+                <td class="w-11">{{ svc.shortenName(game.coach) }}</td>
+                <td class="w-11">{{ svc.shortenName(game.opp_coach) }}</td>
+                <td class="w-14"><a href="#!/player_profile/{{season}}/{{game.team}}/{{game.best_plr_id}}">{{ svc.shortenName(game.best_plr) }}</a></td>
+                <td class="w-14"><a href="#!/player_profile/{{season}}/{{game.opp_team}}/{{game.opp_best_plr_id}}">{{ svc.shortenName(game.opp_best_plr) }}</a></td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class=" text-right" ><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td></td>
+                <td class="text-right"><b>{{ attendance_total = svc.getFilteredTotal(filtered_game_log, 'attendance', game_log) }}</b></td>
+                <td class="text-right"><b>&#216;: {{ (attendance_total / filtered_game_log.length).toFixed(0) }}</b></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="special_team_stats" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'special_team_stats'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-11 text-right">{{ svc.formatTime(game.pp_time) }}</td>
+                <td class="w-08 text-right">{{ game.pp_opps }}</td>
+                <td class="w-08 text-right">{{ game.pp_goals }}</td>
+                <td class="w-08 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.opp_sh_goals }}</td>
+                <td class="w-08 text-right">{{ svc.formatTime(game.opp_pp_time) }}</td>
+                <td class="w-08 text-right">{{ game.opp_pp_opps }}</td>
+                <td class="w-08 text-right">{{ game.opp_pp_goals }}</td>
+                <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.sh_goals }}</td>
+            </tr>
+
+            <tr class="table-secondary">
+                <td>Gesamt:</td>
+                <td><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(svc.getFilteredTotal(filtered_game_log, 'pp_time', 'game_log')) }}</b></td>
+                <td class="text-right"><b>{{ total_pp_opps = svc.getFilteredTotal(filtered_game_log, 'pp_opps', 'game_log') }}</b></td>
+                <td class="text-right"><b>{{ total_pp_goals = svc.getFilteredTotal(filtered_game_log, 'pp_goals', 'game_log') }}</b></td>
+                <td class="text-right"><b>{{ (total_pp_goals / total_pp_opps * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_game_log, 'opp_sh_goals', 'game_log') }}</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(svc.getFilteredTotal(filtered_game_log, 'opp_pp_time', 'game_log')) }}</b></td>
+                <td class="text-right"><b>{{ total_opp_pp_opps = svc.getFilteredTotal(filtered_game_log, 'opp_pp_opps', 'game_log') }}</b></td>
+                <td class="text-right"><b>{{ total_opp_pp_goals = svc.getFilteredTotal(filtered_game_log, 'opp_pp_goals', 'game_log') }}</b></td>
+                <td class="text-right"><b>{{ (100 - total_opp_pp_goals / total_opp_pp_opps * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_game_log, 'sh_goals', 'game_log') }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="development" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'development'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:game_date:true | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-04 text-right">
                     {{ homeRoadFilter || oppFilter ? '--' : getStandingsPositionThroughDate(game.game_date) }}
                 </td>
-                <td class="col-md-1 text-right" style="width: 6%">
+                <td class="w-09 text-right">
                     {{ svc.getFilteredAccumulatedTotal(filtered_game_log, 'points', game_log, game.game_date) }}
                 </td>
-                <td class="col-md-1 text-right">
+                <td class="w-09 text-right">
                     {{ ((svc.getFilteredAccumulatedTotal(filtered_game_log, 'pp_goals', game_log, game.game_date) / svc.getFilteredAccumulatedTotal(filtered_game_log, 'pp_opps', game_log, game.game_date)) * 100).toFixed(2) }} %
                 </td>
-                <td class="col-md-1 text-right">
+                <td class="w-09 text-right">
                     {{ ((1 - svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_pp_goals', game_log, game.game_date) / svc.getFilteredAccumulatedTotal(filtered_game_log, 'sh_opps', game_log, game.game_date)) * 100).toFixed(2) }} %
                 </td>
-                <td class="col-md-1 text-right">
+                <td class="w-09 text-right">
                     {{ shot_pctg = (svc.getFilteredAccumulatedTotal(filtered_game_log, 'goals', game_log, game.game_date) / svc.getFilteredAccumulatedTotal(filtered_game_log, 'shots_on_goal', game_log, game.game_date) * 100).toFixed(2) }} %
                 </td>
-                <td class="col-md-1 text-right">
+                <td class="w-09 text-right">
                     {{ save_pctg = ((1 - svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_goals', game_log, game.game_date) / svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_shots_on_goal', game_log, game.game_date)) * 100).toFixed(2)  }} %
                 </td>
-                <td class="col-md-1 text-right">
+                <td class="w-09 text-right">
                     {{ (svc.parseFloat(shot_pctg) + svc.parseFloat(save_pctg)).toFixed(1) }}
                 </td>
-                <td class="col-md-1 text-right" style="width: 6%">
+                <td class="w-09 text-right">
                     {{ svc.getFilteredAccumulatedTotal(filtered_game_log, 'score', game_log, game.game_date) }}
                 </td>
-                <td class="col-md-1 text-right" style="width: 6%">
+                <td class="w-09 text-right">
                     {{ svc.getFilteredAccumulatedTotal(filtered_game_log, 'opp_score', game_log, game.game_date) }}
                 </td>
             </tr>
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'shot_zones'">
-        <thead>
+    <table id="shot_zones" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.shots }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_sh }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.lf_sh }}</td>
-                <td class="col-md-1 text-right">{{ game.lf_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.rg_sh }}</td>
-                <td class="col-md-1 text-right">{{ game.rg_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.bl_sh }}</td>
-                <td class="col-md-1 text-right">{{ game.bl_p.toFixed(1) }} %</td>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-08 text-right">{{ game.shots }}</td>
+                <td class="w-08 text-right">{{ game.sl_sh }}</td>
+                <td class="w-09 text-right">{{ game.sl_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.lf_sh }}</td>
+                <td class="w-09 text-right">{{ game.lf_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.rg_sh }}</td>
+                <td class="w-09 text-right">{{ game.rg_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.bl_sh }}</td>
+                <td class="w-09 text-right">{{ game.bl_p.toFixed(1) }} %</td>
             </tr>
 
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1" style="width: 6%"></td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_total = svc.getFilteredTotal(filtered_game_log, 'shots', game_log) }} ({{ (shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_shots_total = svc.getFilteredTotal(filtered_game_log, 'sl_sh', game_log) }} ({{ (sl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_shots_pctg_total = ((sl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_shots_total = svc.getFilteredTotal(filtered_game_log, 'lf_sh', game_log) }} ({{ (lf_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_shots_pctg_total = ((lf_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_shots_total = svc.getFilteredTotal(filtered_game_log, 'rg_sh', game_log) }} ({{ (rg_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_shots_pctg_total = ((rg_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_shots_total = svc.getFilteredTotal(filtered_game_log, 'bl_sh', game_log) }} ({{ (bl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_shots_pctg_total = ((bl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ shots_total = svc.getFilteredTotal(filtered_game_log, 'shots', game_log) }} ({{ (shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_shots_total = svc.getFilteredTotal(filtered_game_log, 'sl_sh', game_log) }} ({{ (sl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_shots_pctg_total = ((sl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ lf_shots_total = svc.getFilteredTotal(filtered_game_log, 'lf_sh', game_log) }} ({{ (lf_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ lf_shots_pctg_total = ((lf_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ rg_shots_total = svc.getFilteredTotal(filtered_game_log, 'rg_sh', game_log) }} ({{ (rg_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ rg_shots_pctg_total = ((rg_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ bl_shots_total = svc.getFilteredTotal(filtered_game_log, 'bl_sh', game_log) }} ({{ (bl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ bl_shots_pctg_total = ((bl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
             </tr>
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'shot_on_goal_zones'">
-        <thead>
+    <table id="shot_on_goal_zones" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.shots_on_goal }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_og }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_og_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.lf_og }}</td>
-                <td class="col-md-1 text-right">{{ game.lf_og_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.rg_og }}</td>
-                <td class="col-md-1 text-right">{{ game.rg_og_p.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.bl_og }}</td>
-                <td class="col-md-1 text-right">{{ game.bl_og_p.toFixed(1) }} %</td>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-08 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-08 text-right">{{ game.sl_og }}</td>
+                <td class="w-09 text-right">{{ game.sl_og_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.lf_og }}</td>
+                <td class="w-09 text-right">{{ game.lf_og_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.rg_og }}</td>
+                <td class="w-09 text-right">{{ game.rg_og_p.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.bl_og }}</td>
+                <td class="w-09 text-right">{{ game.bl_og_p.toFixed(1) }} %</td>
             </tr>
 
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1" style="width: 6%"></td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'sl_og', game_log) }} ({{ (sl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_on_goal_pctg_total = ((sl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'lf_og', game_log) }} ({{ (lf_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_on_goal_pctg_total = ((lf_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'rg_og', game_log) }} ({{ (rg_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_on_goal_pctg_total = ((rg_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'bl_og', game_log) }} ({{ (bl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_on_goal_pctg_total = ((bl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'sl_og', game_log) }} ({{ (sl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_on_goal_pctg_total = ((sl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ lf_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'lf_og', game_log) }} ({{ (lf_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ lf_on_goal_pctg_total = ((lf_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ rg_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'rg_og', game_log) }} ({{ (rg_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ rg_on_goal_pctg_total = ((rg_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ bl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'bl_og', game_log) }} ({{ (bl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ bl_on_goal_pctg_total = ((bl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
             </tr>
         </tbody>
     </table>
 
-    <table id="shot_zones_against" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'shot_zones_against'">
-        <thead>
+    <table id="shot_zones_against" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones_against'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.opp_shots }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_sh_a }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.lf_sh_a }}</td>
-                <td class="col-md-1 text-right">{{ game.lf_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.rg_sh_a }}</td>
-                <td class="col-md-1 text-right">{{ game.rg_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.bl_sh_a }}</td>
-                <td class="col-md-1 text-right">{{ game.bl_p_a.toFixed(1) }} %</td>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-08 text-right">{{ game.opp_shots }}</td>
+                <td class="w-08 text-right">{{ game.sl_sh_a }}</td>
+                <td class="w-09 text-right">{{ game.sl_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.lf_sh_a }}</td>
+                <td class="w-09 text-right">{{ game.lf_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.rg_sh_a }}</td>
+                <td class="w-09 text-right">{{ game.rg_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.bl_sh_a }}</td>
+                <td class="w-09 text-right">{{ game.bl_p_a.toFixed(1) }} %</td>
             </tr>
 
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1" style="width: 6%"></td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots', game_log) }} ({{ (shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_shots_total = svc.getFilteredTotal(filtered_game_log, 'sl_sh_a', game_log) }} ({{ (sl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_shots_pctg_total = ((sl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_shots_total = svc.getFilteredTotal(filtered_game_log, 'lf_sh_a', game_log) }} ({{ (lf_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_shots_pctg_total = ((lf_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_shots_total = svc.getFilteredTotal(filtered_game_log, 'rg_sh_a', game_log) }} ({{ (rg_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_shots_pctg_total = ((rg_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_shots_total = svc.getFilteredTotal(filtered_game_log, 'bl_sh_a', game_log) }} ({{ (bl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_shots_pctg_total = ((bl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ shots_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots', game_log) }} ({{ (shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_shots_total = svc.getFilteredTotal(filtered_game_log, 'sl_sh_a', game_log) }} ({{ (sl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_shots_pctg_total = ((sl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ lf_shots_total = svc.getFilteredTotal(filtered_game_log, 'lf_sh_a', game_log) }} ({{ (lf_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ lf_shots_pctg_total = ((lf_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ rg_shots_total = svc.getFilteredTotal(filtered_game_log, 'rg_sh_a', game_log) }} ({{ (rg_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ rg_shots_pctg_total = ((rg_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ bl_shots_total = svc.getFilteredTotal(filtered_game_log, 'bl_sh_a', game_log) }} ({{ (bl_shots_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ bl_shots_pctg_total = ((bl_shots_total / shots_total) * 100).toFixed(1) }} %</b></td>
             </tr>
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones_against" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
-        <thead>
+    <table id="shot_on_goal_zones_against" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}" style="width: 12%"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ game.opp_shots_on_goal }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_og_a }}</td>
-                <td class="col-md-1 text-right">{{ game.sl_og_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.lf_og_a }}</td>
-                <td class="col-md-1 text-right">{{ game.lf_og_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.rg_og_a }}</td>
-                <td class="col-md-1 text-right">{{ game.rg_og_p_a.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ game.bl_og_a }}</td>
-                <td class="col-md-1 text-right">{{ game.bl_og_p_a.toFixed(1) }} %</td>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-08 text-right">{{ game.opp_shots_on_goal }}</td>
+                <td class="w-08 text-right">{{ game.sl_og_a }}</td>
+                <td class="w-09 text-right">{{ game.sl_og_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.lf_og_a }}</td>
+                <td class="w-09 text-right">{{ game.lf_og_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.rg_og_a }}</td>
+                <td class="w-09 text-right">{{ game.rg_og_p_a.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.bl_og_a }}</td>
+                <td class="w-09 text-right">{{ game.bl_og_p_a.toFixed(1) }} %</td>
             </tr>
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1" style="width: 6%"></td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'sl_og_a', game_log) }} ({{ (sl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ sl_on_goal_pctg_total = ((sl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'lf_og_a', game_log) }} ({{ (lf_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ lf_on_goal_pctg_total = ((lf_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'rg_og_a', game_log) }} ({{ (rg_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ rg_on_goal_pctg_total = ((rg_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'bl_og_a', game_log) }} ({{ (bl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="col-md-1 text-right"><b>{{ bl_on_goal_pctg_total = ((bl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log) }} ({{ (shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'sl_og_a', game_log) }} ({{ (sl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ sl_on_goal_pctg_total = ((sl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ lf_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'lf_og_a', game_log) }} ({{ (lf_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ lf_on_goal_pctg_total = ((lf_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ rg_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'rg_og_a', game_log) }} ({{ (rg_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ rg_on_goal_pctg_total = ((rg_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ bl_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'bl_og_a', game_log) }} ({{ (bl_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ bl_on_goal_pctg_total = ((bl_on_goal_total / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
             </tr>
         </tbody>
     </table>
 
-    <table id="score_states" class="table table-bordered table-striped table-condensed" data-ng-if="tableSelect == 'score_states'">
-        <thead>
+    <table id="score_states" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'score_states'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
                         <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
                     </a>
-                </td>
+                </th>
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road === 'home'? 'info' : 'warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="col-md-1 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
-                <td class="col-md-1 text-right" style="width: 6%">{{ game.round }}</td>
-                <td class="col-md-1{{ svc.setTextColor(game.score, game.opp_score) }}"><b>{{ game.score }}:{{game.opp_score}} </b><a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">{{game.home_road
-                        === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.time_played) }}</td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.leading) }}</td>
-                <td class="col-md-1 text-right">{{ game.leading_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.trailing) }}</td>
-                <td class="col-md-1 text-right">{{ game.trailing_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right">{{ svc.formatTime(game.tied) }}</td>
-                <td class="col-md-1 text-right">{{ game.tied_pctg.toFixed(1) }} %</td>
+            <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-right">{{ game.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
+                    <b>{{game.score}}:{{game.opp_score}}</b>
+                    <a href="https://www.del.org/event/{{game.home_road === 'home'? team_lookup[game.team] : team_lookup[game.opp_team]}}-{{game.home_road === 'home'? team_lookup[game.opp_team] : team_lookup[game.team]}}/{{game.schedule_game_id}}">
+                        {{game.home_road === 'home'? 'vs.' : '@'}} {{ game.opp_team }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </a>
+                </td>
+                <td class="w-10 text-right">{{ svc.formatTime(game.time_played) }}</td>
+                <td class="w-10 text-right">{{ svc.formatTime(game.leading) }}</td>
+                <td class="w-12 text-right">{{ game.leading_pctg.toFixed(1) }} %</td>
+                <td class="w-10 text-right">{{ svc.formatTime(game.trailing) }}</td>
+                <td class="w-12 text-right">{{ game.trailing_pctg.toFixed(1) }} %</td>
+                <td class="w-10 text-right">{{ svc.formatTime(game.tied) }}</td>
+                <td class="w-12 text-right">{{ game.tied_pctg.toFixed(1) }} %</td>
             </tr>
-            <tr>
-                <td class="col-md-1">Gesamt:</td>
-                <td class="col-md-1" style="width: 6%"></td>
-                <td class="col-md-1 text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.formatTime(time_played_total = svc.getFilteredTotal(filtered_game_log, 'time_played', game_log)) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.formatTime(leading_total = svc.getFilteredTotal(filtered_game_log, 'leading', game_log)) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((leading_total / time_played_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.formatTime(trailing_total = svc.getFilteredTotal(filtered_game_log, 'trailing', game_log)) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((trailing_total / time_played_total) * 100).toFixed(1) }} %</b></td>
-                <td class="col-md-1 text-right"><b>{{ svc.formatTime(tied_total = svc.getFilteredTotal(filtered_game_log, 'tied', game_log)) }}</b></td>
-                <td class="col-md-1 text-right"><b>{{ ((tied_total / time_played_total) * 100).toFixed(1) }} %</b></td>
+            <tr class="table-secondary">
+                <td></td>
+                <td>Gesamt:</td>
+                <td class="text-right"><b>{{ filtered_game_log.length }} Spiel{{ filtered_game_log.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(time_played_total = svc.getFilteredTotal(filtered_game_log, 'time_played', game_log)) }}</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(leading_total = svc.getFilteredTotal(filtered_game_log, 'leading', game_log)) }}</b></td>
+                <td class="text-right"><b>{{ ((leading_total / time_played_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(trailing_total = svc.getFilteredTotal(filtered_game_log, 'trailing', game_log)) }}</b></td>
+                <td class="text-right"><b>{{ ((trailing_total / time_played_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ svc.formatTime(tied_total = svc.getFilteredTotal(filtered_game_log, 'tied', game_log)) }}</b></td>
+                <td class="text-right"><b>{{ ((tied_total / time_played_total) * 100).toFixed(1) }} %</b></td>
             </tr>
         </tbody>
     </table>
