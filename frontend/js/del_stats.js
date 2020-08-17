@@ -287,6 +287,13 @@ app.factory('svc', function() {
         },
         germanMonths: function() {
             return [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11].map(month => moment().locale('de').month(month).format('MMMM'));
+        },
+        shortenName: function(full_name) {
+            if (!full_name) {
+                return '';
+            }
+            var names = full_name.split(' ');
+            return names[0][0] + '. ' + names.slice(-1)[0];
         }
     }
 });
