@@ -1,8 +1,14 @@
 <div class="container" data-ng-app="delStatsApp">
     <div class="alert alert-info main-bg">
         <div class="inline-headers">
+            <div class="d-none d-md-block">
                 <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{::current_team}}.png" alt="Team logo" width="40" height="40"/></span>
-                <h2 style="margin-left: .5em;">{{ ::team_full_name_lookup[current_team] }} {{ ::season }}/{{ ::svc.parseFloat(season) + 1 - 2000 }}</h2>
+                    <h2 class="ml-3">{{ ::team_full_name_lookup[current_team] }} {{ ::season }}/{{ ::svc.parseFloat(season) + 1 - 2000 }}</h2>
+            </div>
+            <div class="d-md-none">
+                <h3 class="medium">{{ ::team_full_name_lookup[current_team] }}</h3>
+                <b>{{ ::season }}/{{ ::svc.parseFloat(season) + 1 - 2000 }}</b>
+            </div>
         </div>
     </div>
         
@@ -19,7 +25,8 @@
     </div>
 
     <form>
-        <div class="form_group mb-1">
+        <!-- desktop / tablet version -->
+        <div class="form_group mb-1 d-none d-md-block">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">Team:</i></span>
@@ -28,19 +35,9 @@
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                    <span class="input-group-text" id="basic-addon1">Thema:</i></span>
                 </div>
-                <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
-                    <option data-ng-option value="RS">Hauptrunde</option>
-                    <option data-ng-option value="PO">Playoffs</option>
-                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
-                </select>
-            </div>
-        </div>
-
-        <div class="form-group mb-1">
-            <div class="input-group" style="width: 100%">
-                <select class="form-control mr-1" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
                     <option data-ng-option value="game_goals">Torstatistiken</option>
                     <option data-ng-option value="game_shots">Schussstatistiken</option>
@@ -54,19 +51,35 @@
                     <option data-ng-option value="game_refs">Schieds-/Linienrichter</option>
                     <option data-ng-option value="development">Entwicklung im Saisonverlauf</option>
                 </select>
+            </div>
+        </div>
+
+        <div class="form-group mb-1 d-none d-md-block">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                </div>
+                <select class="form-control mr-1" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
+                    <option data-ng-option value="RS">Hauptrunde</option>
+                    <option data-ng-option value="PO">Playoffs</option>
+                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
+                </select>
                 <select class="form-control mr-1" id="home_road_select" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Gegner:</i></span>
+                </div>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
-                    <option data-ng-option value selected="selected">alle Gegner</option>
+                    <option data-ng-option value selected="selected">alle</option>
                     <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + current_team}" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
             </div>
         </div>
 
-        <div class="form-group">
+        <div class="form-group d-none d-md-block">
             <div class="w-auto input-group">
                 <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
@@ -88,10 +101,10 @@
                 <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
 
-                <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
+                <!-- <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
                     <option data-ng-option value selected="selected">alle Tage</option>
                     <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
-                </select>
+                </select> -->
 
                 <div class="input-group-prepend">
                     <span class="input-group-text" id="basic-addon1">von</i></span>
@@ -106,12 +119,121 @@
                 <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
+            </div>
+        </div>
 
+        <!-- mobile version -->
+        <div class="form_group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Team:</i></span>
+                </div>
+                <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
+                    <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form-group mb-1 d-md-none">
+            <div class="input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Thema:</i></span>
+                </div>
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+                    <option data-ng-option value="basic_game_by_game">Basisdaten</option>
+                    <option data-ng-option value="game_goals">Torstatistiken</option>
+                    <option data-ng-option value="game_shots">Schussstatistiken</option>
+                    <option data-ng-option value="shot_zones">Schusszonen (alle Schüsse)</option>
+                    <option data-ng-option value="shot_on_goal_zones">Schusszonen (Torschüsse)</option>
+                    <option data-ng-option value="shot_zones_against">Schusszonen des Gegners (alle Schüsse)</option>
+                    <option data-ng-option value="shot_on_goal_zones_against">Schusszonen des Gegners (Torschüsse)</option>
+                    <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
+                    <option data-ng-option value="game_additional_stats">Zusätzliche Statistiken</option>
+                    <option data-ng-option value="score_states">Zeiten pro Spielstand</option>
+                    <option data-ng-option value="game_refs">Schieds-/Linienrichter</option>
+                    <option data-ng-option value="development">Entwicklung im Saisonverlauf</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form_group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                </div>
+                <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
+                    <option data-ng-option value="RS">Hauptrunde</option>
+                    <option data-ng-option value="PO">Playoffs</option>
+                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
+                </select>
+            </div>
+        </div>
+
+        <div class="form_group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
+                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                    <option data-ng-option value="home">Heimspiele</option>
+                    <option data-ng-option value="road">Auswärtsspiele</option>
+                </select>
+            </div>
+        </div>
+        <div class="form_group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">Gegner:</i></span>
+                </div>
+                <select class="form-control" id="opp_select" data-ng-model="oppFilter">
+                    <option data-ng-option value selected="selected">alle</option>
+                    <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + current_team}" value="{{team.abbr}}">{{team.full_name}}</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                    <option data-ng-option value selected="selected">alle Zeiträume</option>
+                    <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    <option data-ng-option>-----------</option>
+                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
+                </select>
+            </div>
+        </div>
+        <div class="form-group mb-1 d-md-none">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                </div>
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+            </div>
+        </div>
+        <div class="form-group d-md-none">
+            <div class="w-auto input-group">
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">von</i></span>
+                </div>
+                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
+                <div class="input-group-prepend">
+                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                </div>
+                <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                </select>
             </div>
         </div>
     </form>
 
-    <table id="game_additional_stats" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_additional_stats'">
+    <table id="game_additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_additional_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -158,7 +280,7 @@
         </tbody>
     </table>
 
-    <table id="game_shots" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_shots'">
+    <table id="game_shots" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_shots'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -207,7 +329,7 @@
         </tbody>
     </table>
 
-    <table id="game_goals" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_goals'">
+    <table id="game_goals" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_goals'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -256,7 +378,7 @@
         </tbody>
     </table>
 
-    <table id="game_refs" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_refs'">
+    <table id="game_refs" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_refs'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -301,7 +423,7 @@
         </tbody>
     </table>
 
-    <table id="basic_game_by_game" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_game_by_game'">
+    <table id="basic_game_by_game" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_game_by_game'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -316,7 +438,12 @@
         </thead>
         <tbody>
             <tr class="{{game.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="game in filtered_game_log = (game_log | orderBy:sortCriterion:statsSortDescending | filter: {home_road: homeRoadFilter} | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
-                <td class="w-07 text-center"><a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">{{ game.game_date }}</a></td>
+                <td class="w-07 text-center">
+                    <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
+                        <span class="d-none d-lg-block">{{ game.game_date }}</span>
+                        <span class="d-lg-none">{{ game.game_date.slice(5) }}</span>
+                    </a>
+                </td>
                 <td class="w-07 text-right">{{ game.round }}</td>
                 <td class="w-10 {{ svc.setTextColor(game.score, game.opp_score) }}">
                     <b>{{game.score}}:{{game.opp_score}}</b>
@@ -346,7 +473,7 @@
         </tbody>
     </table>
 
-    <table id="special_team_stats" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'special_team_stats'">
+    <table id="special_team_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'special_team_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -397,7 +524,7 @@
         </tbody>
     </table>
 
-    <table id="development" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'development'">
+    <table id="development" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'development'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -447,7 +574,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
+    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -498,7 +625,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+    <table id="shot_on_goal_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -549,7 +676,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones_against" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones_against'">
+    <table id="shot_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -600,7 +727,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones_against" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+    <table id="shot_on_goal_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -650,7 +777,7 @@
         </tbody>
     </table>
 
-    <table id="score_states" class="table table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'score_states'">
+    <table id="score_states" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'score_states'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
