@@ -37,7 +37,7 @@ div.main-bg { background-color: rgb(216, 250, 250); }
 
 .marker { background: orange !important; font-weight: bold;}
 
-.container { padding: 0; }
+.container-md { padding: 0; }
 
 /* TODO: adjust background-color tr.table-info { color: rgb(255, 12, 12); } */
 
