@@ -152,7 +152,7 @@
         {"data_key": "leading_pctg", "col_header": "Leading [%]", "expl_de": "Anteil der Zeit in Führung", "expl_en": "Percentage of Time Played Leading"},
         {"data_key": "trailing", "col_header": "Trailing", "expl_de": "Zeit in Rückstand", "expl_en": "Time Trailing"},
         {"data_key": "trailing_pctg", "col_header": "Trailing [%]", "expl_de": "Anteil der Zeit in Rückstand", "expl_en": "Percentage of Time Played Trailing"},
-        {"data_key": "tied", "col_header": "Tied", "expl_de": "Gleichstand", "expl_en": "Time Tied"},
+        {"data_key": "tied", "col_header": "Tied", "expl_de": "Zeit im Gleichstand", "expl_en": "Time Tied"},
         {"data_key": "tied_pctg", "col_header": "Tied [%]", "expl_de": "Anteil der Zeit im Gleichstand", "expl_en": "Percentage of Time Played Tied"}
     ]
 }
