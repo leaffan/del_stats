@@ -65,28 +65,28 @@
     "shot_shares": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
-        {"data_key": "shots", "col_header": "COF", "expl_de": "Eigene Schüsse (auf das Tor, vorbei und geblockt)", "expl_en": "Corsi Events For"},
-        {"data_key": "opp_shots", "col_header": "COA", "expl_de": "Gegnerische Schüsse (auf das Tor, vorbei und geblockt)", "expl_en": "Corsi Events Against"},
-        {"data_key": "corsi_for_pctg", "col_header": "COF%", "expl_de": "Eigener Schussanteil", "expl_en": "Corsi For Percentage"},
-        {"data_key": "fenwick_events", "col_header": "FWF", "expl_de": "Eigene Schüsse auf und neben das Tor", "expl_en": "Fenwick Events For"},
-        {"data_key": "opp_fenwick_events", "col_header": "FWA", "expl_de": "Gegnerische Schüsse auf und neben das Tor", "expl_en": "Fenwick Events Against"},
-        {"data_key": "fenwick_for_pctg", "col_header": "FWF%", "expl_de": "Eigener Anteil an Schüssen auf und neben das Tor", "expl_en": "Fenwick For Percentage"},
-        {"data_key": "shots_on_goal", "col_header": "SOGF", "expl_de": "Eigene Torschüsse", "expl_en": "Shots on Goal For"},
-        {"data_key": "opp_shots_on_goal", "col_header": "SOGA", "expl_de": "Gegnerische Torschüsse", "expl_en": "Shots on Goal Against"},
-        {"data_key": "shot_for_pctg", "col_header": "SOGF%", "expl_de": "Eigener Anteil an Torschüssen", "expl_en": "Shots on Goal For Percentage"}
+        {"data_key": "shots", "col_header": "CF", "expl_de": "Eigene Schüsse (auf das Tor, vorbei und geblockt)", "expl_en": "Corsi Events For"},
+        {"data_key": "opp_shots", "col_header": "CA", "expl_de": "Gegnerische Schüsse (auf das Tor, vorbei und geblockt)", "expl_en": "Corsi Events Against"},
+        {"data_key": "corsi_for_pctg", "col_header": "CF%", "expl_de": "Eigener Schussanteil", "expl_en": "Corsi For Percentage"},
+        {"data_key": "fenwick_events", "col_header": "FF", "expl_de": "Eigene Schüsse auf und neben das Tor", "expl_en": "Fenwick Events For"},
+        {"data_key": "opp_fenwick_events", "col_header": "FA", "expl_de": "Gegnerische Schüsse auf und neben das Tor", "expl_en": "Fenwick Events Against"},
+        {"data_key": "fenwick_for_pctg", "col_header": "FF%", "expl_de": "Eigener Anteil an Schüssen auf und neben das Tor", "expl_en": "Fenwick For Percentage"},
+        {"data_key": "shots_on_goal", "col_header": "SGF", "expl_de": "Eigene Torschüsse", "expl_en": "Shots on Goal For"},
+        {"data_key": "opp_shots_on_goal", "col_header": "SGA", "expl_de": "Gegnerische Torschüsse", "expl_en": "Shots on Goal Against"},
+        {"data_key": "shot_for_pctg", "col_header": "SGF%", "expl_de": "Eigener Anteil an Torschüssen", "expl_en": "Shots on Goal For Percentage"}
     ],
     "shot_shares_5v5": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
-        {"data_key": "shots_5v5", "col_header": "COF 5v5", "expl_de": "Eigene Schüsse (auf das Tor, vorbei und geblockt) im 5-gegen-5", "expl_en": "Shots (On Goal, Missed and Blocked) i.e. Corsi For in 5-on-5"},
-        {"data_key": "opp_shots_5v5", "col_header": "COA 5v5", "expl_de": "Gegnerische Schüsse (auf das Tor, vorbei und geblockt) im 5-gegen-5", "expl_en": "Shots (On Goal, Missed and Blocked) i.e. Corsi Against in 5-on-5"},
-        {"data_key": "shots_5v5_pctg", "col_header": "COF% 5v5", "expl_de": "Eigener Anteil an allen Schüsse im 5-gegen-5", "expl_en": "Shots For i.e. Corsi Percentage in 5-on-5"},
-        {"data_key": "shots_unblocked_5v5", "col_header": "FWF 5v5", "expl_de": "Eigene ungeblockte Schüsse im 5-gegen-5", "expl_en": "Unblocked Shots i.e. Fenwick For in 5-on-5"},
-        {"data_key": "opp_shots_unblocked_5v5", "col_header": "FWA 5v5", "expl_de": "Gegnerische ungeblockte Schüsse im 5-gegen-5", "expl_en": "Unblocked Shots Against i.e. Fenwick Against in 5-on-5"},
-        {"data_key": "shots_unblocked_5v5_pctg", "col_header": "FWF% 5v5", "expl_de": "Eigener Anteil an ungeblockten Schüssen im 5-gegen-5", "expl_en": "Unblocked Shots For i.e. Fenwick Percentage in 5-on-5"},
-        {"data_key": "shots_on_goal_5v5", "col_header": "SOGF 5v5", "expl_de": "Eigene Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal For in 5-on-5"},
-        {"data_key": "opp_shots_on_goal_5v5", "col_header": "SOGA 5v5", "expl_de": "Gegnerische Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal Against in 5-on-5"},
-        {"data_key": "shots_on_goal_5v5_pctg", "col_header": "SOGF% 5v5", "expl_de": "Eigener Anteil an Torschüssen im 5-gegen-5", "expl_en": "Shots on Goal For Percentage in 5-on-5"}
+        {"data_key": "shots_5v5", "col_header": "CF 5v5", "expl_de": "Eigene Schüsse (auf das Tor, vorbei und geblockt) im 5-gegen-5", "expl_en": "Shots (On Goal, Missed and Blocked) i.e. Corsi For in 5-on-5"},
+        {"data_key": "opp_shots_5v5", "col_header": "CA 5v5", "expl_de": "Gegnerische Schüsse (auf das Tor, vorbei und geblockt) im 5-gegen-5", "expl_en": "Shots (On Goal, Missed and Blocked) i.e. Corsi Against in 5-on-5"},
+        {"data_key": "shots_5v5_pctg", "col_header": "CF% 5v5", "expl_de": "Eigener Anteil an allen Schüsse im 5-gegen-5", "expl_en": "Shots For i.e. Corsi Percentage in 5-on-5"},
+        {"data_key": "shots_unblocked_5v5", "col_header": "FF 5v5", "expl_de": "Eigene ungeblockte Schüsse im 5-gegen-5", "expl_en": "Unblocked Shots i.e. Fenwick For in 5-on-5"},
+        {"data_key": "opp_shots_unblocked_5v5", "col_header": "FA 5v5", "expl_de": "Gegnerische ungeblockte Schüsse im 5-gegen-5", "expl_en": "Unblocked Shots Against i.e. Fenwick Against in 5-on-5"},
+        {"data_key": "shots_unblocked_5v5_pctg", "col_header": "FF% 5v5", "expl_de": "Eigener Anteil an ungeblockten Schüssen im 5-gegen-5", "expl_en": "Unblocked Shots For i.e. Fenwick Percentage in 5-on-5"},
+        {"data_key": "shots_on_goal_5v5", "col_header": "SGF 5v5", "expl_de": "Eigene Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal For in 5-on-5"},
+        {"data_key": "opp_shots_on_goal_5v5", "col_header": "SGA 5v5", "expl_de": "Gegnerische Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal Against in 5-on-5"},
+        {"data_key": "shots_on_goal_5v5_pctg", "col_header": "SGF% 5v5", "expl_de": "Eigener Anteil an Torschüssen im 5-gegen-5", "expl_en": "Shots on Goal For Percentage in 5-on-5"}
     ],
     "additional_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
@@ -173,12 +173,12 @@
     "score_state_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
-        {"data_key": "time_played", "col_header": "Spielzeit", "expl_de": "Gesamte Spielzeit", "expl_en": null},
-        {"data_key": "leading", "col_header": "Führung", "expl_de": "Zeit in Führung", "expl_en": null},
-        {"data_key": "leading_pctg", "col_header": "Führung [%]", "expl_de": "Anteil der Zeit in Führung", "expl_en": null},
-        {"data_key": "trailing", "col_header": "Rückstand", "expl_de": "Zeit in Rückstand", "expl_en": null},
-        {"data_key": "trailing_pctg", "col_header": "Rückstand [%]", "expl_de": "Anteil der Zeit in Rückstand", "expl_en": null},
-        {"data_key": "tied", "col_header": "Gleichstand", "expl_de": "Gleichstand", "expl_en": null},
-        {"data_key": "tied_pctg", "col_header": "Gleichstand [%]", "expl_de": "Anteil der Zeit im Gleichstand", "expl_en": null}
+        {"data_key": "time_played", "col_header": "TP", "expl_de": "Gesamte Spielzeit", "expl_en": "Time Played"},
+        {"data_key": "leading", "col_header": "Leading", "expl_de": "Zeit in Führung", "expl_en": "Time Leading"},
+        {"data_key": "leading_pctg", "col_header": "Leading [%]", "expl_de": "Anteil der Zeit in Führung", "expl_en": "Percentage of Time Played Leading"},
+        {"data_key": "trailing", "col_header": "Trailing", "expl_de": "Zeit in Rückstand", "expl_en": "Time Trailing"},
+        {"data_key": "trailing_pctg", "col_header": "Trailing [%]", "expl_de": "Anteil der Zeit in Rückstand", "expl_en": "Percentage of Time Played Trailing"},
+        {"data_key": "tied", "col_header": "Tied", "expl_de": "Zeit im Gleichstand", "expl_en": "Time Tied"},
+        {"data_key": "tied_pctg", "col_header": "Tied [%]", "expl_de": "Anteil der Zeit im Gleichstand", "expl_en": "Percentage of Time Played Tied"}
     ]
 }
