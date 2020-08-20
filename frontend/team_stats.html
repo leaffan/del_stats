@@ -78,13 +78,13 @@
                 </select>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
@@ -95,14 +95,14 @@
                 </select> -->
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">von</i></span>
+                    <span class="input-group-text">von</i></span>
                 </div>
                 <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                    <span class="input-group-text">bis</i></span>
                 </div>
                 <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>

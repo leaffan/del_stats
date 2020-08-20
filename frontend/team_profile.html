@@ -29,13 +29,13 @@
         <div class="form_group mb-1 d-none d-md-block">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Team:</i></span>
+                    <span class="input-group-text">Team:</i></span>
                 </div>
                 <select class="form-control mr-1" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Thema:</i></span>
+                    <span class="input-group-text">Thema:</i></span>
                 </div>
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
@@ -57,7 +57,7 @@
         <div class="form-group mb-1 d-none d-md-block">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                    <span class="input-group-text">Saisonphase:</i></span>
                 </div>
                 <select class="form-control mr-1" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
@@ -70,7 +70,7 @@
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Gegner:</i></span>
+                    <span class="input-group-text">Gegner:</i></span>
                 </div>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle</option>
@@ -90,13 +90,13 @@
                 </select>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
@@ -107,14 +107,14 @@
                 </select> -->
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">von</i></span>
+                    <span class="input-group-text">von</i></span>
                 </div>
                 <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                    <span class="input-group-text">bis</i></span>
                 </div>
                 <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
@@ -126,7 +126,7 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Team:</i></span>
+                    <span class="input-group-text">Team:</i></span>
                 </div>
                 <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
@@ -137,7 +137,7 @@
         <div class="form-group mb-1 d-md-none">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Thema:</i></span>
+                    <span class="input-group-text">Thema:</i></span>
                 </div>
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
@@ -159,7 +159,7 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Saisonphase:</i></span>
+                    <span class="input-group-text">Saisonphase:</i></span>
                 </div>
                 <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
@@ -181,7 +181,7 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">Gegner:</i></span>
+                    <span class="input-group-text">Gegner:</i></span>
                 </div>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle</option>
@@ -203,13 +203,13 @@
         <div class="form-group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1"><i class="far fa-calendar-alt"></i></span>
+                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
                 <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
@@ -218,13 +218,13 @@
         <div class="form-group d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">von</i></span>
+                    <span class="input-group-text">von</i></span>
                 </div>
                 <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text" id="basic-addon1">bis</i></span>
+                    <span class="input-group-text">bis</i></span>
                 </div>
                 <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
