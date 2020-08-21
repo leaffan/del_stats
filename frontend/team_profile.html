@@ -17,7 +17,7 @@
     </div>
     
     <div class="alert alert-info main-bg">
-        <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
+        <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span data-ng-show="toggle" class="fa fa-minus"></span><span data-ng-show="!toggle" class="fa fa-plus"></span></b></span>
             <dl data-ng-show="toggle" class="row mx-2">
                 <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
                 <dd class="col-md-10" data-ng-repeat-end><i>{{ term.expl_en }}:</i> {{ term.expl_de }}</dd>
