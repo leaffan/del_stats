@@ -41,7 +41,7 @@ div.main-bg { background-color: rgb(216, 250, 250); }
 
 /* TODO: adjust background-color tr.table-info { color: rgb(255, 12, 12); } */
 
-
+table .w-03 { width: 3%;}
 table .w-04 { width: 4%;}
 table .w-05 { width: 5%;}
 table .w-06 { width: 6%;}
