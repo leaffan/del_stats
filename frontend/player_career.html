@@ -9,7 +9,7 @@
             <tr>
                 <td class="text-center" data-ng-repeat="col in stats_cols['skater_career_stats']">
                     <!-- <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key"> -->
-                        <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr class="rank" title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span> -->
                         <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span> -->
@@ -41,7 +41,7 @@
             <tr>
                 <td class="text-center" data-ng-repeat="col in stats_cols['goalie_career_stats']">
                     <!-- <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key"> -->
-                        <abbr class="rank" title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr class="rank" title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span> -->
                         <!-- <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span> -->
