@@ -41,30 +41,31 @@ div.main-bg { background-color: rgb(216, 250, 250); }
 
 /* TODO: adjust background-color tr.table-info { color: rgb(255, 12, 12); } */
 
-table .w-03 { width: 3%;}
-table .w-04 { width: 4%;}
-table .w-05 { width: 5%;}
-table .w-06 { width: 6%;}
-table .w-07 { width: 7%;}
-table .w-08 { width: 8%;}
-table .w-09 { width: 9%;}
-table .w-10 { width: 10%;}
-table .w-11 { width: 11%;}
-table .w-12 { width: 12%;}
-table .w-13 { width: 13%;}
-table .w-14 { width: 14%;}
-table .w-15 { width: 15%;}
-table .w-16 { width: 16%;}
-table .w-17 { width: 17%;}
-table .w-18 { width: 18%;}
-table .w-19 { width: 19%;}
-table .w-20 { width: 20%;}
-table .w-21 { width: 21%;}
-table .w-22 { width: 22%;}
-table .w-23 { width: 23%;}
-table .w-24 { width: 24%;}
-table .w-26 { width: 26%;}
-table .w-27 { width: 27%;}
-table .w-28 { width: 28%;}
-table .w-29 { width: 29%;}
-table .w-30 { width: 30%;}
+/* customized width classes
+.w-03 { width: 3%;}
+.w-04 { width: 4%;}
+.w-05 { width: 5%;}
+.w-06 { width: 6%;}
+.w-07 { width: 7%;}
+.w-08 { width: 8%;}
+.w-09 { width: 9%;}
+.w-10 { width: 10%;}
+.w-11 { width: 11%;}
+.w-12 { width: 12%;}
+.w-13 { width: 13%;}
+.w-14 { width: 14%;}
+.w-15 { width: 15%;}
+.w-16 { width: 16%;}
+.w-17 { width: 17%;}
+.w-18 { width: 18%;}
+.w-19 { width: 19%;}
+.w-20 { width: 20%;}
+.w-21 { width: 21%;}
+.w-22 { width: 22%;}
+.w-23 { width: 23%;}
+.w-24 { width: 24%;}
+.w-26 { width: 26%;}
+.w-27 { width: 27%;}
+.w-28 { width: 28%;}
+.w-29 { width: 29%;}
+.w-30 { width: 30%;}
