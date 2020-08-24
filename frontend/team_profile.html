@@ -29,13 +29,13 @@
         <div class="form_group mb-1 d-none d-md-block">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Team:</i></span>
+                    <span class="input-group-text">Team:</span>
                 </div>
                 <select class="form-control mr-1" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Thema:</i></span>
+                    <span class="input-group-text">Thema:</span>
                 </div>
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
@@ -57,7 +57,7 @@
         <div class="form-group mb-1 d-none d-md-block">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Saisonphase:</i></span>
+                    <span class="input-group-text">Saisonphase:</span>
                 </div>
                 <select class="form-control mr-1" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
@@ -70,7 +70,7 @@
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Gegner:</i></span>
+                    <span class="input-group-text">Gegner:</span>
                 </div>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle</option>
@@ -107,14 +107,14 @@
                 </select> -->
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text">von</i></span>
+                    <span class="input-group-text">von</span>
                 </div>
                 <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
 
                 <div class="input-group-prepend">
-                    <span class="input-group-text">bis</i></span>
+                    <span class="input-group-text">bis</span>
                 </div>
                 <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
@@ -126,9 +126,9 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Team:</i></span>
+                    <span class="input-group-text">Team:</span>
                 </div>
-                <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
+                <select class="form-control" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
             </div>
@@ -137,9 +137,9 @@
         <div class="form-group mb-1 d-md-none">
             <div class="input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Thema:</i></span>
+                    <span class="input-group-text">Thema:</span>
                 </div>
-                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+                <select class="form-control" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_game_by_game">Basisdaten</option>
                     <option data-ng-option value="game_goals">Torstatistiken</option>
                     <option data-ng-option value="game_shots">Schussstatistiken</option>
@@ -159,7 +159,7 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Saisonphase:</i></span>
+                    <span class="input-group-text">Saisonphase:</span>
                 </div>
                 <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
@@ -171,7 +171,7 @@
 
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
-                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
+                <select class="form-control" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
@@ -181,9 +181,9 @@
         <div class="form_group mb-1 d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">Gegner:</i></span>
+                    <span class="input-group-text">Gegner:</span>
                 </div>
-                <select class="form-control" id="opp_select" data-ng-model="oppFilter">
+                <select class="form-control" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle</option>
                     <option data-ng-option data-ng-repeat="team in teams | filter:{abbr: '!' + current_team}" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
@@ -191,7 +191,7 @@
         </div>
         <div class="form-group mb-1 d-md-none">
             <div class="w-auto input-group">
-                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                <select class="form-control" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                     <option data-ng-option>-----------</option>
@@ -218,15 +218,15 @@
         <div class="form-group d-md-none">
             <div class="w-auto input-group">
                 <div class="input-group-prepend">
-                    <span class="input-group-text">von</i></span>
+                    <span class="input-group-text">von</span>
                 </div>
-                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                <select class="form-control mr-1" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
                 <div class="input-group-prepend">
-                    <span class="input-group-text">bis</i></span>
+                    <span class="input-group-text">bis</span>
                 </div>
-                <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
+                <select class="form-control" data-ng-model="toRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
             </div>
@@ -238,7 +238,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -285,7 +285,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -324,7 +324,7 @@
                 <td class="text-right"><b>{{ opp_shots_on_goal_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_on_goal', game_log) }} ({{ (opp_shots_on_goal_total / filtered_game_log.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_shots_missed_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_missed', game_log) }} ({{ (opp_shots_missed_total / filtered_game_log.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_shots_blocked_total = svc.getFilteredTotal(filtered_game_log, 'opp_shots_blocked', game_log) }} ({{ (opp_shots_blocked_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / opp_shots_on_goal_total) * 100).toFixed(2) }} %</td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) / opp_shots_on_goal_total) * 100).toFixed(2) }} %</b></td>
             </tr>
         </tbody>
     </table>
@@ -334,7 +334,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -373,7 +373,7 @@
                 <td class="text-right"><b>{{ goals_3_total = svc.getFilteredTotal(filtered_game_log, 'goals_3', game_log) }} ({{ (goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_goals_3_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals_3', game_log) }} ({{ (opp_goals_3_total / filtered_game_log.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ goals_total = svc.getFilteredTotal(filtered_game_log, 'goals', game_log) }} ({{ (goals_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ opp_goals_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) }} ({{ (opp_goals_total / filtered_game_log.length).toFixed(1) }})</td>
+                <td class="text-right"><b>{{ opp_goals_total = svc.getFilteredTotal(filtered_game_log, 'opp_goals', game_log) }} ({{ (opp_goals_total / filtered_game_log.length).toFixed(1) }})</b></td>
             </tr>
         </tbody>
     </table>
@@ -383,7 +383,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -418,7 +418,7 @@
                 <td></td>
                 <td></td>
                 <td class="text-right"><b>{{ pim_total = svc.getFilteredTotal(filtered_game_log, 'pim', game_log) }} ({{ (pim_total / filtered_game_log.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ opp_pim_total = svc.getFilteredTotal(filtered_game_log, 'opp_pim', game_log) }} ({{ (opp_pim_total / filtered_game_log.length).toFixed(1) }})</td>
+                <td class="text-right"><b>{{ opp_pim_total = svc.getFilteredTotal(filtered_game_log, 'opp_pim', game_log) }} ({{ (opp_pim_total / filtered_game_log.length).toFixed(1) }})</b></td>
             </tr>
         </tbody>
     </table>
@@ -428,7 +428,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -478,7 +478,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -528,7 +528,7 @@
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
-                    <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                     <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                 </th>
             </tr>
@@ -579,7 +579,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -630,7 +630,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -681,7 +681,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -732,7 +732,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
@@ -782,7 +782,7 @@
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
-                        <abbr title={{col.expl_de}} data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
                         <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
