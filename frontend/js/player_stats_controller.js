@@ -553,7 +553,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['shots_on_goal_per_60'] = parseFloat((0).toFixed(2));
                 element['game_score_per_60'] = 0.;
             }
-            // calculating goals, assists, points, shots, shots on goal per game
+            // calculating goals, assists, points, shots, shots on goal, pim per game
             if (element['games_played']) {
                 element['goals_per_game'] = element['goals'] / element['games_played'];
                 element['assists_per_game'] = element['assists'] / element['games_played'];
@@ -563,6 +563,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['primary_points_per_game'] = element['primary_points'] / element['games_played'];
                 element['shots_per_game'] = element['shots'] / element['games_played'];
                 element['shots_on_goal_per_game'] = element['shots_on_goal'] / element['games_played'];
+                element['pim_per_game'] = element['pim_from_events'] / element['games_played'];
             } else {
                 element['goals_per_game'] = parseFloat((0).toFixed(2));
                 element['assists_per_game'] = parseFloat((0).toFixed(2));
@@ -572,6 +573,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
                 element['primary_points_per_game'] = parseFloat((0).toFixed(2));
                 element['shots_per_game'] = parseFloat((0).toFixed(2));
                 element['shots_on_goal_per_game'] = parseFloat((0).toFixed(2));
+                element['pim_per_game'] = 0;
             }
             // calculating shot zone percentages
             if (element['shots']) {
