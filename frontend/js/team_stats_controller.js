@@ -29,7 +29,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
 
     // retrieving teams
     $http.get('./js/teams.json').then(function (res) {
-        $scope.teams = res.data;
+        // only retaining teams that are valid for current season
+        $scope.teams = res.data.filter(team => team.valid_from <= $scope.season && team.valid_to >= $scope.season);
         // creating lookup structures...
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
