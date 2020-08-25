@@ -1,50 +1,55 @@
 <div class="container" data-ng-app="delStatsApp">
     <div class="alert alert-info main-bg">
-        <h1>Karrierestatistiken</h1>
+        <h1>DEL-Karrierestatistiken</h1>
     </div>
 
     <div class="alert alert-info main-bg">
-        <p>Karrierestatistiken für aktive DEL-Spieler.</p>
+        Karrierestatistiken für aktive DEL-Spieler.
     </div>
 
     <div class="alert alert-info main-bg">
-        <p><a href="#!"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Startseite</b></a></p>
+        <a href="#!"><b>Startseite</b></a>
     </div>
 
     <form>
-        <div class="form-group">
-            <div class="input-group">
-                <div class="input-group-addon"><i class="fa fa-search"></i></div>
-                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="nameFilter" />
+        <div class="form-row mb-1">
+            <div class="input-group col-12">
+                <div class="input-group-prepend w-5">
+                    <span class="input-group-text w-100 justify-content-center"><i class="fa fa-search"></i></span>
+                </div>
+                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.nameFilter" />
             </div>
         </div>
-    </form>
-    <form>
-        <div class="form-group">
-            <div style="width: 100%;" class="input-group">
-                <label for="position_select">Position:</label>
-                <select class="form-control" id="position_select" data-ng-model="position">
-                    <option data-ng-option value selected="selected">alle</option>
+        <div class="form-row mb-3">
+            <div class="input-group col-2">
+                <select class="form-control" id="positionSelect" data-ng-model="position">
+                    <option data-ng-option value selected="selected">alle Positionen</option>
                     <option data-ng-option value="GK">Torhüter</option>
                     <option data-ng-option value="DE">Verteidiger</option>
                     <option data-ng-option value="FO">Stürmer</option>
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <label for="team_select">Team:</label>
-                <select class="form-control" id="team_select" data-ng-model="team" data-ng-options="team for team in all_teams">
+            </div>
+            <div class="input-group col-3 pl-0">
+                <select class="form-control" id="team_select" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
                     <option data-ng-option value selected="selected">alle</option>
-                </select>                
-                <span class="input-group-addon form_spacer"></span>
-                <label for="from_select">Von:</label>
+                </select>
+            </div>
+            <div class="input-group col-2 pl-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">von:</span>
+                </div>
                 <select class="form-control" id="from_select" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
                 </select>                
-                <span class="input-group-addon form_spacer"></span>
-                <label for="to_select">Bis:</label>
+            </div>
+            <div class="input-group col-2 pl-0">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">bis:</span>
+                </div>
                 <select class="form-control" id="to_select" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
                 </select>
-                <span class="input-group-addon form_spacer"></span>
-                <label for="season_type_select">Saisonphasen:</label>
-                <select class="form-control" id="season_type_select" data-ng-model="season_type">
+            </div>
+            <div class="input-group col-3 pl-0">
+                <select class="form-control" data-ng-model="season_type">
                     <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
@@ -53,70 +58,68 @@
         </div>
     </form>
 
-    <table id="career_stats_skaters" class="table table-condensed table-bordered table-striped table-hover" data-ng-if="position != 'GK'">
-        <thead>
+    <table id="career_stats_skaters" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="position != 'GK'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center"><span class="rank">Rang</span></td>
-                <td class="text-center" data-ng-repeat="col in stats_cols['career_stats_skaters']">
-                <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
-                    <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
-                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
-                </a>
-                </td>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['career_stats_skaters']">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_season_player_stats | filter:nameFilter | filter: {position: '!GK'} | filter:greaterThanFilter('gp', 0) | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
-                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.gp }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.g }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.a }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pts }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.pim }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ppg }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.shg }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sog }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sh_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ptspg.toFixed(2) }}</td>
+                <td class="w-05 text-right">{{ $index + 1 }}</td>
+                <td class="w-17"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
+                <td class="w-08">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
+                <td class="w-07 text-right">{{ stat.gp }}</td>
+                <td class="w-07 text-right">{{ stat.g }}</td>
+                <td class="w-07 text-right">{{ stat.a }}</td>
+                <td class="w-07 text-right">{{ stat.pts }}</td>
+                <td class="w-07 text-right">{{ stat.pim }}</td>
+                <td class="w-07 text-right">{{ stat.ppg }}</td>
+                <td class="w-07 text-right">{{ stat.shg }}</td>
+                <td class="w-07 text-right">{{ stat.sog }}</td>
+                <td class="w-07 text-right">{{ stat.sh_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.ptspg.toFixed(2) }}</td>
             </tr>
         </tbody>
     </table>
 
-    <table id="career_stats_goalies" class="table table-condensed table-bordered table-striped table-hover" data-ng-if="position == 'GK'">
-        <thead>
+    <table id="career_stats_goalies" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="position == 'GK'">
+        <thead class="thead-light">
             <tr>
-                <td class="text-center"><span class="rank">Rang</span></td>
-                <td class="text-center" data-ng-repeat="col in stats_cols['career_stats_goalies']">
-                <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
-                    <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
-                    <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
-                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
-                    <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
-                </a>
-                </td>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['career_stats_goalies']">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
             </tr>
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_season_player_stats | filter:nameFilter | filter: {position: 'GK'} | filter:greaterThanFilter('gp', 0) | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
-                <td class="col-md-1 text-right" style="width: 3%">{{ $index + 1 }}</td>
-                <td class="col-md-1" style="width: 18%"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.gp }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ svc.formatTime(stat.toi) }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.w }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.l }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sa }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.ga }}</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.sv_pctg.toFixed(1) }} %</td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.gaa.toFixed(2) }} </td>
-                <td class="col-md-1 text-right" style="width: 7%">{{ stat.so }}</td>
+                <td class="w-05 text-right">{{ $index + 1 }}</td>
+                <td class="w-17"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
+                <td class="w-06 text-right">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
+                <td class="w-08 text-right">{{ stat.gp }}</td>
+                <td class="w-08 text-right">{{ svc.formatTime(stat.toi) }}</td>
+                <td class="w-08 text-right">{{ stat.w }}</td>
+                <td class="w-08 text-right">{{ stat.l }}</td>
+                <td class="w-08 text-right">{{ stat.sa }}</td>
+                <td class="w-08 text-right">{{ stat.ga }}</td>
+                <td class="w-08 text-right">{{ stat.sv_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ stat.gaa.toFixed(2) }} </td>
+                <td class="w-08 text-right">{{ stat.so }}</td>
             </tr>
         </tbody>
     </table>
-
-
 </div>
