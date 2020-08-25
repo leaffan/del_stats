@@ -475,6 +475,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
             ctrl.toDate = null;
             return;
         }
+        if ($scope.timespanSelect === '-----------')
+            return;
         if ($scope.timespanSelect == 'pre_dcup')
         {
             ctrl.fromDate = moment($scope.season + '-09-01');
