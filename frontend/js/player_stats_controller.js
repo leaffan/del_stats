@@ -1,6 +1,7 @@
 app.controller('plrStatsController', function ($scope, $http, $routeParams, svc) {
 
     $scope.svc = svc;
+    var ctrl = this;
     $scope.season = $routeParams.season;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
@@ -23,6 +24,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_stats_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
+    });
+
+    // retrieving significant dates and previous year's attendance from external file
+    $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
+        $scope.dcup_date = moment(res.data['dates']['dcup_date']);
     });
 
     // starting to watch filter selection lists
@@ -262,15 +268,15 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         date_to_test = moment(element.game_date);
 
         // testing selected from date
-        if ($scope.fromDate) {
-            if (date_to_test >= $scope.fromDate.startOf('day'))
+        if (ctrl.fromDate) {
+            if (date_to_test >= ctrl.fromDate.startOf('day'))
                 is_equal_past_from_date = true;
         } else {
             is_equal_past_from_date = true;
         }
         // testing selected to date
-        if ($scope.toDate) {
-            if (date_to_test <= $scope.toDate.startOf('day'))
+        if (ctrl.toDate) {
+            if (date_to_test <= ctrl.toDate.startOf('day'))
                 is_prior_equal_to_date = true;
         } else {
             is_prior_equal_to_date = true;
@@ -836,20 +842,31 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
 
     $scope.changeTimespan = function() {
         if (!$scope.timespanSelect) {
-            $scope.fromDate = null;
-            $scope.toDate = null;
+            ctrl.fromDate = null;
+            ctrl.toDate = null;
             return;
         }
-        timespanSelect = parseInt($scope.timespanSelect) + 1;
-        if (timespanSelect < 9) {
-            season = parseInt($scope.season) + 1;
+        if ($scope.timespanSelect === '-----------')
+            return;
+        if ($scope.timespanSelect == 'pre_dcup')
+        {
+            ctrl.fromDate = moment($scope.season + '-09-01');
+            ctrl.toDate = $scope.dcup_date;
+        } else if ($scope.timespanSelect == 'post_dcup') {
+            ctrl.fromDate = $scope.dcup_date;
+            var nextSeason = parseFloat($scope.season) + 1;
+            ctrl.toDate = moment(nextSeason + '-05-01');
         } else {
-            season = parseInt($scope.season);
-        }
-        $scope.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
-        $scope.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
-        $scope.changeDate();
-    };
+            timespanSelect = parseInt($scope.timespanSelect) + 1;
+            if (timespanSelect < 9) {
+                season = parseInt($scope.season) + 1;
+            } else {
+                season = parseInt($scope.season);
+            }
+            ctrl.fromDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D');
+            ctrl.toDate = moment(season + '-' + timespanSelect + '-1', 'YYYY-M-D').endOf('month');
+            }
+    }
 
     $scope.changeDate = function() {
         if ($scope.player_games) {
