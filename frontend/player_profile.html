@@ -32,14 +32,16 @@
     </div>
 
     <form>
-        <div class="form_group mb-3">
-            <div class="input-group mb-1">
+        <div class="form-row mb-1">
+            <div class="input-group col-6">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Team:</span>
                 </div>
-                <select class="form-control mr-1" id="team_select" data-ng-model="model.new_team" data-ng-change="">
+                <select class="form-control" id="team_select" data-ng-model="model.new_team" data-ng-change="">
                     <option data-ng-option data-ng-repeat="full_team in model.full_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
                 </select>
+            </div>
+            <div class="input-group col-6 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Spieler:</span>
                 </div>
@@ -47,8 +49,10 @@
                     <option data-ng-option data-ng-repeat="player in filtered_players =(all_players | orderBy:'last_name' | filter:{team: model.new_team})" value="{{player.player_id}}">{{player.full_name}}</option>
                 </select>
             </div>
-            <div class="input-group mb-1">
-                <select class="form-control mr-1" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
+        </div>
+        <div class="form-row mb-1">
+            <div class="input-group col-4">
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
                     <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
                     <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="toi_special_teams">Eiszeiten/Special Teams</option>
                     <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken</option>
@@ -65,11 +69,15 @@
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
                 </select>
-                <select class="form-control mr-1" id="home_road_select" data-ng-model="homeRoadFilter">
+            </div>
+            <div class="input-group col-4 pl-0">
+                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
+            </div>
+            <div class="input-group col-4 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Gegner:</span>
                 </div>
@@ -78,29 +86,35 @@
                     <option data-ng-option data-ng-repeat="full_team in model.full_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
                 </select>
             </div>
-            <div class="input-group">
-                <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+        </div>
+        <div class="form-row mb-3">
+            <div class="input-group col-4">
+                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                 </select>
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
-                <!-- <select class="form-control" id="week_day_select" data-ng-model="weekdaySelect">
-                    <option data-ng-option value selected="selected">alle Wochentage</option>
-                    <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
-                </select> -->
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">von:</span>
                 </div>
-                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">bis:</span>
                 </div>
