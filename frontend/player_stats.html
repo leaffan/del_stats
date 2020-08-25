@@ -65,8 +65,8 @@
                     <option data-ng-option value="player_information">Spielerinformationen</option>
                 </select>
             </div>
-            <div class="input-group col-3 pl-0 pr-0" data-ng-if="tableSelect == 'streaks'">
-                <select class="form-control mr-1" data-ng-model="$parent.scoringStreakTypeFilter">
+            <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks'">
+                <select class="form-control" data-ng-model="$parent.scoringStreakTypeFilter">
                     <option data-ng-option value="goals">Tore</option>
                     <option data-ng-option value="assists">Vorlagen</option>
                     <option data-ng-option value="points">Punkte</option>
@@ -76,13 +76,13 @@
                 <div class="input-group-prepend w-10">
                     <span class="input-group-text w-100 justify-content-center"><i class="fa fa-search"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="nameFilter" />
+                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.nameFilter" />
             </div>
             <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks'">
                 <div class="input-group-prepend w-20">
                     <span class="input-group-text w-100 justify-content-center"><i class="fa fa-search"></i></span>
                 </div>
-                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="streaknameFilter" />
+                <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.streaknameFilter" />
             </div>
         </div>
         <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks'">
@@ -120,9 +120,12 @@
         </div>
         <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks'">
             <div class="col-6">
-                <select class="form-control mr-1" id="time_span_select" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
+                <select class="form-control" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    <option data-ng-option>-----------</option>
+                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
             </div>
 
@@ -130,16 +133,16 @@
                 <div class="input-group-prepend w-20">
                     <span class="input-group-text w-100 justify-content-center"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control" placeholder="Anfangsdatum" moment-picker="stringFromDate" format="DD.MM.YYYY"
-                    data-ng-model="$parent.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                    data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
             </div>
 
             <div class="input-group col-3 pl-0">
                 <div class="input-group-prepend w-20">
                     <span class="input-group-text w-100 justify-content-center"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control" placeholder="Enddatum" moment-picker="stringToDate" format="DD.MM.YYYY"
-                data-ng-model="$parent.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
             </div>
         </div>
         <div class="form-row mb-1">
@@ -772,7 +775,7 @@
     <table id="basic_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_stats'">
         <thead class="thead-light">
             <tr>
-                <th scope="col" class="w-04 text-center">Rang</th>
+                <th scope="col" class="text-center">Rang</th>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
                     <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
                         <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
@@ -1216,7 +1219,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="streak in streaks | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:longestStreakFilter | filter:currentStreakFilter | filter:{type: scoringStreakTypeFilter} | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter}">
+            <tr data-ng-repeat="streak in streaks | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:longestStreakFilter | filter:currentStreakFilter | filter:{type: scoringStreakTypeFilter} | filter:{full_name: streaknameFilter} | filter:{team: teamFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter}">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21"><a href="#!/player_profile/{{season}}/{{streak.team}}/{{streak.player_id}}">{{ streak.full_name }}</a></td>
                 <td class="w-05"><a href="#!/team_profile/{{season}}/{{ streak.team }}">{{ streak.team }}</a></td>

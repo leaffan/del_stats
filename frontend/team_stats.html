@@ -23,9 +23,9 @@
     </div>
 
     <form>
-        <div class="form-group">
-            <div class="input-group mb-1 w-auto">
-                <select class="form-control mr-1" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
+        <div class="form-row mb-1">
+            <div class="input-group {{ isStandingsView ? 'col-2' : 'col-6' }}">
+                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="standings">Standardtabelle</option>
                     <option data-ng-option value="special_team_stats">Über-/Unterzahlstatistiken</option>
                     <option data-ng-option value="goal_stats">Torstatistiken</option>
@@ -42,17 +42,23 @@
                     <option data-ng-option value="score_state_stats">Zeiten pro Spielstand</option>
                     <option data-ng-option value="attendance_stats">Zuschauerdaten</option>
                 </select>
-                <select class="form-control mr-1" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
+            </div>
+            <div class="input-group col-3 pl-0">
+                <select class="form-control" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
+            </div>
+            <div class="input-group col-3 pl-0">
                 <select class="form-control" id="home_away_select" data-ng-model="homeAwaySelect">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
-                <select data-ng-show="isStandingsView" class="form-control ml-1" data-ng-model="situationSelect" data-ng-change="changeTable()">
+            </div>
+            <div class="input-group col-4 pl-0">
+                <select data-ng-show="isStandingsView" class="form-control" data-ng-model="situationSelect" data-ng-change="changeTable()">
                     <option data-ng-option value selected="selected">Nach voller Spielzeit</option>
                     <option data-ng-option value="lead40">Bei Führung nach 40 Minuten</option>
                     <option data-ng-option value="tied40">Bei Unentschieden nach 40 Minuten</option>
@@ -62,45 +68,50 @@
                     <option data-ng-option value="trail20">Bei Rückstand nach 20 Minuten</option>
                     <option data-ng-option value="scored_first">Nach 1:0-Führung</option>
                     <option data-ng-option value="trailed_first">Nach 0:1-Rückstand</option>
-                    <option data-ng-option value="one_goal">In Spielen mit einem Tor Unterschied</option>
-                    <option data-ng-option value="two_goal">In Spielen mit zwei Toren Unterschied</option>
-                    <option data-ng-option value="three_goal">In Spielen mit drei Toren Unterschied</option>
-                    <option data-ng-option value="four_goal">In Spielen mit vier und mehr Toren Unterschied</option>
+                    <option data-ng-option value="one_goal">Ein Tor Unterschied</option>
+                    <option data-ng-option value="two_goal">Zwei Tore Unterschied</option>
+                    <option data-ng-option value="three_goal">Drei Tore Unterschied</option>
+                    <option data-ng-option value="four_goal">Vier und mehr Tore Unterschied</option>
                 </select>   
             </div>
-            <div class="input-group w-auto">
-                <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+        </div>
+        <div class="form-row mb-1">
+            <div class="input-group col-4">
+                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                     <option data-ng-option>-----------</option>
                     <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
                     <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
-
+            </div>
                 <!-- <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
                     <option data-ng-option value selected="selected">alle Tage</option>
                     <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
                 </select> -->
-
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">von</span>
                 </div>
-                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">bis</span>
                 </div>
