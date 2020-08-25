@@ -26,14 +26,16 @@
 
     <form>
         <!-- desktop / tablet version -->
-        <div class="form_group mb-1 d-none d-md-block">
-            <div class="w-auto input-group">
+        <div class="form-row mb-1">
+            <div class="input-group col-6">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Team:</span>
                 </div>
-                <select class="form-control mr-1" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
+                <select class="form-control" id="team_select" data-ng-model="current_team" data-ng-change="changeTeam()">
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
                 </select>
+            </div>
+            <div class="input-group col-6 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Thema:</span>
                 </div>
@@ -54,21 +56,25 @@
             </div>
         </div>
 
-        <div class="form-group mb-1 d-none d-md-block">
-            <div class="input-group">
+        <div class="form-row mb-1">
+            <div class="input-group col-4">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Saisonphase:</span>
                 </div>
-                <select class="form-control mr-1" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
+                <select class="form-control" data-ng-model="seasonTypeFilter" data-ng-change="changeTable()">
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
-                <select class="form-control mr-1" id="home_road_select" data-ng-model="homeRoadFilter">
+            </div>
+            <div class="input-group col-4 pl-0">
+                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
                     <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
                     <option data-ng-option value="home">Heimspiele</option>
                     <option data-ng-option value="road">Auswärtsspiele</option>
                 </select>
+            </div>
+            <div class="input-group col-4 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">Gegner:</span>
                 </div>
@@ -79,40 +85,39 @@
             </div>
         </div>
 
-        <div class="form-group d-none d-md-block">
-            <div class="w-auto input-group">
-                <select class="form-control mr-1" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+        <div class="form-row mb-3">
+            <div class="input-group col-4">
+                <select class="form-control" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
                     <option data-ng-option>-----------</option>
                     <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
                     <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
+                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
                 </div>
-                <input class="form-control mr-1" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
+                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY"
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
-
-                <!-- <select class="form-control mr-1" id="week_day_select" data-ng-model="weekdaySelect">
-                    <option data-ng-option value selected="selected">alle Tage</option>
-                    <option data-ng-option data-ng-repeat="weekday in weekdaysPlayed" value="{{weekday}}">{{svc.germanDays()[weekday]}}</option>
-                </select> -->
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">von</span>
                 </div>
-                <select class="form-control mr-1" id="from_round_select" data-ng-model="fromRoundSelect">
+                <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
                     <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
                 </select>
-
+            </div>
+            <div class="input-group col-2 pl-0">
                 <div class="input-group-prepend">
                     <span class="input-group-text">bis</span>
                 </div>
