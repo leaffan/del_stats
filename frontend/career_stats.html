@@ -63,7 +63,7 @@
             <tr>
                 <th scope="col" class="text-center">Rang</th>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['career_stats_skaters']">
-                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
                         <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
@@ -96,7 +96,7 @@
             <tr>
                 <th scope="col" class="text-center">Rang</th>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['career_stats_goalies']">
-                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder2(col.data_key, $parent.sortConfig)">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
                         <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
                         <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
                         <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
