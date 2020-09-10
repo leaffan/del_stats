@@ -1,6 +1,6 @@
 {
     "career_stats_skaters": [
-        {"data_key": "full_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "teams_cnt", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "gp", "col_header": "GP", "expl_de": "Spiele", "expl_en": "Games Played"},
         {"data_key": "g", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
@@ -14,7 +14,7 @@
         {"data_key": "ptspg", "col_header": "P/G", "expl_de": "Punkte pro Spiel", "expl_en": "Points/Game"}
     ],
     "career_stats_goalies": [
-        {"data_key": "full_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "teams_cnt", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "gp", "col_header": "GP", "expl_de": "Spiele", "expl_en": "Games Played"},
         {"data_key": "toi", "col_header": "Min", "expl_de": "Eiszeit", "expl_en": "Time On Ice"},
