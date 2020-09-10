@@ -9,8 +9,9 @@
         {"data_key": "pts", "col_header": "P", "expl_de": "Punkte", "expl_en": "Points"},
         {"data_key": "ppg", "col_header": "PPG", "expl_de": "Tore in Überzahl", "expl_en": "Powerplay Goals"},
         {"data_key": "shg", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
-        {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
-        {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
+        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+        {"data_key": "sog", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots On Goal"},
+        {"data_key": "sh_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage"},
         {"data_key": "ptspg", "col_header": "P/G", "expl_de": "Punkte pro Spiel", "expl_en": "Points/Game"}
     ],
     "goalie_career_stats": [
