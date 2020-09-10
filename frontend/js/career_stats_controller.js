@@ -7,13 +7,18 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
         'sortCriteria': ['pts', 'ptspg', 'g', '-gp'],
         'sortDescending': true
     }
-    $scope.sort_def = {
+    $scope.sortCriteria = {
+        "gp": ['gp', 'pts', 'g'],
         "pts": ['pts', 'ptspg', 'g', '-gp'],
         "ptspg": ['ptspg', '-gp', 'sog'],
+        "pim": ['pim', '-gp'],
         "w": ['w', '-gp'],
         "l": ['l', 'gp'],
         "ga": ['ga', 'gp'],
-        "teams_cnt": ['teams_cnt', '-teams[0]']
+        "teams_cnt": ['teams_cnt', '-teams[0]'],
+        "ppg": ['ppg', '-gp'],
+        "sog": ['sog', '-gp'],
+        "sh_pctg": ['sh_pctg', 'sog', '-gp']
     };
 
     // retrieving column headers (and abbreviations + explanations)
@@ -25,7 +30,6 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
         // only retaining teams that are valid for current season
         $scope.teams = res.data;
         $scope.team_full_name_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.full_name}), {});
-        console.log($scope.team_full_name_lookup);
     });
  
     // loading stats from external json file
@@ -143,37 +147,9 @@ app.controller('careerStatsController', function ($scope, $http, $routeParams, s
         return true;
     };
 
-    // TODO: replace with external definition
-    $scope.setSortOrder2 =  function(sortKey, oldSortConfig) {
-        ascendingAttrs = ['full_name'];
-        // if previous sort key equals the new one
-        if (oldSortConfig['sortKey'] == sortKey) {
-            // just change sort direction
-            return {
-                'sortKey': oldSortConfig['sortKey'],
-                'sortCriteria': oldSortConfig['sortCriteria'],
-                'sortDescending': !oldSortConfig['sortDescending']
-            }
-        } else {
-            // ascending for a few columns
-            if (ascendingAttrs.indexOf(sortKey) !== -1) {
-                sortCriteria = $scope.sort_def[sortKey] || sortKey;
-                return {
-                    'sortKey': sortKey,
-                    'sortCriteria': sortCriteria,
-                    'sortDescending': false
-                }
-            } else {
-                // otherwise descending sort order
-                sortCriteria = $scope.sort_def[sortKey] || sortKey;
-                return {
-                    'sortKey': sortKey,
-                    'sortCriteria': sortCriteria,
-                    'sortDescending': true
-                }
-            }
-        }
-    }
+    $scope.setSortOrder = function(sortKey, oldSortConfig) {
+        return svc.setSortOrder2(sortKey, oldSortConfig, $scope.sortCriteria, ['last_name']);
+    };
 
     $scope.greaterThanFilter = function (prop, val) {
         return function (item) {
