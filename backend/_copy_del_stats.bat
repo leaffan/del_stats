@@ -7,7 +7,7 @@ set TGT_EXTENDED_DIR=C:\dev\del_stats\frontend\data\
 set DEL_DATA_BASE_DIR=c:\del
 
 if [%SEASON%] EQU [] (
-    set SEASON=2019
+    set SEASON=2020
 )
 
 echo %SEASON%

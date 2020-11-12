@@ -1,6 +1,6 @@
 #!/bin/bash
 
-season="${1:-2019}"
+season="${1:-2020}"
 game_type="${2:-ALL}"
 
 python3 /home/pacs/mre00/users/markus/_del/download_team_data.py -s "$season" -g "$game_type" schedules

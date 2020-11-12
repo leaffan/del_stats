@@ -147,7 +147,8 @@ U23_CUTOFF_DATES = {
     2016: parse("1994-01-01"),
     2017: parse("1995-01-01"),
     2018: parse("1996-01-01"),
-    2019: parse("1997-01-01")
+    2019: parse("1997-01-01"),
+    2020: parse("1998-01-01"),
 }
 
 
@@ -259,8 +260,8 @@ if __name__ == '__main__':
         help="The last date statistics will be aggregated")
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for', default=2019,
-        choices=[2016, 2017, 2018, 2019],
+        metavar='season to download data for', default=2020,
+        choices=[2016, 2017, 2018, 2019, 2020],
         help="The season for which data  will be aggregated")
 
     args = parser.parse_args()
