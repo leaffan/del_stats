@@ -4,7 +4,7 @@ set SEASON=%1
 set GAME_TYPE=%2
 
 if [%SEASON%] EQU [] (
-    set SEASON=2019
+    set SEASON=2020
 )
 
 if [%GAME_TYPE%] EQU [] (

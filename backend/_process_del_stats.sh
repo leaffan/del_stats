@@ -1,7 +1,7 @@
 #!/bin/bash
 
 date=$(date '+%Y-%m-%d')
-season="${1:-2019}"
+season="${1:-2020}"
 
 python3 /home/pacs/mre00/users/markus/_del/get_del_games.py -s "$season" --initial -f "Sep 1, $season" -t "$date"
 python3 /home/pacs/mre00/users/markus/_del/get_shots.py -s "$season" --initial

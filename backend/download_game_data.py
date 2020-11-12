@@ -117,12 +117,12 @@ if __name__ == '__main__':
         description='Download DEL game information.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for',
-        choices=[2016, 2017, 2018, 2019],
+        metavar='season to download data for', default=2020,
+        choices=[2016, 2017, 2018, 2019, 2020],
         help="The season for which information will be downloaded for")
     parser.add_argument(
         '-g', '--game_type', dest='game_type', required=False,
-        metavar='game type to download data for', choices=['RS', 'PO', 'ALL'],
+        metavar='game type to download data for', choices=['RS', 'PO', 'MSC', 'ALL'],
         help="The game type for which information will be downloaded for")
     parser.add_argument(
         'category', metavar='information category',

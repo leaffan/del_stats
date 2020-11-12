@@ -3,7 +3,7 @@
 set SEASON=%1
 
 if [%SEASON%] EQU [] (
-    set SEASON=2019
+    set SEASON=2020
 )
 
 for /F "usebackq tokens=1,2 delims==" %%i in (`wmic os get LocalDateTime /VALUE 2^>NUL`) do if '.%%i.'=='.LocalDateTime.' set ldt=%%j
@@ -20,7 +20,8 @@ python get_del_goalie_stats.py --initial -s %SEASON%
 python aggregate_del_player_game_stats.py -s %SEASON%
 python get_streaks.py -s %SEASON%
 
-if [%SEASON%] EQU [2019] (
+rem TODO: check base stats
+if [%SEASON%] EQU [2020] (
     python update_coaches.py
     python update_h2h_records.py
     python add_career_stats_to_rosters.py -s %SEASON%
