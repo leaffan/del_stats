@@ -639,8 +639,8 @@ if __name__ == '__main__':
         '--limit', dest='limit', required=False, type=int, default=0,
         help='Number of maximum games to be processed')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2019,
-        type=int, choices=[2016, 2017, 2018, 2019],
+        '-s', '--season', dest='season', required=False, default=2020,
+        type=int, choices=[2016, 2017, 2018, 2019, 2020],
         metavar='season to process games for',
         help="The season information will be processed for")
 

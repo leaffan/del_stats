@@ -24,8 +24,8 @@ if __name__ == '__main__':
         description='Order DEL team schedules.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to order schedules for', default=2019,
-        choices=[2016, 2017, 2018, 2019],
+        metavar='season to order schedules for', default=2020,
+        choices=[2016, 2017, 2018, 2019, 2020],
         help="The season for which team schedules will be ordered")
 
     args = parser.parse_args()
@@ -52,7 +52,8 @@ if __name__ == '__main__':
                     if not game['id'] in game_ids:
                         game_ids.add(game['id'])
                         game['game_id'] = game['id']
-                        if not game['round'].isdigit():
+                        # TODO: deal with non-identified round for MSC
+                        if game['round'] and not game['round'].isdigit():
                             rnd_type, rnd = game['round'].rsplit(maxsplit=1)
                             rnd_type = ROUND_MAPPING[rnd_type]
                             game['round'] = "_".join((rnd_type, rnd))

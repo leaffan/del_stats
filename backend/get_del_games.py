@@ -24,7 +24,9 @@ PLAYOFF_DATES = {
     2016: datetime.date(2017, 2, 28),
     2017: datetime.date(2018, 3, 6),
     2018: datetime.date(2019, 3, 5),
-    2019: datetime.date(2020, 3, 9)
+    2019: datetime.date(2020, 3, 9),
+    # TODO: adjust once the full DEL schedule is known
+    2020: datetime.date(2021, 3, 1),
 }
 
 POS_KEYS = {'1': 'G', '2': 'D', '3': 'F'}
@@ -83,7 +85,11 @@ def get_games_for_date(date, existing_games=None):
         single_game_data['weekday'] = date.weekday()
         season = get_season(date)
         single_game_data['season'] = season
-        if date < PLAYOFF_DATES[season]:
+        # TODO: adjust for when 2020/21 regular season starts
+        if season == 2020:
+            single_game_data['season_type'] = 'MSC'
+            game_type = 4
+        elif date < PLAYOFF_DATES[season]:
             single_game_data['season_type'] = 'RS'
             game_type = 1
         elif date >= PLAYOFF_DATES[season]:
@@ -438,8 +444,8 @@ if __name__ == '__main__':
         metavar='last date to process games for',
         help="The last date information will be processed for")
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2019,
-        type=int, choices=[2016, 2017, 2018, 2019],
+        '-s', '--season', dest='season', required=False, default=2020,
+        type=int, choices=[2016, 2017, 2018, 2019, 2020],
         metavar='season to process games for',
         help="The season information will be processed for")
     parser.add_argument(

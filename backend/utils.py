@@ -19,7 +19,7 @@ coaches = [
     'Larry Mitchell', 'Kevin Gaudet', 'Pekka Tirkkonen', 'Martin Jiranek',
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
-    'Niklas Sundblad'
+    'Niklas Sundblad', 'Glen Hanlon',
 ]
 
 
@@ -174,6 +174,8 @@ def get_game_type_from_season_type(game):
         return 1
     elif game['season_type'] == 'PO':
         return 3
+    elif game['season_type'] == 'MSC':
+        return 4
     else:
         return 0
 
