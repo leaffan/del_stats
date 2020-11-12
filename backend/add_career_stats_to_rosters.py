@@ -17,8 +17,8 @@ if __name__ == '__main__':
         description='Add career stats to team roster stats.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for', default=2019,
-        choices=[2016, 2017, 2018, 2019],
+        metavar='season to download data for', default=2020,
+        choices=[2016, 2017, 2018, 2019, 2020],
         help="The season for which data will be processed")
     parser.add_argument(
         '-g', '--game_type', dest='game_type', required=False, default='RS',
