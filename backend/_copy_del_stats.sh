@@ -1,6 +1,6 @@
 #!/bin/bash
 
-season="${1:-2019}"
+season="${1:-2020}"
 
 # copying data sets to standard site location
 cp -v /home/pacs/mre00/users/markus/_del/_data/del_players.json /home/doms/leaffan.net/subs/www/del/data/del_players.json
