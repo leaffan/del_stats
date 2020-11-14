@@ -2,6 +2,11 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     var ctrl = this;
     $scope.svc = svc;
     $scope.season = $routeParams.season;
+    if ($scope.season == 2020) {
+        $scope.seasonTypeFilter = 'MSC';
+    } else {
+        $scope.seasonTypeFilter = 'RS';
+    }
     $scope.current_team = $routeParams.team;
     if ($routeParams.table_select) {
         $scope.tableSelect = $routeParams.table_select;
