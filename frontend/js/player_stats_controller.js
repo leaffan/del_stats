@@ -1,11 +1,15 @@
-app.controller('plrStatsController', function ($scope, $http, $routeParams, svc) {
+app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, svc) {
 
     $scope.svc = svc;
     var ctrl = this;
     $scope.season = $routeParams.season;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
-    $scope.seasonTypeSelect = 'RS';
+    if ($scope.season == 2020) {
+        $scope.seasonTypeSelect = 'MSC';
+    } else {
+        $scope.seasonTypeSelect = 'RS';
+    }
     $scope.scoringStreakTypeFilter = 'points';
     $scope.showStrictStreaks = true;
     $scope.u23Check = false;
@@ -20,6 +24,24 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
     // default filter values
     $scope.nameFilter = ''; // empty name filter
     $scope.teamFilter = ''; // empty name filter
+
+    // for some reason the previous way to load all players doesn't work with 2020 data
+    // some problem with asynchronous loading I don't clearly understand
+    // that is why we have to wait explicitly for the data being loaded by using a list of promises
+    var promises = [];
+    promises.push(getPlayers());
+    $q.all(promises).then(function (results) {
+        $scope.all_players = results[0].data;
+    });
+    function getPlayers() {
+        return $http.get('data/del_players.json');
+    }
+
+    // old way to load all players
+    // // loading all players from external json file
+    // $http.get('data/del_players.json').then(function (res) {
+    //     $scope.all_players = res.data;
+    // });
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_stats_columns.json').then(function (res) {
@@ -44,11 +66,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         }
     }, true);
 
-    // loading all players from external json file
-    $http.get('data/del_players.json').then(function (res) {
-        $scope.all_players = res.data;
-    });
-
     // loading league-wide stats from external json file
     $http.get('data/' + $scope.season + '/del_league_stats.json').then(function (res) {
         $scope.league_data = res.data;
@@ -65,7 +82,17 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         $scope.goalie_games = res.data;
         $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
     });
-    
+
+    // loading strictly defined player scoring streaks from external json file
+    $http.get('data/' + $scope.season + '/del_streaks_strict.json').then(function (res) {
+        $scope.strict_streaks = res.data;
+        $scope.streaks = $scope.strict_streaks;
+    });
+    // loading loosely defined player scoring streaks from external json file
+    $http.get('data/' + $scope.season + '/del_streaks_loose.json').then(function (res) {
+        $scope.loose_streaks = res.data;
+    });
+
 	$scope.readCSV = function() {
 		// http get request to read CSV file content
         $http.get('data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
@@ -656,16 +683,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, svc)
         });
         return filtered_player_stats;
     };
-
-    // loading strictly defined player scoring streaks from external json file
-    $http.get('data/' + $scope.season + '/del_streaks_strict.json').then(function (res) {
-        $scope.strict_streaks = res.data;
-        $scope.streaks = $scope.strict_streaks;
-    });
-    // loading loosely defined player scoring streaks from external json file
-    $http.get('data/' + $scope.season + '/del_streaks_loose.json').then(function (res) {
-        $scope.loose_streaks = res.data;
-    });
 
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {

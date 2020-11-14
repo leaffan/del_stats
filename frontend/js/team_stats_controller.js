@@ -5,7 +5,11 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $scope.season = $routeParams.season;
     // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
-    $scope.seasonTypeSelect = 'RS'
+    if ($scope.season == 2020) {
+        $scope.seasonTypeSelect = 'MSC';
+    } else {
+        $scope.seasonTypeSelect = 'RS';
+    }
     $scope.isStandingsView = true;
     // TODO: find out what this was supposed for
     $scope.isAttendanceView = false;

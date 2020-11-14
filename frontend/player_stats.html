@@ -88,6 +88,7 @@
         <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks'">
             <div class="col-3">
                 <select class="form-control" data-ng-model="$parent.seasonTypeSelect">
+                    <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
                     <option data-ng-option value="RS" selected="selected">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
@@ -123,9 +124,9 @@
                 <select class="form-control" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
-                    <option data-ng-option>-----------</option>
-                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
-                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
+                    <option data-ng-if="season != 2020" data-ng-option>-----------</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
             </div>
 
