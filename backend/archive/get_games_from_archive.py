@@ -96,15 +96,13 @@ def get_single_game(tr, season, season_type):
     result = tds[7].xpath("a/text()").pop(0)
     home_score, road_score = [int(score) for score in result.split("-")]
     home_team = tds[3].xpath("a/text()").pop(0)
-    home_team_id = int(
-        tds[3].xpath("a/@href").pop(0).split("_")[-1].replace(".html", ""))
+    home_team_id = int(tds[3].xpath("a/@href").pop(0).split("_")[-1].replace(".html", ""))
     single_game['home_id'] = home_team_id
     single_game['home_team'] = home_team
     single_game['home_abbr'] = TEAM_ABBRS_BY_ID[home_team_id]
     single_game['home_score'] = home_score
     road_team = tds[5].xpath("a/text()").pop(0)
-    road_team_id = int(
-        tds[5].xpath("a/@href").pop(0).split("_")[-1].replace(".html", ""))
+    road_team_id = int(tds[5].xpath("a/@href").pop(0).split("_")[-1].replace(".html", ""))
     single_game['road_id'] = road_team_id
     single_game['road_team'] = road_team
     single_game['road_abbr'] = TEAM_ABBRS_BY_ID[road_team_id]
@@ -148,17 +146,14 @@ def get_playoff_games(season_id):
             "//h2/following-sibling::div[count(preceding-sibling::h2)" +
             "=%d]/preceding-sibling::h2[1]/text()" % (i + 1)).pop(0)
         for round_div in round_divs:
-            round_home, round_road = round_div.xpath(
-                "div/div/div/div/a/text()")
+            # round_home, round_road = round_div.xpath("div/div/div/div/a/text()")
             round_home_score, round_road_score = [
-                int(token) for
-                token in round_div.xpath("div/div/div/div/span/text()")]
+                int(token) for token in round_div.xpath("div/div/div/div/span/text()")]
             round_type = max(round_home_score, round_road_score) * 2 - 1
             round_type = "best-of-%d" % round_type
-            round_roster_links = round_div.xpath("div/div/div/div/a/@href")
-            round_home_id, round_road_id = [
-                int(token.split("_")[-1].replace(".html", "")) for
-                token in round_roster_links]
+            # round_roster_links = round_div.xpath("div/div/div/div/a/@href")
+            # round_home_id, round_road_id = [
+            #     int(token.split("_")[-1].replace(".html", "")) for token in round_roster_links]
             round_game_divs = round_div.xpath("div/div/div")[2:]
             game_cnt = 0
             for round_game_div in round_game_divs:
@@ -166,10 +161,9 @@ def get_playoff_games(season_id):
                 single_game = dict()
 
                 season_id, game_id = [
-                    int(x) for x in
-                    round_game_div.xpath(
-                        "div[@class='col-sm-3']/descendant-or-self::a/@href"
-                    )[0].replace(".html", "").split("_")[1:]]
+                    int(x) for x in round_game_div.xpath(
+                        "div[@class='col-sm-3']/descendant-or-self::a/@href")[0].replace(".html", "").split("_")[1:]
+                ]
 
                 single_game['game_id'] = game_id
                 single_game['season_id'] = season_id
@@ -177,33 +171,26 @@ def get_playoff_games(season_id):
                 single_game['season_type'] = season_type
                 single_game['round'] = round_title
                 single_game['round_type'] = round_type
-                game_date = round_game_div.xpath(
-                    "div[@class='col-sm-4']/text()").pop(0)
+                game_date = round_game_div.xpath("div[@class='col-sm-4']/text()").pop(0)
                 game_date = parse(game_date, dayfirst=True).date()
                 single_game['game_no'] = game_cnt
                 single_game['game_date'] = str(game_date)
                 single_game['game_time'] = None
-                game_teams = round_game_div.xpath(
-                    "div[@class='col-sm-5']/strong/text()").pop(0)
-                game_home, game_road = [
-                    token.strip() for token in game_teams.split(":")]
-                game_result = round_game_div.xpath(
-                    "div[@class='col-sm-3']/descendant-or-self::*/text()")
+                game_teams = round_game_div.xpath("div[@class='col-sm-5']/strong/text()").pop(0)
+                game_home, game_road = [token.strip() for token in game_teams.split(":")]
+                game_result = round_game_div.xpath("div[@class='col-sm-3']/descendant-or-self::*/text()")
                 game_result = [r.strip() for r in game_result if r.strip()]
-                score_home, score_road = [
-                    int(token) for token in game_result[0].split(":")]
+                score_home, score_road = [int(token) for token in game_result[0].split(":")]
                 single_game['home_id'] = TEAM_IDS_BY_ABBR[game_home]
 
-                home_team_abbr, home_team_name = TEAM_LOOKUP[
-                    (single_game['home_id'], season)]
+                home_team_abbr, home_team_name = TEAM_LOOKUP[(single_game['home_id'], season)]
 
                 single_game['home_team'] = home_team_name
                 single_game['home_abbr'] = home_team_abbr
                 single_game['home_score'] = score_home
                 single_game['road_id'] = TEAM_IDS_BY_ABBR[game_road]
 
-                road_team_abbr, road_team_name = TEAM_LOOKUP[
-                    (single_game['road_id'], season)]
+                road_team_abbr, road_team_name = TEAM_LOOKUP[(single_game['road_id'], season)]
 
                 single_game['road_team'] = road_team_name
                 single_game['road_abbr'] = road_team_abbr
@@ -242,10 +229,7 @@ if __name__ == '__main__':
         season_type = season_info[1].strip()
         print("+ Collecting games for %s %d" % (season_type, season))
 
-        if season_type in [
-            'Hauptrunde', 'Qualifikationsrunde',
-            'Meisterrunde', 'Abstiegsrunde'
-        ]:
+        if season_type in ['Hauptrunde', 'Qualifikationsrunde', 'Meisterrunde', 'Abstiegsrunde']:
             games = get_regular_season(season_id)
             games_per_season[season].extend(games)
         else:
@@ -255,5 +239,4 @@ if __name__ == '__main__':
     for season in games_per_season:
         tgt_file = "games_%d.json" % season
         tgt_path = os.path.join(CONFIG['base_data_dir'], 'archive', tgt_file)
-        open(tgt_path, 'w').write(
-            json.dumps(games_per_season[season], indent=2))
+        open(tgt_path, 'w').write(json.dumps(games_per_season[season], indent=2))
