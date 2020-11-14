@@ -150,6 +150,9 @@ def get_single_game_details(game_id, season, game_type):
     single_game_data = dict()
 
     single_game_data['arena'] = game_details['stadium']
+    # quick fix for wrongly registered arena in 2020 MagentaSport Cup
+    if season == 2020 and game_type == 4 and single_game_data['arena'] == 'Mercedes-Benz Arena':
+        single_game_data['arena'] = 'Sportforum Berlin'
     single_game_data['attendance'] = game_details['numberOfViewers']
 
     single_game_data['home_id'] = game_details['teamInfo']['home']['id']
