@@ -1,4 +1,4 @@
-app.controller('teamStatsController', function($scope, $http, $routeParams, svc) {
+app.controller('teamStatsController', function($scope, $http, $routeParams, $q, svc) {
 
     $scope.svc = svc;
     var ctrl = this;
@@ -24,6 +24,20 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, svc)
     $http.get('./js/team_stats_columns.json').then(function (res) {
         $scope.stats_cols = res.data;
     });
+
+    // for some reason the previous way to load all players doesn't work with 2020 data
+    // some problem with asynchronous loading I don't clearly understand
+    // that is why we have to wait explicitly for the data being loaded by using a list of promises
+    var promises = [];
+    promises.push(getDatesAttendances());
+    $q.all(promises).then(function (results) {
+        $scope.dcup_date = moment(results[0].data['dates']['dcup_date']);
+        $scope.avg_attendance_last_season = results[0].data['avg_attendance_last_season'];
+        // $scope.all_players = results[0].data;
+    });
+    function getDatesAttendances() {
+        return $http.get('./data/' + $scope.season + '/dates_attendance.json');
+    }
 
     // retrieving significant dates and previous year's attendance from external file
     $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
