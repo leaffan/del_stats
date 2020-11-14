@@ -91,6 +91,7 @@ name_corrections = {
     '1738_KEV': 'Pierre Beaulieu',
     '1691_STR': 'Tom Pokel',
     '1691_WOB': 'Pat Cortina',
+    '1794_RBM': 'Don Jackson',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
