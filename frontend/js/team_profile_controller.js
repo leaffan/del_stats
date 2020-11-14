@@ -42,6 +42,7 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
     // retrieving teams
     $http.get('./js/teams.json').then(function (res) {
         $scope.teams = res.data;
+        $scope.teams = $scope.teams.filter(team => team.valid_from <= $scope.season && team.valid_to >= $scope.season);
         // creating lookup structures...
         // ...for team names used in urls
         $scope.team_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});

@@ -40,11 +40,12 @@
                     <option data-ng-option value="additional_stats">Zusätzliche Statistiken</option>
                     <option data-ng-option value="penalty_stats">Strafzeitstatistiken</option>
                     <option data-ng-option value="score_state_stats">Zeiten pro Spielstand</option>
-                    <option data-ng-option value="attendance_stats">Zuschauerdaten</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="attendance_stats">Zuschauerdaten</option>
                 </select>
             </div>
             <div class="input-group col-3 pl-0">
                 <select class="form-control" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
+                    <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
                     <option data-ng-option value="">Hauptrunde und Playoffs</option>
@@ -80,9 +81,9 @@
                 <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
-                    <option data-ng-option>-----------</option>
-                    <option data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
-                    <option data-ng-option value="post_dcup">Nach Deutschland Cup</option>
+                    <option data-ng-if="season != 2020" data-ng-option>-----------</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="post_dcup">Nach Deutschland Cup</option>
                 </select>
             </div>
             <div class="input-group col-2 pl-0">
