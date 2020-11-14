@@ -11,7 +11,7 @@
             "2019": true
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     
     },
     {
@@ -68,7 +68,7 @@
             "2019": true
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     },
     {
         "abbr": "IEC",
@@ -82,7 +82,7 @@
             "2019": false
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     },
     {
         "abbr": "KEC",
@@ -96,7 +96,7 @@
             "2019": false
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     },
     {
         "abbr": "KEV",
@@ -152,7 +152,7 @@
             "2019": true
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     },
     {
         "abbr": "SWW",
@@ -180,7 +180,7 @@
             "2019": true
         },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2019
     },
     {
         "abbr": "WOB",
