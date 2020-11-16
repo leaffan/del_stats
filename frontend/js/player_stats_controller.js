@@ -28,20 +28,22 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     // for some reason the previous way to load all players doesn't work with 2020 data
     // some problem with asynchronous loading I don't clearly understand
     // that is why we have to wait explicitly for the data being loaded by using a list of promises
-    var promises = [];
-    promises.push(getPlayers());
-    $q.all(promises).then(function (results) {
-        $scope.all_players = results[0].data;
-    });
-    function getPlayers() {
-        return $http.get('data/del_players.json');
+    if ($scope.season == 2020) {
+        var promises = [];
+        promises.push(getPlayers());
+        $q.all(promises).then(function (results) {
+            $scope.all_players = results[0].data;
+        });
+        function getPlayers() {
+            return $http.get('data/del_players.json');
+        }
+    } else {
+        // old way to load all players
+        // loading all players from external json file
+        $http.get('data/del_players.json').then(function (res) {
+            $scope.all_players = res.data;
+        });
     }
-
-    // old way to load all players
-    // // loading all players from external json file
-    // $http.get('data/del_players.json').then(function (res) {
-    //     $scope.all_players = res.data;
-    // });
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_stats_columns.json').then(function (res) {
@@ -51,6 +53,17 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     // retrieving significant dates and previous year's attendance from external file
     $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
         $scope.dcup_date = moment(res.data['dates']['dcup_date']);
+    });
+
+    // retrieving teams
+    $http.get('./js/teams.json').then(function (res) {
+        // only retaining teams that are valid for current season
+        $scope.teams = res.data.filter(team => team.valid_from <= $scope.season && team.valid_to >= $scope.season);
+        // creating lookup structures...
+        // ...for team locations
+        $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
+        // ...for playoff participation indicator
+        $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po[$scope.season]}), {});
     });
 
     // starting to watch filter selection lists
