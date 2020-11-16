@@ -46,9 +46,9 @@
             <div class="input-group col-3 pl-0">
                 <select class="form-control" data-ng-model="seasonTypeSelect" data-ng-change="changeTable()">
                     <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
-                    <option data-ng-option value="RS">Hauptrunde</option>
-                    <option data-ng-option value="PO">Playoffs</option>
-                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="RS">Hauptrunde</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="PO">Playoffs</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
             </div>
             <div class="input-group col-3 pl-0">

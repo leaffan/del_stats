@@ -89,9 +89,9 @@
             <div class="col-3">
                 <select class="form-control" data-ng-model="$parent.seasonTypeSelect">
                     <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
-                    <option data-ng-option value="RS" selected="selected">Hauptrunde</option>
-                    <option data-ng-option value="PO">Playoffs</option>
-                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="RS" selected="selected">Hauptrunde</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="PO">Playoffs</option>
+                    <option data-ng-if="season != 2020" data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
             </div>
             <div class="col-3 pl-0">
@@ -150,7 +150,8 @@
             <div class="input-group col-4">
                 <select class="form-control" id="teamSelect" data-ng-model="teamFilter">
                     <option data-ng-option value selected="selected">alle Teams</option>
-                    <option data-ng-option value="AEV">Augsburger Panther</option>
+                    <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
+                    <!-- <option data-ng-option value="AEV">Augsburger Panther</option>
                     <option data-ng-option value="EBB">Eisbären Berlin</option>
                     <option data-ng-option value="BHV">Pinguins Bremerhaven</option>
                     <option data-ng-option value="DEG">Düsseldorfer EG</option>
@@ -163,7 +164,7 @@
                     <option data-ng-option value="NIT">Thomas Sabo Ice Tigers</option>
                     <option data-ng-option value="SWW">Schwenninger Wild Wings</option>
                     <option data-ng-option value="STR">Straubing Tigers</option>
-                    <option data-ng-option value="WOB">Grizzlys Wolfsburg</option>
+                    <option data-ng-option value="WOB">Grizzlys Wolfsburg</option> -->
                 </select>
             </div>
             <div class="input-group col-2 pl-0">
