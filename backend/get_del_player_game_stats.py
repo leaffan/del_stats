@@ -17,8 +17,7 @@ from utils import get_game_info, get_game_type_from_season_type
 from utils import player_name_corrections, correct_player_name
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
@@ -29,12 +28,8 @@ PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
-    'reckless': [
-        'HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP',
-        'BUT-E', 'SPEAR'],
-    'other': [
-        'THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE',
-        'BENCH', 'BR-ST'],
+    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP', 'BUT-E', 'SPEAR'],
+    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE', 'BENCH', 'BR-ST'],
 }
 REVERSE_PENALTY_CATEGORIES = dict()
 for key, values in PENALTY_CATEGORIES.items():
@@ -90,147 +85,117 @@ EMPTY_LINE = [0, 0, 0]
 # defining potential lines and positions
 LINES = ['1', '2', '3', '4']
 POSITIONS = ['d', 'f']
-POS_LINES = list(
-    map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
+POS_LINES = list(map(''.join, itertools.chain(itertools.product(POSITIONS, LINES))))
 
 
 def retrieve_on_ice_stats(gsl, shots):
-
+    """
+    Retrieves on-ice stats for current player stat line
+    using the specified shot data.
+    """
     # retrieving on-ice shots for (all situations)
-    on_ice_shots_for = list(filter(
-        lambda d: gsl['player_id'] in d['players_on_for'], shots))
+    on_ice_shots_for = list(filter(lambda d: gsl['player_id'] in d['players_on_for'], shots))
     gsl['on_ice_sh_f'] = len(on_ice_shots_for)
-    on_ice_shots_for_unblocked = list(filter(
-        lambda d: d['target_type'] != 'blocked', on_ice_shots_for))
+    on_ice_shots_for_unblocked = list(filter(lambda d: d['target_type'] != 'blocked', on_ice_shots_for))
     gsl['on_ice_unblocked_sh_f'] = len(on_ice_shots_for_unblocked)
-    on_ice_shots_for_on_goal = list(filter(
-        lambda d: d['target_type'] == 'on_goal', on_ice_shots_for))
+    on_ice_shots_for_on_goal = list(filter(lambda d: d['target_type'] == 'on_goal', on_ice_shots_for))
     gsl['on_ice_sog_f'] = len(on_ice_shots_for_on_goal)
-    on_ice_goals_for = list(filter(
-        lambda d: d['scored'] is True, on_ice_shots_for))
+    on_ice_goals_for = list(filter(lambda d: d['scored'] is True, on_ice_shots_for))
     gsl['on_ice_goals_f'] = len(on_ice_goals_for)
 
     # retrieving on-ice shots against (all situations)
-    on_ice_shots_against = list(filter(
-        lambda d: gsl['player_id'] in d['players_on_against'], shots))
+    on_ice_shots_against = list(filter(lambda d: gsl['player_id'] in d['players_on_against'], shots))
     gsl['on_ice_sh_a'] = len(on_ice_shots_against)
-    on_ice_shots_against_unblocked = list(filter(
-        lambda d: d['target_type'] != 'blocked', on_ice_shots_against))
+    on_ice_shots_against_unblocked = list(filter(lambda d: d['target_type'] != 'blocked', on_ice_shots_against))
     gsl['on_ice_unblocked_sh_a'] = len(on_ice_shots_against_unblocked)
-    on_ice_shots_against_on_goal = list(filter(
-        lambda d: d['target_type'] == 'on_goal', on_ice_shots_against))
+    on_ice_shots_against_on_goal = list(filter(lambda d: d['target_type'] == 'on_goal', on_ice_shots_against))
     gsl['on_ice_sog_a'] = len(on_ice_shots_against_on_goal)
-    on_ice_goals_against = list(filter(
-        lambda d: d['scored'] is True, on_ice_shots_against))
+    on_ice_goals_against = list(filter(lambda d: d['scored'] is True, on_ice_shots_against))
     gsl['on_ice_goals_a'] = len(on_ice_goals_against)
 
     # calculating percentages (all situations)
     on_ice_shots = gsl['on_ice_sh_f'] + gsl['on_ice_sh_a']
     if on_ice_shots:
-        gsl['on_ice_sh_pctg'] = round(
-            gsl['on_ice_sh_f'] / on_ice_shots * 100, 2)
+        gsl['on_ice_sh_pctg'] = round(gsl['on_ice_sh_f'] / on_ice_shots * 100, 2)
     else:
         gsl['on_ice_sh_pctg'] = 0.
-    on_ice_unblocked_shots = (
-        gsl['on_ice_unblocked_sh_f'] + gsl['on_ice_unblocked_sh_a'])
+    on_ice_unblocked_shots = gsl['on_ice_unblocked_sh_f'] + gsl['on_ice_unblocked_sh_a']
     if on_ice_unblocked_shots:
-        gsl['on_ice_unblocked_sh_pctg'] = round(
-            gsl['on_ice_unblocked_sh_f'] / on_ice_unblocked_shots * 100, 2)
+        gsl['on_ice_unblocked_sh_pctg'] = round(gsl['on_ice_unblocked_sh_f'] / on_ice_unblocked_shots * 100, 2)
     else:
         gsl['on_ice_unblocked_sh_pctg'] = 0.
     on_ice_shots_on_goal = gsl['on_ice_sog_f'] + gsl['on_ice_sog_a']
     if on_ice_shots_on_goal:
-        gsl['on_ice_sog_pctg'] = round(
-            gsl['on_ice_sog_f'] / on_ice_shots_on_goal * 100, 2)
+        gsl['on_ice_sog_pctg'] = round(gsl['on_ice_sog_f'] / on_ice_shots_on_goal * 100, 2)
     else:
         gsl['on_ice_sog_pctg'] = 0.
     on_ice_goals = gsl['on_ice_goals_f'] + gsl['on_ice_goals_a']
     if on_ice_goals:
-        gsl['on_ice_goals_pctg'] = round(
-            gsl['on_ice_goals_f'] / on_ice_goals * 100, 2)
+        gsl['on_ice_goals_pctg'] = round(gsl['on_ice_goals_f'] / on_ice_goals * 100, 2)
     else:
         gsl['on_ice_goals_pctg'] = 0.
     if gsl['on_ice_sog_f']:
-        gsl['on_ice_shooting_pctg'] = round(
-            gsl['on_ice_goals_f'] / gsl['on_ice_sog_f'] * 100, 2)
+        gsl['on_ice_shooting_pctg'] = round(gsl['on_ice_goals_f'] / gsl['on_ice_sog_f'] * 100, 2)
     else:
         gsl['on_ice_shooting_pctg'] = 0.
     if gsl['on_ice_sog_a']:
-        gsl['on_ice_save_pctg'] = round(
-            100 - gsl['on_ice_goals_a'] / gsl['on_ice_sog_a'] * 100, 2)
+        gsl['on_ice_save_pctg'] = round(100 - gsl['on_ice_goals_a'] / gsl['on_ice_sog_a'] * 100, 2)
     else:
         gsl['on_ice_save_pctg'] = 0.
     gsl['on_ice_pdo'] = gsl['on_ice_shooting_pctg'] + gsl['on_ice_save_pctg']
 
     # retrieving on-ice shots for (5v5)
-    on_ice_shots_for_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for))
+    on_ice_shots_for_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', on_ice_shots_for))
     gsl['on_ice_sh_f_5v5'] = len(on_ice_shots_for_5v5)
-    on_ice_shots_for_unblocked_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_unblocked))
+    on_ice_shots_for_unblocked_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_unblocked))
     gsl['on_ice_unblocked_sh_f_5v5'] = len(on_ice_shots_for_unblocked_5v5)
-    on_ice_shots_for_on_goal_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_on_goal))
+    on_ice_shots_for_on_goal_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', on_ice_shots_for_on_goal))
     gsl['on_ice_sog_f_5v5'] = len(on_ice_shots_for_on_goal_5v5)
-    on_ice_goals_for_5v5 = list(filter(
-        lambda d: d['scored'] is True, on_ice_shots_for_5v5))
+    on_ice_goals_for_5v5 = list(filter(lambda d: d['scored'] is True, on_ice_shots_for_5v5))
     gsl['on_ice_goals_f_5v5'] = len(on_ice_goals_for_5v5)
 
     # retrieving on-ice shots against (5v5)
-    on_ice_shots_against_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', on_ice_shots_against))
+    on_ice_shots_against_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', on_ice_shots_against))
     gsl['on_ice_sh_a_5v5'] = len(on_ice_shots_against_5v5)
     on_ice_shots_against_unblocked_5v5 = list(filter(
         lambda d: d['plr_situation'] == '5v5', on_ice_shots_against_unblocked))
-    gsl['on_ice_unblocked_sh_a_5v5'] = len(
-        on_ice_shots_against_unblocked_5v5)
-    on_ice_shots_against_on_goal_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', on_ice_shots_against_on_goal))
+    gsl['on_ice_unblocked_sh_a_5v5'] = len(on_ice_shots_against_unblocked_5v5)
+    on_ice_shots_against_on_goal_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', on_ice_shots_against_on_goal))
     gsl['on_ice_sog_a_5v5'] = len(on_ice_shots_against_on_goal_5v5)
-    on_ice_goals_against_5v5 = list(filter(
-        lambda d: d['scored'] is True, on_ice_shots_against_5v5))
+    on_ice_goals_against_5v5 = list(filter(lambda d: d['scored'] is True, on_ice_shots_against_5v5))
     gsl['on_ice_goals_a_5v5'] = len(on_ice_goals_against_5v5)
 
     # calculating percentages (5v5)
     on_ice_shots_5v5 = gsl['on_ice_sh_f_5v5'] + gsl['on_ice_sh_a_5v5']
     if on_ice_shots_5v5:
-        gsl['on_ice_sh_pctg_5v5'] = round(
-            gsl['on_ice_sh_f_5v5'] / on_ice_shots_5v5 * 100, 2)
+        gsl['on_ice_sh_pctg_5v5'] = round(gsl['on_ice_sh_f_5v5'] / on_ice_shots_5v5 * 100, 2)
     else:
         gsl['on_ice_sh_pctg_5v5'] = 0.
-    on_ice_unblocked_shots_5v5 = (
-        gsl['on_ice_unblocked_sh_f_5v5'] + gsl['on_ice_unblocked_sh_a_5v5'])
+    on_ice_unblocked_shots_5v5 = gsl['on_ice_unblocked_sh_f_5v5'] + gsl['on_ice_unblocked_sh_a_5v5']
     if on_ice_unblocked_shots_5v5:
         gsl['on_ice_unblocked_sh_pctg_5v5'] = round(
-            gsl['on_ice_unblocked_sh_f_5v5'] /
-            on_ice_unblocked_shots_5v5 * 100, 2)
+            gsl['on_ice_unblocked_sh_f_5v5'] / on_ice_unblocked_shots_5v5 * 100, 2)
     else:
         gsl['on_ice_unblocked_sh_pctg_5v5'] = 0.
-    on_ice_shots_on_goal_5v5 = (
-        gsl['on_ice_sog_f_5v5'] + gsl['on_ice_sog_a_5v5'])
+    on_ice_shots_on_goal_5v5 = gsl['on_ice_sog_f_5v5'] + gsl['on_ice_sog_a_5v5']
     if on_ice_shots_on_goal_5v5:
-        gsl['on_ice_sog_pctg_5v5'] = round(
-            gsl['on_ice_sog_f_5v5'] / on_ice_shots_on_goal_5v5 * 100, 2)
+        gsl['on_ice_sog_pctg_5v5'] = round(gsl['on_ice_sog_f_5v5'] / on_ice_shots_on_goal_5v5 * 100, 2)
     else:
         gsl['on_ice_sog_pctg_5v5'] = 0.
     on_ice_goals_5v5 = gsl['on_ice_goals_f_5v5'] + gsl['on_ice_goals_a_5v5']
     if on_ice_goals_5v5:
-        gsl['on_ice_goals_pctg_5v5'] = round(
-            gsl['on_ice_goals_f_5v5'] / on_ice_goals_5v5 * 100, 2)
+        gsl['on_ice_goals_pctg_5v5'] = round(gsl['on_ice_goals_f_5v5'] / on_ice_goals_5v5 * 100, 2)
     else:
         gsl['on_ice_goals_pctg_5v5'] = 0.
     if gsl['on_ice_sog_f_5v5']:
-        gsl['on_ice_shooting_pctg_5v5'] = round(
-            gsl['on_ice_goals_f_5v5'] / gsl['on_ice_sog_f_5v5'] * 100, 2)
+        gsl['on_ice_shooting_pctg_5v5'] = round(gsl['on_ice_goals_f_5v5'] / gsl['on_ice_sog_f_5v5'] * 100, 2)
     else:
         gsl['on_ice_shooting_pctg_5v5'] = 0.
     if gsl['on_ice_sog_a_5v5']:
-        gsl['on_ice_save_pctg_5v5'] = round(
-            100 - gsl['on_ice_goals_a_5v5'] / gsl['on_ice_sog_a_5v5'] * 100, 2)
+        gsl['on_ice_save_pctg_5v5'] = round(100 - gsl['on_ice_goals_a_5v5'] / gsl['on_ice_sog_a_5v5'] * 100, 2)
     else:
         gsl['on_ice_save_pctg_5v5'] = 0.
-    gsl['on_ice_pdo_5v5'] = (
-        gsl['on_ice_shooting_pctg_5v5'] + gsl['on_ice_save_pctg_5v5'])
+    gsl['on_ice_pdo_5v5'] = gsl['on_ice_shooting_pctg_5v5'] + gsl['on_ice_save_pctg_5v5']
 
     return gsl
 
@@ -267,38 +232,30 @@ def get_single_game_player_data(game, shots):
         faceoffs = list()
 
     for home_stat_line in home_stats:
-        player_game = retrieve_single_player_game_stats(
-            home_stat_line, game, 'home')
+        player_game = retrieve_single_player_game_stats(home_stat_line, game, 'home')
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
     for road_stat_line in road_stats:
-        player_game = retrieve_single_player_game_stats(
-            road_stat_line, game, 'away')
+        player_game = retrieve_single_player_game_stats(road_stat_line, game, 'away')
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
-    assistants, scorers_5v5 = retrieve_assistants_from_event_data(
-        period_events)
+    assistants, scorers_5v5 = retrieve_assistants_from_event_data(period_events)
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
         # retrieving on-ice statistics
         gsl = retrieve_on_ice_stats(gsl, shots)
         # retrieving actual shots
-        per_player_game_shots = list(filter(
-            lambda d: d['player_id'] == gsl['player_id'], shots))
-        shots_5v5 = list(filter(
-            lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
+        per_player_game_shots = list(filter(lambda d: d['player_id'] == gsl['player_id'], shots))
+        shots_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
         gsl['shots_5v5'] = len(shots_5v5)
-        shots_missed_5v5 = list(filter(
-            lambda d: d['target_type'] == 'missed', shots_5v5))
+        shots_missed_5v5 = list(filter(lambda d: d['target_type'] == 'missed', shots_5v5))
         gsl['shots_missed_5v5'] = len(shots_missed_5v5)
-        shots_on_goal_5v5 = list(filter(
-            lambda d: d['target_type'] == 'on_goal', shots_5v5))
+        shots_on_goal_5v5 = list(filter(lambda d: d['target_type'] == 'on_goal', shots_5v5))
         gsl['shots_on_goal_5v5'] = len(shots_on_goal_5v5)
-        goals_5v5 = list(filter(
-            lambda d: d['scored'] is True, shots_on_goal_5v5))
+        goals_5v5 = list(filter(lambda d: d['scored'] is True, shots_on_goal_5v5))
         gsl['goals_5v5'] = len(goals_5v5)
         gsl['goals_5v5_from_events'] = 0
         if gsl['player_id'] in scorers_5v5:
@@ -319,8 +276,7 @@ def get_single_game_player_data(game, shots):
         # calculating primary points
         gsl['primary_points'] = gsl['goals'] + gsl['primary_assists']
         gsl['points_5v5'] = gsl['goals_5v5_from_events'] + gsl['assists_5v5']
-        gsl['primary_points_5v5'] = (
-            gsl['goals_5v5_from_events'] + gsl['primary_assists_5v5'])
+        gsl['primary_points_5v5'] = gsl['goals_5v5_from_events'] + gsl['primary_assists_5v5']
         # adding penalty information to player's game stat line
         if gsl['player_id'] in penalties:
             single_penalty_dict = penalties[gsl['player_id']]
@@ -330,37 +286,25 @@ def get_single_game_player_data(game, shots):
                 gsl["_%dmin" % l] = single_penalty_dict['durations'].get(l, 0)
             gsl['penalty_shots'] = single_penalty_dict.get('penalty_shots')
             for category in PENALTY_CATEGORIES:
-                gsl[category] = single_penalty_dict['categories'].get(
-                    category, 0)
+                gsl[category] = single_penalty_dict['categories'].get(category, 0)
         # adding linemate information to player's game stat line
         defense_linemates, forward_linemates, line = get_linemates(gsl, game)
         gsl['line'] = line
         gsl['defense'] = defense_linemates
         gsl['forwards'] = forward_linemates
-        for shot_zone in [
-            'slot', 'left', 'right', 'blue_line',
-            'neutral_zone', 'behind_goal'
-        ]:
-            shots_from_zone = list(filter(
-                lambda d: d['shot_zone'] == shot_zone.upper(),
-                per_player_game_shots))
+        for shot_zone in ['slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']:
+            shots_from_zone = list(filter(lambda d: d['shot_zone'] == shot_zone.upper(), per_player_game_shots))
             gsl["%s_shots" % shot_zone] = len(shots_from_zone)
-            missed_from_zone = list(filter(
-                lambda d: d['target_type'] == 'missed',
-                shots_from_zone))
+            missed_from_zone = list(filter(lambda d: d['target_type'] == 'missed', shots_from_zone))
             gsl["%s_missed" % shot_zone] = len(missed_from_zone)
-            blocked_from_zone = list(filter(
-                lambda d: d['target_type'] == 'blocked',
-                shots_from_zone))
+            blocked_from_zone = list(filter(lambda d: d['target_type'] == 'blocked', shots_from_zone))
             gsl["%s_blocked" % shot_zone] = len(blocked_from_zone)
-            shots_on_goal_from_zone = list(filter(
-                lambda d: d['target_type'] == 'on_goal',
-                shots_from_zone))
+            shots_on_goal_from_zone = list(filter(lambda d: d['target_type'] == 'on_goal', shots_from_zone))
             gsl["%s_on_goal" % shot_zone] = len(shots_on_goal_from_zone)
-            goals_from_zone = list(filter(
-                lambda d: d['scored'], shots_on_goal_from_zone))
+            goals_from_zone = list(filter(lambda d: d['scored'], shots_on_goal_from_zone))
             gsl["%s_goals" % shot_zone] = len(goals_from_zone)
 
+        # calculating game scores
         gsl['game_score'] = round(
             0.75 * gsl['goals'] + 0.7 * gsl['primary_assists'] +
             0.55 * gsl['secondary_assists'] + 0.075 * gsl['shots_on_goal'] +
@@ -381,43 +325,26 @@ def retrieve_detailed_faceoff_stats(gsl, faceoffs):
     item.
     """
     per_player_game_faceoffs = list(filter(
-        lambda d:
-            d['winner']['id'] == gsl['player_id'] or
-            d['losser']['id'] == gsl['player_id'], faceoffs))
+        lambda d: d['winner']['id'] == gsl['player_id'] or d['losser']['id'] == gsl['player_id'], faceoffs))
 
     # retrieving and calculating neutral zone faceoff stats
     nzone_faceoffs = list(filter(
-        lambda d:
-            d['positionShortcut'] in ['C', 'ABL', 'ABR', 'HBL', 'HBR'],
-            per_player_game_faceoffs))
+        lambda d: d['positionShortcut'] in ['C', 'ABL', 'ABR', 'HBL', 'HBR'], per_player_game_faceoffs))
     nzone_faceoffs_won = get_won_faceoffs(nzone_faceoffs, gsl['player_id'])
     nzone_faceoffs_lost = len(nzone_faceoffs) - nzone_faceoffs_won
 
     gsl['nzone_faceoffs'] = len(nzone_faceoffs)
     gsl['nzone_faceoffs_won'] = nzone_faceoffs_won
     gsl['nzone_faceoffs_lost'] = nzone_faceoffs_lost
-    gsl['nzone_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(nzone_faceoffs), nzone_faceoffs_won)
+    gsl['nzone_faceoff_pctg'] = calculate_faceoff_percentage(len(nzone_faceoffs), nzone_faceoffs_won)
 
     # retrieving and calculating offensive and defensive zone faceoff stats
     if gsl['home_road'] == 'home':
-        ozone_faceoffs = list(filter(
-            lambda d:
-                d['positionShortcut'] in ['ADL', 'ADR'],
-                per_player_game_faceoffs))
-        dzone_faceoffs = list(filter(
-            lambda d:
-                d['positionShortcut'] in ['HDL', 'HDR'],
-                per_player_game_faceoffs))
+        ozone_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['ADL', 'ADR'], per_player_game_faceoffs))
+        dzone_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'HDR'], per_player_game_faceoffs))
     elif gsl['home_road'] == 'road':
-        ozone_faceoffs = list(filter(
-            lambda d:
-                d['positionShortcut'] in ['HDL', 'HDR'],
-                per_player_game_faceoffs))
-        dzone_faceoffs = list(filter(
-            lambda d:
-                d['positionShortcut'] in ['ADL', 'ADR'],
-                per_player_game_faceoffs))
+        ozone_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'HDR'], per_player_game_faceoffs))
+        dzone_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['ADL', 'ADR'], per_player_game_faceoffs))
 
     ozone_faceoffs_won = get_won_faceoffs(ozone_faceoffs, gsl['player_id'])
     ozone_faceoffs_lost = len(ozone_faceoffs) - ozone_faceoffs_won
@@ -427,96 +354,65 @@ def retrieve_detailed_faceoff_stats(gsl, faceoffs):
     gsl['ozone_faceoffs'] = len(ozone_faceoffs)
     gsl['ozone_faceoffs_won'] = ozone_faceoffs_won
     gsl['ozone_faceoffs_lost'] = ozone_faceoffs_lost
-    gsl['ozone_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(ozone_faceoffs), ozone_faceoffs_won)
+    gsl['ozone_faceoff_pctg'] = calculate_faceoff_percentage(len(ozone_faceoffs), ozone_faceoffs_won)
     gsl['dzone_faceoffs'] = len(dzone_faceoffs)
     gsl['dzone_faceoffs_won'] = dzone_faceoffs_won
     gsl['dzone_faceoffs_lost'] = dzone_faceoffs_lost
-    gsl['dzone_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(dzone_faceoffs), dzone_faceoffs_won)
+    gsl['dzone_faceoff_pctg'] = calculate_faceoff_percentage(len(dzone_faceoffs), dzone_faceoffs_won)
 
     # retrieving and calculating left and right side faceoff stats
     if gsl['home_road'] == 'home':
         left_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'],
-            per_player_game_faceoffs))
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'], per_player_game_faceoffs))
         right_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'],
-            per_player_game_faceoffs))
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'], per_player_game_faceoffs))
     elif gsl['home_road'] == 'road':
         left_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'],
-            per_player_game_faceoffs))
+            lambda d: d['positionShortcut'] in ['HDR', 'ADL', 'HBR', 'ABL'], per_player_game_faceoffs))
         right_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'],
-            per_player_game_faceoffs))
+            lambda d: d['positionShortcut'] in ['HDL', 'ADR', 'HBL', 'ABR'], per_player_game_faceoffs))
 
-    left_side_faceoffs_won = get_won_faceoffs(
-        left_side_faceoffs, gsl['player_id'])
+    left_side_faceoffs_won = get_won_faceoffs(left_side_faceoffs, gsl['player_id'])
     left_side_faceoffs_lost = len(left_side_faceoffs) - left_side_faceoffs_won
-    right_side_faceoffs_won = get_won_faceoffs(
-        right_side_faceoffs, gsl['player_id'])
-    right_side_faceoffs_lost = (
-        len(right_side_faceoffs) - right_side_faceoffs_won)
+    right_side_faceoffs_won = get_won_faceoffs(right_side_faceoffs, gsl['player_id'])
+    right_side_faceoffs_lost = len(right_side_faceoffs) - right_side_faceoffs_won
 
     gsl['left_side_faceoffs'] = len(left_side_faceoffs)
     gsl['left_side_faceoffs_won'] = left_side_faceoffs_won
     gsl['left_side_faceoffs_lost'] = left_side_faceoffs_lost
-    gsl['left_side_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(left_side_faceoffs), left_side_faceoffs_won)
+    gsl['left_side_faceoff_pctg'] = calculate_faceoff_percentage(len(left_side_faceoffs), left_side_faceoffs_won)
     gsl['right_side_faceoffs'] = len(right_side_faceoffs)
     gsl['right_side_faceoffs_won'] = right_side_faceoffs_won
     gsl['right_side_faceoffs_lost'] = right_side_faceoffs_lost
-    gsl['right_side_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(right_side_faceoffs), right_side_faceoffs_won)
+    gsl['right_side_faceoff_pctg'] = calculate_faceoff_percentage(len(right_side_faceoffs), right_side_faceoffs_won)
 
     # retrieving and calculating strong and weak side faceoff stats
     if gsl['home_road'] == 'home' and gsl['shoots'] == 'left':
-        weak_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
-            per_player_game_faceoffs))
-        strong_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
-            per_player_game_faceoffs))
+        weak_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDR', 'ADL'], per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'ADR'], per_player_game_faceoffs))
     elif gsl['home_road'] == 'home' and gsl['shoots'] == 'right':
-        weak_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
-            per_player_game_faceoffs))
-        strong_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
-            per_player_game_faceoffs))
+        weak_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'ADR'], per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDR', 'ADL'], per_player_game_faceoffs))
     elif gsl['home_road'] == 'road' and gsl['shoots'] == 'left':
-        weak_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
-            per_player_game_faceoffs))
-        strong_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
-            per_player_game_faceoffs))
+        weak_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'ADR'], per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDR', 'ADL'], per_player_game_faceoffs))
     elif gsl['home_road'] == 'road' and gsl['shoots'] == 'right':
-        weak_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDR', 'ADL'],
-            per_player_game_faceoffs))
-        strong_side_faceoffs = list(filter(
-            lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
-            per_player_game_faceoffs))
+        weak_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDR', 'ADL'], per_player_game_faceoffs))
+        strong_side_faceoffs = list(filter(lambda d: d['positionShortcut'] in ['HDL', 'ADR'], per_player_game_faceoffs))
 
-    wside_faceoffs_won = get_won_faceoffs(
-        weak_side_faceoffs, gsl['player_id'])
+    wside_faceoffs_won = get_won_faceoffs(weak_side_faceoffs, gsl['player_id'])
     wside_faceoffs_lost = len(weak_side_faceoffs) - wside_faceoffs_won
-    sside_faceoffs_won = get_won_faceoffs(
-        strong_side_faceoffs, gsl['player_id'])
+    sside_faceoffs_won = get_won_faceoffs(strong_side_faceoffs, gsl['player_id'])
     sside_faceoffs_lost = len(strong_side_faceoffs) - sside_faceoffs_won
 
     gsl['weak_side_faceoffs'] = len(weak_side_faceoffs)
     gsl['weak_side_faceoffs_won'] = wside_faceoffs_won
     gsl['weak_side_faceoffs_lost'] = wside_faceoffs_lost
-    gsl['weak_side_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(weak_side_faceoffs), wside_faceoffs_won)
+    gsl['weak_side_faceoff_pctg'] = calculate_faceoff_percentage(len(weak_side_faceoffs), wside_faceoffs_won)
     gsl['strong_side_faceoffs'] = len(strong_side_faceoffs)
     gsl['strong_side_faceoffs_won'] = sside_faceoffs_won
     gsl['strong_side_faceoffs_lost'] = sside_faceoffs_lost
-    gsl['strong_side_faceoff_pctg'] = calculate_faceoff_percentage(
-        len(strong_side_faceoffs), sside_faceoffs_won)
+    gsl['strong_side_faceoff_pctg'] = calculate_faceoff_percentage(len(strong_side_faceoffs), sside_faceoffs_won)
 
     return gsl
 
@@ -525,8 +421,7 @@ def get_won_faceoffs(list_of_faceoffs, player_id):
     """
     Retrieves number of faceoffs in specified list won by player with given id.
     """
-    return len(list(
-        filter(lambda d: d['winner']['id'] == player_id, list_of_faceoffs)))
+    return len(list(filter(lambda d: d['winner']['id'] == player_id, list_of_faceoffs)))
 
 
 def calculate_faceoff_percentage(all_faceoffs, faceoffs_won):
@@ -568,8 +463,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     # setting u23 status
     if (
         single_player_game['country'] == 'GER' and
-        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATES[
-            game['season']]
+        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATES[game['season']]
     ):
         single_player_game['u23'] = True
     else:
@@ -613,8 +507,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['pim'] = stat_dict['penaltyMinutes']
     single_player_game['plus'] = stat_dict['positive']
     single_player_game['minus'] = stat_dict['negative']
-    single_player_game['plus_minus'] = (
-        stat_dict['positive'] - stat_dict['negative'])
+    single_player_game['plus_minus'] = stat_dict['positive'] - stat_dict['negative']
     single_player_game['pp_goals'] = stat_dict['ppGoals']
     single_player_game['pp_assists'] = 0
     single_player_game['pp_primary_assists'] = 0
@@ -636,8 +529,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['faceoffs_lost'] = stat_dict['faceoffsLosses']
     if single_player_game['faceoffs']:
         single_player_game['faceoff_pctg'] = round(
-            single_player_game['faceoffs_won'] /
-            single_player_game['faceoffs'] * 100., 3)
+            single_player_game['faceoffs_won'] / single_player_game['faceoffs'] * 100., 3)
     else:
         single_player_game['faceoff_pctg'] = 0
     single_player_game['blocked_shots'] = stat_dict['blockedShotsByPlayer']
@@ -646,9 +538,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['time_on_ice_sh'] = stat_dict['timeOnIceSH']
     single_player_game['shifts'] = stat_dict['shifts']
     if single_player_game['shifts']:
-        single_player_game['toi_per_shift'] = round(
-            single_player_game['time_on_ice'] / single_player_game['shifts'], 2
-        )
+        single_player_game['toi_per_shift'] = round(single_player_game['time_on_ice'] / single_player_game['shifts'], 2)
     else:
         single_player_game['toi_per_shift'] = 0.
     single_player_game['penalties'] = 0
@@ -751,13 +641,10 @@ def retrieve_penalties_from_event_data(period_events):
             penalties_dict[plr_id]['durations'][pim] += 1
 
             if infraction not in REVERSE_PENALTY_CATEGORIES:
-                print(
-                    "Previously unknown infraction '%s' " % infraction +
-                    "discovered. Added to 'other' category.")
+                print("Previously unknown infraction '%s' " % infraction + "discovered. Added to 'other' category.")
                 penalties_dict[plr_id]['categories']['other'] += 1
             else:
-                penalties_dict[plr_id]['categories'][
-                    REVERSE_PENALTY_CATEGORIES[infraction]] += 1
+                penalties_dict[plr_id]['categories'][REVERSE_PENALTY_CATEGORIES[infraction]] += 1
 
             if event['data']['shooting']:
                 penalties_dict[plr_id]['penalty_shots'] += 1
@@ -807,19 +694,15 @@ def get_linemates(game_stat_line, game):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Download DEL player game statistics.')
+    parser = argparse.ArgumentParser(description='Download DEL player game statistics.')
     parser.add_argument(
-        '--initial', dest='initial', required=False,
-        action='store_true', help='Re-create list of player games')
+        '--initial', dest='initial', required=False, action='store_true', help='Re-create list of player games')
     parser.add_argument(
-        '--limit', dest='limit', required=False, type=int, default=0,
-        help='Number of maximum games to be processed')
+        '--limit', dest='limit', required=False, type=int, default=0, help='Number of maximum games to be processed')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process games for',
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False,
+        metavar='season to process games for', help="The season information will be processed for",
+        default=2020, type=int, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
 
@@ -863,18 +746,15 @@ if __name__ == '__main__':
             continue
 
         # retrieving shots for current game
-        game_shots = list(
-            filter(lambda d: d['game_id'] == game['game_id'], shots))
+        game_shots = list(filter(lambda d: d['game_id'] == game['game_id'], shots))
 
         print("+ Retrieving player stats for game %s" % get_game_info(game))
-        single_player_game_stats = get_single_game_player_data(
-            game, game_shots)
+        single_player_game_stats = get_single_game_player_data(game, game_shots)
         player_game_stats.extend(single_player_game_stats)
 
         # collecting stat lines on a per-player basis
         for stat_line in single_player_game_stats:
-            per_player_game_stats[
-                (stat_line['player_id'], stat_line['team'])].append(stat_line)
+            per_player_game_stats[(stat_line['player_id'], stat_line['team'])].append(stat_line)
 
         if limit and cnt >= limit:
             break
@@ -889,16 +769,13 @@ if __name__ == '__main__':
     tgt_csv_path = tgt_path.replace(".json", ".csv")
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
-        dict_writer = csv.DictWriter(
-            output_file, OUT_FIELDS, delimiter=';', lineterminator='\n',
-            extrasaction='ignore')
+        dict_writer = csv.DictWriter(output_file, OUT_FIELDS, delimiter=';', lineterminator='\n', extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(player_game_stats)
 
     # dumping individual player game stats
     for player_id, team in per_player_game_stats:
-        tgt_path = os.path.join(
-            tgt_dir, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
+        tgt_path = os.path.join(tgt_dir, PER_PLAYER_TGT_DIR, "%s_%d.json" % (team, player_id))
 
         output = per_player_game_stats[(player_id, team)]
         # optionally adding output to already existing data

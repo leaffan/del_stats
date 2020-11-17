@@ -16,8 +16,7 @@ from dateutil.relativedelta import relativedelta
 from utils import get_season, get_team_from_game
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 # TODO: decide whether to put the following stuff into external configuration
 PLAYOFF_DATES = {
@@ -52,9 +51,7 @@ def get_games_for_date(date, existing_games=None):
     registered_game_ids = [g['game_id'] for g in games]
 
     # retrieving full league schedule for current season
-    schedules_src_path = os.path.join(
-        CONFIG['tgt_processing_dir'],
-        str(get_season(date)), 'full_schedule.json')
+    schedules_src_path = os.path.join(CONFIG['tgt_processing_dir'], str(get_season(date)), 'full_schedule.json')
     schedules = json.loads(open(schedules_src_path).read())
 
     game_ids_rounds = list()
@@ -66,13 +63,11 @@ def get_games_for_date(date, existing_games=None):
         except ValueError:
             # TODO: think of something more clever than iterating over all
             # fixtures each day
-            # print("+ Unable to parse game start date %s" % schedule[
-            #     'start_date'])
+            # print("+ Unable to parse game start date %s" % schedule[start_date'])
             continue
         # comparing start date of game with current date
         if start_date == game_date and schedule['status'] == 'AFTER_MATCH':
-            game_ids_rounds.append(
-                (schedule['game_id'], int(schedule['round'].split()[-1])))
+            game_ids_rounds.append((schedule['game_id'], int(schedule['round'].split()[-1])))
 
     for game_id, round in game_ids_rounds:
         if game_id in registered_game_ids:
@@ -105,8 +100,7 @@ def get_games_for_date(date, existing_games=None):
         # retrieving game details
         if 'game_id' in single_game_data:
             try:
-                single_game_details = get_single_game_details(
-                    game_id, season, game_type)
+                single_game_details = get_single_game_details(game_id, season, game_type)
             except Exception:
                 import traceback
                 traceback.print_exc()
@@ -118,15 +112,11 @@ def get_games_for_date(date, existing_games=None):
         # retrieving game events
         single_game_events = get_game_events(game_id, season, game_type)
 
-        single_game_data = {
-            **single_game_data, **single_game_details,
-            **single_game_rosters, **single_game_events
-        }
+        # combining different game data dictionaries
+        single_game_data = {**single_game_data, **single_game_details, **single_game_rosters, **single_game_events}
 
-        single_game_data['first_goal'] = get_team_from_game(
-            single_game_data, single_game_data['first_goal'])
-        single_game_data['gw_goal'] = get_team_from_game(
-            single_game_data, single_game_data['gw_goal'])
+        single_game_data['first_goal'] = get_team_from_game(single_game_data, single_game_data['first_goal'])
+        single_game_data['gw_goal'] = get_team_from_game(single_game_data, single_game_data['gw_goal'])
 
         print("\t+ %s (%d) vs. %s (%d)" % (
             single_game_data['home_team'], single_game_data['home_score'],
@@ -143,8 +133,7 @@ def get_single_game_details(game_id, season, game_type):
     Gets game details for a single game with the specified id.
     """
     game_detail_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'game_info',
-        str(season), str(game_type), "%d.json" % game_id)
+        CONFIG['base_data_dir'], 'game_info', str(season), str(game_type), "%d.json" % game_id)
     game_details = json.loads(open(game_detail_src_path).read())
 
     single_game_data = dict()
@@ -155,125 +144,94 @@ def get_single_game_details(game_id, season, game_type):
         single_game_data['arena'] = 'Sportforum Berlin'
     single_game_data['attendance'] = game_details['numberOfViewers']
 
+    # retrieving basic team information and coaching details
     single_game_data['home_id'] = game_details['teamInfo']['home']['id']
     single_game_data['home_team'] = game_details['teamInfo']['home']['name']
-    single_game_data['home_abbr'] = game_details[
-        'teamInfo']['home']['shortcut']
+    single_game_data['home_abbr'] = game_details['teamInfo']['home']['shortcut']
     if game_details['trainers']:
         if 'homeHeadCoach' in game_details['trainers']:
             if type(game_details['trainers']['homeHeadCoach']) is str:
-                single_game_data['home_coach'] = game_details[
-                    'trainers']['homeHeadCoach']
+                single_game_data['home_coach'] = game_details['trainers']['homeHeadCoach']
             else:
-                single_game_data['home_coach_id'] = game_details[
-                    'trainers']['homeHeadCoach']['id']
-                single_game_data['home_coach'] = game_details[
-                    'trainers']['homeHeadCoach']['name']
+                single_game_data['home_coach_id'] = game_details['trainers']['homeHeadCoach']['id']
+                single_game_data['home_coach'] = game_details['trainers']['homeHeadCoach']['name']
     single_game_data['road_id'] = game_details['teamInfo']['visitor']['id']
     single_game_data['road_team'] = game_details['teamInfo']['visitor']['name']
-    single_game_data['road_abbr'] = game_details[
-        'teamInfo']['visitor']['shortcut']
+    single_game_data['road_abbr'] = game_details['teamInfo']['visitor']['shortcut']
     if game_details['trainers']:
         if 'visitorHeadCoach' in game_details['trainers']:
             if type(game_details['trainers']['visitorHeadCoach']) is str:
-                single_game_data['road_coach'] = game_details[
-                    'trainers']['visitorHeadCoach']
+                single_game_data['road_coach'] = game_details['trainers']['visitorHeadCoach']
             else:
-                single_game_data['road_coach_id'] = game_details[
-                    'trainers']['visitorHeadCoach']['id']
-                single_game_data['road_coach'] = game_details[
-                    'trainers']['visitorHeadCoach']['name']
+                single_game_data['road_coach_id'] = game_details['trainers']['visitorHeadCoach']['id']
+                single_game_data['road_coach'] = game_details['trainers']['visitorHeadCoach']['name']
 
-    single_game_data['home_score'] = game_details[
-        'results']['score']['final']['score_home']
-    single_game_data['road_score'] = game_details[
-        'results']['score']['final']['score_guest']
+    # retrieving score and goals
+    single_game_data['home_score'] = game_details['results']['score']['final']['score_home']
+    single_game_data['road_score'] = game_details['results']['score']['final']['score_guest']
 
-    single_game_data['home_goals_1'] = game_details[
-        'results']['score']['first_period']['score_home']
-    single_game_data['road_goals_1'] = game_details[
-        'results']['score']['first_period']['score_guest']
-    single_game_data['home_goals_2'] = game_details[
-        'results']['score']['second_period']['score_home']
-    single_game_data['road_goals_2'] = game_details[
-        'results']['score']['second_period']['score_guest']
-    single_game_data['home_goals_3'] = game_details[
-        'results']['score']['third_period']['score_home']
-    single_game_data['road_goals_3'] = game_details[
-        'results']['score']['third_period']['score_guest']
+    single_game_data['home_goals_1'] = game_details['results']['score']['first_period']['score_home']
+    single_game_data['road_goals_1'] = game_details['results']['score']['first_period']['score_guest']
+    single_game_data['home_goals_2'] = game_details['results']['score']['second_period']['score_home']
+    single_game_data['road_goals_2'] = game_details['results']['score']['second_period']['score_guest']
+    single_game_data['home_goals_3'] = game_details['results']['score']['third_period']['score_home']
+    single_game_data['road_goals_3'] = game_details['results']['score']['third_period']['score_guest']
 
+    # determining overtime and shootout status
     single_game_data['overtime_game'] = False
     single_game_data['shootout_game'] = False
-
-    if (sum([
-        single_game_data['home_goals_1'],
-        single_game_data['home_goals_2'],
-        single_game_data['home_goals_3']
-    ]) != single_game_data['home_score']) or (sum([
-        single_game_data['road_goals_1'],
-        single_game_data['road_goals_2'],
-        single_game_data['road_goals_3']
-    ]) != single_game_data['road_score']):
+    if (
+        sum([single_game_data['home_goals_1'], single_game_data['home_goals_2'], single_game_data['home_goals_3']]) !=
+        single_game_data['home_score']
+    ) or (
+        sum([single_game_data['road_goals_1'], single_game_data['road_goals_2'], single_game_data['road_goals_3']]) !=
+        single_game_data['road_score']
+    ):
         if game_details['results']['extra_time']:
             single_game_data['overtime_game'] = True
         if game_details['results']['shooting']:
             single_game_data['shootout_game'] = True
 
+    # retrieving refereeing information
     if type(game_details['referees']['headReferee1']) is str:
-        single_game_data['referee_1'] = game_details[
-            'referees']['headReferee1']
+        single_game_data['referee_1'] = game_details['referees']['headReferee1']
     else:
-        single_game_data['referee_1_id'] = game_details[
-            'referees']['headReferee1']['id']
-        single_game_data['referee_1'] = game_details[
-            'referees']['headReferee1']['name']
+        single_game_data['referee_1_id'] = game_details['referees']['headReferee1']['id']
+        single_game_data['referee_1'] = game_details['referees']['headReferee1']['name']
     if type(game_details['referees']['headReferee2']) is str:
-        single_game_data['referee_2'] = game_details[
-            'referees']['headReferee2']
+        single_game_data['referee_2'] = game_details['referees']['headReferee2']
     else:
-        single_game_data['referee_2_id'] = game_details[
-            'referees']['headReferee2']['id']
-        single_game_data['referee_2'] = game_details[
-            'referees']['headReferee2']['name']
+        single_game_data['referee_2_id'] = game_details['referees']['headReferee2']['id']
+        single_game_data['referee_2'] = game_details['referees']['headReferee2']['name']
     if type(game_details['referees']['lineReferee1']) is str:
-        single_game_data['linesman_1'] = game_details[
-            'referees']['lineReferee1']
+        single_game_data['linesman_1'] = game_details['referees']['lineReferee1']
     else:
-        single_game_data['linesman_1_id'] = game_details[
-            'referees']['lineReferee1']['id']
-        single_game_data['linesman_1'] = game_details[
-            'referees']['lineReferee1']['name']
+        single_game_data['linesman_1_id'] = game_details['referees']['lineReferee1']['id']
+        single_game_data['linesman_1'] = game_details['referees']['lineReferee1']['name']
     if type(game_details['referees']['lineReferee2']) is str:
-        single_game_data['linesman_2'] = game_details[
-            'referees']['lineReferee2']
+        single_game_data['linesman_2'] = game_details['referees']['lineReferee2']
     else:
-        single_game_data['linesman_2_id'] = game_details[
-            'referees']['lineReferee2']['id']
-        single_game_data['linesman_2'] = game_details[
-            'referees']['lineReferee2']['name']
+        single_game_data['linesman_2_id'] = game_details['referees']['lineReferee2']['id']
+        single_game_data['linesman_2'] = game_details['referees']['lineReferee2']['name']
 
+    # retrieving *best* players of the game
     if 'bestPlayers' in game_details:
-        single_game_data['home_best_player_id'] = game_details[
-            'bestPlayers']['home']['id']
-        single_game_data['home_best_player'] = game_details[
-            'bestPlayers']['home']['name']
-        single_game_data['road_best_player_id'] = game_details[
-            'bestPlayers']['visitor']['id']
-        single_game_data['road_best_player'] = game_details[
-            'bestPlayers']['visitor']['name']
+        single_game_data['home_best_player_id'] = game_details['bestPlayers']['home']['id']
+        single_game_data['home_best_player'] = game_details['bestPlayers']['home']['name']
+        single_game_data['road_best_player_id'] = game_details['bestPlayers']['visitor']['id']
+        single_game_data['road_best_player'] = game_details['bestPlayers']['visitor']['name']
 
     return single_game_data
 
 
 def get_game_rosters(game_id, season, game_type):
     """
-    Retrieves rosters for all teams in game with the specified game id.
+    Retrieves starting rosters for all teams in game with the specified game id.
     """
     roster_data = defaultdict(list)
 
     game_roster_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'game_roster',
-        str(season), str(game_type), "%d.json" % game_id)
+        CONFIG['base_data_dir'], 'game_roster', str(season), str(game_type), "%d.json" % game_id)
     if not os.path.isfile(game_roster_src_path):
         return roster_data
 
@@ -292,8 +250,7 @@ def get_game_rosters(game_id, season, game_type):
             if pos == 'G':
                 line = clr
             # setting up target key
-            tgt_key = ("%s_%s%s" % (
-                home_road_key.replace('visitor', 'road'), pos, line)).lower()
+            tgt_key = ("%s_%s%s" % (home_road_key.replace('visitor', 'road'), pos, line)).lower()
             collected_tgt_keys.add(tgt_key)
             # appending a dummy player id if necessary, e.g. for fourth
             # defensive pairs only consisting of a right defenseman
@@ -330,8 +287,7 @@ def get_game_events(game_id, season, game_type):
     Register game events for current game from separate data source.
     """
     game_events_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'game_events',
-        str(season), str(game_type), "%d.json" % game_id)
+        CONFIG['base_data_dir'], 'game_events', str(season), str(game_type), "%d.json" % game_id)
     game_events = json.loads(open(game_events_src_path).read())
 
     single_game_events = dict()
@@ -356,8 +312,7 @@ def get_game_events(game_id, season, game_type):
                 home_road = event['data']['team'].replace('visitor', 'road')
                 goals_per_team[home_road].append(event)
                 # calculating timespan of previous score state
-                score_state, timespan = get_time_tied_leading_trailing(
-                    event, current_score, last_goal_time)
+                score_state, timespan = get_time_tied_leading_trailing(event, current_score, last_goal_time)
                 tied_leading_trailing[score_state] += timespan
                 # re-setting helper variables for score state time retrieval
                 # setting time of previous goal to current time
@@ -368,8 +323,7 @@ def get_game_events(game_id, season, game_type):
     else:
         # calculating timespan of score state between last goal scored in game
         # and end of game
-        score_state, timespan = get_time_tied_leading_trailing(
-            event, current_score, last_goal_time)
+        score_state, timespan = get_time_tied_leading_trailing(event, current_score, last_goal_time)
         tied_leading_trailing[score_state] += timespan
 
         # finally storing score state timespans
@@ -384,15 +338,12 @@ def get_game_events(game_id, season, game_type):
     # making sure the goals are sorted by time
     first_goal = sorted(all_goals, key=lambda d: d['time'])[0]
 
-    single_game_events['first_goal'] = first_goal[
-        'data']['team'].replace('visitor', 'road')
+    # storing first goal information
+    single_game_events['first_goal'] = first_goal['data']['team'].replace('visitor', 'road')
     single_game_events['first_goal_time'] = first_goal['time']
-    single_game_events['first_goal_player_id'] = first_goal[
-        'data']['scorer']['playerId']
-    single_game_events['first_goal_first_name'] = first_goal[
-        'data']['scorer']['name']
-    single_game_events['first_goal_last_name'] = first_goal[
-        'data']['scorer']['surname']
+    single_game_events['first_goal_player_id'] = first_goal['data']['scorer']['playerId']
+    single_game_events['first_goal_first_name'] = first_goal['data']['scorer']['name']
+    single_game_events['first_goal_last_name'] = first_goal['data']['scorer']['surname']
 
     # retrieving game-winning goal
     if len(goals_per_team['home']) > len(goals_per_team['road']):
@@ -400,15 +351,12 @@ def get_game_events(game_id, season, game_type):
     else:
         winning_goal = goals_per_team['road'][len(goals_per_team['home'])]
 
-    single_game_events['gw_goal'] = winning_goal[
-        'data']['team'].replace('visitor', 'road')
+    # storing winning goal information
+    single_game_events['gw_goal'] = winning_goal['data']['team'].replace('visitor', 'road')
     single_game_events['gw_goal_time'] = winning_goal['time']
-    single_game_events['gw_goal_player_id'] = winning_goal[
-        'data']['scorer']['playerId']
-    single_game_events['gw_goal_first_name'] = winning_goal[
-        'data']['scorer']['name']
-    single_game_events['gw_goal_last_name'] = winning_goal[
-        'data']['scorer']['surname']
+    single_game_events['gw_goal_player_id'] = winning_goal['data']['scorer']['playerId']
+    single_game_events['gw_goal_first_name'] = winning_goal['data']['scorer']['name']
+    single_game_events['gw_goal_last_name'] = winning_goal['data']['scorer']['surname']
 
     # counting empty net and extra attacker goals per team
     for key in ['home', 'road']:
@@ -426,31 +374,24 @@ def get_game_events(game_id, season, game_type):
                     continue
                 extra_attacker_goals_per_team[key] += 1
         else:
-            single_game_events[
-                "%s_en_goals" % key] = empty_net_goals_per_team[key]
-            single_game_events[
-                "%s_ea_goals" % key] = extra_attacker_goals_per_team[key]
+            single_game_events["%s_en_goals" % key] = empty_net_goals_per_team[key]
+            single_game_events["%s_ea_goals" % key] = extra_attacker_goals_per_team[key]
 
     return single_game_events
 
 
 if __name__ == '__main__':
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Process DEL game information.')
+    parser = argparse.ArgumentParser(description='Process DEL game information.')
     parser.add_argument(
         '-f', '--from', dest='from_date', required=False,
-        metavar='first date to process games for',
-        help="The first date information will be processed for")
+        metavar='first date to process games for', help="The first date information will be processed for")
     parser.add_argument(
         '-t', '--to', dest='to_date', required=False,
-        metavar='last date to process games for',
-        help="The last date information will be processed for")
+        metavar='last date to process games for', help="The last date information will be processed for")
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process games for',
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False, default=2020, type=int, choices=[2016, 2017, 2018, 2019, 2020],
+        metavar='season to process games for', help="The season information will be processed for")
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of games')
@@ -502,5 +443,4 @@ if __name__ == '__main__':
     for game_date in game_dates:
         games = get_games_for_date(game_date, games)
 
-    open(tgt_path, 'w').write(
-        json.dumps(games, indent=2, default=str))
+    open(tgt_path, 'w').write(json.dumps(games, indent=2, default=str))

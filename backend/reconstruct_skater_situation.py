@@ -13,16 +13,13 @@ import intervaltree
 from utils import get_game_info, get_game_type_from_season_type, get_home_road
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 
 # named tuples to define various items
-GoalieChange = namedtuple(
-    'GoalieChange', ['time', 'team', 'home_road', 'type', 'player_id'])
-GoalieShift = namedtuple(
-    'GoalieShift', ['player_id', 'team', 'home_road', 'from_time', 'to_time'])
+GoalieChange = namedtuple('GoalieChange', ['time', 'team', 'home_road', 'type', 'player_id'])
+GoalieShift = namedtuple('GoalieShift', ['player_id', 'team', 'home_road', 'from_time', 'to_time'])
 Penalty = namedtuple('Penalty', [
     'id', 'player_id', 'surname', 'team', 'home_road', 'infraction',
     'duration', 'from_time', 'to_time', 'create_time', 'actual_duration'])
@@ -59,10 +56,7 @@ def build_interval_tree(game):
             event_type = event['type']
 
             # adding time of overtime end to list of period end times
-            if (
-                period == 'overtime' and (
-                    event_type == 'periodEnd' or event_type == 'goal')
-            ):
+            if period == 'overtime' and (event_type == 'periodEnd' or event_type == 'goal'):
                 end_period_times.append(event['time'])
 
             # adding time of goal to list of times a goal has been scored
@@ -85,11 +79,9 @@ def build_interval_tree(game):
         player_id = goalie_changes[home_road][-1].player_id
         if goalie_changes[home_road][-1].type == 'goalie_in':
             goalie_changes[home_road].append(
-                GoalieChange(
-                    # using the maximum time from all period end times as
-                    # time of game end
-                    max(end_period_times), event_team,
-                    home_road, 'goalie_out', player_id))
+                # using the maximum time from all period end times as
+                # time of game end
+                GoalieChange(max(end_period_times), event_team, home_road, 'goalie_out', player_id))
 
     # creating actual goalie shifts from registered goalie changes
     create_goalie_shifts(goalie_changes, game, it)
@@ -119,8 +111,7 @@ def create_goalie_shifts(goalie_changes, game, interval_tree):
                 home_road, goalie_in_change.time, goalie_out_change.time)
 
             # adding goalie shift to interval tree
-            interval_tree.addi(
-                -goalie_out_change.time, -goalie_in_change.time, goalie_shift)
+            interval_tree.addi(-goalie_out_change.time, -goalie_in_change.time, goalie_shift)
 
 
 def register_goalie_change(event, game, goalie_changes):
@@ -147,8 +138,7 @@ def register_goalie_change(event, game, goalie_changes):
 
     for change_type, player_id in zip(changes, players):
         # setting up goalie change item
-        goalie_change = GoalieChange(
-            event_time, event_team, home_road, change_type, player_id)
+        goalie_change = GoalieChange(event_time, event_team, home_road, change_type, player_id)
         # adding goalie change to list of goalie changes for current team
         goalie_changes[home_road].append(goalie_change)
 
@@ -160,10 +150,7 @@ def create_penalty_interval(event, game, interval_tree):
     # retrieving team taking the penalty (including home/road indicator)
     event_team, home_road = get_home_road(game, event)
     # retrieving penalized player
-    if (
-        event['data']['disciplinedPlayer'] and
-        'playerId' in event['data']['disciplinedPlayer']
-    ):
+    if event['data']['disciplinedPlayer'] and 'playerId' in event['data']['disciplinedPlayer']:
         penalty_player_id = event['data']['disciplinedPlayer']['playerId']
         penalty_player = event['data']['disciplinedPlayer']['surname']
     else:
@@ -192,8 +179,7 @@ def create_penalty_interval(event, game, interval_tree):
         # creating penalty item
         penalty = Penalty(
             id, penalty_player_id, penalty_player, event_team, home_road,
-            infraction, duration, penalty_start, penalty_end,
-            create_time, actual_duration)
+            infraction, duration, penalty_start, penalty_end, create_time, actual_duration)
         # using dummy times for penalties that effectively start at the end of
         # the game
         if penalty_end == penalty_start and penalty_start >= 3600:
@@ -211,9 +197,7 @@ def reconstruct_skater_situation(game, verbose=False):
     """
     Reconstruct skater on-ice situation for specified game.
     """
-    print(
-        "+ Reconstructing on-ice skater situation for " +
-        "game %s" % get_game_info(game))
+    print("+ Reconstructing on-ice skater situation for game %s" % get_game_info(game))
 
     # building interval tree to query goalies and player situations
     # receiving a list of times when goals has been scored
@@ -259,8 +243,7 @@ def reconstruct_skater_situation(game, verbose=False):
         # adjusting skater counts accordingly
         in_ot = adjust_skater_count_in_overtime(game, t, skr_count)
         # adjusting skater counts according to the goaltenders currently on ice
-        current_goalies = adjust_skater_counts_for_goalies(
-            t, goalies_on_ice, curr_goalie_delta)
+        current_goalies = adjust_skater_counts_for_goalies(t, goalies_on_ice, curr_goalie_delta)
 
         if t in goal_times and verbose:
             print("--> Goal: %d:%02d" % (t // 60, t % 60))
@@ -277,12 +260,9 @@ def reconstruct_skater_situation(game, verbose=False):
             if verbose:
                 print("--> %d:%02d (%d)" % (t // 60, t % 60, t))
             # retaining only penalty intervals
-            penalty_intervals = list(filter(lambda item: (
-                isinstance(item.data, Penalty)), current_intervals))
+            penalty_intervals = list(filter(lambda item: (isinstance(item.data, Penalty)), current_intervals))
             # collecting currently on-going penalties by team
-            for pi in sorted(
-                penalty_intervals, key=lambda interval: interval.data.from_time
-            ):
+            for pi in sorted(penalty_intervals, key=lambda interval: interval.data.from_time):
                 penalty = pi.data
                 if penalty.duration in (120, 300):
                     if verbose:

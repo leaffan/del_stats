@@ -14,8 +14,7 @@ from utils import get_game_info, get_game_type_from_season_type
 from utils import name_corrections, coaches, capacities
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
@@ -105,33 +104,25 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         if game_stat_line['arena'] in capacities:
             game_stat_line['capacity'] = capacities[game_stat_line['arena']]
         else:
-            print(
-                "\t+ Unable to retrieve capacity " +
-                "for '%s'" % game_stat_line['arena'])
+            print("\t+ Unable to retrieve capacity for '%s'" % game_stat_line['arena'])
             game_stat_line['capacity'] = 0
         # coaches and referees
         if "%s_coach" % key in game:
-            game_stat_line['coach'] = correct_name(
-                game["%s_coach" % key], game['date'])
+            game_stat_line['coach'] = correct_name(game["%s_coach" % key], game['date'])
             if game_stat_line['coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['coach'])
         else:
-            print("\t+ No coach information found for %s in game %d" % (
-                game_stat_line['team'], game_id))
-            game_stat_line['coach'] = correct_name(
-                "%d_%s" % (game_id, game_stat_line['team']))
+            print("\t+ No coach information found for %s in game %d" % (game_stat_line['team'], game_id))
+            game_stat_line['coach'] = correct_name("%d_%s" % (game_id, game_stat_line['team']))
             print("\t+ Adjusted to '%s'" % game_stat_line['coach'])
         if "%s_coach" % opp_key in game:
-            game_stat_line['opp_coach'] = correct_name(
-                game["%s_coach" % opp_key], game['date'])
+            game_stat_line['opp_coach'] = correct_name(game["%s_coach" % opp_key], game['date'])
             if game_stat_line['opp_coach'] not in coaches:
                 print("+ Unknown coach '%s'" % game_stat_line['opp_coach'])
         else:
             print(
-                "\t+ No opposition coach information found " +
-                "for %s in game %d" % (game_stat_line['opp_team'], game_id))
-            game_stat_line['opp_coach'] = correct_name(
-                "%d_%s" % (game_id, game_stat_line['opp_team']))
+                "\t+ No opposition coach information found for %s in game %d" % (game_stat_line['opp_team'], game_id))
+            game_stat_line['opp_coach'] = correct_name("%d_%s" % (game_id, game_stat_line['opp_team']))
             print("\t+ Adjusted to '%s'" % game_stat_line['opp_coach'])
         game_stat_line['ref_1'] = correct_name(game['referee_1'])
         game_stat_line['ref_2'] = correct_name(game['referee_2'])
@@ -176,19 +167,15 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             game_stat_line['ol'] * 1)
         # per-period goals
         for period in [1, 2, 3]:
-            game_stat_line["goals_%d" % period] = game[
-                "%s_goals_%d" % (key, period)]
-            game_stat_line["opp_goals_%d" % period] = game[
-                "%s_goals_%d" % (opp_key, period)]
+            game_stat_line["goals_%d" % period] = game["%s_goals_%d" % (key, period)]
+            game_stat_line["opp_goals_%d" % period] = game["%s_goals_%d" % (opp_key, period)]
         # empty-net and extra-attacker goals
         game_stat_line['en_goals'] = game["%s_en_goals" % key]
         game_stat_line['ea_goals'] = game["%s_ea_goals" % key]
         game_stat_line['opp_en_goals'] = game["%s_en_goals" % opp_key]
         game_stat_line['opp_ea_goals'] = game["%s_ea_goals" % opp_key]
         # situation after 20 and 40 minutes respectively
-        for situation in [
-            'tied20', 'lead20', 'trail20', 'tied40', 'lead40', 'trail40'
-        ]:
+        for situation in ['tied20', 'lead20', 'trail20', 'tied40', 'lead40', 'trail40']:
             game_stat_line[situation] = False
         if game_stat_line['goals_1'] == game_stat_line['opp_goals_1']:
             game_stat_line['tied20'] = True
@@ -197,8 +184,7 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         else:
             game_stat_line['trail20'] = True
         goals40 = game_stat_line['goals_1'] + game_stat_line['goals_2']
-        opp_goals40 = (
-            game_stat_line['opp_goals_1'] + game_stat_line['opp_goals_2'])
+        opp_goals40 = game_stat_line['opp_goals_1'] + game_stat_line['opp_goals_2']
         if goals40 == opp_goals40:
             game_stat_line['tied40'] = True
         elif goals40 > opp_goals40:
@@ -235,119 +221,86 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         # retrieving score state time spans for current team
         game_stat_line['time_played'] = game['time_played']
         game_stat_line['tied'] = game['tied']
-        game_stat_line['tied_pctg'] = round(
-            game['tied'] / game['time_played'] * 100, 2)
+        game_stat_line['tied_pctg'] = round(game['tied'] / game['time_played'] * 100, 2)
         if key == 'home':
             game_stat_line['leading'] = game['home_leading']
             game_stat_line['trailing'] = game['road_leading']
         else:
             game_stat_line['leading'] = game['road_leading']
             game_stat_line['trailing'] = game['home_leading']
-        game_stat_line['leading_pctg'] = round(
-            game_stat_line['leading'] / game['time_played'] * 100, 2)
-        game_stat_line['trailing_pctg'] = round(
-            game_stat_line['trailing'] / game['time_played'] * 100, 2)
+        game_stat_line['leading_pctg'] = round(game_stat_line['leading'] / game['time_played'] * 100, 2)
+        game_stat_line['trailing_pctg'] = round(game_stat_line['trailing'] / game['time_played'] * 100, 2)
 
         # retrieving raw stats for team and opposing team
         for category, raw_category in RAW_STATS_MAPPING:
             game_stat_line[category] = raw_stats[key].get(raw_category, None)
-            game_stat_line["opp_%s" % category] = raw_stats[opp_key].get(
-                raw_category, None)
+            game_stat_line["opp_%s" % category] = raw_stats[opp_key].get(raw_category, None)
         # calculating shooting percentages
         if game_stat_line['shots_on_goal']:
-            game_stat_line['shot_pctg'] = round(
-                game_stat_line['goals'] /
-                game_stat_line['shots_on_goal'] * 100., 2)
+            game_stat_line['shot_pctg'] = round(game_stat_line['goals'] / game_stat_line['shots_on_goal'] * 100., 2)
         else:
             game_stat_line['shot_pctg'] = None
         if game_stat_line['opp_shots_on_goal']:
             game_stat_line['opp_shot_pctg'] = round(
-                game_stat_line['opp_goals'] /
-                game_stat_line['opp_shots_on_goal'] * 100., 2)
+                game_stat_line['opp_goals'] / game_stat_line['opp_shots_on_goal'] * 100., 2)
         else:
             game_stat_line['opp_shot_pctg'] = None
         # calculating save percentages
         if game_stat_line['opp_shots_on_goal']:
             game_stat_line['save_pctg'] = round(
-                100 - game_stat_line['opp_goals'] /
-                game_stat_line['opp_shots_on_goal'] * 100., 2)
+                100 - game_stat_line['opp_goals'] / game_stat_line['opp_shots_on_goal'] * 100., 2)
         else:
             game_stat_line['save_pctg'] = None
         if game_stat_line['shots_on_goal']:
             game_stat_line['opp_save_pctg'] = round(
-                100 - game_stat_line['goals'] /
-                game_stat_line['shots_on_goal'] * 100., 2)
+                100 - game_stat_line['goals'] / game_stat_line['shots_on_goal'] * 100., 2)
         else:
             game_stat_line['opp_save_pctg'] = None
         # calculating pdo values
-        if (
-            game_stat_line['shot_pctg'] is not None and
-            game_stat_line['save_pctg'] is not None
-        ):
-            game_stat_line['pdo'] = round((
-                game_stat_line['shot_pctg'] +
-                game_stat_line['save_pctg']), 1)
-            game_stat_line['opp_pdo'] = round((
-                game_stat_line['opp_shot_pctg'] +
-                game_stat_line['opp_save_pctg']), 1)
+        if game_stat_line['shot_pctg'] is not None and game_stat_line['save_pctg'] is not None:
+            game_stat_line['pdo'] = round((game_stat_line['shot_pctg'] + game_stat_line['save_pctg']), 1)
+            game_stat_line['opp_pdo'] = round((game_stat_line['opp_shot_pctg'] + game_stat_line['opp_save_pctg']), 1)
         # calculating power play percentages
         if game_stat_line['pp_opps']:
-            game_stat_line['pp_pctg'] = round((
-                game_stat_line['pp_goals'] /
-                game_stat_line['pp_opps']) * 100., 1)
+            game_stat_line['pp_pctg'] = round((game_stat_line['pp_goals'] / game_stat_line['pp_opps']) * 100., 1)
         else:
             game_stat_line['pp_pctg'] = 0
         if game_stat_line['opp_pp_opps']:
             game_stat_line['opp_pp_pctg'] = round((
-                game_stat_line['opp_pp_goals'] /
-                game_stat_line['opp_pp_opps']) * 100., 1)
+                game_stat_line['opp_pp_goals'] / game_stat_line['opp_pp_opps']) * 100., 1)
         else:
             game_stat_line['opp_pp_pctg'] = 0
         # calculating penalty killing percentages
         if game_stat_line['sh_opps']:
             game_stat_line['pk_pctg'] = round(
-                100 - game_stat_line['opp_pp_goals'] /
-                game_stat_line['sh_opps'] * 100., 1)
+                100 - game_stat_line['opp_pp_goals'] / game_stat_line['sh_opps'] * 100., 1)
         else:
             game_stat_line['pk_pctg'] = 0
         if game_stat_line['opp_sh_opps']:
             game_stat_line['opp_pk_pctg'] = round(
-                100 - game_stat_line['pp_goals'] /
-                game_stat_line['opp_sh_opps'] * 100., 1)
+                100 - game_stat_line['pp_goals'] / game_stat_line['opp_sh_opps'] * 100., 1)
         else:
             game_stat_line['opp_pk_pctg'] = 0
-        game_stat_line['ev_goals'] = (
-            game_stat_line['goals'] -
-            game_stat_line['pp_goals'] -
-            game_stat_line['sh_goals'])
+        game_stat_line['ev_goals'] = game_stat_line['goals'] - game_stat_line['pp_goals'] - game_stat_line['sh_goals']
         game_stat_line['opp_ev_goals'] = (
-            game_stat_line['opp_goals'] -
-            game_stat_line['opp_pp_goals'] -
-            game_stat_line['opp_sh_goals'])
+            game_stat_line['opp_goals'] - game_stat_line['opp_pp_goals'] - game_stat_line['opp_sh_goals'])
         # faceoffs are treated separately since each of the team game stats
         # datasets only contains the number of won faceoffs and sometimes this
         # one is stored as a string (wtf?)
-        game_stat_line['faceoffs_won'] = int(
-            raw_stats[key].get('faceOffsWon', 0))
-        game_stat_line['faceoffs_lost'] = int(
-            raw_stats[opp_key].get('faceOffsWon', 0))
+        game_stat_line['faceoffs_won'] = int(raw_stats[key].get('faceOffsWon', 0))
+        game_stat_line['faceoffs_lost'] = int(raw_stats[opp_key].get('faceOffsWon', 0))
         # calculating overall number of faceoffs and faceoff percentage
-        game_stat_line['faceoffs'] = (
-            game_stat_line['faceoffs_won'] + game_stat_line['faceoffs_lost'])
+        game_stat_line['faceoffs'] = (game_stat_line['faceoffs_won'] + game_stat_line['faceoffs_lost'])
         if game_stat_line['faceoffs']:
             game_stat_line['faceoff_pctg'] = round(
-                game_stat_line['faceoffs_won'] /
-                game_stat_line['faceoffs'] * 100., 1)
+                game_stat_line['faceoffs_won'] / game_stat_line['faceoffs'] * 100., 1)
         else:
             game_stat_line['faceoff_pctg'] = 0.
         # best players
-        game_stat_line['best_plr_id'] = game.get(
-            "%s_best_player_id" % key, None)
+        game_stat_line['best_plr_id'] = game.get("%s_best_player_id" % key, None)
         game_stat_line['best_plr'] = game.get("%s_best_player" % key, None)
-        game_stat_line['opp_best_plr_id'] = game.get(
-            "%s_best_player_id" % opp_key, None)
-        game_stat_line['opp_best_plr'] = game.get(
-            "%s_best_player" % opp_key, None)
+        game_stat_line['opp_best_plr_id'] = game.get("%s_best_player_id" % opp_key, None)
+        game_stat_line['opp_best_plr'] = game.get("%s_best_player" % opp_key, None)
         # game-winning-goal
         game_stat_line['gw_goal_team'] = game['gw_goal']
         game_stat_line['gw_goal_player_id'] = game['gw_goal_player_id']
@@ -362,8 +315,7 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             'shots_on_goal_pp', 'shots_on_goal_sh', 'goals_5v5']
 
         # retrieving shot data for current game and team
-        shot_data = grouped_shot_data.get(
-            (game_id, game_stat_line['team']), list())
+        shot_data = grouped_shot_data.get((game_id, game_stat_line['team']), list())
         for item in shot_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
@@ -374,8 +326,7 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
                 game_stat_line[item] = shot_data[item]
 
         # retrieving shots against data for current game and team
-        shot_against_data = grouped_shot_data.get(
-            (game_id, game_stat_line['opp_team']), list())
+        shot_against_data = grouped_shot_data.get((game_id, game_stat_line['opp_team']), list())
         for item in shot_against_data:
             if item.startswith(tuple(shot_zones_to_retain)):
                 abbr_item = item
@@ -386,14 +337,11 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
                 game_stat_line["opp_%s" % item] = shot_against_data[item]
 
         game_stat_line['ev_cf_pctg'] = round(
-            game_stat_line['shots_ev'] / (
-                game_stat_line['shots_ev'] + game_stat_line['opp_shots_ev']
-            ) * 100, 2)
+            game_stat_line['shots_ev'] / (game_stat_line['shots_ev'] + game_stat_line['opp_shots_ev']) * 100, 2)
 
         for penalty_duration in [2, 5, 10, 20]:
             if penalty_counts[key] and penalty_duration in penalty_counts[key]:
-                game_stat_line["penalty_%d" % penalty_duration] = (
-                    penalty_counts[key][penalty_duration])
+                game_stat_line["penalty_%d" % penalty_duration] = penalty_counts[key][penalty_duration]
             else:
                 game_stat_line["penalty_%d" % penalty_duration] = 0
 
@@ -425,8 +373,7 @@ def group_shot_data_by_game_team(shots):
     grouped_shot_data = dict()
 
     # definining zones
-    zones = [
-        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
+    zones = ['slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
 
     for shot in shots[:]:
         game_team_key = (shot['game_id'], shot['team'])
@@ -449,8 +396,7 @@ def group_shot_data_by_game_team(shots):
         # adding shot incident to counter for shot zone/outcome
         grouped_shot_data[game_team_key][zone_tgt_type] += 1
         # adding distance of shot incident
-        grouped_shot_data[game_team_key][zone_distance].append(
-            shot['distance'])
+        grouped_shot_data[game_team_key][zone_distance].append(shot['distance'])
         # in case of a goal, adding shot incident to couter for goals
         # from shot zone
         if shot['scored']:
@@ -471,85 +417,53 @@ def group_shot_data_by_game_team(shots):
             # applicable)
             if grouped_shot_data[key]["%s_shots" % zone]:
                 grouped_shot_data[key]["%s_distance" % zone] = round(
-                    sum(grouped_shot_data[key]["%s_distance" % zone]) /
-                    grouped_shot_data[key]["%s_shots" % zone], 2
-                )
+                    sum(grouped_shot_data[key]["%s_distance" % zone]) / grouped_shot_data[key]["%s_shots" % zone], 2)
             else:
                 grouped_shot_data[key]["%s_distance" % zone] = 0
 
         # calculating percentage of shots and shots on goal for each shot zone
         for zone in zones:
             grouped_shot_data[key]["%s_pctg" % zone] = round((
-                grouped_shot_data[key]["%s_shots" % zone] / all_shots
-            ) * 100., 2)
+                grouped_shot_data[key]["%s_shots" % zone] / all_shots) * 100., 2)
             grouped_shot_data[key]["%s_on_goal_pctg" % zone] = round((
-                grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal
-            ) * 100., 2)
+                grouped_shot_data[key]["%s_on_goal" % zone] / all_on_goal) * 100., 2)
 
     for key in grouped_shot_data:
         game_id, team = key
-        per_team_game_shots = list(filter(
-            lambda d:
-            d['game_id'] == game_id and
-            d['team'] == team, shots))
+        per_team_game_shots = list(filter(lambda d: d['game_id'] == game_id and d['team'] == team, shots))
         grouped_shot_data[key]['shots'] = len(per_team_game_shots)
-        per_team_game_ev_shots = list(filter(
-            lambda d: d['situation'] == 'EV', per_team_game_shots))
+        per_team_game_ev_shots = list(filter(lambda d: d['situation'] == 'EV', per_team_game_shots))
         grouped_shot_data[key]['shots_ev'] = len(per_team_game_ev_shots)
-        per_team_game_5v5_shots = list(filter(
-            lambda d: d['plr_situation'] == '5v5', per_team_game_shots))
+        per_team_game_5v5_shots = list(filter(lambda d: d['plr_situation'] == '5v5', per_team_game_shots))
         grouped_shot_data[key]['shots_5v5'] = len(per_team_game_5v5_shots)
-        per_team_game_pp_shots = list(filter(
-            lambda d: d['situation'] == 'PP', per_team_game_shots))
+        per_team_game_pp_shots = list(filter(lambda d: d['situation'] == 'PP', per_team_game_shots))
         grouped_shot_data[key]['shots_pp'] = len(per_team_game_pp_shots)
-        per_team_game_sh_shots = list(filter(
-            lambda d: d['situation'] == 'SH', per_team_game_shots))
+        per_team_game_sh_shots = list(filter(lambda d: d['situation'] == 'SH', per_team_game_shots))
         grouped_shot_data[key]['shots_sh'] = len(per_team_game_sh_shots)
         per_team_game_unblocked_shots = list(filter(
-            lambda d: d['target_type'] in ['on_goal', 'missed'],
-            per_team_game_shots))
-        grouped_shot_data[key]['shots_unblocked'] = len(
-            per_team_game_unblocked_shots)
-        per_team_game_unblocked_ev_shots = list(filter(
-            lambda d: d['situation'] == 'EV', per_team_game_unblocked_shots))
-        grouped_shot_data[key]['shots_unblocked_ev'] = len(
-            per_team_game_unblocked_ev_shots)
+            lambda d: d['target_type'] in ['on_goal', 'missed'], per_team_game_shots))
+        grouped_shot_data[key]['shots_unblocked'] = len(per_team_game_unblocked_shots)
+        per_team_game_unblocked_ev_shots = list(filter(lambda d: d['situation'] == 'EV', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_ev'] = len(per_team_game_unblocked_ev_shots)
         per_team_game_unblocked_5v5_shots = list(filter(
-            lambda d: d['plr_situation'] == '5v5',
-            per_team_game_unblocked_shots))
-        grouped_shot_data[key]['shots_unblocked_5v5'] = len(
-            per_team_game_unblocked_5v5_shots)
-        per_team_game_unblocked_pp_shots = list(filter(
-            lambda d: d['situation'] == 'PP', per_team_game_unblocked_shots))
-        grouped_shot_data[key]['shots_unblocked_pp'] = len(
-            per_team_game_unblocked_pp_shots)
-        per_team_game_unblocked_sh_shots = list(filter(
-            lambda d: d['situation'] == 'SH', per_team_game_unblocked_shots))
-        grouped_shot_data[key]['shots_unblocked_sh'] = len(
-            per_team_game_unblocked_sh_shots)
-        per_team_game_shots_on_goal = list(filter(
-            lambda d: d['target_type'] == 'on_goal', per_team_game_shots))
-        grouped_shot_data[key]['shots_on_goal'] = len(
-            per_team_game_shots_on_goal)
-        per_team_game_ev_shots_on_goal = list(filter(
-            lambda d: d['situation'] == 'EV', per_team_game_shots_on_goal))
-        grouped_shot_data[key]['shots_on_goal_ev'] = len(
-            per_team_game_ev_shots_on_goal)
+            lambda d: d['plr_situation'] == '5v5', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_5v5'] = len(per_team_game_unblocked_5v5_shots)
+        per_team_game_unblocked_pp_shots = list(filter(lambda d: d['situation'] == 'PP', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_pp'] = len(per_team_game_unblocked_pp_shots)
+        per_team_game_unblocked_sh_shots = list(filter(lambda d: d['situation'] == 'SH', per_team_game_unblocked_shots))
+        grouped_shot_data[key]['shots_unblocked_sh'] = len(per_team_game_unblocked_sh_shots)
+        per_team_game_shots_on_goal = list(filter(lambda d: d['target_type'] == 'on_goal', per_team_game_shots))
+        grouped_shot_data[key]['shots_on_goal'] = len(per_team_game_shots_on_goal)
+        per_team_game_ev_shots_on_goal = list(filter(lambda d: d['situation'] == 'EV', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_ev'] = len(per_team_game_ev_shots_on_goal)
         per_team_game_5v5_shots_on_goal = list(filter(
-            lambda d: d['plr_situation'] == '5v5',
-            per_team_game_shots_on_goal))
-        grouped_shot_data[key]['shots_on_goal_5v5'] = len(
-            per_team_game_5v5_shots_on_goal)
-        per_team_game_pp_shots_on_goal = list(filter(
-            lambda d: d['situation'] == 'PP', per_team_game_shots_on_goal))
-        grouped_shot_data[key]['shots_on_goal_pp'] = len(
-            per_team_game_pp_shots_on_goal)
-        per_team_game_sh_shots_on_goal = list(filter(
-            lambda d: d['situation'] == 'SH', per_team_game_shots_on_goal))
-        grouped_shot_data[key]['shots_on_goal_sh'] = len(
-            per_team_game_sh_shots_on_goal)
-        per_team_game_5v5_goals = list(filter(
-            lambda d: d['scored'], per_team_game_5v5_shots_on_goal))
+            lambda d: d['plr_situation'] == '5v5', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_5v5'] = len(per_team_game_5v5_shots_on_goal)
+        per_team_game_pp_shots_on_goal = list(filter(lambda d: d['situation'] == 'PP', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_pp'] = len(per_team_game_pp_shots_on_goal)
+        per_team_game_sh_shots_on_goal = list(filter(lambda d: d['situation'] == 'SH', per_team_game_shots_on_goal))
+        grouped_shot_data[key]['shots_on_goal_sh'] = len(per_team_game_sh_shots_on_goal)
+        per_team_game_5v5_goals = list(filter(lambda d: d['scored'], per_team_game_5v5_shots_on_goal))
         grouped_shot_data[key]['goals_5v5'] = len(per_team_game_5v5_goals)
     return grouped_shot_data
 
@@ -565,13 +479,11 @@ def correct_name(name, game_date=None, corrections=name_corrections):
         return name_corrections[name]
     for delimiter in [',', ';']:
         if delimiter in name:
-            name = " ".join(
-                [token.strip() for token in name.split(delimiter)][::-1])
+            name = " ".join([token.strip() for token in name.split(delimiter)][::-1])
     if name.upper() == name:
         name = name.title()
     if name in name_corrections:
-        single_date_correction, *valid_on_date = (
-            name_corrections[name].split("//"))
+        single_date_correction, *valid_on_date = (name_corrections[name].split("//"))
         if game_date and valid_on_date:
             valid_on_date = parse(valid_on_date[0])
             # checking if game had been played before expiration date
@@ -611,8 +523,7 @@ def get_penalty_counts(game):
     pen_counts['road'] = defaultdict(int)
 
     game_events_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'game_events',
-        str(game['season']), str(game_type), "%d.json" % game['game_id'])
+        CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
     events_data = json.loads(open(game_events_src_path).read())
 
     for period in events_data:
@@ -630,19 +541,15 @@ def get_penalty_counts(game):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Process DEL team game statistics.')
+    parser = argparse.ArgumentParser(description='Process DEL team game statistics.')
     parser.add_argument(
-        '--initial', dest='initial', required=False,
-        action='store_true', help='Re-create list of team games')
+        '--initial', dest='initial', required=False, action='store_true', help='Re-create list of team games')
     parser.add_argument(
-        '--limit', dest='limit', required=False, type=int, default=0,
-        help='Number of maximum games to be processed')
+        '--limit', dest='limit', required=False, type=int, default=0, help='Number of maximum games to be processed')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process games for',
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False,
+        metavar='season to process games for', help="The season information will be processed for",
+        default=2020, type=int, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
 
@@ -685,8 +592,7 @@ if __name__ == '__main__':
         if game['game_id'] in registered_games:
             continue
         print("+ Retrieving team stats for game %s" % get_game_info(game))
-        single_team_game_stats = get_single_game_team_data(
-            game, grouped_shot_data, pp_sit_data[str(game['game_id'])])
+        single_team_game_stats = get_single_game_team_data(game, grouped_shot_data, pp_sit_data[str(game['game_id'])])
         team_game_stats.extend(single_team_game_stats)
 
         if limit and cnt >= limit:

@@ -28,10 +28,7 @@ def get_download_targets(args, config):
     if not tgt_game_type or tgt_game_type == 'ALL':
         game_types = list(config['game_types'].keys())
     else:
-        game_types = {
-            k: v for (k, v) in config['game_types'].items() if
-            v == tgt_game_type
-        }
+        game_types = {k: v for (k, v) in config['game_types'].items() if v == tgt_game_type}
 
     return seasons, game_types
 
@@ -113,28 +110,24 @@ def download_task(tgt_url, tgt_path, last_modified_dict):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Download DEL game information.')
+    parser = argparse.ArgumentParser(description='Download DEL game information.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for', default=2020,
-        choices=[2016, 2017, 2018, 2019, 2020],
-        help="The season for which information will be downloaded for")
+        metavar='season to download data for', help="The season for which information will be downloaded for",
+        default=2020, choices=[2016, 2017, 2018, 2019, 2020])
     parser.add_argument(
         '-g', '--game_type', dest='game_type', required=False,
-        metavar='game type to download data for', choices=['RS', 'PO', 'MSC', 'ALL'],
-        help="The game type for which information will be downloaded for")
+        metavar='game type to download data for', help="The game type for which information will be downloaded for",
+        choices=['RS', 'PO', 'MSC', 'ALL'])
     parser.add_argument(
-        'category', metavar='information category',
-        help='information category to be downloaded',
+        'category', metavar='information category', help='information category to be downloaded',
         choices=[
             'game_info', 'game_events', 'game_roster', 'game_team_stats',
             'game_goalies', 'shifts', 'game_player_stats', 'shots', 'faceoffs'
         ])
 
     # loading external configuration
-    config = yaml.safe_load(open(os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    config = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
     args = parser.parse_args()
     seasons, game_types = get_download_targets(args, config)
@@ -165,15 +158,13 @@ if __name__ == '__main__':
 
             print(
                 "+ Downloading %s data for %s games in %d-%d" % (
-                    args.category, config['game_types'][game_type],
-                    season, season + 1))
+                    args.category, config['game_types'][game_type], season, season + 1))
 
             download_tasks = list()
 
             # retrieving games and teams involved for current season and game
             # type
-            games_and_teams = get_game_ids_and_teams(
-                schedule_src_dir, season, game_type)
+            games_and_teams = get_game_ids_and_teams(schedule_src_dir, season, game_type)
 
             for game_id in games_and_teams:
                 # game player stats are divided in two files for each of the
@@ -183,39 +174,29 @@ if __name__ == '__main__':
                         # setting up target url
                         if args.category == 'game_player_stats':
                             target_url = R"/".join((
-                                base_url, 'matches', str(game_id),
-                                target_url_component, "%s.json" % team_id))
+                                base_url, 'matches', str(game_id), target_url_component, "%s.json" % team_id))
                         elif args.category == 'game_team_stats':
                             target_url = R"/".join((
-                                base_url, 'match-detail', target_url_component,
-                                str(game_id), "%s.json" % team_id))
+                                base_url, 'match-detail', target_url_component, str(game_id), "%s.json" % team_id))
 
                         # setting up target directory and path
-                        tgt_dir = os.path.join(
-                            tgt_base_dir, tgt_sub_dir,
-                            str(season), str(game_type))
+                        tgt_dir = os.path.join(tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
                         if not os.path.isdir(tgt_dir):
                             os.makedirs(tgt_dir)
-                        tgt_path = os.path.join(
-                            tgt_dir, "%d_%d.json" % (game_id, team_id))
+                        tgt_path = os.path.join(tgt_dir, "%d_%d.json" % (game_id, team_id))
 
                         download_tasks.append((target_url, tgt_path))
                 # regular game stats are stored in a single file for each game
                 else:
                     if args.category in ['shots']:
                         # setting up target url
-                        target_url = R"/".join((
-                            del_base_url, target_url_component,
-                            "%d.json" % game_id))
+                        target_url = R"/".join((del_base_url, target_url_component, "%d.json" % game_id))
                     else:
                         # setting up target url
-                        target_url = R"/".join((
-                            base_url, 'matches', str(game_id),
-                            "%s.json" % target_url_component))
+                        target_url = R"/".join((base_url, 'matches', str(game_id), "%s.json" % target_url_component))
 
                     # setting up target directory and path
-                    tgt_dir = os.path.join(
-                        tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
+                    tgt_dir = os.path.join(tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
                     if not os.path.isdir(tgt_dir):
                         os.makedirs(tgt_dir)
                     tgt_path = os.path.join(tgt_dir, "%d.json" % game_id)
@@ -225,11 +206,8 @@ if __name__ == '__main__':
             # downloading data concurrently
             with ThreadPoolExecutor(max_workers=4) as threads:
                 tasks = {
-                    threads.submit(
-                        download_task, tgt_url, tgt_path, last_modified_dict
-                    ): (
-                        tgt_url, tgt_path
-                    ) for tgt_url, tgt_path in download_tasks
+                    threads.submit(download_task, tgt_url, tgt_path, last_modified_dict): (tgt_url, tgt_path) for
+                    tgt_url, tgt_path in download_tasks
                 }
                 for completed_task in as_completed(tasks):
                     if completed_task.result():
@@ -237,5 +215,4 @@ if __name__ == '__main__':
                         last_modified_dict[tgt_url] = last_modified
             print()
 
-    open(last_modified_path, 'w').write(
-        json.dumps(last_modified_dict, indent=2))
+    open(last_modified_path, 'w').write(json.dumps(last_modified_dict, indent=2))

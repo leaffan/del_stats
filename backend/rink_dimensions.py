@@ -40,10 +40,7 @@ HOME_BEHIND_GOAL = [[87, 100], [87, -100], [105, -100], [105, 100]]
 ROAD_BEHIND_GOAL = [[-87, 100], [-87, -100], [-105, -100], [-105, 100]]
 
 polygons = list(zip(
-    polygon_names,
-    [Polygon(
-        [[X_TO_M * x, Y_TO_M * y] for x, y in globals()[poly_name]]
-    ) for poly_name in polygon_names]
+    polygon_names, [Polygon([[X_TO_M * x, Y_TO_M * y] for x, y in globals()[poly_name]]) for poly_name in polygon_names]
 ))
 
 if __name__ == '__main__':

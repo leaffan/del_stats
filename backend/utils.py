@@ -122,6 +122,7 @@ capacities = {
     'Helios Arena': 6214,
     'Eisstadion Straubing': 5825,
     'EisArena Wolfsburg': 4503,
+    'Sportforum Berlin': 4695,
 }
 
 
@@ -202,9 +203,7 @@ def calculate_age(dob):
     today = date.today()
     # projecting player's date of birth to this year
     # checking if player was born in a leap year first
-    if (
-        dob.month == 2 and dob.day == 29
-    ):
+    if dob.month == 2 and dob.day == 29:
         # moving player's date of birth forward then
         dob = dob + timedelta(days=1)
     this_year_dob = date(today.year, dob.month, dob.day)
@@ -257,8 +256,7 @@ def read_del_team_names(src=R"data\del_team_names.csv"):
                 valid_to = int(row['valid_to'])
             # populating lookup for current team
             for season in range(valid_from, valid_to + 1):
-                team_lookup[(team_id, season)] = (
-                    row['team_abbr'], row['team_name'])
+                team_lookup[(team_id, season)] = (row['team_abbr'], row['team_name'])
 
     return team_lookup
 

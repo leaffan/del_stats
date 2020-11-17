@@ -27,10 +27,7 @@ def get_download_targets(args, config):
     if not tgt_game_type or tgt_game_type == 'ALL':
         game_types = list(config['game_types'].keys())
     else:
-        game_types = {
-            k: v for (k, v) in config['game_types'].items() if
-            v == tgt_game_type
-        }
+        game_types = {k: v for (k, v) in config['game_types'].items() if v == tgt_game_type}
 
     return seasons, game_types, teams
 
@@ -38,32 +35,25 @@ def get_download_targets(args, config):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Download DEL team information.')
+    parser = argparse.ArgumentParser(description='Download DEL team information.')
     parser.add_argument(
         '-t', '--team', dest='team', required=False,
-        metavar='team to download data for',
-        choices=[
-            'ING', 'MAN', 'EBB', 'DEG', 'KEV', 'STR', 'IEC',
-            'WOB', 'BHV', 'KEC', 'RBM', 'AEV', 'NIT', 'SWW'],
-        help="The team for which information will be downloaded for")
+        metavar='team to download data for', help="The team for which information will be downloaded for",
+        choices=['ING', 'MAN', 'EBB', 'DEG', 'KEV', 'STR', 'IEC', 'WOB', 'BHV', 'KEC', 'RBM', 'AEV', 'NIT', 'SWW'])
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for',
-        choices=[2016, 2017, 2018, 2019, 2020],
-        help="The season for which information will be downloaded for")
+        metavar='season to download data for', help="The season for which information will be downloaded for",
+        choices=[2016, 2017, 2018, 2019, 2020])
     parser.add_argument(
         '-g', '--game_type', dest='game_type', required=False,
-        metavar='game type to download data for', choices=['RS', 'PO', 'MSC', 'ALL'],
-        help="The game type for which information will be downloaded for")
+        metavar='game type to download data for', help="The game type for which information will be downloaded for",
+        choices=['RS', 'PO', 'MSC', 'ALL'])
     parser.add_argument(
-        'category', metavar='information category',
-        help='information category to be downloaded',
+        'category', metavar='information category', help='information category to be downloaded',
         choices=['schedules', 'team_stats', 'roster_stats'])
 
     # loading external configuration
-    config = yaml.safe_load(open(os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    config = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
     args = parser.parse_args()
     seasons, game_types, teams = get_download_targets(args, config)
@@ -84,32 +74,25 @@ if __name__ == '__main__':
         last_modified_dict = dict()
 
     for season in seasons:
-        print(
-            "+ Downloading %s for %d-%d" % (args.category, season, season + 1))
+        print("+ Downloading %s for %d-%d" % (args.category, season, season + 1))
         for team_id in teams:
             sys.stdout.write(teams[team_id])
             sys.stdout.flush()
             for game_type in game_types:
                 # setting up target url
                 target_url = R"/".join((
-                    base_url, target_url_component,
-                    str(season), str(game_type), "%d.json" % team_id))
+                    base_url, target_url_component, str(season), str(game_type), "%d.json" % team_id))
 
                 # setting up target directory and path
-                tgt_dir = os.path.join(
-                    tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
+                tgt_dir = os.path.join(tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
                 if not os.path.isdir(tgt_dir):
                     os.makedirs(tgt_dir)
                 tgt_path = os.path.join(tgt_dir, "%d.json" % team_id)
 
                 # setting up customized header
                 req_header = dict()
-                if (
-                    os.path.isfile(tgt_path) and
-                    target_url in last_modified_dict
-                ):
-                    req_header['If-Modified-Since'] = last_modified_dict[
-                        target_url]
+                if os.path.isfile(tgt_path) and target_url in last_modified_dict:
+                    req_header['If-Modified-Since'] = last_modified_dict[target_url]
 
                 # retrieving target data using customized header
                 try:
@@ -130,8 +113,7 @@ if __name__ == '__main__':
                         sys.stdout.flush()
                         continue
                 except json.decoder.JSONDecodeError:
-                    print(
-                        "Unable to retrieve JSON data from %s" % target_url)
+                    print("Unable to retrieve JSON data from %s" % target_url)
                     continue
 
                 if args.category == 'roster_stats':
@@ -145,5 +127,4 @@ if __name__ == '__main__':
             sys.stdout.write(' ')
         print()
 
-    open(last_modified_path, 'w').write(
-        json.dumps(last_modified_dict, indent=2))
+    open(last_modified_path, 'w').write(json.dumps(last_modified_dict, indent=2))

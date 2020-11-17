@@ -8,8 +8,7 @@ import argparse
 
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 SHOT_SRC = 'del_shots.json'
 
@@ -19,16 +18,14 @@ LEAGUE_WIDE_STATS_TGT = 'del_league_stats.json'
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Calculate league-wide statistics.')
+    parser = argparse.ArgumentParser(description='Calculate league-wide statistics.')
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of league-wide statistics')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process data for',
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False,
+        metavar='season to process data for', help="The season information will be processed for",
+        default=2020, type=int, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
     initial = args.initial
@@ -42,14 +39,10 @@ if __name__ == '__main__':
 
     shots = json.loads(open(shot_src_path).read())
 
-    all_shots_on_goal = list(filter(
-        lambda d: d['target_type'] == 'on_goal', shots))
-    all_goals = list(filter(
-        lambda d: d['scored'] is True, all_shots_on_goal))
-    shots_on_goal_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', all_shots_on_goal))
-    goals_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', all_goals))
+    all_shots_on_goal = list(filter(lambda d: d['target_type'] == 'on_goal', shots))
+    all_goals = list(filter(lambda d: d['scored'] is True, all_shots_on_goal))
+    shots_on_goal_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', all_shots_on_goal))
+    goals_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', all_goals))
 
     all_shots_on_goal = len(all_shots_on_goal)
     all_goals = len(all_goals)

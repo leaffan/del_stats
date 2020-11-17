@@ -15,8 +15,7 @@ from dateutil.parser import parse
 from utils import calculate_age
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
@@ -153,8 +152,7 @@ U23_CUTOFF_DATES = {
 
 
 def convert_to_minutes(td):
-    return "%02d:%02d" % (
-        td.total_seconds() // 60, round(td.total_seconds() % 60, 0))
+    return "%02d:%02d" % (td.total_seconds() // 60, round(td.total_seconds() % 60, 0))
 
 
 def get_shot_stats(player_id, team, season_type, shot_data):
@@ -181,33 +179,26 @@ def get_shot_stats(player_id, team, season_type, shot_data):
             on_goal += 1
         shot_stats["%s_shots" % shot['shot_zone'].lower()] += 1
         # adding up shot distances
-        shot_stats[
-            "%s_distance" % shot['shot_zone'].lower()] += shot['distance']
-        shot_zone_result = "%s_%s" % (
-            shot['shot_zone'].lower(), shot['target_type'])
+        shot_stats["%s_distance" % shot['shot_zone'].lower()] += shot['distance']
+        shot_zone_result = "%s_%s" % (shot['shot_zone'].lower(), shot['target_type'])
         shot_stats[shot_zone_result] += 1
         if shot['scored']:
             shot_stats["%s_goals" % shot['shot_zone'].lower()] += 1
 
-    for zone in [
-        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal'
-    ]:
+    for zone in ['slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']:
         # calculating average distance to goal from all previously aggregated
         # distances and number of shots for the current shot zone
         if shot_stats["%s_distance" % zone]:
             shot_stats["%s_distance" % zone] = round(
-                shot_stats["%s_distance" % zone] /
-                float(shot_stats["%s_shots" % zone]), 2)
+                shot_stats["%s_distance" % zone] / float(shot_stats["%s_shots" % zone]), 2)
         # calculating shots on goal percentage for current shot zone in
         # relation to all shots on goal
         if shot_stats["%s_on_goal" % zone]:
-            shot_stats["%s_on_goal_pctg" % zone] = round(
-                shot_stats["%s_on_goal" % zone] / float(on_goal) * 100, 2)
+            shot_stats["%s_on_goal_pctg" % zone] = round(shot_stats["%s_on_goal" % zone] / float(on_goal) * 100, 2)
         # calculating shots percentage for current shot zone in relation
         # to all shots
         if shot_stats["%s_shots" % zone]:
-            shot_stats["%s_pctg" % zone] = round(
-                shot_stats["%s_shots" % zone] / float(all_shots) * 100, 2)
+            shot_stats["%s_pctg" % zone] = round(shot_stats["%s_shots" % zone] / float(all_shots) * 100, 2)
 
     return shot_stats
 
@@ -223,11 +214,9 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
     # calculating overall save percentage and goals against average
     if aggregated_stats['shots_against']:
         goalie_stats['save_pctg'] = round(
-            100 - aggregated_stats['goals_against'] /
-            aggregated_stats['shots_against'] * 100., 3)
+            100 - aggregated_stats['goals_against'] / aggregated_stats['shots_against'] * 100., 3)
         goalie_stats['gaa'] = round(
-            aggregated_stats['goals_against'] * 3600 /
-            aggregated_stats['toi'], 2)
+            aggregated_stats['goals_against'] * 3600 / aggregated_stats['toi'], 2)
     else:
         goalie_stats['save_pctg'] = None
         goalie_stats['gaa'] = None
@@ -237,8 +226,7 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
     for key in TO_CALCULATE_PCTG_GOALIES:
         if aggregated_stats["sa_%s" % key]:
             goalie_stats["save_pctg_%s" % key] = round(
-                100 - aggregated_stats["ga_%s" % key] /
-                aggregated_stats["sa_%s" % key] * 100., 3)
+                100 - aggregated_stats["ga_%s" % key] / aggregated_stats["sa_%s" % key] * 100., 3)
         else:
             goalie_stats["save_pctg_%s" % key] = None
 
@@ -248,8 +236,7 @@ def calculate_goalie_stats(player_id, team, aggregated_stats):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Aggregate DEL player stats.')
+    parser = argparse.ArgumentParser(description='Aggregate DEL player stats.')
     parser.add_argument(
         '-f', '--from', dest='from_date', required=False,
         metavar='first date to aggregate stats for', default=None,
@@ -260,9 +247,8 @@ if __name__ == '__main__':
         help="The last date statistics will be aggregated")
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to download data for', default=2020,
-        choices=[2016, 2017, 2018, 2019, 2020],
-        help="The season for which data  will be aggregated")
+        metavar='season to download data for', help="The season for which data  will be aggregated",
+        default=2020, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
     season = args.season
@@ -281,8 +267,7 @@ if __name__ == '__main__':
     goalie_src_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_SRC)
     tgt_path = os.path.join(tgt_dir, AGGREGATED_PLAYER_STATS_TGT)
     tgt_goalies_path = os.path.join(tgt_dir, AGGREGATED_GOALIE_STATS_TGT)
-    tgt_csv_path = os.path.join(
-        tgt_dir, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
+    tgt_csv_path = os.path.join(tgt_dir, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -290,8 +275,7 @@ if __name__ == '__main__':
     # loading shot data
     shot_data = json.loads(open(shot_src_path).read())
 
-    print("+ %d player-in-game items collected overall" % len(
-        player_game_stats))
+    print("+ %d player-in-game items collected overall" % len(player_game_stats))
 
     # setting up data containers
     player_data = dict()
@@ -307,10 +291,7 @@ if __name__ == '__main__':
             continue
         filtered_cnt += 1
         # constructing reference key
-        player_team_key = (
-            game_stat_line['player_id'],
-            game_stat_line['team'],
-            game_stat_line['season_type'])
+        player_team_key = (game_stat_line['player_id'], game_stat_line['team'], game_stat_line['season_type'])
         # creating empty data dictionaries
         if player_team_key not in aggregated_stats:
             aggregated_stats[player_team_key] = defaultdict(int)
@@ -325,21 +306,15 @@ if __name__ == '__main__':
             aggregated_stats[player_team_key][attr] += game_stat_line[attr]
         # aggregating timedelta attributes
         for attr in TO_AGGREGATE_TIMES:
-            aggregate_time_stats[player_team_key][attr] += timedelta(
-                seconds=game_stat_line[attr])
+            aggregate_time_stats[player_team_key][attr] += timedelta(seconds=game_stat_line[attr])
     else:
         print("+ %d player-in-game items after filtering" % filtered_cnt)
         # re-setting games played counter for goaltenders
         for player_id, team, season_type in aggregated_stats:
-            if (
-                list(player_data[
-                    (player_id, team, season_type)]['position'])[0] == 'GK'
-            ):
-                aggregated_stats[
-                    (player_id, team, season_type)]['games_played'] = 0
+            if list(player_data[(player_id, team, season_type)]['position'])[0] == 'GK':
+                aggregated_stats[(player_id, team, season_type)]['games_played'] = 0
 
-    print("+ %d goalie-in-game items collected overall" % len(
-        goalie_game_stats))
+    print("+ %d goalie-in-game items collected overall" % len(goalie_game_stats))
 
     filtered_cnt = 0
 
@@ -351,10 +326,7 @@ if __name__ == '__main__':
             continue
         filtered_cnt += 1
         # constructing reference key
-        goalie_team_key = (
-            game_stat_line['goalie_id'],
-            game_stat_line['team'],
-            game_stat_line['season_type'])
+        goalie_team_key = (game_stat_line['goalie_id'], game_stat_line['team'], game_stat_line['season_type'])
         # creating empty data dictionaries
         if goalie_team_key not in aggregated_stats:
             aggregated_stats[goalie_team_key] = defaultdict(int)
@@ -377,11 +349,8 @@ if __name__ == '__main__':
             # reviewing multiple values for personal player attributes
             if len(player_data[key][pd_item]) > 1:
                 print(
-                    "+ %s (%s) registered with " % (
-                        list(player_data[key]['full_name'])[-1], team) +
-                    "multiple values for '%s': %s" % (
-                        pd_item,
-                        ", ".join([str(s) for s in player_data[key][pd_item]]))
+                    "+ %s (%s) registered with " % (list(player_data[key]['full_name'])[-1], team) +
+                    "multiple values for '%s': %s" % (pd_item, ", ".join([str(s) for s in player_data[key][pd_item]]))
                 )
 
         if not player_data[key]:
@@ -397,21 +366,15 @@ if __name__ == '__main__':
         # calculating player age
         basic_values['age'] = calculate_age(basic_values['date_of_birth'])
 
-        if (
-            basic_values['country'] == 'GER' and
-            parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATES[season]
-        ):
+        if basic_values['country'] == 'GER' and parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATES[season]:
             basic_values['u23'] = True
         else:
             basic_values['u23'] = False
 
         if basic_values['country'] in ISO_COUNTRY_CODES:
-            basic_values[
-                'iso_country'] = ISO_COUNTRY_CODES[basic_values['country']]
+            basic_values['iso_country'] = ISO_COUNTRY_CODES[basic_values['country']]
         else:
-            print(
-                "+ Country code '%s' not found " % basic_values['country'] +
-                "in list of available ones")
+            print("+ Country code '%s' not found in list of available ones" % basic_values['country'])
             basic_values['iso_country'] = None
 
         # calculating shot statistics
@@ -419,16 +382,13 @@ if __name__ == '__main__':
         shot_stats = get_shot_stats(player_id, team, season_type, shot_data)
         # calculating goaltender statistics
         if basic_values['position'] == 'GK':
-            goalie_stats = calculate_goalie_stats(
-                player_id, team, aggregated_stats)
+            goalie_stats = calculate_goalie_stats(player_id, team, aggregated_stats)
         else:
             goalie_stats = dict()
 
         # combining data dictionaries
         all_values = {
-            **basic_values,
-            **aggregated_stats[key], **aggregate_time_stats[key],
-            **shot_stats, **goalie_stats
+            **basic_values, **aggregated_stats[key], **aggregate_time_stats[key], **shot_stats, **goalie_stats
         }
         aggregated_stats_as_list.append(all_values)
 
@@ -441,20 +401,17 @@ if __name__ == '__main__':
 
         # calculating shooting percentage
         if item['shots_on_goal']:
-            item['shot_pctg'] = round(
-                item['goals'] / float(item['shots_on_goal']) * 100., 2)
+            item['shot_pctg'] = round(item['goals'] / float(item['shots_on_goal']) * 100., 2)
         else:
             item['shot_pctg'] = 0.
         # calculating faceoff percentage
         if item['faceoffs']:
-            item['faceoff_pctg'] = round(
-                item['faceoffs_won'] / float(item['faceoffs']) * 100., 4)
+            item['faceoff_pctg'] = round(item['faceoffs_won'] / float(item['faceoffs']) * 100., 4)
         else:
             item['faceoff_pctg'] = 0.
         # calculating power play point share among all points
         if item['points']:
-            item['pp_pts_pctg'] = round(
-                item['pp_points'] / item['points'] * 100, 4)
+            item['pp_pts_pctg'] = round(item['pp_points'] / item['points'] * 100, 4)
         else:
             item['pp_pts_pctg'] = 0.
         # calculating per-game relative values
@@ -465,15 +422,11 @@ if __name__ == '__main__':
             except TypeError:
                 item["%s_per_game" % attr] = per_game_attr
 
-        item['time_on_ice_per_game_seconds'] = item[
-            'time_on_ice_per_game'].total_seconds()
-        item['time_on_ice_pp_per_game_seconds'] = item[
-            'time_on_ice_pp_per_game'].total_seconds()
-        item['time_on_ice_sh_per_game_seconds'] = item[
-            'time_on_ice_sh_per_game'].total_seconds()
+        item['time_on_ice_per_game_seconds'] = item['time_on_ice_per_game'].total_seconds()
+        item['time_on_ice_pp_per_game_seconds'] = item['time_on_ice_pp_per_game'].total_seconds()
+        item['time_on_ice_sh_per_game_seconds'] = item['time_on_ice_sh_per_game'].total_seconds()
         if item['shifts']:
-            item['time_on_ice_per_shift'] = round(
-                item['time_on_ice_seconds'] / item['shifts'], 2)
+            item['time_on_ice_per_shift'] = round(item['time_on_ice_seconds'] / item['shifts'], 2)
         else:
             item['time_on_ice_per_shift'] = 0.
 
@@ -488,9 +441,7 @@ if __name__ == '__main__':
                 time_attr = 'time_on_ice'
             # calculating per-60-minute relative values
             if item[time_attr]:
-                item["%s_per_60" % attr] = round(
-                    item[attr] /
-                    (item[time_attr].total_seconds() / 60) * 60, 4)
+                item["%s_per_60" % attr] = round(item[attr] / (item[time_attr].total_seconds() / 60) * 60, 4)
 
     output = [last_modified, aggregated_stats_as_list]
 
@@ -503,29 +454,21 @@ if __name__ == '__main__':
         adjusted_player_stats_tgt = AGGREGATED_PLAYER_STATS_TGT
         if to_date is not None:
             to_prefix = "to%s" % to_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (
-                to_prefix, adjusted_player_stats_tgt)
+            adjusted_player_stats_tgt = "%s_%s" % (to_prefix, adjusted_player_stats_tgt)
         if from_date is not None:
             from_prefix = "from%s" % from_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (
-                from_prefix, adjusted_player_stats_tgt)
+            adjusted_player_stats_tgt = "%s_%s" % (from_prefix, adjusted_player_stats_tgt)
 
         tgt_path = os.path.join(tgt_dir, adjusted_player_stats_tgt)
-        tgt_csv_path = os.path.join(
-            tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
+        tgt_csv_path = os.path.join(tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
 
-    open(tgt_path, 'w').write(
-        json.dumps(output, indent=2, default=convert_to_minutes))
-    open(tgt_goalies_path, 'w').write(
-        json.dumps(
-            aggregated_goalie_stats, indent=2, default=convert_to_minutes))
+    open(tgt_path, 'w').write(json.dumps(output, indent=2, default=convert_to_minutes))
+    open(tgt_goalies_path, 'w').write(json.dumps(aggregated_goalie_stats, indent=2, default=convert_to_minutes))
 
     keys = aggregated_stats_as_list[0].keys()
 
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
-        dict_writer = csv.DictWriter(
-            output_file, OUT_FIELDS, delimiter=';', lineterminator='\n',
-            extrasaction='ignore')
+        dict_writer = csv.DictWriter(output_file, OUT_FIELDS, delimiter=';', lineterminator='\n', extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(aggregated_stats_as_list)

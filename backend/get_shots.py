@@ -16,8 +16,7 @@ from utils import get_game_info, get_game_type_from_season_type
 from reconstruct_skater_situation import reconstruct_skater_situation
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 SHOTS_DATA_TGT = 'del_shots.json'
@@ -25,9 +24,7 @@ PP_SITS_DATA_TGT = 'del_pp_sits_goals.json'
 
 ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
 
-SHOT_RESULTS = {
-    1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal'
-}
+SHOT_RESULTS = {1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal'}
 
 
 def correct_time_of_shot(shot, goal_times):
@@ -134,8 +131,7 @@ def retrieve_goals(events_src_path):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Process DEL shots.')
+    parser = argparse.ArgumentParser(description='Process DEL shots.')
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of shots')
@@ -143,10 +139,9 @@ if __name__ == '__main__':
         '--limit', dest='limit', required=False, type=int, default=0,
         help='Number of maximum games to be processed')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, metavar='season to process games for',
-        choices=[2016, 2017, 2018, 2019, 2020],
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False, type=int,
+        metavar='season to process games for', help="The season information will be processed for",
+        default=2020, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
 
@@ -194,19 +189,16 @@ if __name__ == '__main__':
 
         # retrieving raw shot data
         shots_src_path = os.path.join(
-            CONFIG['base_data_dir'], 'shots',
-            str(game['season']), str(game_type), "%d.json" % game['game_id'])
+            CONFIG['base_data_dir'], 'shots', str(game['season']), str(game_type), "%d.json" % game['game_id'])
         if not os.path.isfile(shots_src_path):
             print("+ Skipping game since shot data is unavailable")
             continue
 
         shifts_src_path = os.path.join(
-            CONFIG['base_data_dir'], 'shifts', str(game['season']),
-            str(game_type), "%d.json" % game['game_id'])
+            CONFIG['base_data_dir'], 'shifts', str(game['season']), str(game_type), "%d.json" % game['game_id'])
 
         events_src_path = os.path.join(
-            CONFIG['base_data_dir'], 'game_events', str(game['season']),
-            str(game_type), "%d.json" % game['game_id'])
+            CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
 
         shifts = retrieve_shifts(shifts_src_path)
         goals = retrieve_goals(events_src_path)
@@ -264,9 +256,7 @@ if __name__ == '__main__':
 
             # retrieving skater situation at time of shot
             if not shot['time']:
-                print(
-                    "Shot at zero time encountered in " +
-                    "game %s" % get_game_info(game))
+                print("Shot at zero time encountered in game %s" % get_game_info(game))
             else:
                 try:
                     skr_situation = times[shot['time']]
@@ -277,53 +267,34 @@ if __name__ == '__main__':
                             "end of game (%d) registered" % max(times.keys()))
                         shot['time'] = max(times.keys())
 
-                if (
-                    skr_situation[shot['team']] ==
-                    skr_situation[shot['team_against']]
-                ):
+                if skr_situation[shot['team']] == skr_situation[shot['team_against']]:
                     shot['situation'] = 'EV'
-                elif (
-                    skr_situation[shot['team']] >
-                    skr_situation[shot['team_against']]
-                ):
+                elif skr_situation[shot['team']] > skr_situation[shot['team_against']]:
                     shot['situation'] = 'PP'
-                elif (
-                    skr_situation[shot['team']] <
-                    skr_situation[shot['team_against']]
-                ):
+                elif skr_situation[shot['team']] < skr_situation[shot['team_against']]:
                     shot['situation'] = 'SH'
 
-                shot['plr_situation'] = "%dv%d" % (
-                    skr_situation[shot['team']],
-                    skr_situation[shot['team_against']])
+                shot['plr_situation'] = "%dv%d" % (skr_situation[shot['team']], skr_situation[shot['team_against']])
                 shot['plr_situation_against'] = "%dv%d" % (
-                    skr_situation[shot['team_against']],
-                    skr_situation[shot['team']])
+                    skr_situation[shot['team_against']], skr_situation[shot['team']])
 
                 # retrieving players on ice via event data in case of a goal
                 if shot['scored'] and goals:
                     goal = goals[shot['time']]
                     # re-calculating home and road score differentials
-                    home_score, road_score = [
-                        int(x) for x in goal['currentScore'].split(":")]
+                    home_score, road_score = [int(x) for x in goal['currentScore'].split(":")]
                     home_score_diff = home_score - road_score
                     road_score_diff = road_score - home_score
                     # retrieving players on ice for goal from events data
-                    shot['players_on_for'] = sorted(
-                        [plr['playerId'] for plr in goal[
-                            'attendants']['positive']])
-                    shot['players_on_against'] = sorted(
-                        [plr['playerId'] for plr in goal[
-                            'attendants']['negative']])
+                    shot['players_on_for'] = sorted([plr['playerId'] for plr in goal['attendants']['positive']])
+                    shot['players_on_against'] = sorted([plr['playerId'] for plr in goal['attendants']['negative']])
                 # retrieving players on ice from shifts data
                 elif shifts:
                     skaters = shifts[-shot['time']]
                     shot['players_on_for'] = sorted([
-                        plr[-1]['player_id'] for plr in skaters if
-                        plr[-1]['team'] == shot['team']])
+                        plr[-1]['player_id'] for plr in skaters if plr[-1]['team'] == shot['team']])
                     shot['players_on_against'] = sorted([
-                        plr[-1]['player_id'] for plr in skaters if
-                        plr[-1]['team'] == shot['team_against']])
+                        plr[-1]['player_id'] for plr in skaters if plr[-1]['team'] == shot['team_against']])
 
                 # retrieving goalie facing the shot
                 if game['home_abbr'] == shot['team_against']:
@@ -352,8 +323,7 @@ if __name__ == '__main__':
         prev_situation = (5, 5)
 
         for time in times:
-            curr_situation = (
-                times[time]['home'], times[time]['road'])
+            curr_situation = times[time]['home'], times[time]['road']
             if curr_situation != prev_situation:
                 pp_situations[curr_situation] += 1
                 prev_situation = curr_situation
@@ -375,16 +345,12 @@ if __name__ == '__main__':
 
         for situation in pp_situations:
             sit_key = "%dv%d" % situation
-            pp_situations_goals['home']['pp_sits'][sit_key] = (
-                pp_situations[situation])
-            pp_situations_goals['road']['pp_sits'][sit_key[::-1]] = (
-                pp_situations[situation])
+            pp_situations_goals['home']['pp_sits'][sit_key] = pp_situations[situation]
+            pp_situations_goals['road']['pp_sits'][sit_key[::-1]] = pp_situations[situation]
         for situation in pp_goals:
             sit_key = "%dv%d" % situation
-            pp_situations_goals['home']['pp_goals'][sit_key] = (
-                pp_goals[situation])
-            pp_situations_goals['road']['pp_goals'][sit_key[::-1]] = (
-                pp_goals[situation])
+            pp_situations_goals['home']['pp_goals'][sit_key] = pp_goals[situation]
+            pp_situations_goals['road']['pp_goals'][sit_key[::-1]] = pp_goals[situation]
 
         all_pp_situations_goals[game['game_id']] = pp_situations_goals
 
@@ -405,7 +371,6 @@ if __name__ == '__main__':
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
         dict_writer = csv.DictWriter(
-            output_file, CSV_OUT_FIELDS, delimiter=';', lineterminator='\n',
-            extrasaction='ignore')
+            output_file, CSV_OUT_FIELDS, delimiter=';', lineterminator='\n', extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(all_shots)

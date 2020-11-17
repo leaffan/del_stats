@@ -9,8 +9,7 @@ import requests
 
 from lxml import html
 
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PLR_ID_REGEX = re.compile(R"\-(\d+)\/")
 
@@ -34,8 +33,7 @@ if __name__ == '__main__':
     team_url_component = CONFIG['url_components']['team_profile']
     teams = CONFIG['teams']
 
-    all_player_src_path = os.path.join(
-        CONFIG['tgt_processing_dir'], ALL_PLAYERS_SRC)
+    all_player_src_path = os.path.join(CONFIG['tgt_processing_dir'], ALL_PLAYERS_SRC)
     all_players = json.loads(open(all_player_src_path).read())
 
     # setting up target directories and paths
@@ -89,10 +87,8 @@ if __name__ == '__main__':
             plr_career_stats = dict()
             plr_career_stats['player_id'] = plr_id
             # retrieving name of player from dictionary of all players
-            plr_career_stats['first_name'] = all_players[
-                str(plr_id)]['first_name']
-            plr_career_stats['last_name'] = all_players[
-                str(plr_id)]['last_name']
+            plr_career_stats['first_name'] = all_players[str(plr_id)]['first_name']
+            plr_career_stats['last_name'] = all_players[str(plr_id)]['last_name']
             # TODO: check and mark different position from dictionary of all
             # players (?)
             plr_career_stats['position'] = position
@@ -101,8 +97,7 @@ if __name__ == '__main__':
 
             for tr in trs:
                 single_stat_line = dict()
-                season_season_type_team = tr.xpath(
-                    "th/span[@class='hidedesktop']/text()")
+                season_season_type_team = tr.xpath("th/span[@class='hidedesktop']/text()")
                 # retrieving season, season type and team from table row
                 if len(season_season_type_team) == 2:
                     season_season_type, team = season_season_type_team
@@ -114,8 +109,7 @@ if __name__ == '__main__':
                     try:
                         season = int(season.split("/")[0])
                     except ValueError:
-                        # print(
-                        #     "+ Unable to retrieve season from '%s'" % season)
+                        # print("+ Unable to retrieve season from '%s'" % season)
                         continue
                     single_stat_line['season'] = season
                     single_stat_line['season_type'] = season_type
@@ -147,16 +141,12 @@ if __name__ == '__main__':
                             # re-calculating shooting percentage
                             if single_stat_line['sog']:
                                 single_stat_line[category] = round(
-                                    single_stat_line['g'] /
-                                    single_stat_line['sog'] * 100., 2)
+                                    single_stat_line['g'] / single_stat_line['sog'] * 100., 2)
                             else:
                                 single_stat_line[category] = 0.0
-                    single_stat_line['gpg'] = round(
-                        single_stat_line['g'] / single_stat_line['gp'], 2)
-                    single_stat_line['apg'] = round(
-                        single_stat_line['a'] / single_stat_line['gp'], 2)
-                    single_stat_line['ptspg'] = round(
-                        single_stat_line['pts'] / single_stat_line['gp'], 2)
+                    single_stat_line['gpg'] = round(single_stat_line['g'] / single_stat_line['gp'], 2)
+                    single_stat_line['apg'] = round(single_stat_line['a'] / single_stat_line['gp'], 2)
+                    single_stat_line['ptspg'] = round(single_stat_line['pts'] / single_stat_line['gp'], 2)
                 # retrieving goalie stats
                 else:
                     for category, td in zip(GOALIE_CATEGORIES, tds):
@@ -168,22 +158,17 @@ if __name__ == '__main__':
                             single_stat_line[category] = int(td)
                     else:
                         # transforming minutes string to time on ice in seconds
-                        minutes, seconds = [
-                            int(t) for t in single_stat_line['min'].split(":")]
+                        minutes, seconds = [int(t) for t in single_stat_line['min'].split(":")]
                         single_stat_line['toi'] = minutes * 60 + seconds
                         # calculating shots against
-                        single_stat_line['sa'] = (
-                            single_stat_line['sv'] + single_stat_line['ga'])
+                        single_stat_line['sa'] = (single_stat_line['sv'] + single_stat_line['ga'])
                         # re-calculating save percentage
                         if single_stat_line['sa']:
                             single_stat_line['sv_pctg'] = round(
-                                100 - single_stat_line['ga'] /
-                                single_stat_line['sa'] * 100., 3)
+                                100 - single_stat_line['ga'] / single_stat_line['sa'] * 100., 3)
                         # re-calculating goals against average
                         if single_stat_line['ga']:
-                            single_stat_line['gaa'] = round(
-                                single_stat_line['ga'] * 3600 /
-                                single_stat_line['toi'], 2)
+                            single_stat_line['gaa'] = round(single_stat_line['ga'] * 3600 / single_stat_line['toi'], 2)
                         else:
                             single_stat_line['gaa'] = 0
 
@@ -192,15 +177,12 @@ if __name__ == '__main__':
                     plr_career_stats['seasons'].append(single_stat_line)
                 # adding full career stats to according container
                 else:
-                    plr_career_stats['career'][
-                        single_stat_line['season_type']] = single_stat_line
+                    plr_career_stats['career'][single_stat_line['season_type']] = single_stat_line
 
             # exporting single player career stats
-            plr_career_stats['seasons'] = list(
-                reversed(plr_career_stats['seasons']))
+            plr_career_stats['seasons'] = list(reversed(plr_career_stats['seasons']))
             plr_tgt_path = os.path.join(per_player_tgt_dir, "%d.json" % plr_id)
-            open(plr_tgt_path, 'w').write(
-                json.dumps(plr_career_stats, indent=2))
+            open(plr_tgt_path, 'w').write(json.dumps(plr_career_stats, indent=2))
 
             careers.append(plr_career_stats)
         print()

@@ -10,15 +10,12 @@ import operator
 from collections import namedtuple, defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
-TeamGame = namedtuple('TeamGame', [
-    'team', 'game_id', 'game_date', 'game_type', 'home_road', 'roster'])
-Streak = namedtuple('Streak', [
-    'player_id', 'team', 'type', 'length', 'from_date', 'to_date',
-    'goals', 'assists', 'points'])
+TeamGame = namedtuple('TeamGame', ['team', 'game_id', 'game_date', 'game_type', 'home_road', 'roster'])
+Streak = namedtuple(
+    'Streak', ['player_id', 'team', 'type', 'length', 'from_date', 'to_date', 'goals', 'assists', 'points'])
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 PLAYER_STATS_SRC = 'del_player_game_stats.json'
@@ -54,8 +51,7 @@ def collect_team_games(games, teams):
                         roster.remove(0)
                 # creating actual team game
                 team_game = TeamGame(
-                    team, game['game_id'], game['date'],
-                    game['season_type'], home_road_key, sorted(roster))
+                    team, game['game_id'], game['date'], game['season_type'], home_road_key, sorted(roster))
                 single_team_games.append(team_game)
         else:
             # sorting all team games by date
@@ -93,9 +89,7 @@ def save_and_reset_streak(raw_streak, component, plr_id, team):
     return streak
 
 
-def post_process_streak(
-    all_streaks, raw_streak, component, plr_id, team, max_streak_lengths
-):
+def post_process_streak(all_streaks, raw_streak, component, plr_id, team, max_streak_lengths):
     """
     Handles post-processing of streak data after registering it. Includes
     creation of an actual streak item.
@@ -112,8 +106,7 @@ def get_streaks_for_player(plr_id, plr_team, player_stats, players):
     Retrieves scorings streaks for specified player only regardles of the team
     and whether he was dressed for all the team's games during the streak.
     """
-    plr_name = " ".join((
-        players[plr_id]['first_name'], players[plr_id]['last_name']))
+    plr_name = " ".join((players[plr_id]['first_name'], players[plr_id]['last_name']))
     print("+ Collecting loosely defined scoring streaks by %s" % plr_name)
     # setting container for all of a player's streaks
     single_player_streaks = defaultdict(list)
@@ -123,53 +116,36 @@ def get_streaks_for_player(plr_id, plr_team, player_stats, players):
     raw_streaks = dict()
     # initializing temporary container
     for component in ['goals', 'assists', 'points']:
-        raw_streaks[component] = {
-            'length': 0, 'goals': 0, 'assists': 0, 'points': 0,
-            'range': list()
-        }
+        raw_streaks[component] = {'length': 0, 'goals': 0, 'assists': 0, 'points': 0, 'range': list()}
 
-    single_player_stats = list(filter(
-        lambda d: d['player_id'] == plr_id and
-        d['team'] == plr_team, player_stats))
-    single_player_stats = sorted(
-        single_player_stats, key=lambda d: d['game_date'])
+    single_player_stats = list(filter(lambda d: d['player_id'] == plr_id and d['team'] == plr_team, player_stats))
+    single_player_stats = sorted(single_player_stats, key=lambda d: d['game_date'])
 
     for plr_game in single_player_stats:
         for component in ['goals', 'assists', 'points']:
             if plr_game[component]:
                 raw_streaks[component]['length'] += 1
-                raw_streaks[component][
-                    'goals'] += plr_game['goals']
-                raw_streaks[component][
-                    'assists'] += plr_game['assists']
-                raw_streaks[component][
-                    'points'] += plr_game['points']
-                raw_streaks[component][
-                    'range'].append(plr_game['game_date'])
+                raw_streaks[component]['goals'] += plr_game['goals']
+                raw_streaks[component]['assists'] += plr_game['assists']
+                raw_streaks[component]['points'] += plr_game['points']
+                raw_streaks[component]['range'].append(plr_game['game_date'])
             else:
-                post_process_streak(
-                    single_player_streaks, raw_streaks, component,
-                    plr_id, plr_team, max_streak_lengths)
+                post_process_streak(single_player_streaks, raw_streaks, component, plr_id, plr_team, max_streak_lengths)
     else:
         for component in ['goals', 'assists', 'points']:
-            post_process_streak(
-                single_player_streaks, raw_streaks, component,
-                plr_id, plr_team, max_streak_lengths)
+            post_process_streak(single_player_streaks, raw_streaks, component, plr_id, plr_team, max_streak_lengths)
 
     last_plr_game_date = single_player_stats[-1]['game_date']
 
-    return combine_single_player_streaks(
-        single_player_streaks, max_streak_lengths, last_plr_game_date)
+    return combine_single_player_streaks(single_player_streaks, max_streak_lengths, last_plr_game_date)
 
 
-def get_streaks_for_team_and_player(
-        plr_id, plr_team, team_games, player_stats, players):
+def get_streaks_for_team_and_player(plr_id, plr_team, team_games, player_stats, players):
     """
     Retrieves scorings streaks for specified player and team using provided
     team games and player statistics.
     """
-    plr_name = " ".join((
-        players[plr_id]['first_name'], players[plr_id]['last_name']))
+    plr_name = " ".join((players[plr_id]['first_name'], players[plr_id]['last_name']))
     print("+ Collecting strictly defined scoring streaks for %s" % plr_name)
     # setting container for all of a player's streaks
     single_player_streaks = defaultdict(list)
@@ -179,18 +155,14 @@ def get_streaks_for_team_and_player(
     raw_streaks = dict()
     # initializing temporary container
     for component in ['goals', 'assists', 'points']:
-        raw_streaks[component] = {
-            'length': 0, 'goals': 0, 'assists': 0, 'points': 0,
-            'range': list()
-        }
+        raw_streaks[component] = {'length': 0, 'goals': 0, 'assists': 0, 'points': 0, 'range': list()}
     for team_game in team_games[plr_team]:
         # re-setting all (possibly on-going) streaks if player didn't play in
         # current game
         if plr_id not in team_game.roster:
             for component in ['goals', 'assists', 'points']:
                 post_process_streak(
-                    single_player_streaks, raw_streaks, component,
-                    plr_id, team_game.team, max_streak_lengths)
+                    single_player_streaks, raw_streaks, component, plr_id, team_game.team, max_streak_lengths)
 
         for plr_game in player_stats:
             if (
@@ -201,35 +173,26 @@ def get_streaks_for_team_and_player(
                 for component in ['goals', 'assists', 'points']:
                     if plr_game[component]:
                         raw_streaks[component]['length'] += 1
-                        raw_streaks[component][
-                            'goals'] += plr_game['goals']
-                        raw_streaks[component][
-                            'assists'] += plr_game['assists']
-                        raw_streaks[component][
-                            'points'] += plr_game['points']
-                        raw_streaks[component][
-                            'range'].append(team_game.game_date)
+                        raw_streaks[component]['goals'] += plr_game['goals']
+                        raw_streaks[component]['assists'] += plr_game['assists']
+                        raw_streaks[component]['points'] += plr_game['points']
+                        raw_streaks[component]['range'].append(team_game.game_date)
                     else:
                         post_process_streak(
-                            single_player_streaks, raw_streaks, component,
-                            plr_id, team_game.team, max_streak_lengths)
+                            single_player_streaks, raw_streaks, component, plr_id, team_game.team, max_streak_lengths)
                 break
     # finally ending all on-going streaks
     else:
         for component in ['goals', 'assists', 'points']:
             post_process_streak(
-                single_player_streaks, raw_streaks, component,
-                plr_id, team_game.team, max_streak_lengths)
+                single_player_streaks, raw_streaks, component, plr_id, team_game.team, max_streak_lengths)
     # retrieving last game date for current team
     last_team_game_date = team_games[plr_team][-1].game_date
 
-    return combine_single_player_streaks(
-        single_player_streaks, max_streak_lengths, last_team_game_date)
+    return combine_single_player_streaks(single_player_streaks, max_streak_lengths, last_team_game_date)
 
 
-def combine_single_player_streaks(
-    single_player_streaks, max_streak_lengths, last_team_game_date
-):
+def combine_single_player_streaks(single_player_streaks, max_streak_lengths, last_team_game_date):
     """
     Combines all collected player scoring streaks determining the longest and
     (possibly) current ones as well.
@@ -241,8 +204,7 @@ def combine_single_player_streaks(
             streak_d = streak._asdict()
             streak_d['last_name'] = players[streak.player_id]['last_name']
             streak_d['full_name'] = " ".join((
-                players[streak.player_id]['first_name'],
-                players[streak.player_id]['last_name']
+                players[streak.player_id]['first_name'], players[streak.player_id]['last_name']
             ))
             streak_d['position'] = players[streak.player_id]['position']
             streak_d['iso_country'] = players[streak.player_id]['iso_country']
@@ -262,13 +224,11 @@ def combine_single_player_streaks(
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Retrieve DEL scoring streaks.')
+    parser = argparse.ArgumentParser(description='Retrieve DEL scoring streaks.')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, default=2020,
-        type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process games for',
-        help="The season information will be processed for")
+        '-s', '--season', dest='season', required=False,
+        metavar='season to process games for', help="The season information will be processed for",
+        default=2020, type=int, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
     season = args.season
@@ -290,9 +250,7 @@ if __name__ == '__main__':
     [teams.add(game['home_abbr']) for game in games]
     [teams.add(game['road_abbr']) for game in games]
     # collecting games played by each team and player
-    [player_teams.add((
-        player_stat['player_id'],
-        player_stat['team'])) for player_stat in player_stats]
+    [player_teams.add((player_stat['player_id'], player_stat['team'])) for player_stat in player_stats]
     # collecting indivudual team games
     team_games = collect_team_games(games, teams)
 
@@ -302,18 +260,15 @@ if __name__ == '__main__':
     # retrieving scoring streaks in parallel threads
     with ThreadPoolExecutor(max_workers=8) as threads:
         tasks = {threads.submit(
-            get_streaks_for_team_and_player,
-            plr_id, plr_team, team_games, player_stats, players
-        ): (
-            plr_id, plr_team) for plr_id, plr_team in player_teams}
+            get_streaks_for_team_and_player, plr_id, plr_team, team_games, player_stats, players): (plr_id, plr_team)
+            for plr_id, plr_team in player_teams}
         for completed_task in as_completed(tasks):
             all_streaks_strict.extend(completed_task.result())
 
     with ThreadPoolExecutor(max_workers=8) as threads:
         tasks = {threads.submit(
-            get_streaks_for_player, plr_id, plr_team, player_stats, players
-        ): (
-            plr_id, plr_team) for plr_id, plr_team in player_teams}
+            get_streaks_for_player, plr_id, plr_team, player_stats, players): (plr_id, plr_team)
+            for plr_id, plr_team in player_teams}
         for completed_task in as_completed(tasks):
             all_streaks_loose.extend(completed_task.result())
 

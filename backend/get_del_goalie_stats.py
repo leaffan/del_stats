@@ -19,15 +19,12 @@ PLR_SRC = 'del_players.json'
 LEAGUE_SRC = 'del_league_stats.json'
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
 
-SKR_SITUATIONS = [
-    '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
-SHOT_ZONES = [
-    'blue_line', 'left', 'right', 'slot', 'neutral_zone']
+SKR_SITUATIONS = ['5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
+SHOT_ZONES = ['blue_line', 'left', 'right', 'slot', 'neutral_zone']
 
 U23_CUTOFF_DATES = {
     2016: parse("1994-01-01"),
@@ -47,8 +44,7 @@ def retrieve_goalies_in_game(game):
     for interval in interval_tree:
         if type(interval[-1]) is GoalieShift:
             gs = interval[-1]
-            goalie_seconds[(gs.team, gs.player_id)] += (
-                abs(interval[0] - interval[1]))
+            goalie_seconds[(gs.team, gs.player_id)] += (abs(interval[0] - interval[1]))
 
     # retrieving on-going goalie shifts at time of the game-winning goal
     # later used to determine the goalie of record
@@ -83,8 +79,7 @@ def calculate_save_pctg(goalie_dict, type=''):
         sv_key = 'save_pctg'
 
     if type in ('EV', 'SH', 'PP'):
-        shots_against, goals_against = collect_shots_goals_per_situations(
-            goalie_dict, type)
+        shots_against, goals_against = collect_shots_goals_per_situations(goalie_dict, type)
     else:
         shots_against = goalie_dict[sa_key]
         goals_against = goalie_dict[ga_key]
@@ -94,14 +89,15 @@ def calculate_save_pctg(goalie_dict, type=''):
         goalie_dict["ga_%s" % type.lower()] = goals_against
 
     if shots_against:
-        goalie_dict[sv_key] = round(
-            100 - goals_against / shots_against * 100., 3)
+        goalie_dict[sv_key] = round(100 - goals_against / shots_against * 100., 3)
     else:
         goalie_dict[sv_key] = None
 
 
 def collect_shots_goals_per_situations(goalie_dict, situation='EV'):
-
+    """
+    Collecs shots against for specified player situation.
+    """
     shots_against = 0
     goals_against = 0
 
@@ -152,16 +148,14 @@ def is_shutout(goalie_dict, goalies_in_game):
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Download DEL goalie game statistics.')
+    parser = argparse.ArgumentParser(description='Download DEL goalie game statistics.')
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of goalie games')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, default=2020,
         type=int, choices=[2016, 2017, 2018, 2019, 2020],
-        metavar='season to process games for',
-        help="The season information will be processed for")
+        metavar='season to process games for', help="The season information will be processed for")
 
     args = parser.parse_args()
     initial = args.initial
@@ -196,10 +190,7 @@ if __name__ == '__main__':
 
     for game in games[:]:
 
-        game_shots = list(filter(
-            lambda d: d['game_id'] == game['game_id'] and
-            d['target_type'] == 'on_goal', shots
-        ))
+        game_shots = list(filter(lambda d: d['game_id'] == game['game_id'] and d['target_type'] == 'on_goal', shots))
 
         # skipping already processed games
         if game['game_id'] in registered_games:
@@ -209,18 +200,12 @@ if __name__ == '__main__':
 
         # retrieving goalies dressed from game item
         goalies_dressed = [
-            (game['home_abbr'], game['home_g1'][0]
-                if 'home_g1' in game else None),
-            (game['home_abbr'], game['home_g2'][0]
-                if 'home_g2' in game else None),
-            (game['home_abbr'], game['home_g3'][0]
-                if 'home_g3' in game else None),
-            (game['road_abbr'], game['road_g1'][0]
-                if 'road_g1' in game else None),
-            (game['road_abbr'], game['road_g2'][0]
-                if 'road_g2' in game else None),
-            (game['road_abbr'], game['road_g3'][0]
-                if 'road_g3' in game else None),
+            (game['home_abbr'], game['home_g1'][0] if 'home_g1' in game else None),
+            (game['home_abbr'], game['home_g2'][0] if 'home_g2' in game else None),
+            (game['home_abbr'], game['home_g3'][0] if 'home_g3' in game else None),
+            (game['road_abbr'], game['road_g1'][0] if 'road_g1' in game else None),
+            (game['road_abbr'], game['road_g2'][0] if 'road_g2' in game else None),
+            (game['road_abbr'], game['road_g3'][0] if 'road_g3' in game else None),
         ]
         goalies_in_game, gw_goal_intervals = retrieve_goalies_in_game(game)
 
@@ -269,16 +254,14 @@ if __name__ == '__main__':
             # setting u23 status
             if (
                 goalie_dict['country'] == 'de' and
-                parse(players[str(goalie_id)]['dob']) >= U23_CUTOFF_DATES[
-                    game['season']]
+                parse(players[str(goalie_id)]['dob']) >= U23_CUTOFF_DATES[game['season']]
             ):
                 goalie_dict['u23'] = True
             else:
                 goalie_dict['u23'] = False
 
             print("\t+ Retrieving goalie stats for %s %s (%s)" % (
-                goalie_dict['first_name'], goalie_dict['last_name'],
-                goalie_team))
+                goalie_dict['first_name'], goalie_dict['last_name'], goalie_team))
 
             goalie_dict['games_dressed'] += 1
             # checking whether goaltender actually played
@@ -342,24 +325,17 @@ if __name__ == '__main__':
 
             for shot in game_shots:
                 # skipping shot if not from current game or not on goal
-                if (
-                    shot['game_id'] != game['game_id'] or
-                    shot['target_type'] != 'on_goal'
-                ):
+                if shot['game_id'] != game['game_id'] or shot['target_type'] != 'on_goal':
                     continue
                 # checking whether shot was on current goalie
-                if (
-                    shot['team_against'] == goalie_team and
-                    shot['goalie'] == goalie_id
-                ):
+                if shot['team_against'] == goalie_team and shot['goalie'] == goalie_id:
                     # counting shots and goals against
                     goalie_dict['shots_against'] += 1
                     goalie_dict["sa_%s" % shot['plr_situation_against']] += 1
                     goalie_dict["sa_%s" % shot['shot_zone'].lower()] += 1
                     if shot['scored']:
                         goalie_dict['goals_against'] += 1
-                        goalie_dict[
-                            "ga_%s" % shot['plr_situation_against']] += 1
+                        goalie_dict["ga_%s" % shot['plr_situation_against']] += 1
                         goalie_dict["ga_%s" % shot['shot_zone'].lower()] += 1
             else:
                 # calculating save percentages
@@ -373,9 +349,7 @@ if __name__ == '__main__':
                 calculate_save_pctg(goalie_dict)
                 # calculating goals against average
                 if goalie_dict['goals_against']:
-                    goalie_dict['gaa'] = round(
-                        goalie_dict['goals_against'] * 3600 /
-                        goalie_dict['toi'], 2)
+                    goalie_dict['gaa'] = round(goalie_dict['goals_against'] * 3600 / goalie_dict['toi'], 2)
                 else:
                     goalie_dict['gaa'] = 0
 
@@ -387,10 +361,8 @@ if __name__ == '__main__':
             calculate_goals_saved_above_average(goalie_dict, league_data)
 
             goalie_dict['game_score'] = round(
-                -0.75 * goalie_dict['goals_against'] +
-                0.1 * (
-                    goalie_dict['shots_against'] -
-                    goalie_dict['goals_against']), 2)
+                -0.75 * goalie_dict['goals_against'] + 0.1 * (
+                    goalie_dict['shots_against'] - goalie_dict['goals_against']), 2)
 
             goalies_per_game.append(goalie_dict)
 

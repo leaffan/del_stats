@@ -8,8 +8,7 @@ import yaml
 from collections import defaultdict
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PRE_SEASON_HEAD2HEAD_SRC = 'pre_season_h2h.json'
 SEASON_HEAD2HEAD_TGT = 'h2h.json'
