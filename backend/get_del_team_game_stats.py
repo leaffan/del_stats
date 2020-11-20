@@ -11,11 +11,10 @@ from datetime import datetime
 from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
-from utils import name_corrections, coaches, capacities
+from utils import name_corrections, coaches, capacities, divisions
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
@@ -98,6 +97,12 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         game_stat_line['team'] = game["%s_abbr" % key]
         game_stat_line['opp_team_id'] = game["%s_id" % opp_key]
         game_stat_line['opp_team'] = game["%s_abbr" % opp_key]
+        # identifying team's and opposing team's division (if
+        # applicable for current season and season type)
+        if (game['season'], game['season_type']) in divisions:
+            current_divisions = divisions[game['season'], game['season_type']]
+            game_stat_line['division'] = current_divisions[game_stat_line['team']]
+            game_stat_line['opp_division'] = current_divisions[game_stat_line['opp_team']]
         # TODO: reactivate when schedule game id is available again
         # game_stat_line['schedule_game_id'] = game['schedule_game_id']
         game_stat_line['arena'] = correct_name(game['arena'])
@@ -562,23 +567,34 @@ def correct_name(name, game_date=None, corrections=name_corrections):
     # abbreviation, e.g. 1738_IEC (used in case of missing information about
     # coaches)
     if "_" in name and name[0].isdigit():
-        return name_corrections[name]
+        if name not in name_corrections:
+            game_id, team_abbr = name.split("_")
+            print("\t+ Need to set coach information for %s in game %s manually." % (team_abbr, game_id))
+            return name
+        else:
+            return name_corrections[name]
+    # at times coaches' names are given as *Jackson, Don* or *Gross; Pavel*
     for delimiter in [',', ';']:
         if delimiter in name:
-            name = " ".join(
-                [token.strip() for token in name.split(delimiter)][::-1])
+            name = " ".join([token.strip() for token in name.split(delimiter)][::-1])
+    # at times coaches' name are specified in upper case
     if name.upper() == name:
         name = name.title()
+    # conducting manual coach replacement, indicated in list of name corrections
+    # by *name of replacement coach//date for which the replacement should be made*
     if name in name_corrections:
-        single_date_correction, *valid_on_date = (
-            name_corrections[name].split("//"))
+        single_date_correction, *valid_on_date = name_corrections[name].split("//")
         if game_date and valid_on_date:
             valid_on_date = parse(valid_on_date[0])
-            # checking if game had been played before expiration date
+            # checking if current game was actually played on date of coach replacement
             if game_date == valid_on_date:
                 name = single_date_correction
         else:
             name = name
+    # at times former assistants become head coaches and therefore their names no longer need to be adjusted,
+    # the corresponding name correction is indicated in list of all name corrections by a *valid until* date
+    # specified after a pipe symbol, e.g. *'Pierre Beaulieu': 'Brandon Reid|2019-12-12'* means Pierre Beaulieu
+    # is adjusted to Brandon Reid but only for games played until Dec 12, 2019
     tries = 0
     while name in name_corrections and tries < 3:
         if "//" in name_corrections[name]:
