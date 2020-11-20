@@ -19,7 +19,7 @@ coaches = [
     'Larry Mitchell', 'Kevin Gaudet', 'Pekka Tirkkonen', 'Martin Jiranek',
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
-    'Niklas Sundblad', 'Glen Hanlon',
+    'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak',
 ]
 
 
@@ -92,6 +92,7 @@ name_corrections = {
     '1691_STR': 'Tom Pokel',
     '1691_WOB': 'Pat Cortina',
     '1794_RBM': 'Don Jackson',
+    '1798_KEV': 'Glen Hanlon',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
@@ -122,6 +123,18 @@ capacities = {
     'Helios Arena': 6214,
     'Eisstadion Straubing': 5825,
     'EisArena Wolfsburg': 4503,
+    'Sportforum Berlin': 4695,
+}
+
+divisions = {
+    (2020, 'MSC'): {
+        'BHV': 'A', 'WOB': 'A', 'KEV': 'A', 'DEG': 'A',
+        'SWW': 'B', 'MAN': 'B', 'RBM': 'B', 'EBB': 'B',
+    },
+    (2020, 'RS'): {
+        'BHV': 'Nord', 'WOB': 'Nord', 'KEV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'EBB': 'Nord',
+        'SWW': 'Süd', 'MAN': 'Süd', 'RBM': 'Süd', 'AEV': 'Süd', 'NIT': 'Süd', 'IEC': 'Süd', 'STR': 'Süd',
+    }
 }
 
 
