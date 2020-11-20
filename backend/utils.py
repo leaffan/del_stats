@@ -133,7 +133,7 @@ divisions = {
     },
     (2020, 'RS'): {
         'BHV': 'Nord', 'WOB': 'Nord', 'KEV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'EBB': 'Nord',
-        'SWW': 'Süd', 'MAN': 'Süd', 'RBM': 'Süd', 'AEV': 'Süd', 'NIT': 'Süd', 'IEC': 'Süd', 'STR': 'Süd',
+        'SWW': 'Süd', 'MAN': 'Süd', 'RBM': 'Süd', 'AEV': 'Süd', 'NIT': 'Süd', 'ING': 'Süd', 'STR': 'Süd',
     }
 }
 
