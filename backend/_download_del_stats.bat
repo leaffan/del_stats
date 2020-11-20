@@ -28,7 +28,6 @@ python download_game_data.py -s %SEASON% -g %GAME_TYPE% shifts
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% shots
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% faceoffs
 
-if [%SEASON%] EQU [2019] (
+if [%SEASON%] EQU [2020] (
     python download_career_data.py
 )
-
