@@ -10,9 +10,17 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2019
-    
+        "valid_to": 2019,
+        "colors": [
+            "#C00D1E", "#32553B", "#FFFFFF"
+        ]
     },
     {
         "abbr": "EBB",
@@ -25,8 +33,18 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "A",
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#D61825", "#1C2B64", "#FFFFFF"
+        ]
     },
     {
         "abbr": "BHV",
@@ -39,8 +57,18 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "B",
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#C00D0E", "#FFFFFF", "#C00D0E"
+        ]
     },
     {
         "abbr": "DEG",
@@ -53,8 +81,18 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "A",
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#E1051B", "#F9B800", "#E1051B"
+        ]
     },
     {
         "abbr": "ING",
@@ -67,8 +105,17 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2019
+        "valid_to": 2019,
+        "colors": [
+            "#27A6C4", "#0D2C5D", "#FFFFFF"
+        ]
     },
     {
         "abbr": "IEC",
@@ -81,8 +128,17 @@
             "2018": false,
             "2019": false
         },
+        "division":
+        {
+            "2020": {
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2019
+        "valid_to": 2019,
+        "colors": [
+            "#1A3C85", "#FFFFFF", "#1A3C85"
+        ]
     },
     {
         "abbr": "KEC",
@@ -95,8 +151,17 @@
             "2018": true,
             "2019": false
         },
-        "valid_from": 1994,
-        "valid_to": 2019
+        "division":
+        {
+            "2020": {
+                "RS": "Nord"
+            }
+        },
+       "valid_from": 1994,
+        "valid_to": 2019,
+        "colors": [
+            "#000000", "#E30613", "#FFFFFF"
+        ]
     },
     {
         "abbr": "KEV",
@@ -109,8 +174,18 @@
             "2018": false,
             "2019": false
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "A",
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#000000", "#FFEC00", "#000000"
+        ]
     },
     {
         "abbr": "MAN",
@@ -123,8 +198,18 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "B",
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#F0192D", "#004289", "#FFFFFF"
+        ]
     },
     {
         "abbr": "RBM",
@@ -137,13 +222,23 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "B",
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#BB0508", "#1A2E56", "#FFFFFF"
+        ]
     },
     {
         "abbr": "NIT",
-        "url_name": "thomas-sabo-ice-tigers",
-        "full_name": "Thomas Sabo Ice Tigers",
+        "url_name": "nuernberg-ice-tigers",
+        "full_name": "Nürnberg Ice Tigers",
         "location": "Nürnberg",
         "id": 14,
         "po":
@@ -151,8 +246,17 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2019
+        "valid_to": 2019,
+        "colors": [
+            "#878787", "#FFFFFF", "#E2001A"
+        ]
     },
     {
         "abbr": "SWW",
@@ -165,8 +269,18 @@
             "2018": false,
             "2019": false
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "A",
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#1756AD", "#FFFFFF", "#1756AD"
+        ]
     },
     {
         "abbr": "STR",
@@ -179,8 +293,17 @@
             "2018": true,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "RS": "Süd"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2019
+        "valid_to": 2019,
+        "colors": [
+            "#0055A4", "#FFFFFF", "#0055A4"
+        ]
     },
     {
         "abbr": "WOB",
@@ -193,8 +316,18 @@
             "2018": false,
             "2019": true
         },
+        "division":
+        {
+            "2020": {
+                "MSC": "A",
+                "RS": "Nord"
+            }
+        },
         "valid_from": 1994,
-        "valid_to": 2020
+        "valid_to": 2020,
+        "colors": [
+            "#000000", "#EB6911", "#000000"
+        ]
     },
     {
         "abbr": "FRA",
