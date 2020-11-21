@@ -17,6 +17,12 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         $scope.players = res.data;
     });
 
+    // retrieving current team's colors
+    $http.get('./js/teams.json').then(function (res) {
+        $scope.currentTeam = res.data.filter(team => team.abbr == $routeParams.team);
+        $scope.colors = $scope.currentTeam[0].colors;
+    });
+    
     // loading stats from external json file
     $http.get('data/' + $scope.season + '/per_player/' + $routeParams.team + '_' + $routeParams.player_id + '.json').then(function (res) {
         $scope.player_stats = res.data;
@@ -34,6 +40,8 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         $scope.monthsPlayed = [...new Set($scope.player_stats.map(item => moment(item.game_date).month()))];
         // setting to round selection to maximum round played
         $scope.toRoundSelect = $scope.maxRoundPlayed;
+        // retrieving all numbers a player used
+        $scope.numbersWorn = [...new Set($scope.player_stats.map(item => item.no))].sort();
     });
 
     // loading goalie stats
@@ -44,11 +52,15 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
     $http.get('data/'+ $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
         seen = [];
         $scope.all_players = []
-        // de-duplicating array with players
+        // de-duplicating array with players because they usually will appear with
+        // both aggregated regular season and playoff statistics
         res.data[1].forEach(element => {
-            if (!seen[element.player_id]) {
+            // using a combination of player id and team abbreviation to account for players that
+            // changed teams during the season
+            player_team_key = element.player_id + '_' + element.team;
+            if (!seen[player_team_key]) {
                 $scope.all_players.push(element);
-                seen[element.player_id] = true;
+                seen[player_team_key] = true;
             }
         });
         // $scope.all_players = res.data[1];
@@ -59,12 +71,6 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         new_team: $routeParams.team,
         player_id: $routeParams.player_id,
         new_player_id: $routeParams.player_id,
-        // possibly no longer needed:
-        countries: {
-            'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
-            'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
-            'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
-        },
         full_teams: [
             {'abbr': 'AEV', 'url_name': 'augsburger-panther', 'full_name': 'Augsburger Panther'},
             {'abbr': 'EBB', 'url_name': 'eisbaeren-berlin', 'full_name': 'Eisbären Berlin'},
