@@ -180,5 +180,19 @@
         {"data_key": "trailing_pctg", "col_header": "Trailing [%]", "expl_de": "Anteil der Zeit in Rückstand", "expl_en": "Percentage of Time Played Trailing"},
         {"data_key": "tied", "col_header": "Tied", "expl_de": "Zeit im Gleichstand", "expl_en": "Time Tied"},
         {"data_key": "tied_pctg", "col_header": "Tied [%]", "expl_de": "Anteil der Zeit im Gleichstand", "expl_en": "Percentage of Time Played Tied"}
+    ],
+    "group_standings": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "rw", "col_header": "W", "expl_de": "Siege nach regulärer Spielzeit", "expl_en": "Wins"},
+        {"data_key": "ow", "col_header": "OTW", "expl_de": "Siege nach Verlängerung", "expl_en": "Overtime Wins"},
+        {"data_key": "sw", "col_header": "SOW", "expl_de": "Siege nach Penaltyschießen", "expl_en": "Shootout Wins"},
+        {"data_key": "ol", "col_header": "OTL", "expl_de": "Niederlagen nach Verlängerung", "expl_en": "Overtime Losses"},
+        {"data_key": "sl", "col_header": "SOL", "expl_de": "Niederlagen nach Penaltyschießen", "expl_en": "Shootout Losses"},
+        {"data_key": "rl", "col_header": "L", "expl_de": "Niederlagen nach regulärer Spielzeit", "expl_en": "Losses"},
+        {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
+        {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
+        {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
     ]
 }
