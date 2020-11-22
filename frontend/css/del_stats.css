@@ -74,4 +74,11 @@ div.main-bg { background-color: rgb(216, 250, 250); }
     font-family: jersey;
     src: url('jersey.ttf') format('truetype');
 }
-.jersey { font-family: jersey;}
+.jersey {
+    font-family: jersey;
+}
+
+caption {
+    font-weight: bold;
+    caption-side: top;
+}
