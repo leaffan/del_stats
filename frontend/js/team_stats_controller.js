@@ -33,7 +33,6 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     $q.all(promises).then(function (results) {
         $scope.dcup_date = moment(results[0].data['dates']['dcup_date']);
         $scope.avg_attendance_last_season = results[0].data['avg_attendance_last_season'];
-        // $scope.all_players = results[0].data;
     });
     function getDatesAttendances() {
         return $http.get('./data/' + $scope.season + '/dates_attendance.json');
@@ -72,9 +71,9 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         $scope.team_stats = res.data[1];
         // retrieving maximum round played
         $scope.maxRoundPlayed = Math.max.apply(Math, $scope.team_stats.map(function(o) { return o.round; })).toString();
-        // retrieving all weekdays a game was played by the current team
+        // retrieving all weekdays a game was played by all the teams
         $scope.weekdaysPlayed = [...new Set($scope.team_stats.map(item => item.weekday))].sort();
-        // retrieving all months a game was played by the current team
+        // retrieving all months a game was played by all the teams
         $scope.monthsPlayed = [...new Set($scope.team_stats.map(item => moment(item.game_date).month()))];
         // setting to round selection to maximum round played
         $scope.toRoundSelect = $scope.maxRoundPlayed;
@@ -93,6 +92,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
                 if ($scope.seasonTypeSelect != 'PO' || $scope.team_playoff_lookup[team]) {
                     filtered_team_stats[team] = {};
                     filtered_team_stats[team]['team'] = team;
+                    filtered_team_stats[team]['division'] = element['division'];
                     $scope.svc.stats_to_aggregate().forEach(category => {
                         filtered_team_stats[team][category] = 0;
                     });
@@ -444,7 +444,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             'sortDescending': sortDescending
         };
         // toggling additional option list in standings view
-        if ($scope.tableSelect === 'standings') {
+        if ($scope.tableSelect === 'standings' || $scope.tableSelect === 'group_standings') {
             $scope.isStandingsView = true;
         } else {
             $scope.isStandingsView = false;
@@ -456,6 +456,14 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         } else {
             $scope.isAttendanceView = false;
         }
+        // setting the right divisions/groups corresponding to season type
+        if ($scope.seasonTypeSelect === 'MSC') {
+            $scope.divisions = ['A', 'B'];
+        } else {
+            $scope.divisions = ['Nord', 'Süd'];
+        }
+        console.log($scope.divisions);
+        console.log($scope.tableSelect);
     };
 
     // adjusting sort order after click on column header
