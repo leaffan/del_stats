@@ -10,15 +10,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     } else {
         $scope.seasonTypeSelect = 'RS';
     }
+    // initially setting indicators which view we're currently in
     $scope.isStandingsView = true;
-    // TODO: find out what this was supposed for
-    $scope.isAttendanceView = false;
     $scope.sortConfig = {
         'sortKey': 'points',
         'sortCriteria': ['points', 'score_diff', 'score'],
         'sortDescending': true
     }
     $scope.fromRoundSelect = '1';
+    // initially setting memory for previously used home/away game selection
+    $scope.oldHomeAwaySelect = 'unused';
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/team_stats_columns.json').then(function (res) {
@@ -366,6 +367,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {
         'standings': 'points',
+        'group_standings': 'points',
         'special_team_stats': 'pp_pctg',
         'goal_stats': 'goals_diff',
         'shot_stats': 'shots_on_goal',
@@ -427,6 +429,9 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
 
     // changing sorting criteria according to table selected for display
     $scope.changeTable = function() {
+        // re-setting to previous home/away-game selection if
+        // changing back from attendance view
+        console.log($scope.oldHomeAwaySelect);
         // retrieving sort key for current table from list of default table
         // sort criteria
         sortKey = $scope.tableSortCriteria[$scope.tableSelect];
@@ -452,9 +457,14 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         }
         // checking whether we're in attendance table view
         if ($scope.tableSelect === 'attendance_stats') {
-            $scope.isAttendanceView = true;
+            $scope.oldHomeAwaySelect = $scope.homeAwaySelect;
+            console.log($scope.oldHomeAwaySelect);
+            $scope.homeAwaySelect = 'home';
         } else {
-            $scope.isAttendanceView = false;
+            if ($scope.oldHomeAwaySelect != 'unused') {
+                $scope.homeAwaySelect = $scope.oldHomeAwaySelect;
+                $scope.oldHomeAwaySelect = undefined;
+            }
         }
         // setting the right divisions/groups corresponding to season type
         if ($scope.seasonTypeSelect === 'MSC') {
@@ -462,8 +472,6 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         } else {
             $scope.divisions = ['Nord', 'Süd'];
         }
-        console.log($scope.divisions);
-        console.log($scope.tableSelect);
     };
 
     // adjusting sort order after click on column header
