@@ -429,9 +429,6 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
 
     // changing sorting criteria according to table selected for display
     $scope.changeTable = function() {
-        // re-setting to previous home/away-game selection if
-        // changing back from attendance view
-        console.log($scope.oldHomeAwaySelect);
         // retrieving sort key for current table from list of default table
         // sort criteria
         sortKey = $scope.tableSortCriteria[$scope.tableSelect];
