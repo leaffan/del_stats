@@ -19,7 +19,7 @@ coaches = [
     'Larry Mitchell', 'Kevin Gaudet', 'Pekka Tirkkonen', 'Martin Jiranek',
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
-    'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak',
+    'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak', 'Mihails Svarinskis',
 ]
 
 
@@ -103,6 +103,10 @@ player_name_corrections = {
     1410: {
         'first_name': 'Patrick Joseph',
         'full_name': 'Patrick Joseph Alber'
+    },
+    1601: {
+        'first_name': 'Tylor',
+        'full_name': 'Tylor Spink'
     }
 }
 
