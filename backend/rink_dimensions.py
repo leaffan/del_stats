@@ -21,6 +21,14 @@ polygon_names = [
     'HOME_BEHIND_GOAL', 'ROAD_BEHIND_GOAL',
 ]
 
+polygon_to_original_mapping = {
+    'HOME_SLOT': 'home_center_polygon', 'ROAD_SLOT': 'away_center_polygon',
+    'HOME_BLUE_LINE': 'home_defense_polygon', 'ROAD_BLUE_LINE': 'away_defense_polygon',
+    'HOME_LEFT': 'home_top_polygon', 'ROAD_LEFT': 'away_bottom_polygon',
+    'HOME_RIGHT': 'home_bottom_polygon', 'ROAD_RIGHT': 'away_top_polygon',
+}
+
+
 HOME_SLOT = [[52, 46], [67, 46], [87, 8], [87, -8], [67, -46], [52, -46]]
 ROAD_SLOT = [[-52, 46], [-67, 46], [-87, 8], [-87, -8], [-67, -46], [-52, -46]]
 
