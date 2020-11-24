@@ -49,8 +49,8 @@
                 <div class="input-group-prepend">
                     <span class="input-group-text">Team:</span>
                 </div>
-                <select class="form-control" id="team_select" data-ng-model="model.new_team" data-ng-change="">
-                    <option data-ng-option data-ng-repeat="full_team in model.full_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                <select class="form-control" id="team_select" data-ng-model="model.new_team" data-ng-change="changeTeam()">
+                    <option data-ng-option data-ng-repeat="full_team in all_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
                 </select>
             </div>
             <div class="input-group col-6 pl-0">
@@ -95,7 +95,7 @@
                 </div>
                 <select class="form-control" id="opp_select" data-ng-model="oppFilter">
                     <option data-ng-option value selected="selected">alle</option>
-                    <option data-ng-option data-ng-repeat="full_team in model.full_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    <option data-ng-option data-ng-repeat="full_team in all_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
                 </select>
             </div>
         </div>
