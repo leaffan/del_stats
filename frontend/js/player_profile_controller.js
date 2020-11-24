@@ -17,9 +17,11 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         $scope.players = res.data;
     });
 
-    // retrieving current team's colors
+    // retrieving current season's teams as well currently selected team and its colors
     $http.get('./js/teams.json').then(function (res) {
-        $scope.currentTeam = res.data.filter(team => team.abbr == $routeParams.team);
+        $scope.all_teams = res.data.filter(team => team.valid_from <= $scope.season && team.valid_to >= $scope.season);
+        $scope.team_lookup = $scope.all_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
+        $scope.currentTeam = $scope.all_teams.filter(team => team.abbr == $routeParams.team);
         $scope.colors = $scope.currentTeam[0].colors;
     });
     
@@ -70,26 +72,8 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         team: $routeParams.team,
         new_team: $routeParams.team,
         player_id: $routeParams.player_id,
-        new_player_id: $routeParams.player_id,
-        full_teams: [
-            {'abbr': 'AEV', 'url_name': 'augsburger-panther', 'full_name': 'Augsburger Panther'},
-            {'abbr': 'EBB', 'url_name': 'eisbaeren-berlin', 'full_name': 'Eisbären Berlin'},
-            {'abbr': 'BHV', 'url_name': 'pinguins-bremerhaven', 'full_name': 'Pinguins Bremerhaven'},
-            {'abbr': 'DEG', 'url_name': 'duesseldorfer-eg', 'full_name': 'Düsseldorfer EG'},
-            {'abbr': 'ING', 'url_name': 'erc-ingolstadt', 'full_name': 'ERC Ingolstadt'},
-            {'abbr': 'IEC', 'url_name': 'iserlohn-roosters', 'full_name': 'Iserlohn Roosters'},
-            {'abbr': 'KEC', 'url_name': 'koelner-haie', 'full_name': 'Kölner Haie'},
-            {'abbr': 'KEV', 'url_name': 'krefeld-pinguine', 'full_name': 'Krefeld Pinguine'},
-            {'abbr': 'MAN', 'url_name': 'adler-mannheim', 'full_name': 'Adler Mannheim'},
-            {'abbr': 'RBM', 'url_name': 'ehc-red-bull-muenchen', 'full_name': 'EHC Red Bull München'},
-            {'abbr': 'NIT', 'url_name': 'thomas-sabo-ice-tigers', 'full_name': 'Thomas Sabo Ice Tigers'},
-            {'abbr': 'SWW', 'url_name': 'schwenninger-wild-wings', 'full_name': 'Schwenninger Wild Wings'},
-            {'abbr': 'STR', 'url_name': 'straubing-tigers', 'full_name': 'Straubing Tigers'},
-            {'abbr': 'WOB', 'url_name': 'grizzlys-wolfsburg', 'full_name': 'Grizzlys Wolfsburg'},
-        ]
+        new_player_id: $routeParams.player_id
     }
-
-    $scope.team_lookup = $scope.model.full_teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.url_name}), {});
 
     $scope.sortCriterion = 'game_date';
     $scope.statsSortDescending = true;
@@ -180,6 +164,12 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
             return true;
         }
     };
+
+    $scope.changeTeam = function() {
+        $scope.filtered_players = $scope.all_players.filter(player => player.team == $scope.model.new_team);
+        $scope.model.new_player_id = $scope.filtered_players[0].player_id;
+        $location.path('/player_profile/' + $scope.season + '/' + $scope.model.new_team + '/' + $scope.model.new_player_id);
+    }
 
     $scope.changePlayer = function() {
         $scope.model.player_id = $scope.model.new_player_id;
