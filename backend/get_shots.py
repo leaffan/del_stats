@@ -26,7 +26,7 @@ PP_SITS_DATA_TGT = 'del_pp_sits_goals.json'
 ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
 
 SHOT_RESULTS = {
-    1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal'
+    1: 'on_goal', 2: 'missed', 3: 'blocked', 4: 'on_goal', 5: 'post',
 }
 
 
@@ -243,12 +243,35 @@ if __name__ == '__main__':
                 dst = rd.ROAD_GOAL.distance(shot_pnt)
             shot['distance'] = round(dst, 2)
             # determining shot zone
+            shot['shot_zone'] = None
+            # first checking whether shot is actually in one of the defined shot zone polygons
             for poly_name, poly in rd.polygons:
-                if poly.intersects(shot_pnt):
+                if poly.contains(shot_pnt):
                     shot['shot_zone'] = poly_name[5:]
+                    # checking whether determined shot zone matches polygon in original data
+                    if poly_name in rd.polygon_to_original_mapping:
+                        if shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
+                            print("\tRetrieved shot zone '%s' does not match original polygon '%s'" % (
+                                poly_name, shot['polygon']))
+                            print(shot)
+                            print(shot_pnt)
                     break
+            if shot['shot_zone'] is None:
+                for poly_name, poly in rd.polygons:
+                    if poly.intersects(shot_pnt):
+                        shot['shot_zone'] = poly_name[5:]
+                        if poly_name in rd.polygon_to_original_mapping:
+                            if shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
+                                print("\tRetrieved shot zone '%s' by intersect does not match original polygon '%s'" % (
+                                    poly_name, shot['polygon']))
+                                print(shot)
+                                print(shot_pnt)
+                        break
             # determining target and outcome of shot
             shot['target_type'] = SHOT_RESULTS[shot['match_shot_resutl_id']]
+            if shot['target_type'] == 'post':
+                shot['target_type'] = 'missed'
+                shot['hit_post'] = True
             if shot['match_shot_resutl_id'] == 4:
                 shot['scored'] = True
             else:
