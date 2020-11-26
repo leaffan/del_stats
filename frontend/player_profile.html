@@ -16,7 +16,8 @@
             <div class="col-md-11">
                 <ul class="list-group list-group-horizontal my-1">
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Geburtsdatum:</b> {{ player_stats[0].date_of_birth | date: 'dd.MM.yyyy' }}</li>
-                    <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Alter:</b> {{ players[player_id].age.toFixed(3) }}</li>
+                    <li data-ng-if="season == 2020" class="col-4 list-group-item border-0 bg-transparent p-0"><b>Alter:</b> {{ players[player_id].age.toFixed(3) }}</li>
+                    <li data-ng-if="season < 2020" class="col-4 list-group-item border-0 bg-transparent p-0"><b>Alter:</b> {{ svc.parseFloat(season) - svc.parseFloat(player_stats[0].date_of_birth | date: 'yyyy') }}</li>
                 </ul>
                 <ul class="list-group list-group-horizontal my-1">
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Größe:</b> {{player_stats[0].height }} cm</li>
