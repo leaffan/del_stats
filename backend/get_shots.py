@@ -347,6 +347,10 @@ if __name__ == '__main__':
                     shot['players_on_against'] = sorted([
                         plr[-1]['player_id'] for plr in skaters if
                         plr[-1]['team'] == shot['team_against']])
+                # using empty lists if no shift data is available
+                else:
+                    shot['players_on_for'] = list()
+                    shot['players_on_against'] = list()
 
                 # retrieving goalie facing the shot
                 if game['home_abbr'] == shot['team_against']:
