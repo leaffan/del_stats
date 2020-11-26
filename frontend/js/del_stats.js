@@ -7,6 +7,7 @@ app.config(['$routeProvider', function($routeProvider){
         .when('/home', {
             title: 'DEL-Statistiken',
             templateUrl: 'home.html',
+            controller: 'homeController as ctrl',
             reloadOnSearch: false
         })
         .when('/del_stats/:season', {
