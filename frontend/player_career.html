@@ -55,7 +55,8 @@
         <tbody>
             <tr class="{{season.season_type === 'RS'? 'table-info' : 'table-warning'}}" data-ng-repeat="season in filtered_seasons | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-10">{{ season.season }}/{{ svc.pad(season.season + 1 - 2000, 2) }}</td>
-                <td class="w-10">{{ season.team }}</td>
+                <td data-ng-if="season.season < 2018" class="w-10">{{ season.team }}</td>
+                <td data-ng-if="season.season > 2017" class="w-10"><b><a href="#!/player_profile/{{season.season}}/{{season.team}}/{{player_id}}">{{ season.team }}</a></b></td>
                 <td class="w-10">{{ season.season_type }}</td>
                 <td class="w-07 text-right">{{ season.gp }}</td>
                 <td class="w-07 text-right">{{ season.g }}</td>
@@ -132,7 +133,8 @@
         <tbody>
             <tr class="{{season.season_type === 'RS'? 'table-info' : 'table-warning'}}" data-ng-repeat="season in filtered_seasons | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-08">{{ season.season }}/{{ svc.pad(season.season + 1 - 2000, 2) }}</td>
-                <td class="w-10">{{ season.team }}</td>
+                <td data-ng-if="season.season < 2018" class="w-10">{{ season.team }}</td>
+                <td data-ng-if="season.season > 2017" class="w-10"><b><a href="#!/player_profile/{{season.season}}/{{season.team}}/{{player_id}}">{{ season.team }}</a></b></td>
                 <td class="w-10">{{ season.season_type }}</td>
                 <td class="w-08 text-right">{{ season.gp }}</td>
                 <td class="w-08 text-right">{{ svc.formatTime(season.toi) }}</td>
