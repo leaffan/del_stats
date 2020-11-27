@@ -48,7 +48,7 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
             return;
         } 
         if ($scope.roundFilter == 'first_round_1') {
-            return 52;
+            return 28;
         }
         if (svc.isNumeric($scope.roundFilter)) {
             return svc.parseFloat($scope.roundFilter) - 1;
@@ -58,18 +58,21 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
         }
     };
 
+    // TODO: possibly reactivate that playoff stuff once we're at this point of the season
     $scope.getFollowingRound = function() {
-        if ($scope.roundFilter == 52) {
-            return $scope.playoff_rounds[0];
-        }
-        if ($scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1 === $scope.playoff_rounds.length)
+        // TODO: set max number for round filter automatically from schedule data
+        if ($scope.roundFilter == 28) {
             return;
-        if (svc.isNumeric($scope.roundFilter)) {
-            return svc.parseFloat($scope.roundFilter) + 1;
+            // return $scope.playoff_rounds[0];
         }
-        else {
-            return $scope.playoff_rounds[$scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1];
-        }
+        // if ($scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1 === $scope.playoff_rounds.length)
+        //     return;
+        // if (svc.isNumeric($scope.roundFilter)) {
+        return svc.parseFloat($scope.roundFilter) + 1;
+        // }
+        // else {
+        //     return $scope.playoff_rounds[$scope.playoff_rounds.findIndex(element => element === $scope.roundFilter) + 1];
+        // }
     };
 
     $scope.changeRound = function() {

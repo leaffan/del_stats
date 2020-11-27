@@ -1,48 +1,47 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg">
-        <div class="inline-headers">
-            <h2>Vorschaumappen zur DEL-Saison {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h2>
-        </div>
+    <div class="alert alert-info main-bg mb-2">
+        <h1>Vorschaumappen zur DEL-Saison {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info main-bg">
-        <p><a href="#!"><i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Startseite</b></a></p>
+    <div class="alert alert-info main-bg mb-2">
+        <a href="#!/team_stats/{{ season }}"><b>Teamstatistiken</b></a> | <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
     <!-- <div class="alert alert-danger">
-        <h4 style="margin-bottom: 0;"><b></b></h4>
+        <h4 class="mb-0"><b>Achtung</b></h4>
     </div> -->
 
     <form>
-        <div class="form_group">
-            <div class="input-group" style="width: 100%">
-                <label for="round_select">Spieltag:</label>
+        <div class="form-row mb-2">
+            <div class="input-group col-12">
+                <div class="input-group-prepend">
+                    <span class="input-group-text">Spieltag:</span>
+                </div>
                 <select class="form-control" id="round_select" data-ng-model="roundFilter" data-ng-change="changeRound()">
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 52)" value="{{round}}">{{round}}</option>
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 3)" value="first_round_{{round}}">1. Playoff-Runde [{{round}}]</option>
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 5)" value="quarter_finals_{{round}}">Viertelfinale [{{round}}]</option>
-<!-- 
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 4)" value="semi_finals_{{round}}">Halbfinale [{{round}}]</option>
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 4)" value="finals_{{round}}">Finale [{{round}}]</option>
- -->
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, 28)" value="{{round}}">{{round}}</option>
                 </select>
             </div>
         </div>        
     </form>
 
-    <br/>
-
-    <div class="alert alert-info main-bg">
-        <ul class="list-inline">
-            <li class="personal_stuff">
-                <a data-ng-if='previous_round !== undefined' data-ng-href="#!/previews/{{season}}/{{previous_round}}">
-                    <i class="fas fa-arrow-left" aria-hidden="true"></i> <b>Vorheriger Spieltag ({{svc.replaceRoundNames(previous_round)}})</b>
+    <div class="alert alert-info main-bg mb-2">
+        <ul class="list-group list-group-horizontal my-1">
+            <li class="col-4 list-group-item border-0 bg-transparent p-0 text-left">
+                <a data-ng-if="previous_round !== undefined" data-ng-href="#!/previews/{{season}}/{{previous_round}}">
+                    <i class="fas fa-arrow-left" aria-hidden="true"></i>
+                    <b>Vorheriger Spieltag ({{svc.replaceRoundNames(previous_round)}})</b>
                 </a>
             </li>
-            <li class="personal_stuff" style="text-align: center"><a data-ng-href="#!/previews/{{season}}/{{next_round}}"><b>Aktueller Spieltag ({{svc.replaceRoundNames(next_round)}})</b> <i class="fas fa-star" aria-hidden="true"></i></a></li>
-            <li class="personal_stuff" style="text-align: right">
-                <a data-ng-if='following_round !== undefined' data-ng-href="#!/previews/{{season}}/{{following_round}}">
-                    <b>Nachfolgender Spieltag ({{svc.replaceRoundNames(following_round)}})</b> <i class="fas fa-arrow-right" aria-hidden="true"></i>
+            <li class="col-4 list-group-item border-0 bg-transparent p-0 text-center">
+                <a data-ng-href="#!/previews/{{season}}/{{next_round}}">
+                    <b>Aktueller Spieltag ({{svc.replaceRoundNames(next_round)}})</b>
+                    <i class="fas fa-star" aria-hidden="true"></i>
+                </a>
+            </li>
+            <li class="col-4 list-group-item border-0 bg-transparent p-0 text-right">
+                <a data-ng-if="following_round !== undefined" data-ng-href="#!/previews/{{season}}/{{following_round}}">
+                    <b>Nachfolgender Spieltag ({{svc.replaceRoundNames(following_round)}})</b>
+                    <i class="fas fa-arrow-right" aria-hidden="true"></i>
                 </a>
             </li>
         </ul>
@@ -50,39 +49,42 @@
 
     <hr/>
 
-    <table class="table table-bordered table-striped table-condensed">
-        <thead>
-            <td class="text-center"><span class="rank">Spieltag</span></td>
-            <td class="text-center"><span class="rank">Datum</span></td>
-            <td class="text-center"><span class="rank">Uhrzeit</span></td>
-            <td class="text-center"><span class="rank">Heimteam</span></td>
-            <td class="text-center"><span class="rank">Gastteam</span></td>
-            <td class="text-center"><span class="rank">Ergebnis</span></td>
-            <td class="text-center"><span class="rank">Status</span></td>
-            <td class="text-center"><span class="rank">Vorschaumappe</span></td>
+    <table class="table table-responsive-md table-striped table-bordered table-hover">
+        <thead class="thead-light">
+            <tr>
+                <th class="text-center px-2"><span class="rank">Spieltag</span></th>
+                <th class="text-center px-2"><span class="rank">Datum</span></th>
+                <th class="text-center px-2"><span class="rank">Uhrzeit</span></th>
+                <th class="text-center px-2"><span class="rank">Heimteam</span></th>
+                <th class="text-center px-2"><span class="rank">Gastteam</span></th>
+                <th class="text-center px-2"><span class="rank">Ergebnis</span></th>
+                <th class="text-center px-2"><span class="rank">Status</span></th>
+                <th class="text-center px-2"><span class="rank">Vorschaumappe</span></th>
+            </tr>
         </thead>
+
         <tbody>
             <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
-                <td data-ng-if="svc.isNumeric(game.round)" class="col-md-1 text-right">{{ game.round }}</td>
-                <td data-ng-if="!svc.isNumeric(game.round)" class="col-md-1" style="width: 12%">{{ svc.replaceRoundNames(game.round) }}</td>
-                <td class="col-md-1 hidden-xs">
+                <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right px-2">{{ game.round }}</td>
+                <td data-ng-if="!svc.isNumeric(game.round)" class="w-10">{{ svc.replaceRoundNames(game.round) }}</td>
+                <td class="w-10 px-2">
                     <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YYYY' }}
                     </a>
                 </td>
-                <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
+                <!-- <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
                     <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
-                </td>
-                <td class="col-md-1">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
-                <td class="col-md-2"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
-                <td class="col-md-2"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
-                <td class="col-md-1">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
-                <td class="col-md-1">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
-                <td class="col-md-2">
-                    <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
-                    <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+                </td> -->
+                <td class="w-10 px-2">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
+                <td class="w-20 px-2"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
+                <td class="w-20 px-2"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
+                <td class="w-10 px-2">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
+                <td class="w-15 px-2">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
+                <td class="w-10 px-2">
+                    <a data-ng-if="game.days_left <= 50" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                    <span data-ng-if="game.days_left > 50">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
                 </td>
             </tr>
         </tbody>
