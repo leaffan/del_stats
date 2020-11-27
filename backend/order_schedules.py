@@ -6,8 +6,7 @@ import json
 import yaml
 import argparse
 
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 ROUND_MAPPING = {
     '1. Playoff-Runde': 'first_round',
@@ -20,13 +19,11 @@ ROUND_MAPPING = {
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Order DEL team schedules.')
+    parser = argparse.ArgumentParser(description='Order DEL team schedules.')
     parser.add_argument(
         '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to order schedules for', default=2020,
-        choices=[2016, 2017, 2018, 2019, 2020],
-        help="The season for which team schedules will be ordered")
+        metavar='season to order schedules for', help="The season for which team schedules will be ordered",
+        default=2020, choices=[2016, 2017, 2018, 2019, 2020])
 
     args = parser.parse_args()
     seasons = [args.season]
@@ -39,12 +36,13 @@ if __name__ == '__main__':
 
     for season in seasons:
         for game_type in game_types:
-            print("+ Aggregating schedules for %s season %d-%d" % (
-                game_types[game_type], season, season + 1))
+            # skipping MagentaSport Cup 2020
+            if season == 2020 and game_type == 4:
+                continue
+            print("+ Aggregating schedules for %s season %d-%d" % (game_types[game_type], season, season + 1))
             for team_id in teams:
                 team_schedule_src_path = os.path.join(
-                    CONFIG['base_data_dir'], 'schedules', str(season),
-                    str(game_type), "%d.json" % team_id)
+                    CONFIG['base_data_dir'], 'schedules', str(season), str(game_type), "%d.json" % team_id)
                 if not os.path.isfile(team_schedule_src_path):
                     continue
                 team_schedule = json.loads(open(team_schedule_src_path).read())
@@ -52,7 +50,7 @@ if __name__ == '__main__':
                     if not game['id'] in game_ids:
                         game_ids.add(game['id'])
                         game['game_id'] = game['id']
-                        # TODO: deal with non-identified round for MSC
+                        # setting round for non-regular season games
                         if game['round'] and not game['round'].isdigit():
                             rnd_type, rnd = game['round'].rsplit(maxsplit=1)
                             rnd_type = ROUND_MAPPING[rnd_type]
