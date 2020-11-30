@@ -294,7 +294,7 @@
     "plr_time_on_ice_shift_rankings": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
-        {"data_key": "time_on_ice_per_game_seconds", "col_header": "TOI/G", "expl_de": "Eiszeit/Spiel", "expl_en": "Time On Ice/Game"},
+        {"data_key": "time_on_ice_per_game", "col_header": "TOI/G", "expl_de": "Eiszeit/Spiel", "expl_en": "Time On Ice/Game"},
         {"data_key": "time_on_ice_seconds", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
         {"data_key": "shifts_per_game", "col_header": "SHF/G", "expl_de": "Wechsel/Spiel", "expl_en": "Shifts/Game"},
         {"data_key": "shifts", "col_header": "SHF", "expl_de": "Wechsel", "expl_en": "Shifts"},
