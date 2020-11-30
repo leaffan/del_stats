@@ -30,12 +30,16 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.current_home_vs_road_fixtures = $scope.current_home_team_fixtures.filter(function(value, index, arr) {
             return value['home']['name'] == $scope.current_game.guest.name || value['guest']['name'] == $scope.current_game.guest.name;
     	});
+        $scope.current_home_team_home_fixtures_cnt = ($scope.current_home_team_fixtures.filter(fixture => $scope.current_game.home.name == fixture['home']['name'])).length;
+        $scope.current_home_team_road_fixtures_cnt = ($scope.current_home_team_fixtures.filter(fixture => $scope.current_game.home.name == fixture['guest']['name'])).length;
         $scope.current_road_team_fixtures = $scope.games.filter(function(value, index, arr) {
             return value['status'] == 'BEFORE_MATCH' && ($scope.current_game.guest.name == value['home']['name'] || $scope.current_game.guest.name == value['guest']['name']);
         });
         $scope.current_road_vs_home_fixtures = $scope.current_road_team_fixtures.filter(function(value, index, arr) {
             return value['home']['name'] == $scope.current_game.home.name || value['guest']['name'] == $scope.current_game.home.name;
         });
+        $scope.current_road_team_home_fixtures_cnt = ($scope.current_road_team_fixtures.filter(fixture => $scope.current_game.guest.name == fixture['home']['name'])).length;
+        $scope.current_road_team_road_fixtures_cnt = ($scope.current_road_team_fixtures.filter(fixture => $scope.current_game.guest.name == fixture['guest']['name'])).length;
         $http.get('data/career_stats/per_team/'+ $scope.current_game.home.shortcut + '_stats.json').then(function (res) {
             $scope.home_career_stats = res.data;
         });
@@ -174,8 +178,10 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
         // ...for playoff participation indicator
         // $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po}), {});
+        // ...for team colors
+        $scope.team_color_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.full_name]: key.colors}), {});
     });
-
+    
     // loading arenas from external json file
     $http.get('data/arenas.json').then(function (res) {
         $scope.arenas = res.data;
