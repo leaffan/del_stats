@@ -14,7 +14,7 @@ CONFIG = yaml.safe_load(open(os.path.join(
 PRE_SEASON_HEAD2HEAD_SRC = 'pre_season_h2h.json'
 SEASON_HEAD2HEAD_TGT = 'h2h.json'
 TEAM_GAME_SRC = 'del_team_game_stats.json'
-SEASON = 2019
+SEASON = 2020
 
 if __name__ == '__main__':
 
@@ -30,6 +30,9 @@ if __name__ == '__main__':
 
     # collecting head-to-head records for current season
     for team_game in team_games[-1]:
+        # skipping non-regular season or playoff games, i.e. exhibition games
+        if team_game['season_type'] not in ['RS', 'PO']:
+            continue
         team = team_game['team']
         opp_team = team_game['opp_team']
         games_played = team_game['games_played']
