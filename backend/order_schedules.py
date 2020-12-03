@@ -37,8 +37,8 @@ if __name__ == '__main__':
     for season in seasons:
         for game_type in game_types:
             # skipping MagentaSport Cup 2020
-            if season == 2020 and game_type == 4:
-                continue
+            # if season == 2020 and game_type == 4:
+            #     continue
             print("+ Aggregating schedules for %s season %d-%d" % (game_types[game_type], season, season + 1))
             for team_id in teams:
                 team_schedule_src_path = os.path.join(
