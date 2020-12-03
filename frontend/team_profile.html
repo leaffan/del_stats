@@ -1,5 +1,5 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <div class="inline-headers">
             <div class="d-none d-md-block">
                 <span><img class="img-fluid" src="https://www.del.org/assets/img/teams/team_{{::current_team}}.png" alt="Team logo" width="40" height="40"/></span>
@@ -12,11 +12,11 @@
         </div>
     </div>
         
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <a href="#!/team_stats/{{::season}}"><b>Teamstatistiken</b></a> | <a href="#!/del_stats/{{::season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
     
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span data-ng-show="toggle" class="fa fa-minus"></span><span data-ng-show="!toggle" class="fa fa-plus"></span></b></span>
             <dl data-ng-show="toggle" class="row mx-2">
                 <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
@@ -240,7 +240,7 @@
         </div>
     </form>
 
-    <table id="game_additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_additional_stats'">
+    <table id="game_additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'game_additional_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -287,7 +287,7 @@
         </tbody>
     </table>
 
-    <table id="game_shots" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_shots'">
+    <table id="game_shots" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'game_shots'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -336,7 +336,7 @@
         </tbody>
     </table>
 
-    <table id="game_goals" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_goals'">
+    <table id="game_goals" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'game_goals'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -385,7 +385,7 @@
         </tbody>
     </table>
 
-    <table id="game_refs" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_refs'">
+    <table id="game_refs" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'game_refs'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -430,7 +430,7 @@
         </tbody>
     </table>
 
-    <table id="basic_game_by_game" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_game_by_game'">
+    <table id="basic_game_by_game" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'basic_game_by_game'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -480,7 +480,7 @@
         </tbody>
     </table>
 
-    <table id="special_team_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'special_team_stats'">
+    <table id="special_team_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'special_team_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -531,7 +531,7 @@
         </tbody>
     </table>
 
-    <table id="development" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'development'">
+    <table id="development" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'development'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -581,7 +581,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
+    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -632,7 +632,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+    <table id="shot_on_goal_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_on_goal_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -683,7 +683,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones_against'">
+    <table id="shot_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -734,7 +734,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+    <table id="shot_on_goal_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -784,7 +784,7 @@
         </tbody>
     </table>
 
-    <table id="score_states" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'score_states'">
+    <table id="score_states" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'score_states'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
@@ -830,7 +830,7 @@
         </tbody>
     </table>
 
-    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shootout_stats'">
+    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shootout_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">

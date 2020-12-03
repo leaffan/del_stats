@@ -1,9 +1,9 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <h1>DEL-Teamstatistiken für {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         Teamstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.
 
         <ul class="list-group list-group-horizontal my-1">
@@ -18,7 +18,7 @@
         </ul>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
@@ -125,7 +125,7 @@
         </div>
     </form>
 
-    <table id="standings" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'standings'">
+    <table id="standings" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'standings'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -159,7 +159,7 @@
     </table>
 
     <div data-ng-if="tableSelect == 'group_standings'">
-        <table id="standings_div_1" class="table table-responsive-md table-striped table-bordered table-hover table-sm small">
+        <table id="standings_div_1" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow">
             <caption class="pt-0 pb-2">Gruppe {{ divisions[0] }}:</caption>
             <thead class="thead-light">
                 <tr>
@@ -193,7 +193,7 @@
             </tbody>
         </table>
 
-        <table id="standings_div_2" class="table table-responsive-md table-striped table-bordered table-hover table-sm small">
+        <table id="standings_div_2" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow">
             <caption class="pt-0 pb-2">Gruppe {{ divisions[1] }}:</caption>
             <thead class="thead-light">
                 <tr>
@@ -229,7 +229,7 @@
 
     </div>
 
-    <table id="goal_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goal_stats'">
+    <table id="goal_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goal_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -261,7 +261,7 @@
         </tbody>
     </table>
 
-    <table id="shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_stats'">
+    <table id="shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -291,7 +291,7 @@
         </tbody>
     </table>
 
-    <table id="shot_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_stats_5v5'">
+    <table id="shot_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_stats_5v5'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -321,7 +321,7 @@
         </tbody>
     </table>
 
-    <table id="shot_shares" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_shares'">
+    <table id="shot_shares" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_shares'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -353,7 +353,7 @@
         </tbody>
     </table>
 
-    <table id="shot_shares_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_shares_5v5'">
+    <table id="shot_shares_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_shares_5v5'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -385,7 +385,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
+    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -417,7 +417,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones_against'">
+    <table id="shot_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -449,7 +449,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
+    <table id="shot_on_goal_zones_against" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_on_goal_zones_against'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -481,7 +481,7 @@
         </tbody>
     </table>
 
-    <table id="shot_on_goal_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_on_goal_zones'">
+    <table id="shot_on_goal_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_on_goal_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -513,7 +513,7 @@
         </tbody>
     </table>
 
-    <table id="special_team_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'special_team_stats'">
+    <table id="special_team_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'special_team_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -546,7 +546,7 @@
         </tbody>
     </table>
 
-    <table id="additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'additional_stats'">
+    <table id="additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'additional_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -576,7 +576,7 @@
             </tbody>
     </table>
 
-    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shootout_stats'">
+    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shootout_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -609,7 +609,7 @@
         </tbody>
     </table>
 
-    <table id="attendance_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'attendance_stats'">
+    <table id="attendance_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'attendance_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -637,7 +637,7 @@
         </tbody>
     </table>
 
-    <table id="penalty_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small"  data-ng-if="tableSelect == 'penalty_stats'">
+    <table id="penalty_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow"  data-ng-if="tableSelect == 'penalty_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -666,7 +666,7 @@
         </tbody>
     </table>
 
-    <table id="score_state_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small"  data-ng-if="tableSelect == 'score_state_stats'">
+    <table id="score_state_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow"  data-ng-if="tableSelect == 'score_state_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
@@ -696,7 +696,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-info main-bg my-3">
+    <div class="alert alert-info main-bg my-3 shadow">
         <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
             <dl data-ng-show="toggle" class="row mx-2">
                 <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
