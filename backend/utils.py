@@ -20,6 +20,7 @@ coaches = [
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
     'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak', 'Mihails Svarinskis',
+    'Boris Blank',
 ]
 
 
@@ -148,9 +149,7 @@ def get_game_info(game):
     """
     return (
         "%d (%s: %s [%d] vs. %s [%d])" % (
-            game['game_id'], game['date'],
-            game['home_team'], game['home_score'],
-            game['road_team'], game['road_score'],
+            game['game_id'], game['date'], game['home_team'], game['home_score'], game['road_team'], game['road_score'],
         ))
 
 
@@ -159,9 +158,9 @@ def get_team_from_game(game, home_road):
     Gets abbreviation for team associated with specified
     home/road denominator.
     """
-    if home_road == 'home':
+    if home_road in ['home']:
         return game['home_abbr']
-    elif home_road == 'road':
+    elif home_road in ['road', 'visitor']:
         return game['road_abbr']
     else:
         return None
@@ -219,9 +218,7 @@ def calculate_age(dob):
     today = date.today()
     # projecting player's date of birth to this year
     # checking if player was born in a leap year first
-    if (
-        dob.month == 2 and dob.day == 29
-    ):
+    if dob.month == 2 and dob.day == 29:
         # moving player's date of birth forward then
         dob = dob + timedelta(days=1)
     this_year_dob = date(today.year, dob.month, dob.day)
