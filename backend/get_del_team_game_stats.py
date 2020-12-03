@@ -417,6 +417,11 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         # if opp_diff:
         #     print("\tpp opp discrepancy of %d for %s" % (opp_diff, key))
 
+        # registering shootout stats (if applicable)
+        shootout_stats = get_shootout_stats(game, key, opp_key)
+        if shootout_stats:
+            game_stat_line = {**game_stat_line, **shootout_stats}
+
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
@@ -641,6 +646,52 @@ def get_penalty_counts(game):
                     pen_counts['road'][duration] += 1
 
     return pen_counts
+
+
+def get_shootout_stats(game, key, opp_key):
+    """
+    Gets shootout statistics for specified game and teams.
+    """
+    # loding events data
+    game_type = get_game_type_from_season_type(game)
+    game_events_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
+    events_data = json.loads(open(game_events_src_path).read())
+
+    team_shootout_stats = dict()
+
+    if 'shootout' in events_data and events_data['shootout']:
+        # setting initial values
+        for param in ['so_rounds', 'so_a', 'so_g', 'so_pctg', 'opp_so_a', 'opp_so_g', 'opp_so_pctg', 'so_sv_pctg']:
+            team_shootout_stats[param] = 0
+
+        for attempt in events_data['shootout']:
+            if attempt['type'] != 'shootout':
+                continue
+            # dirty way to get indication whether the 'home' or 'road' team was shooting
+            so_team = attempt['data']['team'].replace("visitor", "road")
+            # re-calculating current shootout round
+            team_shootout_stats['so_rounds'] = (attempt['data']['order'] + 1) // 2
+            # registering shootout data per team
+            if so_team == key:
+                team_shootout_stats['so_a'] += 1
+                if attempt['data']['scored']:
+                    team_shootout_stats['so_g'] += 1
+            else:
+                team_shootout_stats['opp_so_a'] += 1
+                if attempt['data']['scored']:
+                    team_shootout_stats['opp_so_g'] += 1
+        # finally calculating shootout percentages
+        else:
+            if team_shootout_stats['so_a']:
+                team_shootout_stats['so_pctg'] = round(
+                    team_shootout_stats['so_g'] / team_shootout_stats['so_a'] * 100, 2)
+            if team_shootout_stats['opp_so_a']:
+                team_shootout_stats['opp_so_pctg'] = round(
+                    team_shootout_stats['opp_so_g'] / team_shootout_stats['opp_so_a'] * 100, 2)
+                team_shootout_stats['so_sv_pctg'] = round(
+                    (1 - team_shootout_stats['opp_so_g'] / team_shootout_stats['opp_so_a']) * 100, 2)
+    return team_shootout_stats
 
 
 if __name__ == '__main__':
