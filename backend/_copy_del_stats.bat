@@ -30,7 +30,7 @@ xcopy /i /y /d data\career_stats\per_team %TGT_BASE_DIR%\career_stats\per_team
 :: Daten für Extended-Version
 copy data\del_players.json %TGT_EXTENDED_DIR%
 copy %DEL_DATA_BASE_DIR%\del_facts\facts.json %TGT_EXTENDED_DIR%\%SEASON%
-copy data\%SEASON%\full_schedule.json %TGT_EXTENDED_DIR%\%SEASON%
+rem copy data\%SEASON%\full_schedule.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\coaches.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\h2h.json %TGT_EXTENDED_DIR%\%SEASON%
 copy data\%SEASON%\del_league_stats.json %TGT_EXTENDED_DIR%\%SEASON%
