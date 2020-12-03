@@ -1,13 +1,13 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <h1>DEL-Karrierestatistiken</h1>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         Karrierestatistiken für aktive DEL-Spieler.
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <a href="#!"><b>Startseite</b></a>
     </div>
 
@@ -58,7 +58,7 @@
         </div>
     </form>
 
-    <table id="career_stats_skaters" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="position != 'GK'">
+    <table id="career_stats_skaters" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="position != 'GK'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -91,7 +91,7 @@
         </tbody>
     </table>
 
-    <table id="career_stats_goalies" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="position == 'GK'">
+    <table id="career_stats_goalies" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="position == 'GK'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>

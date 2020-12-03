@@ -1,9 +1,9 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <h1>DEL-Spielerstatistiken für {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         Spielerstatisken gesammelt und aggregiert aus den Live-Ticker-Daten der DEL.
 
         <ul class="list-group list-group-horizontal my-1">
@@ -21,11 +21,11 @@
         </ul>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <a href="#!/team_stats/{{ season }}"><b>Teamstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
     
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <span ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
             <dl data-ng-show="toggle" class="row mx-2">
                 <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
@@ -153,20 +153,6 @@
                 <select class="form-control" id="teamSelect" data-ng-model="teamFilter">
                     <option data-ng-option value selected="selected">alle Teams</option>
                     <option data-ng-option data-ng-repeat="team in teams" value="{{team.abbr}}">{{team.full_name}}</option>
-                    <!-- <option data-ng-option value="AEV">Augsburger Panther</option>
-                    <option data-ng-option value="EBB">Eisbären Berlin</option>
-                    <option data-ng-option value="BHV">Pinguins Bremerhaven</option>
-                    <option data-ng-option value="DEG">Düsseldorfer EG</option>
-                    <option data-ng-option value="ING">ERC Ingolstadt</option>
-                    <option data-ng-option value="IEC">Iserlohn Roosters</option>
-                    <option data-ng-option value="KEC">Kölner Haie</option>
-                    <option data-ng-option value="KEV">Krefeld Pinguine</option>
-                    <option data-ng-option value="MAN">Adler Mannheim</option>
-                    <option data-ng-option value="RBM">EHC Red Bull München</option>
-                    <option data-ng-option value="NIT">Thomas Sabo Ice Tigers</option>
-                    <option data-ng-option value="SWW">Schwenninger Wild Wings</option>
-                    <option data-ng-option value="STR">Straubing Tigers</option>
-                    <option data-ng-option value="WOB">Grizzlys Wolfsburg</option> -->
                 </select>
             </div>
             <div class="input-group col-2 pl-0">
@@ -242,7 +228,7 @@
 
     </form>
 
-    <table id="penalty_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'penalty_stats'">
+    <table id="penalty_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'penalty_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -282,7 +268,7 @@
         </tbody>
     </table>
 
-    <table id="additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'additional_stats'">
+    <table id="additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'additional_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -320,7 +306,7 @@
         </tbody>
     </table>
 
-    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shootout_stats'">
+    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shootout_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -355,7 +341,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_shootout_stats'">
+    <table id="goalie_shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_shootout_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -389,7 +375,7 @@
         </tbody>
     </table>
 
-    <table id="on_ice_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_stats'">
+    <table id="on_ice_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_ice_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -422,7 +408,7 @@
         </tbody>
     </table>
 
-    <table id="on_ice_shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_shot_stats'">
+    <table id="on_ice_shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_ice_shot_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -458,7 +444,7 @@
         </tbody>
     </table>
 
-    <table id="on_ice_shot_on_goal_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_shot_on_goal_stats'">
+    <table id="on_ice_shot_on_goal_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_ice_shot_on_goal_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -497,7 +483,7 @@
         </tbody>
     </table>
 
-    <table id="on_ice_shot_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_shot_stats_5v5'">
+    <table id="on_ice_shot_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_ice_shot_stats_5v5'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -533,7 +519,7 @@
         </tbody>
     </table>
 
-    <table id="on_ice_shot_on_goal_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_shot_on_goal_stats_5v5'">
+    <table id="on_ice_shot_on_goal_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_ice_shot_on_goal_stats_5v5'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -572,7 +558,7 @@
         </tbody>
     </table>
 
-    <table id="faceoff_by_zone_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'faceoff_by_zone_stats'">
+    <table id="faceoff_by_zone_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'faceoff_by_zone_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -614,7 +600,7 @@
         </tbody>
     </table>
 
-    <table id="faceoff_by_side_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'faceoff_by_side_stats'">
+    <table id="faceoff_by_side_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'faceoff_by_side_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -653,7 +639,7 @@
         </tbody>
     </table>
 
-    <table id="power_play_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'power_play_stats'">
+    <table id="power_play_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'power_play_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -692,7 +678,7 @@
         </tbody>
     </table>
 
-    <table id="game_score_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'game_score_stats'">
+    <table id="game_score_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'game_score_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -731,7 +717,7 @@
         </tbody>
     </table>
 
-    <table id="time_on_ice_shift_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
+    <table id="time_on_ice_shift_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'time_on_ice_shift_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -769,7 +755,7 @@
         </tbody>
     </table>
 
-    <table id="per_game_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'per_game_stats'">
+    <table id="per_game_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'per_game_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -807,7 +793,7 @@
         </tbody>
     </table>
 
-    <table id="per_60_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'per_60_stats'">
+    <table id="per_60_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'per_60_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -845,7 +831,7 @@
         </tbody>
     </table>
 
-    <table id="basic_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'basic_stats'">
+    <table id="basic_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'basic_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -885,7 +871,7 @@
         </tbody>
     </table>
 
-    <table id="player_information" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'player_information'">
+    <table id="player_information" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'player_information'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -921,7 +907,7 @@
         </tbody>
     </table>
 
-    <table id="on_goal_shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_goal_shot_zones'">
+    <table id="on_goal_shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'on_goal_shot_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -960,7 +946,7 @@
         </tbody>
     </table>
 
-    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shot_zones'">
+    <table id="shot_zones" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_zones'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -976,7 +962,7 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
-                <td class="w-04">{{ $index + 1 }}</td>
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
@@ -999,7 +985,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_stats'">
+    <table id="goalie_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1015,7 +1001,7 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
-                    <td class="w-04">{{ $index + 1 }}</td>
+                    <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
@@ -1038,7 +1024,7 @@
         </tbody>
     </table>
 
-    <div class="alert alert-info main-bg" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
+    <div class="alert alert-info main-bg shadow" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
         <table id="league_wide_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" >
             <tbody>
                 <tr>
@@ -1051,7 +1037,7 @@
         </table>
     </div>
 
-    <table id="goalie_against_avg_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
+    <table id="goalie_against_avg_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_against_avg_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1067,7 +1053,7 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_goalie_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:{team: teamFilter} | filter:{position: 'GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:u23Filter | filter:greaterThanFilter('toi', 0)">
-                    <td class="w-04">{{ $index + 1 }}</td>
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
@@ -1090,7 +1076,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_stats_ev" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_stats_ev'">
+    <table id="goalie_stats_ev" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_stats_ev'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1128,7 +1114,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_stats_sh" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_stats_sh'">
+    <table id="goalie_stats_sh" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_stats_sh'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1166,7 +1152,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_stats_pp" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_stats_pp'">
+    <table id="goalie_stats_pp" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_stats_pp'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1204,7 +1190,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_zone_stats_near" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_zone_stats_near'">
+    <table id="goalie_zone_stats_near" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_zone_stats_near'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1242,7 +1228,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_zone_stats_far" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_zone_stats_far'">
+    <table id="goalie_zone_stats_far" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goalie_zone_stats_far'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -1277,7 +1263,7 @@
         </tbody>
     </table>
 
-    <table id="streaks" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'streaks'">
+    <table id="streaks" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'streaks'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
