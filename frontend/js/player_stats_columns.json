@@ -130,6 +130,25 @@
         {"data_key": "minus", "col_header": "-", "expl_de": "Minus-Wertung", "expl_en": "Minus"},
         {"data_key": "plus_minus", "col_header": "+/-", "expl_de": "Plus/Minus-Wertung", "expl_en": "Plus/Minus"}
     ],
+    "shootout_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "so_games_played", "col_header": "ShoGP", "expl_de": "Absolvierte Penaltyschießen", "expl_en": "Shootout Games Played"},
+        {"data_key": "so_attempts", "col_header": "ShoA", "expl_de": "Versuche im Penaltyschießen", "expl_en": "Shootout Attempts"},
+        {"data_key": "so_goals", "col_header": "ShoG", "expl_de": "Tore im Penaltyschießen", "expl_en": "Shootout Goals"},
+        {"data_key": "so_pctg", "col_header": "Sho%", "expl_de": "Torquote im Penaltyschießen", "expl_en": "Shootout Percentage"},
+        {"data_key": "so_gw_goals", "col_header": "ShoGWG", "expl_de": "Siegtore im Penaltyschießen", "expl_en": "Shootout Game Winning Goals"}
+    ],
+    "goalie_shootout_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "so_games_played", "col_header": "ShoGP", "expl_de": "Absolvierte Penaltyschießen", "expl_en": "Shootout Games Played"},
+        {"data_key": "so_attempts_a", "col_header": "ShoA", "expl_de": "Gegnerische Versuche im Penaltyschießen", "expl_en": "Shootout Attempts Against"},
+        {"data_key": "so_goals_a", "col_header": "ShoG", "expl_de": "Zugelassene Tore im Penaltyschießen", "expl_en": "Shootout Goals Against"},
+        {"data_key": "so_sv_pctg", "col_header": "Sho%", "expl_de": "Fangquote im Penaltyschießen", "expl_en": "Shootout Save Percentage"}
+    ],
     "on_ice_shot_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
