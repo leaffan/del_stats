@@ -18,7 +18,7 @@ from utils import read_del_team_names
 
 # loading configuration from external file
 CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    os.path.dirname(os.path.realpath(__file__)), '..', 'config.yml')))
 
 user = CONFIG['del_archive_user']
 pwd = CONFIG['del_archive_pass']
@@ -215,7 +215,7 @@ if __name__ == '__main__':
 
     games_per_season = defaultdict(list)
 
-    for season_id in range(1, 65):
+    for season_id in range(1, 66):
         url = SCHEDULE_URL % season_id
         r = requests.get(url, auth=(user, pwd))
         doc = html.fromstring(r.text)
