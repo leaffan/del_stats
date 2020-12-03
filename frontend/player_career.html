@@ -1,10 +1,10 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg mb-2">
+    <div class="alert alert-info main-bg mb-2 shadow">
         <h1>{{ player_first_name }} {{ player_last_name }}</h1>
         <h3>Karriereverlauf</h3>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <a href="#!/career_stats"><b>Karrierestatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
@@ -39,7 +39,7 @@
         </div>
     </form>
 
-    <table id="skater_career_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="table_select == 'skater_career_stats'">
+    <table id="skater_career_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="table_select == 'skater_career_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['skater_career_stats']">
@@ -117,7 +117,7 @@
         </tbody>
     </table>
 
-    <table id="goalie_career_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="table_select == 'goalie_career_stats'">
+    <table id="goalie_career_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="table_select == 'goalie_career_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['goalie_career_stats']">
