@@ -81,6 +81,8 @@
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
                     <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
+                    <option data-ng-if="shootoutParticipation && player_stats[0].position != 'GK'" data-ng-option value="shootout_stats">Penaltyschießen</option>
+                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_shootout_stats">Penaltyschießen</option>
                 </select>
             </div>
             <div class="input-group col-4 pl-0">
@@ -200,7 +202,7 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="w-08 text-right">{{ stat.shots_missed }}</td>
                 <td class="w-08 text-right">{{ stat.shots_blocked }}</td>
                 <td class="w-08 text-right">{{ stat.plus_minus }}</td>
@@ -228,6 +230,75 @@
         </tbody>
     </table>
 
+    <table id="shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'shootout_stats'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (shootoutParticipationGames | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
+                <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="w-07 text-right">{{ stat.round }}</td>
+                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-18 text-right">{{ stat.so_attempts }}</td>
+                <td class="w-18 text-right">{{ stat.so_goals }}</td>
+                <td class="w-18 text-right">{{ stat.so_pctg.toFixed(1) }} %</td>
+                <td class="w-18 text-right">{{ stat.so_gw_goals }}</td>
+            </tr>
+            <tr data-ng-if="filtered_stats.length > 0">
+                <td></td>
+                <td></td>
+                <td><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ totalAttempts = svc.getFilteredTotal(filtered_stats, 'so_attempts', shootoutParticipationGames) }}</b></td>
+                <td class="text-right"><b>{{ totalGoals = svc.getFilteredTotal(filtered_stats, 'so_goals', shootoutParticipationGames) }}</b></td>
+                <td class="text-right"><b>{{ (totalGoals / totalAttempts * 100.).toFixed(1)}} %</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'so_gw_goals', shootoutParticipationGames) }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goalie_shootout_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'goalie_shootout_stats'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (goalie_so_stats | orderBy:sortCriterion:statsSortDescending | filter:goalieFilter | filter:dayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter} | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter)">
+                <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="w-07 text-right">{{ stat.round }}</td>
+                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-24 text-right">{{ stat.so_attempts_a }}</td>
+                <td class="w-24 text-right">{{ stat.so_goals_a }}</td>
+                <td class="w-24 text-right">{{ stat.so_sv_pctg.toFixed(1) }} %</td>
+            </tr>
+            <tr data-ng-if="filtered_stats.length > 0">
+                <td></td>
+                <td></td>
+                <td><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ totalAttempts = svc.getFilteredTotal(filtered_stats, 'so_attempts_a', shootoutParticipationGames) }}</b></td>
+                <td class="text-right"><b>{{ totalGoals = svc.getFilteredTotal(filtered_stats, 'so_goals_a', shootoutParticipationGames) }}</b></td>
+                <td class="text-right"><b>{{ ((1 - totalGoals / totalAttempts) * 100.).toFixed(1)}} %</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+
     <table id="on_ice_shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small" data-ng-if="tableSelect == 'on_ice_shot_stats'">
         <thead class="thead-light">
             <tr>
@@ -245,7 +316,7 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-19 {{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-19 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="w-11 text-right">{{ stat.on_ice_sh_f }}</td>
                 <td class="w-11 text-right">{{ stat.on_ice_sh_a }}</td>
                 <td class="w-11 text-right">{{ stat.on_ice_sh_pctg.toFixed(1) }} %</td>
@@ -284,7 +355,7 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="w-08 text-right">{{ stat.on_ice_sog_f }}</td>
                 <td class="w-08 text-right">{{ stat.on_ice_sog_a }}</td>
                 <td class="w-08 text-right">{{ stat.on_ice_sog_pctg.toFixed(1) }} %</td>
@@ -413,7 +484,7 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-16 {{ svc.setTextColor(stat.score, stat.opp_score) }}" style="width: 12%"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-16 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
                 <td class="w-06 text-right">{{ stat.nzone_faceoffs }}</td>
                 <td class="w-05 text-right">{{ stat.nzone_faceoffs_won }}</td>
                 <td class="w-04 text-right">{{ stat.nzone_faceoffs_lost }}</td>
