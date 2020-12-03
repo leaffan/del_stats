@@ -1,9 +1,9 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg mb-2">
+    <div class="alert alert-info main-bg mb-2 shadow">
         <h1>Vorschaumappen zur DEL-Saison {{ season }}/{{ svc.parseFloat(season) + 1 - 2000 }}</h1>
     </div>
 
-    <div class="alert alert-info main-bg mb-2">
+    <div class="alert alert-info main-bg mb-2 shadow">
         <a href="#!/team_stats/{{ season }}"><b>Teamstatistiken</b></a> | <a href="#!/del_stats/{{ season }}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
@@ -24,7 +24,7 @@
         </div>        
     </form>
 
-    <div class="alert alert-info main-bg mb-2">
+    <div class="alert alert-info main-bg mb-2 shadow">
         <ul class="list-group list-group-horizontal my-1">
             <li class="col-4 list-group-item border-0 bg-transparent p-0 text-left">
                 <a data-ng-if="previous_round !== undefined" data-ng-href="#!/previews/{{season}}/{{previous_round}}">
@@ -49,7 +49,7 @@
 
     <hr/>
 
-    <table class="table table-responsive-md table-striped table-bordered table-hover">
+    <table class="table table-responsive-md table-striped table-bordered table-hover shadow">
         <thead class="thead-light">
             <tr>
                 <th class="text-center px-2"><span class="rank">Spieltag</span></th>
