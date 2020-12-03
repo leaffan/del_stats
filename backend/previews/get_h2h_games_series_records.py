@@ -21,7 +21,7 @@ from collections import defaultdict
 CONFIG = yaml.safe_load(open(os.path.join(
     os.path.dirname(os.path.realpath(__file__)), '..', 'config.yml')))
 
-SEASON_FILE_REGEX = re.compile(R"games_(\d{4})\.json")
+SEASON_FILE_REGEX = re.compile(R"^games_(\d{4})\.json")
 # SEASON_FILE_REGEX = re.compile(R"games_(2010)\.json")
 
 # setting lookup table for abbreviations by team id
@@ -45,7 +45,7 @@ PO_SEASON_TYPES = ['PO-Qualifikation', 'Playoffs', 'Playdowns']
 
 # setting current season to toggle it as an upper limit for the head-to-head
 # records
-CURRENT_SEASON = 2019
+CURRENT_SEASON = 2020
 
 # setting up categories for head-to-head records
 CATEGORIES = [
