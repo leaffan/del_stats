@@ -9,7 +9,7 @@ import argparse
 from collections import defaultdict
 from dateutil.parser import parse
 
-from utils import get_game_info
+from utils import get_game_info, get_game_type_from_season_type
 from reconstruct_skater_situation import build_interval_tree
 from reconstruct_skater_situation import GoalieShift
 
@@ -149,6 +149,52 @@ def is_shutout(goalie_dict, goalies_in_game):
     return False
 
 
+def get_shootout_stats(goalie_dict, game):
+    """
+    Retrieves shootout stats for specified game goaltender statistics item.
+    """
+    game_type = get_game_type_from_season_type(game)
+    game_events_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
+    game_events = json.loads(open(game_events_src_path).read())
+
+    if 'shootout' in game_events:
+        shootout = game_events['shootout']
+
+    # retrieving shootout attempts directed towards current goalie
+    per_goalie_shootout_attempts = list(filter(
+        lambda d:
+            d['type'] == 'shootout' and
+            d['data']['goalkeeper']['playerId'] == goalie_dict['goalie_id'], shootout
+    ))
+
+    # retrieving game-winning goal in shootout
+    so_winning_goal = list(filter(lambda d: d['type'] == 'goal', shootout))
+    if so_winning_goal:
+        so_winning_goal = so_winning_goal.pop(0)
+
+    # setting initial values
+    if per_goalie_shootout_attempts:
+        goalie_dict['so_games_played'] = 1
+        goalie_dict['so_attempts_a'] = 0
+        goalie_dict['so_goals_a'] = 0
+        # not yet sure how to definetely retrieve winning/losing status here
+        # since winning goal data gives no indication about the goalie allowing it
+        # goalie_dict['so_w'] = 0
+        # goalie_dict['so_l'] = 0
+    # cumulating shootout statistics
+    for attempt in per_goalie_shootout_attempts:
+        goalie_dict['so_attempts_a'] += 1
+        if attempt['data']['scored']:
+            goalie_dict['so_goals_a'] += 1
+    # calculating shootout save percentage
+    else:
+        if 'so_attempts_a' in goalie_dict and goalie_dict['so_attempts_a']:
+            goalie_dict['so_sv_pctg'] = round((1 - goalie_dict['so_goals_a'] / goalie_dict['so_attempts_a']) * 100, 2)
+
+    return goalie_dict
+
+
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -209,18 +255,12 @@ if __name__ == '__main__':
 
         # retrieving goalies dressed from game item
         goalies_dressed = [
-            (game['home_abbr'], game['home_g1'][0]
-                if 'home_g1' in game else None),
-            (game['home_abbr'], game['home_g2'][0]
-                if 'home_g2' in game else None),
-            (game['home_abbr'], game['home_g3'][0]
-                if 'home_g3' in game else None),
-            (game['road_abbr'], game['road_g1'][0]
-                if 'road_g1' in game else None),
-            (game['road_abbr'], game['road_g2'][0]
-                if 'road_g2' in game else None),
-            (game['road_abbr'], game['road_g3'][0]
-                if 'road_g3' in game else None),
+            (game['home_abbr'], game['home_g1'][0] if 'home_g1' in game else None),
+            (game['home_abbr'], game['home_g2'][0] if 'home_g2' in game else None),
+            (game['home_abbr'], game['home_g3'][0] if 'home_g3' in game else None),
+            (game['road_abbr'], game['road_g1'][0] if 'road_g1' in game else None),
+            (game['road_abbr'], game['road_g2'][0] if 'road_g2' in game else None),
+            (game['road_abbr'], game['road_g3'][0] if 'road_g3' in game else None),
         ]
         goalies_in_game, gw_goal_intervals = retrieve_goalies_in_game(game)
 
@@ -277,8 +317,7 @@ if __name__ == '__main__':
                 goalie_dict['u23'] = False
 
             print("\t+ Retrieving goalie stats for %s %s (%s)" % (
-                goalie_dict['first_name'], goalie_dict['last_name'],
-                goalie_team))
+                goalie_dict['first_name'], goalie_dict['last_name'], goalie_team))
 
             goalie_dict['games_dressed'] += 1
             # checking whether goaltender actually played
@@ -391,6 +430,9 @@ if __name__ == '__main__':
                 0.1 * (
                     goalie_dict['shots_against'] -
                     goalie_dict['goals_against']), 2)
+
+            if game['shootout_game']:
+                goalie_dict = get_shootout_stats(goalie_dict, game)
 
             goalies_per_game.append(goalie_dict)
 

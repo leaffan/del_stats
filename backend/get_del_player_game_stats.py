@@ -81,8 +81,8 @@ OUT_FIELDS = [
     'ozone_faceoffs', 'ozone_faceoffs_won', 'ozone_faceoffs_lost',
     'dzone_faceoffs', 'dzone_faceoffs_won', 'dzone_faceoffs_lost',
     'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
-    'right_side_faceoffs', 'right_side_faceoffs_won',
-    'right_side_faceoffs_lost',
+    'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
+    'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
 ]
 
 # default empty line
@@ -372,7 +372,47 @@ def get_single_game_player_data(game, shots):
 
         gsl = retrieve_detailed_faceoff_stats(gsl, faceoffs)
 
+        if 'shootout' in period_events and period_events['shootout']:
+            gsl = retrieve_shootout_stats(gsl, period_events['shootout'])
+
     return game_stat_lines
+
+
+def retrieve_shootout_stats(gsl, shootout):
+    """
+    Retrieves shootout stats for specified game player statistics item.
+    """
+    # retrieving shootout attempts by current player
+    per_player_shootout_attempts = list(filter(
+        lambda d:
+            d['type'] == 'shootout' and
+            d['data']['scorer']['playerId'] == gsl['player_id'], shootout
+    ))
+    # retrieving game-winning goal in shootout
+    so_winning_goal = list(filter(lambda d: d['type'] == 'goal', shootout))
+    if so_winning_goal:
+        so_winning_goal = so_winning_goal.pop(0)
+
+    # setting initial values
+    if per_player_shootout_attempts:
+        gsl['so_games_played'] = 1
+        gsl['so_attempts'] = 0
+        gsl['so_goals'] = 0
+        gsl['so_gw_goals'] = 0
+    # cumulating shootout statistics
+    for attempt in per_player_shootout_attempts:
+        gsl['so_attempts'] += 1
+        if attempt['data']['scored']:
+            gsl['so_goals'] += 1
+    # calculating shootout shooting percentage
+    else:
+        if 'so_attempts' in gsl and gsl['so_attempts']:
+            gsl['so_pctg'] = round(gsl['so_goals'] / gsl['so_attempts'] * 100, 2)
+
+    if so_winning_goal and so_winning_goal['data']['scorer']['playerId'] == gsl['player_id']:
+        gsl['so_gw_goals'] += 1
+
+    return gsl
 
 
 def retrieve_detailed_faceoff_stats(gsl, faceoffs):
