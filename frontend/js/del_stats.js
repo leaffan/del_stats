@@ -249,7 +249,8 @@ app.factory('svc', function() {
                 'attendance', 'penalty_2', 'penalty_5', 'penalty_10', 'penalty_20',
                 'shots_on_goal_5v5', 'goals_5v5', 'opp_shots_on_goal_5v5', 'opp_goals_5v5',
                 'capacity', 'sl_g', 'tied', 'leading', 'trailing', 'time_played',
-                'shots_5v5', 'opp_shots_5v5', 'shots_unblocked_5v5', 'opp_shots_unblocked_5v5'
+                'shots_5v5', 'opp_shots_5v5', 'shots_unblocked_5v5', 'opp_shots_unblocked_5v5',
+                'so_rounds', 'so_a', 'so_g', 'opp_so_a', 'opp_so_g'
             ];    
         },
         player_stats_to_aggregate: function() {
@@ -275,7 +276,8 @@ app.factory('svc', function() {
                 'ozone_faceoffs', 'ozone_faceoffs_won', 'ozone_faceoffs_lost',
                 'dzone_faceoffs', 'dzone_faceoffs_won', 'dzone_faceoffs_lost',
                 'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
-                'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost'
+                'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
+                'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals'
             ];
         },
         player_float_stats_to_aggregate: function() {
@@ -290,7 +292,8 @@ app.factory('svc', function() {
                 'sa_blue_line', 'sa_left', 'sa_right', 'sa_slot', 'sa_neutral_zone',
                 'ga_blue_line', 'ga_left', 'ga_right', 'ga_slot', 'ga_neutral_zone',
                 'sa_ev', 'ga_ev', 'sa_sh', 'ga_sh', 'sa_pp', 'ga_pp', 'so',
-                'ga_avg', 'gsaa', 'ga_avg_5v5', 'gsaa_5v5'
+                'ga_avg', 'gsaa', 'ga_avg_5v5', 'gsaa_5v5',
+                'so_games_played', 'so_attempts_a', 'so_goals_a'
             ];    
         },
         pad: function pad(num, size) {
