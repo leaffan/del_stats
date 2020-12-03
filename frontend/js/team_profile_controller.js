@@ -24,6 +24,8 @@ app.controller('teamProfileController', function($scope, $http, $routeParams, $l
         $scope.game_log = $scope.team_stats.filter(function(value, index, arr) {
             return value['team'] == $scope.current_team;
         });
+        // retrieving special game with shootout games only
+        $scope.so_game_log = $scope.game_log.filter(game => game.sw == 1 || game.sl == 1);
         // retrieving maximum round played
         $scope.maxRoundPlayed = Math.max.apply(Math, $scope.game_log.map(function(o) { return o.round; })).toString();
         // retrieving all weekdays a game was played by the current team

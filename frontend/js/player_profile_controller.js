@@ -6,6 +6,7 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
     $scope.season = $routeParams.season;
     $scope.player_id = $routeParams.player_id;
     $scope.fromRoundSelect = '1';
+    $scope.shootoutParticipation = false;
 
     // retrieving column headers (and abbreviations + explanations)
     $http.get('./js/player_profile_columns.json').then(function (res) {
@@ -44,11 +45,17 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
         $scope.toRoundSelect = $scope.maxRoundPlayed;
         // retrieving all numbers a player used
         $scope.numbersWorn = [...new Set($scope.player_stats.map(item => item.no))].sort();
+        // retrieving indication whether player took part in a shootout
+        $scope.shootoutParticipationGames = $scope.player_stats.filter(item => item.so_attempts);
+        if ($scope.shootoutParticipationGames.length > 0) {
+            $scope.shootoutParticipation = true;
+        }
     });
 
     // loading goalie stats
     $http.get('./data/'+ $scope.season + '/del_goalie_game_stats.json').then(function (res) {
         $scope.goalie_stats = res.data;
+        $scope.goalie_so_stats = $scope.goalie_stats.filter(item => item.so_attempts_a);
     });
 
     $http.get('data/'+ $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {

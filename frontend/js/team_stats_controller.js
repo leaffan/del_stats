@@ -168,7 +168,12 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
                 is_equal_past_from_round && is_prior_equal_to_round
             ) {
                 $scope.svc.stats_to_aggregate().forEach(category => {
-                    filtered_team_stats[team][category] += element[category];
+                    // skipping categories that possibly don't exist, e.g. for shootout-related data
+                    if (element[category] === undefined) {
+                        
+                    } else {
+                        filtered_team_stats[team][category] += element[category];
+                    }
                 })
             }
         });
@@ -259,6 +264,22 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
                 element['opp_shot_pct_5v5'] = parseFloat((0).toFixed(2));
                 element['save_pct_5v5'] = parseFloat((0).toFixed(2));
             }
+            // calculating team shootout shooting percentages
+            if (element['so_a']) {
+                element['so_pctg'] = parseFloat(((element['so_g'] / element['so_a']) * 100).toFixed(2));
+            } else {
+                element['so_pctg'] = 0;
+            }
+            // calculating team shootout save percentages
+            if (element['opp_so_a']) {
+                element['opp_so_pctg'] = parseFloat(((element['opp_so_g'] / element['opp_so_a']) * 100).toFixed(2));
+                element['so_sv_pctg'] = parseFloat(((  (element['opp_so_a'] - element['opp_so_g']) / element['opp_so_a']) * 100).toFixed(2));
+            } else {
+                element['opp_so_pctg'] = 0;
+                element['so_sv_pctg'] = 0;
+            }
+            // calculating number of shootout games played
+            element['so_games_played'] = element['sw'] + element['sl'];
             // calculating PDO
             element['pdo'] = parseFloat((parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(2));
             element['opp_pdo'] = parseFloat((parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(2));
@@ -366,8 +387,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
 
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {
-        'standings': 'points',
-        'group_standings': 'points',
+        'standings': 'pt_pctg',
+        'group_standings': 'pt_pctg',
         'special_team_stats': 'pp_pctg',
         'goal_stats': 'goals_diff',
         'shot_stats': 'shots_on_goal',
@@ -379,6 +400,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         'shot_zones_against': 'opp_shots',
         'shot_on_goal_zones_against': 'opp_shots_on_goal',
         'additional_stats': 'faceoff_pctg',
+        'shootout_stats': 'so_pctg',
         'penalty_stats': 'pim_per_game',
         'score_state_stats': 'leading_pctg',
         'attendance_stats': 'util_capacity_pctg'
@@ -388,6 +410,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     $scope.sortCriteria = {
         // standings
         "points": ['points', 'score_diff', 'score'],
+        "pt_pctg": ['pt_pctg', 'points', 'score_diff', 'score'],
         "games_played": ['games_played', '-team'],
         // goal stats
         "goals_diff": ['goals_diff', 'goals'],
@@ -412,6 +435,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         "sh_goals": ['sh_goals', '-sh_opps'],
         "opp_pp_goals": ['opp_pp_goals', '-pk_pctg'],
         "opp_sh_goals": ['opp_sh_goals', '-sh_opps'],
+        "so_pctg": ['so_pctg', 'so_g'],
         // shot shares
         "corsi_for_pctg": ['corsi_for_pctg', 'shots'],
         "shots_on_goal_5v5": ['shots_on_goal_5v5', 'goals_5v5', '-games_played'],
@@ -455,7 +479,6 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         // checking whether we're in attendance table view
         if ($scope.tableSelect === 'attendance_stats') {
             $scope.oldHomeAwaySelect = $scope.homeAwaySelect;
-            console.log($scope.oldHomeAwaySelect);
             $scope.homeAwaySelect = 'home';
         } else {
             if ($scope.oldHomeAwaySelect != 'unused') {

@@ -190,7 +190,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             {
                 // adding values
                 $scope.svc.goalie_stats_to_aggregate().forEach(category => {
-                    filtered_goalie_stats[key][category] += element[category];
+                    if (element[category] === undefined) {
+
+                    } else {
+                        filtered_goalie_stats[key][category] += element[category];
+                    }
                 });
                 // registering player's team
                 if (!goalie_teams[plr_id]) {
@@ -289,8 +293,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             } else {
                 element['save_pctg_neutral_zone'] = null;
             }
-        });
+            // calculating save percentage in shootouts
+            if (element['so_attempts_a']) {
+                element['so_sv_pctg'] = (1 - element['so_goals_a'] / element['so_attempts_a']) * 100.; 
+            } else {
+                element['so_sv_pctg'] = 0; 
+            }
 
+        });
         return filtered_goalie_stats;
     }
 
@@ -476,7 +486,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             {
                 // adding values
                 $scope.svc.player_stats_to_aggregate().forEach(category => {
-                    filtered_player_stats[key][category] += element[category];
+                    if (isNaN(element[category])) {
+                        // passing element if not a number in csv data (i.e. left out)
+                    } else {
+                        filtered_player_stats[key][category] += element[category];
+                    }
                 });
                 $scope.svc.player_float_stats_to_aggregate().forEach(category => {
                     filtered_player_stats[key][category] += parseFloat(element[category]);
@@ -691,7 +705,12 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             element['faceoffs_diff'] = element['faceoffs_won'] - element['faceoffs_lost'];
             element['on_ice_sh_diff'] = element['on_ice_sh_f'] - element['on_ice_sh_a'];
             element['on_ice_goals_diff'] = element['on_ice_goals_f'] - element['on_ice_goals_a'];
-
+            // calculating shooting percentage in shootouts
+            if (element['so_attempts']) {
+                element['so_pctg'] = (element['so_goals'] / element['so_attempts']) * 100.; 
+            } else {
+                element['so_pctg'] = 0; 
+            }
 
         });
         return filtered_player_stats;
@@ -710,6 +729,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'power_play_stats': 'time_on_ice_pp',
         'penalty_stats': 'pim_from_events',
         'additional_stats': 'faceoff_pctg',
+        'shootout_stats': 'so_goals',
         'on_ice_stats': 'plus_minus',
         'on_ice_shot_stats': 'on_ice_sh_pctg',
         'on_ice_shot_on_goal_stats': 'on_ice_sog_pctg',
@@ -725,6 +745,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'goalie_stats_pp': 'save_pctg_5v4',
         'goalie_zone_stats_near': 'save_pctg_slot',
         'goalie_zone_stats_far': 'save_pctg_blue_line',
+        'goalie_shootout_stats': 'so_sv_pctg',
         'game_score_stats': 'game_score'
     }
 
@@ -758,6 +779,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'time_on_ice_pp': ['time_on_ice_pp', 'pp_goals_per_60'],
         'pim_from_events': ['pim_from_events', '-games_played'],
         'faceoff_pctg': ['faceoff_pctg', 'faceoffs'],
+        'so_goals': ['so_goals'],
         'plus_minus': ['plus_minus'],
         'on_ice_sh_pctg': ['on_ice_sh_pctg'],
         'on_ice_sh_pctg_5v5': ['on_ice_sh_pctg_5v5'],
@@ -765,6 +787,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5'],
         'game_score': ['game_score', 'goals', 'primary_assists'],
         'gsaa': ['gsaa'],
+        'so_sv_pctg': ['so_sv_pctg'],
         'left_side_faceoff_pctg': ['left_side_faceoff_pctg', 'left_side_faceoffs'],
         'right_side_faceoff_pctg': ['right_side_faceoff_pctg', 'right_side_faceoffs'],
         'nzone_faceoff_pctg': ['nzone_faceoff_pctg', 'nzone_faceoffs'],

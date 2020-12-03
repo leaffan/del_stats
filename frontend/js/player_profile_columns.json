@@ -41,6 +41,23 @@
         {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
         {"data_key": "blocked_shots", "col_header": "BLKS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked Actively"}
     ],
+    "shootout_stats": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "so_attempts", "col_header": "ShoA", "expl_de": "Versuche im Penaltyschießen", "expl_en": "Shootout Attempts"},
+        {"data_key": "so_goals", "col_header": "ShoG", "expl_de": "Tore im Penaltyschießen", "expl_en": "Shootout Goals"},
+        {"data_key": "so_pctg", "col_header": "Sho%", "expl_de": "Torquote im Penaltyschießen", "expl_en": "Shootout Percentage"},
+        {"data_key": "so_gw_goals", "col_header": "ShoGWG", "expl_de": "Siegtore im Penaltyschießen", "expl_en": "Shootout Game Winning Goals"}
+    ],
+    "goalie_shootout_stats": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "so_attempts_a", "col_header": "ShoAA", "expl_de": "Gegnerische Versuche im Penaltyschießen", "expl_en": "Shootout Attempts Against"},
+        {"data_key": "so_goals_a", "col_header": "ShoGA", "expl_de": "Zugelassene Tore im Penaltyschießen", "expl_en": "Shootout Goals Against"},
+        {"data_key": "so_sv_pctg", "col_header": "ShoSv%", "expl_de": "Fangqoute im Penaltyschießen", "expl_en": "Shootout Save Percentage"}
+    ],
     "on_ice_shot_stats": [
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},

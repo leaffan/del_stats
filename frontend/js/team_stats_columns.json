@@ -194,5 +194,19 @@
         {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
         {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
         {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
+    ],
+    "shootout_stats": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "so_games_played", "col_header": "ShoGP", "expl_de": "Absolvierte Spiele, die im Penaltyschießen endeten", "expl_en": "Shootout Games Played"},
+        {"data_key": "so_rounds", "col_header": "Runden", "expl_de": "Absolvierte Runnden im Penaltyschießen", "expl_en": "Shootout Rounds"},
+        {"data_key": "so_a", "col_header": "ShoA", "expl_de": "Versuche im Penaltyschießen", "expl_en": "Shootout Attempts"},
+        {"data_key": "so_g", "col_header": "ShoG", "expl_de": "Tore im Penaltyschießen", "expl_en": "Shootout Goals"},
+        {"data_key": "so_pctg", "col_header": "Sho%", "expl_de": "Torquote im Penaltyschießen", "expl_en": "Shootout Percentage"},
+        {"data_key": "opp_so_a", "col_header": "OppShoA", "expl_de": "Gegnerische Versuche im Penaltyschießen", "expl_en": "Opposition Shootout Attempts"},
+        {"data_key": "opp_so_g", "col_header": "OppShoG", "expl_de": "Gegnerische Tore im Penaltyschießen", "expl_en": "Opposition Shootout Goals"},
+        {"data_key": "so_sv_pctg", "col_header": "ShoSv%", "expl_de": "Fangquote im Penaltyschießen", "expl_en": "Shootout Save Percentage"},
+        {"data_key": "sw", "col_header": "SW", "expl_de": "Siege im Penaltyschießen", "expl_en": "Shootout Wins"},
+        {"data_key": "sl", "col_header": "SL", "expl_de": "Niederlagen im Penaltyschießen", "expl_en": "Shootout Losses"}
     ]
 }
