@@ -13,8 +13,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     // initially setting indicators which view we're currently in
     $scope.isStandingsView = true;
     $scope.sortConfig = {
-        'sortKey': 'points',
-        'sortCriteria': ['points', 'score_diff', 'score'],
+        'sortKey': 'pt_pctg',
+        'sortCriteria': ['pt_pctg', 'points', 'score_diff', 'score'],
         'sortDescending': true
     }
     $scope.fromRoundSelect = '1';

@@ -140,7 +140,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-20"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
@@ -175,7 +175,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in filtered_team_stats | filter:{division: divisions[0]} | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+                <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | filter:{division: divisions[0]} | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                     <td class="w-03 text-right">{{ $index + 1 }}</td>
                     <td class="w-20"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                     <td class="w-07 text-right">{{ stat.games_played }}</td>
@@ -209,7 +209,7 @@
                 </tr>
             </thead>
             <tbody>
-                <tr data-ng-repeat="stat in filtered_team_stats | filter:{division: divisions[1]} | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+                <tr class="{{stat.team === 'SWW' || stat.team == 'EBB' ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | filter:{division: divisions[1]} | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                     <td class="w-03 text-right">{{ $index + 1 }}</td>
                     <td class="w-20"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                     <td class="w-07 text-right">{{ stat.games_played }}</td>
@@ -226,7 +226,6 @@
                 </tr>
             </tbody>
         </table>
-
     </div>
 
     <table id="goal_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goal_stats'">
@@ -244,7 +243,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-27"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right {{ stat.goals_diff > 0 ? 'green' : stat.goals_diff < 0 ? 'red' : '' }}">{{ stat.goals_diff }}</td>
@@ -276,7 +275,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-25"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-09 text-right">{{ stat.games_played }}</td>
@@ -306,7 +305,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-25"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-09 text-right">{{ stat.games_played }}</td>
@@ -336,7 +335,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -368,7 +367,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -400,7 +399,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -432,7 +431,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -464,7 +463,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -496,7 +495,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-08 text-right">{{ stat.games_played }}</td>
@@ -528,7 +527,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-20"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
@@ -561,7 +560,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-25"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-09 text-right">{{ stat.games_played }}</td>
@@ -591,7 +590,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-20"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-06 text-right">{{ stat.games_played }}</td>
@@ -624,7 +623,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-25"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-12 text-right">{{ stat.games_played }}</td>
@@ -652,7 +651,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-27"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-10 text-right">{{ stat.games_played }}</td>
@@ -681,7 +680,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
+            <tr class="{{season == 2020 && (stat.team === 'SWW' || stat.team == 'EBB') ? 'table-danger' : ''}}" data-ng-repeat="stat in filtered_team_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-10 text-right">{{ stat.games_played }}</td>
@@ -695,6 +694,10 @@
             </tr>
         </tbody>
     </table>
+
+    <div data-ng-if="season == 2020" class="alert alert-danger shadow">
+        NB: <b>Schwenningen</b> und <b>Berlin</b> haben ihre Teams aus dem MagentaSport Cup zurück gezogen. Sie sind daher außer Konkurrenz zu betrachten.
+    </div>
 
     <div class="alert alert-info main-bg my-3 shadow">
         <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span ng-show="toggle" class="fa fa-minus"></span><span ng-show="!toggle" class="fa fa-plus"></span></b></span>
