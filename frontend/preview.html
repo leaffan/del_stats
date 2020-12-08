@@ -2602,7 +2602,7 @@
         </tbody>
     </table>
 
-    <div id="plr_scoring_powerplay_playoffs" class="alert alert-info main-bg mb-2 shadow-sm">
+    <div data-ng-if="is_playoff_game" id="plr_scoring_powerplay_playoffs" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/plr_scoring_powerplay_playoffs">Top-Scorer Überzahl (Playoffs):</a></h4>
         <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
@@ -2674,13 +2674,13 @@
         </tbody>
     </table>
 
-    <div id="plr_scoring_shorthanded_playoffs" class="alert alert-info main-bg mb-2 shadow-sm">
+    <div data-ng-if="is_playoff_game" id="plr_scoring_shorthanded_playoffs" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/plr_scoring_shorthanded_playoffs">Top-Scorer Unterzahl (Playoffs):</a></h4>
         <p>(Unter Berücksichtigung aller Playoff-Spiele bis zum <b>{{ previous_date | amDateFormat:'DD. MMMM YYYY' }}</b>.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
-    <table id="scoring_shorthanded_rankings_playoffs" class="table table-responsive-md table-bordered table-hover table-sm shadow">
+    <table data-ng-if="is_playoff_game" id="scoring_shorthanded_rankings_playoffs" class="table table-responsive-md table-bordered table-hover table-sm shadow">
         <thead class="thead-light">
             <tr data-ng-if="full_playoffs_stats.length">
                 <th scope="col" class="text-center"><span class="rank">#</span></th>
