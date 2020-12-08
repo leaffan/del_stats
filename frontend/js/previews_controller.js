@@ -8,7 +8,8 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
     // loading schedule from external json file
     var now = moment();
     $http.get('data/'+ $scope.season + '/full_schedule.json').then(function (res) {
-        $scope.fixtures = res.data;
+        // only retaining regular DEL games (leaving out MSC games)
+        $scope.fixtures = res.data.filter(fixture => fixture.league_id != 4);
         $scope.fixtures.forEach(fixture => {
             fixture['game_date'] = moment(fixture['start_date']);
             // retrieving start of day for game date
@@ -34,6 +35,8 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
         // determining previous and following round for table view navigation
         $scope.previous_round = $scope.getPreviousRound();
         $scope.following_round = $scope.getFollowingRound();
+        // retrieving maximum round played
+        $scope.max_round = Math.max.apply(Math, $scope.fixtures.map(function(o) { return o.round; })).toString();
     });
 
     // // restoring previously set round filter, if possible
@@ -48,7 +51,7 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
             return;
         } 
         if ($scope.roundFilter == 'first_round_1') {
-            return 28;
+            return $scope.max_round;
         }
         if (svc.isNumeric($scope.roundFilter)) {
             return svc.parseFloat($scope.roundFilter) - 1;
@@ -61,7 +64,7 @@ app.controller('previewsController', function($scope, $http, $localStorage, $rou
     // TODO: possibly reactivate that playoff stuff once we're at this point of the season
     $scope.getFollowingRound = function() {
         // TODO: set max number for round filter automatically from schedule data
-        if ($scope.roundFilter == 28) {
+        if ($scope.roundFilter == $scope.max_round) {
             return;
             // return $scope.playoff_rounds[0];
         }
