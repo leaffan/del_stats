@@ -242,15 +242,15 @@ def calculate_age(dob):
     return float("%d.%03d" % (years, days))
 
 
-def calculate_games_left_till_next_hundred(games):
-    if games:
-        next_hundred = int(math.ceil(games / 100.0)) * 100
-        if games % 100 == 0:
+def calculate_items_left_till_next_100(count):
+    if count:
+        next_hundred = int(math.ceil(count / 100.0)) * 100
+        if count % 100 == 0:
             next_hundred += 100
-        games_left = next_hundred - games
+        items_left = next_hundred - count
     else:
-        games_left = 100
-    return games_left
+        items_left = 100
+    return items_left
 
 
 def read_del_team_names(src=R"data\del_team_names.csv"):
