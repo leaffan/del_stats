@@ -590,13 +590,13 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{current_game.home.shortcut == coach.team ? 'table-info' : current_game.guest.shortcut == coach.team ? 'table-warning' : ''}}" data-ng-repeat="coach in coaches | orderBy:sorting_config['coaches_rankings']">
+            <tr class="{{current_game.home.shortcut == coach.team ? 'table-info' : current_game.guest.shortcut == coach.team ? 'table-warning' : ''}}" data-ng-repeat="coach in coaches | filter:{active: 'true'} | orderBy:sorting_config['coaches_rankings']">
                     <td class="w-05 text-right">{{ $index + 1 }}</td>
                     <td class="w-25">{{ coach.first_name }} {{ coach.last_name }}</td>
                     <td class="w-15"><a href="#!/team_profile/{{season}}/{{coach.team}}">{{ team_location_lookup[coach.team] }}</a></td>
                     <td class="w-10 text-right">{{ coach.games_coached }}</td>
-                    <td class="w-10 text-right">{{ coach.wins }}</td>
-                    <td class="w-10 text-right">{{ coach.losses }}</td>
+                    <td class="w-10 {{ coach.wl <= 5 ? 'marker ': '' }}text-right">{{ coach.wins }}</td>
+                    <td class="w-10 {{ coach.ll <= 5 ? 'marker ': '' }}text-right">{{ coach.losses }}</td>
                     <td class="w-10 text-right">{{ coach.win_pctg.toFixed(1) }} %</td>
                     <td class="w-15 {{ coach.gcl < 10 ? 'marker ': '' }}text-right">{{ coach.gcl }}</td>
                 </tr>
