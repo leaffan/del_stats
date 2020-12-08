@@ -18,7 +18,7 @@
                     <span class="input-group-text">Spieltag:</span>
                 </div>
                 <select class="form-control" id="round_select" data-ng-model="roundFilter" data-ng-change="changeRound()">
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, 28)" value="{{round}}">{{round}}</option>
+                    <option data-ng-option data-ng-repeat="round in svc.range(1, max_round)" value="{{round}}">{{round}}</option>
                 </select>
             </div>
         </div>        
@@ -83,8 +83,8 @@
                 <td class="w-10 px-2">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
                 <td class="w-15 px-2">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
                 <td class="w-10 px-2">
-                    <a data-ng-if="game.days_left <= 50" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
-                    <span data-ng-if="game.days_left > 50">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+                    <a data-ng-if="game.days_left <= 14" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                    <span data-ng-if="game.days_left > 14">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
                 </td>
             </tr>
         </tbody>
