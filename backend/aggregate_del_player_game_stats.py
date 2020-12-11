@@ -12,7 +12,7 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
-from utils import calculate_age
+from utils import calculate_age, iso_country_codes
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -93,26 +93,6 @@ SHOT_STATS_ATTRS = [
     'behind_goal_blocked', 'behind_goal_goals', 'behind_goal_distance',
     'behind_goal_pctg', 'behind_goal_on_goal_pctg'
 ]
-
-ISO_COUNTRY_CODES = {
-    'GER': 'de',
-    'CAN': 'ca',
-    'SWE': 'se',
-    'USA': 'us',
-    'FIN': 'fi',
-    'ITA': 'it',
-    'NOR': 'no',
-    'FRA': 'fr',
-    'LVA': 'lv',
-    'SVK': 'sk',
-    'DNK': 'dk',
-    'RUS': 'ru',
-    'SVN': 'si',
-    'HUN': 'hu',
-    'SLO': 'si',
-    'CRO': 'hr',
-    'CZE': 'cz'
-}
 
 OUT_FIELDS = [
     'player_id', 'season_type', 'team', 'no', 'position',
@@ -405,9 +385,8 @@ if __name__ == '__main__':
         else:
             basic_values['u23'] = False
 
-        if basic_values['country'] in ISO_COUNTRY_CODES:
-            basic_values[
-                'iso_country'] = ISO_COUNTRY_CODES[basic_values['country']]
+        if basic_values['country'] in iso_country_codes:
+            basic_values['iso_country'] = iso_country_codes[basic_values['country']]
         else:
             print(
                 "+ Country code '%s' not found " % basic_values['country'] +

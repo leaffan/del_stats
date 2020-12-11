@@ -6,17 +6,10 @@ import os
 import yaml
 import json
 
-from utils import calculate_age, player_name_corrections, correct_player_name
+from utils import calculate_age, player_name_corrections, correct_player_name, iso_country_codes
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
-
-ISO_COUNTRY_CODES = {
-    'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
-    'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
-    'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
-    'AUT': 'at', 'CRO': 'hr', 'CZE': 'cz', 'DEN': 'dk', 'LAT': 'lv',
-}
 
 
 if __name__ == '__main__':
@@ -59,8 +52,8 @@ if __name__ == '__main__':
                 if 'dateOfBirth' in plr:
                     single_plr['dob'] = plr['dateOfBirth']
                     single_plr['age'] = calculate_age(single_plr['dob'])
-                if plr['nationalityShort'] in ISO_COUNTRY_CODES:
-                    single_plr['iso_country'] = ISO_COUNTRY_CODES[plr['nationalityShort']]
+                if plr['nationalityShort'] in iso_country_codes:
+                    single_plr['iso_country'] = iso_country_codes[plr['nationalityShort']]
                 else:
                     print("Nationality abbreviation not recognized: %s" % plr['nationalityShort'])
                     single_plr['iso_country'] = 'n/a'
