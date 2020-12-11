@@ -12,7 +12,10 @@ ROUND_MAPPING = {
     '1. Playoff-Runde': 'first_round',
     'Viertelfinale': 'quarter_finals',
     'Halbfinale': 'semi_finals',
-    'Finale': 'finals'
+    'Finale': 'finals',
+    # MSC rounds:
+    'Halbfinale 1': 'semi_finals',
+    'Halbfinale 2': 'semi_finals',
 }
 
 
