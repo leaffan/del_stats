@@ -6,8 +6,38 @@ import yaml
 import json
 import argparse
 
+from collections import defaultdict
+
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+
+SKATER_INTEGERS = ['gp', 'g', 'a', 'pts', 'plus_minus', 'pim', 'ppg', 'shg', 'gwg', 'sog']
+
+
+def combine_season_statlines(season_stat_lines):
+    """
+    Combines multiple season stat lines (e.g. with more than one team in a season) into a single one.
+    """
+    combined_statline = defaultdict(int)
+    for ssl in season_stat_lines:
+        for skr_int in SKATER_INTEGERS:
+            combined_statline[skr_int] += ssl[skr_int]
+    else:
+        if combined_statline['sog'] > 0:
+            combined_statline['sh_pctg'] = round(combined_statline['g'] / combined_statline['sog'] * 100, 2)
+        else:
+            combined_statline['sh_pctg'] = 0.
+        if combined_statline['gp'] > 0:
+            combined_statline['gpg'] = round(combined_statline['g'] / combined_statline['gp'], 2)
+            combined_statline['apg'] = round(combined_statline['a'] / combined_statline['gp'], 2)
+            combined_statline['ptspg'] = round(combined_statline['pts'] / combined_statline['gp'], 2)
+        else:
+            combined_statline['gpg'] = 0.
+            combined_statline['apg'] = 0.
+            combined_statline['ptspg'] = 0.
+
+    return combined_statline
+
 
 if __name__ == '__main__':
 
@@ -86,14 +116,19 @@ if __name__ == '__main__':
             if len(curr_player_career_stats) == 1:
                 curr_player_career_stats = curr_player_career_stats.pop(0)
             elif len(curr_player_career_stats) == 1:
-                print("More than one career stats dataset found for player %s" % plr['name'])
+                print("Multiple career stats datasets found for player %s" % plr['name'])
                 continue
             # retrieving current player's stats from last regular season
             prev_season_player_stats = list(filter(
                 lambda d: d['season'] == season - 1 and d['season_type'] == 'RS', curr_player_career_stats['seasons']))
             if prev_season_player_stats:
-                # retaining previou season's stats (if available)
-                plr['prev_season'] = prev_season_player_stats.pop(0)
+                if len(prev_season_player_stats) > 1:
+                    print("Multiple datasets from previous regular season found for player %s" % plr['name'])
+                    plr['prev_season'] = dict(combine_season_statlines(prev_season_player_stats))
+                    # TODO: take care of goalies with multiple season stat lines
+                else:
+                    # retaining previous season's stats (if available)
+                    plr['prev_season'] = prev_season_player_stats.pop(0)
 
             # retaining career stats
             if 'all' in curr_player_career_stats['career']:
