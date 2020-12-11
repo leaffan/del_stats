@@ -108,6 +108,10 @@ player_name_corrections = {
     1601: {
         'first_name': 'Tylor',
         'full_name': 'Tylor Spink'
+    },
+    1569: {
+        'first_name': 'Mitch',
+        'full_name': 'Mitch Wahl'
     }
 }
 
@@ -140,6 +144,13 @@ divisions = {
         'BHV': 'Nord', 'WOB': 'Nord', 'KEV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'EBB': 'Nord',
         'SWW': 'Süd', 'MAN': 'Süd', 'RBM': 'Süd', 'AEV': 'Süd', 'NIT': 'Süd', 'ING': 'Süd', 'STR': 'Süd',
     }
+}
+
+iso_country_codes = {
+    'GER': 'de', 'CAN': 'ca', 'SWE': 'se', 'USA': 'us', 'FIN': 'fi',
+    'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
+    'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
+    'AUT': 'at', 'CRO': 'hr', 'CZE': 'cz', 'DEN': 'dk', 'LAT': 'lv',
 }
 
 
