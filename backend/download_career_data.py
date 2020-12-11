@@ -48,6 +48,9 @@ if __name__ == '__main__':
     tgt_path = os.path.join(tgt_dir, 'career_stats.json')
 
     careers = list()
+    # set of processed player ids to avoid duplicate entries in final data set
+    # have to check whether this will lead to problems with legitimate player team changes during the season
+    processed_plr_ids = set()
 
     for team_id in list(teams.keys())[:]:
         # setting up team page url
@@ -68,6 +71,10 @@ if __name__ == '__main__':
             match = re.search(PLR_ID_REGEX, plr_url)
             if match:
                 plr_id = int(match.group(1))
+
+            if plr_id in processed_plr_ids:
+                print("=> Career data for player id %d (URL: %s) already collected previously" % (plr_id, plr_url))
+                continue
 
             print("+ Collecting data from %s" % plr_url)
 
@@ -203,6 +210,9 @@ if __name__ == '__main__':
                 json.dumps(plr_career_stats, indent=2))
 
             careers.append(plr_career_stats)
+            # adding current player id to set of already processed ones
+            processed_plr_ids.add(plr_id)
+
         print()
 
     careers = sorted(careers, key=lambda k: k['player_id'])
