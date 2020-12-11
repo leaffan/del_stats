@@ -3,6 +3,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.Math = window.Math;
     $scope.season = $routeParams.season;
     $scope.current_game_id = $routeParams.game_id;
+    $scope.previous_stats = false;
 
     // loading current game data from full schedule
     $http.get('data/'+ $scope.season + '/full_schedule.json').then(function (res) {
@@ -21,8 +22,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.current_home_team = $scope.current_game.home.name;
         $scope.current_road_team = $scope.current_game.guest.name;
         $scope.current_season = parseInt($scope.current_game.season);
-        if ($scope.current_game.round == '1')
-            $scope.season = $scope.season - 1;
         $scope.current_season = $scope.current_season.toString() + "/" + ($scope.current_season + 1 - 2000).toString();
         $scope.current_home_team_fixtures = $scope.games.filter(function(value, index, arr) {
             return value['status'] == 'BEFORE_MATCH' && ($scope.current_game.home.name == value['home']['name'] || $scope.current_game.home.name == value['guest']['name']);
