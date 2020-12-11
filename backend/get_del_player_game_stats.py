@@ -539,6 +539,9 @@ def retrieve_detailed_faceoff_stats(gsl, faceoffs):
         strong_side_faceoffs = list(filter(
             lambda d: d['positionShortcut'] in ['HDL', 'ADR'],
             per_player_game_faceoffs))
+    else:
+        weak_side_faceoffs = list()
+        strong_side_faceoffs = list()
 
     wside_faceoffs_won = get_won_faceoffs(
         weak_side_faceoffs, gsl['player_id'])
