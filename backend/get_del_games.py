@@ -72,7 +72,7 @@ def get_games_for_date(date, existing_games=None):
         # comparing start date of game with current date
         if start_date == game_date and schedule['status'] == 'AFTER_MATCH':
             game_ids_rounds.append(
-                (schedule['game_id'], int(schedule['round'].split()[-1])))
+                (schedule['game_id'], int(schedule['round'].split('_')[-1])))
 
     for game_id, round in game_ids_rounds:
         if game_id in registered_game_ids:
