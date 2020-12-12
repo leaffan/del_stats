@@ -23,7 +23,7 @@
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Größe:</b> {{player_stats[0].height }} cm</li>
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Gewicht:</b> {{player_stats[0].weight }} kg</li>
                 </ul>
-                        <ul class="list-group list-group-horizontal my-1">
+                <ul class="list-group list-group-horizontal my-1">
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Position:</b> {{player_stats[0].position === 'FO' ? 'Stürmer' : player_stats[0].position === 'DE' ? 'Verteidiger' : player_stats[0].position === 'GK' ? 'Torhüter' : ''}}</li>
                     <li class="col-4 list-group-item border-0 bg-transparent p-0"><b>Stockhand:</b> {{player_stats[0].shoots === 'left' ? 'links' : player_stats[0].shoots === 'right' ? 'rechts' : ''}}</li>
                 </ul>
@@ -36,7 +36,7 @@
         <a href="#!/player_career/{{player_id}}"><b>Karriereverlauf</b></a> | <a href="#!/del_stats/{{season}}"><b>Spielerstatistiken</b></a> | <a href="#!/team_stats/{{season}}"><b>Teamstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
-    <div class="alert alert-info main-bg">
+    <div class="alert alert-info main-bg shadow">
         <span data-ng-click="toggle=!toggle"><b>Abkürzungsverzeichnis&#32;&#32;<span data-ng-show="toggle" class="fa fa-minus"></span><span data-ng-show="!toggle" class="fa fa-plus"></span></b></span>
             <dl data-ng-show="toggle" class="row mx-2">
                 <dt class="col-md-2 text-right" data-ng-repeat-start="term in stats_cols[tableSelect] | filter:{expl_de: '!!'}">{{ term.col_header }}</dt>
@@ -45,97 +45,206 @@
     </div>
 
     <form>
-        <div class="form-row mb-1">
-            <div class="input-group col-6">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Team:</span>
+        <!-- mobile version -->
+        <div class="d-md-none">
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <div class="w-25 input-group-prepend">
+                        <span class="w-100 input-group-text">Team:</span>
+                    </div>
+                    <select class="w-75 form-control" data-ng-model="model.new_team" data-ng-change="changeTeam()">
+                        <option data-ng-option data-ng-repeat="full_team in all_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    </select>
                 </div>
-                <select class="form-control" id="team_select" data-ng-model="model.new_team" data-ng-change="changeTeam()">
-                    <option data-ng-option data-ng-repeat="full_team in all_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
-                </select>
             </div>
-            <div class="input-group col-6 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Spieler:</span>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <div class="w-25 input-group-prepend">
+                        <span class="w-100 input-group-text">Spieler:</span>
+                    </div>
+                    <select class="w-75 form-control" data-ng-model="model.new_player_id" data-ng-change="changePlayer()">
+                        <option data-ng-option data-ng-repeat="player in filtered_players =(all_players | orderBy:'last_name' | filter:{team: model.new_team})" value="{{player.player_id}}">{{player.full_name}}</option>
+                    </select>
                 </div>
-                <select class="form-control" id="player_select" data-ng-model="model.new_player_id" data-ng-change="changePlayer()">
-                    <option data-ng-option data-ng-repeat="player in filtered_players =(all_players | orderBy:'last_name' | filter:{team: model.new_team})" value="{{player.player_id}}">{{player.full_name}}</option>
-                </select>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <select class="form-control" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="toi_special_teams">Eiszeiten/Special Teams</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats">On-Ice-Schussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
+                        <option data-ng-if="shootoutParticipation && player_stats[0].position != 'GK'" data-ng-option value="shootout_stats">Penaltyschießen</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_shootout_stats">Penaltyschießen</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <select class="form-control" data-ng-model="homeRoadFilter">
+                        <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                        <option data-ng-option value="home">Heimspiele</option>
+                        <option data-ng-option value="road">Auswärtsspiele</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <div class="w-25 input-group-prepend">
+                        <span class="w-100 input-group-text">Gegner:</span>
+                    </div>
+                    <select class="w-75 form-control" data-ng-model="oppFilter">
+                        <option data-ng-option value selected="selected">alle</option>
+                        <option data-ng-option data-ng-repeat="full_team in all_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <select class="form-control" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                        <option data-ng-option value selected="selected">alle Zeiträume</option>
+                        <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <div class="input-group col-6 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="fromRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
+                <div class="input-group col-6 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="toRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
             </div>
         </div>
-        <div class="form-row mb-1">
-            <div class="input-group col-4">
-                <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="toi_special_teams">Eiszeiten/Special Teams</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats">On-Ice-Schussdaten (alle Situationen)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussdaten (5-gegen-5)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussdaten (alle Situationen)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
-                    <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
-                    <option data-ng-if="shootoutParticipation && player_stats[0].position != 'GK'" data-ng-option value="shootout_stats">Penaltyschießen</option>
-                    <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_shootout_stats">Penaltyschießen</option>
-                </select>
-            </div>
-            <div class="input-group col-4 pl-0">
-                <select class="form-control" id="home_road_select" data-ng-model="homeRoadFilter">
-                    <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
-                    <option data-ng-option value="home">Heimspiele</option>
-                    <option data-ng-option value="road">Auswärtsspiele</option>
-                </select>
-            </div>
-            <div class="input-group col-4 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">Gegner:</span>
+        <!-- desktop/tablet version -->
+        <div class="d-none d-md-block">
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Team:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="model.new_team" data-ng-change="changeTeam()">
+                        <option data-ng-option data-ng-repeat="full_team in all_teams" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    </select>
                 </div>
-                <select class="form-control" id="opp_select" data-ng-model="oppFilter">
-                    <option data-ng-option value selected="selected">alle</option>
-                    <option data-ng-option data-ng-repeat="full_team in all_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
-                </select>
-            </div>
-        </div>
-        <div class="form-row mb-3">
-            <div class="input-group col-4">
-                <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
-                    <option data-ng-option value selected="selected">alle Zeiträume</option>
-                    <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
-                </select>
-            </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                <div class="input-group col-6 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Spieler:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="model.new_player_id" data-ng-change="changePlayer()">
+                        <option data-ng-option data-ng-repeat="player in filtered_players =(all_players | orderBy:'last_name' | filter:{team: model.new_team})" value="{{player.player_id}}">{{player.full_name}}</option>
+                    </select>
                 </div>
-                <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
             </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+            <div class="form-row mb-1">
+                <div class="input-group col-4">
+                    <select class="form-control" data-ng-model="tableSelect" data-ng-change="changeTable(sortCriterion)">
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="toi_special_teams">Eiszeiten/Special Teams</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats">On-Ice-Schussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_near">Fangquoten (Nahschüsse)</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_zone_stats_far">Fangquoten (Fernschüsse)</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_situation_stats">Fangquoten (Spielsituationen)</option>
+                        <option data-ng-if="shootoutParticipation && player_stats[0].position != 'GK'" data-ng-option value="shootout_stats">Penaltyschießen</option>
+                        <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_shootout_stats">Penaltyschießen</option>
+                    </select>
                 </div>
-                <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                <div class="input-group col-4 pl-0">
+                    <select class="form-control" data-ng-model="homeRoadFilter">
+                        <option data-ng-option value selected="selected">Heim-/Auswärtsspiele</option>
+                        <option data-ng-option value="home">Heimspiele</option>
+                        <option data-ng-option value="road">Auswärtsspiele</option>
+                    </select>
+                </div>
+                <div class="input-group col-4 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">Gegner:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="oppFilter">
+                        <option data-ng-option value selected="selected">alle</option>
+                        <option data-ng-option data-ng-repeat="full_team in all_teams | filter:{abbr: '!' + model.team}" value="{{full_team.abbr}}">{{full_team.full_name}}</option>
+                    </select>
+                </div>
             </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">von:</span>
+            <div class="form-row mb-3">
+                <div class="input-group col-4">
+                    <select class="form-control" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
+                        <option data-ng-option value selected="selected">alle Zeiträume</option>
+                        <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
+                    </select>
                 </div>
-                <select class="form-control" id="from_round_select" data-ng-model="fromRoundSelect">
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                </select>
-            </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">bis:</span>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Anfangsdatum" moment-picker="ctrl.stringFromDate" format="DD.MM.YYYY" data-ng-model="ctrl.fromDate" data-ng-model-options="{ updateOn: 'blur' }">
                 </div>
-                <select class="form-control" id="to_round_select" data-ng-model="toRoundSelect">
-                    <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
-                </select>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text"><i class="far fa-calendar-alt"></i></span>
+                    </div>
+                    <input class="form-control" placeholder="Enddatum" moment-picker="ctrl.stringToDate" format="DD.MM.YYYY" data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }">
+                </div>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="fromRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="toRoundSelect">
+                        <option data-ng-option data-ng-repeat="round in svc.range(1, maxRoundPlayed)" value="{{round}}">Spieltag {{round}}</option>
+                    </select>
+                </div>
             </div>
         </div>
     </form>
