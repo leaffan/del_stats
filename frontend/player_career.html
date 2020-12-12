@@ -4,37 +4,71 @@
         <h3>Karriereverlauf</h3>
     </div>
 
-    <div class="alert alert-info main-bg shadow">
+    <div class="alert alert-info main-bg mb-2 shadow">
         <a href="#!/career_stats"><b>Karrierestatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
     <form>
-        <div class="form-row mb-2">
-            <div class="input-group col-3">
-                <select class="form-control" data-ng-model="season_type">
-                    <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
-                    <option data-ng-option value="RS">Hauptrunde</option>
-                    <option data-ng-option value="PO">Playoffs</option>
-                </select>
-            </div>
-            <div class="input-group col-3 pl-0">
-                <select class="form-control" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
-                    <option data-ng-option value selected="selected">alle Teams</option>
-                </select>
-            </div>
-            <div class="input-group col-3 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">von:</span>
+        <div class="d-none d-md-block">
+            <div class="form-row mb-2">
+                <div class="input-group col-3">
+                    <select class="form-control" data-ng-model="season_type">
+                        <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
+                        <option data-ng-option value="RS">Hauptrunde</option>
+                        <option data-ng-option value="PO">Playoffs</option>
+                    </select>
                 </div>
-                <select class="form-control" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
-                </select>                
-            </div>
-            <div class="input-group col-3 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">bis:</span>
+                <div class="input-group col-3 pl-0">
+                    <select class="form-control" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
+                        <option data-ng-option value selected="selected">alle Teams</option>
+                    </select>
                 </div>
-                <select class="form-control" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
-                </select>
+                <div class="input-group col-3 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>                
+                </div>
+                <div class="input-group col-3 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>
+                </div>
+            </div>
+        </div>
+        <div class="d-md-none">
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <select class="form-control" data-ng-model="season_type">
+                        <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
+                        <option data-ng-option value="RS">Hauptrunde</option>
+                        <option data-ng-option value="PO">Playoffs</option>
+                    </select>
+                </div>
+                <div class="input-group col-6 pl-0">
+                    <select class="form-control" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
+                        <option data-ng-option value selected="selected">alle Teams</option>
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>                
+                </div>
+                <div class="input-group col-6 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>
+                </div>
             </div>
         </div>
     </form>
@@ -66,13 +100,16 @@
                 <td class="w-07 text-right">{{ season.shg }}</td>
                 <td class="w-07 text-right">{{ season.pim }}</td>
                 <td class="w-07 text-right">{{ season.sog }}</td>
-                <td class="w-07 text-right">{{ season.sh_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right d-none d-md-table-cell">{{ season.sh_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right d-md-none px-0">{{ season.sh_pctg.toFixed(1) }} %</td>
                 <td class="w-07 text-right">{{ season.ptspg.toFixed(2) }}</td>
             </tr>
             <tr data-ng-if="season_type == 'ALL'">
                 <td><b>Gesamt:</b></td>
-                <td><b>{{ number_of_teams }} Team{{ number_of_teams == 1 ? '' : 's'}}</b></td>
-                <td><b>{{ number_of_seasons }} Saison{{ number_of_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_teams }} Team{{ number_of_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_teams }} T{{ number_of_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_seasons }} Saison{{ number_of_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_seasons }} S{{ number_of_seasons == 1 ? '' : 's'}}</b></td>
                 <td class="text-right"><b>{{ totalGames = svc.getFilteredTotal(filtered_seasons, 'gp', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalGoals = svc.getFilteredTotal(filtered_seasons, 'g', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_seasons, 'a', seasons) }}</b></td>
@@ -81,13 +118,16 @@
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_seasons, 'shg', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_seasons, 'pim', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalShots = svc.getFilteredTotal(filtered_seasons, 'sog', seasons) }}</b></td>
-                <td class="text-right"><b>{{ (totalShots != 0 ? totalGoals / totalShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-none d-md-table-cell"><b>{{ (totalShots != 0 ? totalGoals / totalShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-md-none px-0"><b>{{ (totalShots != 0 ? totalGoals / totalShots * 100 : 0).toFixed(1) }} %</b></td>
                 <td class="text-right"><b>{{ totalGames != 0 ? (totalPoints / totalGames).toFixed(2) : (0).toFixed(2)}}</b></td>
             </tr>
             <tr data-ng-if="number_of_regular_seasons > 0">
                 <td><b>Hauptrunde:</b></td>
-                <td><b>{{ number_of_regular_season_teams }} Team{{ number_of_regular_season_teams == 1 ? '' : 's'}}</b></td>
-                <td><b>{{ number_of_regular_seasons }} Saison{{ number_of_regular_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_regular_season_teams }} Team{{ number_of_regular_season_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_regular_season_teams }} T{{ number_of_regular_season_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_regular_seasons }} Saison{{ number_of_regular_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_regular_seasons }} S{{ number_of_regular_seasons == 1 ? '' : 's'}}</b></td>
                 <td class="text-right"><b>{{ totalRegularGames = svc.getFilteredTotal(filtered_regular_seasons, 'gp', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalRegularGoals = svc.getFilteredTotal(filtered_regular_seasons, 'g', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_regular_seasons, 'a', seasons) }}</b></td>
@@ -96,13 +136,16 @@
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_regular_seasons, 'shg', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_regular_seasons, 'pim', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalRegularShots = svc.getFilteredTotal(filtered_regular_seasons, 'sog', seasons) }}</b></td>
-                <td class="text-right"><b>{{ (totalRegularShots != 0 ? totalRegularGoals / totalRegularShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-none d-md-table-cell"><b>{{ (totalRegularShots != 0 ? totalRegularGoals / totalRegularShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-md-none px-0"><b>{{ (totalRegularShots != 0 ? totalRegularGoals / totalRegularShots * 100 : 0).toFixed(1) }} %</b></td>
                 <td class="text-right"><b>{{ totalRegularGames != 0 ? (totalRegularPoints / totalRegularGames).toFixed(2) : (0).toFixed(2)}}</b></td>
             </tr>
             <tr data-ng-if="number_of_playoff_seasons > 0">
                 <td><b>Playoffs:</b></td>
-                <td><b>{{ number_of_playoff_season_teams }} Team{{ number_of_playoff_season_teams == 1 ? '' : 's'}}</b></td>
-                <td><b>{{ number_of_playoff_seasons }} Saison{{ number_of_playoff_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_playoff_season_teams }} Team{{ number_of_playoff_season_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_playoff_season_teams }} T{{ number_of_playoff_season_teams == 1 ? '' : 's'}}</b></td>
+                <td class="d-none d-md-table-cell"><b>{{ number_of_playoff_seasons }} Saison{{ number_of_playoff_seasons == 1 ? '' : 's'}}</b></td>
+                <td class="d-md-none"><b>{{ number_of_playoff_seasons }} S{{ number_of_playoff_seasons == 1 ? '' : 's'}}</b></td>
                 <td class="text-right"><b>{{ totalPlayoffGames = svc.getFilteredTotal(filtered_playoff_seasons, 'gp', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalPlayoffGoals = svc.getFilteredTotal(filtered_playoff_seasons, 'g', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_playoff_seasons, 'a', seasons) }}</b></td>
@@ -111,7 +154,8 @@
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_playoff_seasons, 'shg', seasons) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_playoff_seasons, 'pim', seasons) }}</b></td>
                 <td class="text-right"><b>{{ totalPlayoffShots = svc.getFilteredTotal(filtered_playoff_seasons, 'sog', seasons) }}</b></td>
-                <td class="text-right"><b>{{ (totalPlayoffShots != 0 ? totalPlayoffGoals / totalPlayoffShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-none d-md-table-cell"><b>{{ (totalPlayoffShots != 0 ? totalPlayoffGoals / totalPlayoffShots * 100 : 0).toFixed(1) }} %</b></td>
+                <td class="text-right d-md-none px-0"><b>{{ (totalPlayoffShots != 0 ? totalPlayoffGoals / totalPlayoffShots * 100 : 0).toFixed(1) }} %</b></td>
                 <td class="text-right"><b>{{ totalPlayoffGames != 0 ? (totalPlayoffPoints / totalPlayoffGames).toFixed(2) : (0).toFixed(2)}}</b></td>
             </tr>
         </tbody>

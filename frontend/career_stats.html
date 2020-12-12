@@ -1,13 +1,14 @@
 <div class="container" data-ng-app="delStatsApp">
-    <div class="alert alert-info main-bg shadow">
-        <h1>DEL-Karrierestatistiken</h1>
+    <div class="alert alert-info main-bg shadow mb-2">
+        <h3 class="d-md-none mb-0">DEL-Karrierestatistiken</h3>
+        <h1 class="d-none d-md-block mb-0">DEL-Karrierestatistiken</h1>
     </div>
 
-    <div class="alert alert-info main-bg shadow">
+    <div class="alert alert-info main-bg shadow mb-2">
         Karrierestatistiken für aktive DEL-Spieler.
     </div>
 
-    <div class="alert alert-info main-bg shadow">
+    <div class="alert alert-info main-bg shadow mb-2">
         <a href="#!"><b>Startseite</b></a>
     </div>
 
@@ -20,40 +21,85 @@
                 <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.nameFilter" />
             </div>
         </div>
-        <div class="form-row mb-3">
-            <div class="input-group col-2">
-                <select class="form-control" id="positionSelect" data-ng-model="position">
-                    <option data-ng-option value selected="selected">alle Positionen</option>
-                    <option data-ng-option value="GK">Torhüter</option>
-                    <option data-ng-option value="DE">Verteidiger</option>
-                    <option data-ng-option value="FO">Stürmer</option>
-                </select>
-            </div>
-            <div class="input-group col-3 pl-0">
-                <select class="form-control" id="team_select" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
-                    <option data-ng-option value selected="selected">alle</option>
-                </select>
-            </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">von:</span>
+        <div class="d-md-none">
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <select class="form-control" data-ng-model="position">
+                        <option data-ng-option value selected="selected">alle Positionen</option>
+                        <option data-ng-option value="GK">Torhüter</option>
+                        <option data-ng-option value="DE">Verteidiger</option>
+                        <option data-ng-option value="FO">Stürmer</option>
+                    </select>
                 </div>
-                <select class="form-control" id="from_select" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
-                </select>                
-            </div>
-            <div class="input-group col-2 pl-0">
-                <div class="input-group-prepend">
-                    <span class="input-group-text">bis:</span>
+                <div class="input-group col-6 pl-0">
+                    <select class="form-control" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
+                        <option data-ng-option value selected="selected">alle</option>
+                    </select>
                 </div>
-                <select class="form-control" id="to_select" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
-                </select>
             </div>
-            <div class="input-group col-3 pl-0">
-                <select class="form-control" data-ng-model="season_type">
-                    <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
-                    <option data-ng-option value="RS">Hauptrunde</option>
-                    <option data-ng-option value="PO">Playoffs</option>
-                </select>
+            <div class="form-row mb-1">
+                <div class="input-group col-6">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>                
+                </div>
+                <div class="input-group col-6 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>
+                </div>
+            </div>
+            <div class="form-row mb-1">
+                <div class="input-group col-12">
+                    <select class="form-control" data-ng-model="season_type">
+                        <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
+                        <option data-ng-option value="RS">Hauptrunde</option>
+                        <option data-ng-option value="PO">Playoffs</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+        <div class="d-none d-md-block">
+            <div class="form-row mb-3">
+                <div class="input-group col-2">
+                    <select class="form-control" data-ng-model="position">
+                        <option data-ng-option value selected="selected">alle Positionen</option>
+                        <option data-ng-option value="GK">Torhüter</option>
+                        <option data-ng-option value="DE">Verteidiger</option>
+                        <option data-ng-option value="FO">Stürmer</option>
+                    </select>
+                </div>
+                <div class="input-group col-3 pl-0">
+                    <select class="form-control" data-ng-model="team" data-ng-options="team_full_name_lookup[team] for team in all_teams">
+                        <option data-ng-option value selected="selected">alle</option>
+                    </select>
+                </div>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">von:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="from_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>                
+                </div>
+                <div class="input-group col-2 pl-0">
+                    <div class="input-group-prepend">
+                        <span class="input-group-text">bis:</span>
+                    </div>
+                    <select class="form-control" data-ng-model="to_season" data-ng-options="(season.toString() + '/' + svc.pad((season + 1 - 2000), 2)) for season in svc.range(min_season, max_season)">
+                    </select>
+                </div>
+                <div class="input-group col-3 pl-0">
+                    <select class="form-control" data-ng-model="season_type">
+                        <option data-ng-option value="ALL">Hauptrunde und Playoffs</option>
+                        <option data-ng-option value="RS">Hauptrunde</option>
+                        <option data-ng-option value="PO">Playoffs</option>
+                    </select>
+                </div>
             </div>
         </div>
     </form>
@@ -61,7 +107,8 @@
     <table id="career_stats_skaters" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="position != 'GK'">
         <thead class="thead-light">
             <tr>
-                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center d-none d-md-block">Rang</th>
+                <th scope="col" class="text-center d-md-none">#</th>
                 <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['career_stats_skaters']">
                     <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
                         <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
@@ -75,8 +122,11 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_season_player_stats | filter:nameFilter | filter: {position: '!GK'} | filter:greaterThanFilter('gp', 0) | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending']">
                 <td class="w-05 text-right">{{ $index + 1 }}</td>
-                <td class="w-17"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
-                <td class="w-08">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
+                <td class="w-17 d-md-none pr-0"><a href="#!/player_career/{{stat.player_id}}">{{svc.shortenName(stat.first_name + ' ' + stat.last_name)}}</a></td>
+                <td class="w-08 d-md-none pr-0">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Tms' }}</td>
+
+                <td class="w-17 d-none d-md-table-cell"><a href="#!/player_career/{{stat.player_id}}">{{ stat.first_name }} {{ stat.last_name }}</a></td>
+                <td class="w-08 d-none d-md-table-cell">{{ stat.teams_cnt == 1 ? stat.teams[0] : stat.teams_cnt + ' Teams' }}</td>
                 <td class="w-07 text-right">{{ stat.gp }}</td>
                 <td class="w-07 text-right">{{ stat.g }}</td>
                 <td class="w-07 text-right">{{ stat.a }}</td>
@@ -85,7 +135,8 @@
                 <td class="w-07 text-right">{{ stat.ppg }}</td>
                 <td class="w-07 text-right">{{ stat.shg }}</td>
                 <td class="w-07 text-right">{{ stat.sog }}</td>
-                <td class="w-07 text-right">{{ stat.sh_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right d-none d-md-table-cell">{{ stat.sh_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right d-md-none px-0">{{ stat.sh_pctg.toFixed(1) }} %</td>
                 <td class="w-07 text-right">{{ stat.ptspg.toFixed(2) }}</td>
             </tr>
         </tbody>
