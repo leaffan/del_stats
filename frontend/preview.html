@@ -22,8 +22,8 @@
                     <ul>
                         <li><a href data-ng-click="scrollTo('h2h_all_time')">All-Time-DEL</a></li>
                         <li data-ng-if="is_playoff_game"><a href data-ng-click="scrollTo('h2h_all_time_playoffs')">All-Time-DEL-Playoffs</a></li>
-                        <li><a href data-ng-click="scrollTo('h2h_recent_home')">Aktuelle Saison (Heimteam)</a></li>
-                        <li><a href data-ng-click="scrollTo('h2h_recent_road')">Aktuelle Saison (Auswärtsteam)</a></li>
+                        <li><a href data-ng-click="scrollTo('h2h_recent_home')">Letzte/aktuelle Saison (Heimteam)</a></li>
+                        <li><a href data-ng-click="scrollTo('h2h_recent_road')">Letzte/aktuelle Saison (Auswärtsteam)</a></li>
                     </ul>
                 <h5><b>Ergebnisse und ausstehende Spiele</b></h5>
                     <ul>
@@ -281,11 +281,12 @@
     </table>
 
     <div id="h2h_recent_home" class="alert alert-info main-bg mb-2 shadow-sm">
-        <h4><a href="#!/preview/2020/{{ current_game.game_id }}/h2h_recent_home">Direktvergleich vergangene und aktuelle Saison:</a></h4>
+        <h4><a href="#!/preview/2020/{{ current_game.game_id }}/h2h_recent_home">Direktvergleich letzte und aktuelle Saison:</a></h4>
         <p>(aus der Sicht des Heimteams {{ current_home_team }})</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
+    <!-- Direktvergleich heim vs. auswärts -->
     <table id="h2h_recent_home_table" class="table table-responsive-md table-bordered table-hover table-sm shadow">
         <thead class="thead-light">
             <tr>
@@ -298,7 +299,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_home_vs_road | orderBy:sorting_config['h2h_recent_table']">
+            <!-- letzte Saison -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_home_vs_road_last_season | orderBy:sorting_config['h2h_recent_table']">
                 <td class="w-08 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
@@ -321,7 +323,44 @@
                 <td class="w-07 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
             </tr>
             <tr>
-                <td class="text-center">Gesamt:</td>
+                <td class="text-center"><b>{{ season - 1 }}/{{ season - 2000 }}:</b></td>
+                <td class="text-center"><b>{{ game_log_home_vs_road_last_season.length }} Spiel{{ game_log_home_vs_road_last_season.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'score', game_log_home_vs_road_last_season) }} ({{ (score_total / game_log_home_vs_road_last_season.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'opp_score', game_log_home_vs_road_last_season) }} ({{ (opp_score_total / game_log_home_vs_road_last_season.length).toFixed(1) }})</b></td>
+                <td></td>
+                <td></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'shots_on_goal', game_log_home_vs_road_last_season) }} ({{ (shots_on_goal_total / game_log_home_vs_road_last_season.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(game_log_home_vs_road_last_season, 'goals', game_log_home_vs_road_last_season) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'pp_goals', game_log_home_vs_road_last_season) }} / {{ pp_opps_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'pp_opps', game_log_home_vs_road_last_season) }}</b></td>
+                <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'opp_pp_goals', game_log_home_vs_road_last_season) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(game_log_home_vs_road_last_season, 'opp_pp_opps', game_log_home_vs_road_last_season) }}</b></td>
+                <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
+            </tr>
+            <!-- aktuelle Saison -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_home_vs_road | orderBy:sorting_config['h2h_recent_table']">
+                <td class="w-08 text-center">
+                    <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <td class="w-16">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'road' ? '@' : ''}} {{team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
+                <td class="w-08 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
+                    <b>
+                        {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </b>
+                </td>
+                <td class="w-12"><a href="#!/player_profile/{{season}}/{{game.gw_goal_team}}/{{game.gw_goal_player_id}}">{{ game.gw_goal_first_name.slice(0, 1) + '. ' + game.gw_goal_last_name }}</a></td>
+                <td class="w-09 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-07 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
+                <td class="w-06 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
+                <td class="w-07 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
+                <td class="w-06 text-right">{{ game.opp_pp_goals }} / {{ game.sh_opps }}</td>
+                <td class="w-07 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
+            </tr>
+            <tr data-ng-if="game_log_home_vs_road.length > 0">
+                <td class="text-center"><b>{{ current_season }}</b>:</td>
                 <td class="text-center"><b>{{ game_log_home_vs_road.length }} Spiel{{ game_log_home_vs_road.length == 1 ? '' : 'e'}}</b></td>
                 <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_home_vs_road, 'score', game_log_home_vs_road) }} ({{ (score_total / game_log_home_vs_road.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_home_vs_road, 'opp_score', game_log_home_vs_road) }} ({{ (opp_score_total / game_log_home_vs_road.length).toFixed(1) }})</b></td>
@@ -351,11 +390,12 @@
     </table>
 
     <div id="h2h_recent_road" class="alert alert-info main-bg mb-2 shadow-sm">
-        <h4><a href="#!/preview/2020/{{ current_game.game_id }}/h2h_recent_road">Direktvergleich aktuelle Saison:</a></h4>
+        <h4><a href="#!/preview/2020/{{ current_game.game_id }}/h2h_recent_road">Direktvergleich letzte und aktuelle Saison:</a></h4>
         <p>(aus der Sicht des Auswärtsteams {{ current_road_team }})</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
+    <!-- Direktvergleich auswärts vs. heim -->
     <table id="h2h_recent_road_table" class="table table-responsive-md table-bordered table-hover table-sm shadow">
         <thead class="thead-light">
             <tr>
@@ -368,7 +408,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_road_vs_home | orderBy:sorting_config['h2h_recent_table']">
+            <!-- letzte Saison -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_road_vs_home_last_season | orderBy:sorting_config['h2h_recent_table']">
                 <td class="w-08 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
@@ -391,7 +432,44 @@
                 <td class="w-07 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
             </tr>
             <tr>
-                <td class="text-center">Gesamt:</td>
+                <td class="text-center"><b>{{ season - 1 }}/{{ season - 2000 }}:</b></td>
+                <td class="text-center"><b>{{ game_log_road_vs_home_last_season.length }} Spiel{{ game_log_road_vs_home_last_season.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'score', game_log_road_vs_home_last_season) }} ({{ (score_total / game_log_road_vs_home_last_season.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'opp_score', game_log_road_vs_home_last_season) }} ({{ (opp_score_total / game_log_road_vs_home_last_season.length).toFixed(1) }})</b></td>
+                <td></td>
+                <td></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'shots_on_goal', game_log_road_vs_home_last_season) }} ({{ (shots_on_goal_total / game_log_road_vs_home_last_season.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(game_log_road_vs_home_last_season, 'goals', game_log_road_vs_home_last_season) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'pp_goals', game_log_road_vs_home_last_season) }} / {{ pp_opps_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'pp_opps', game_log_road_vs_home_last_season) }}</b></td>
+                <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'opp_pp_goals', game_log_road_vs_home_last_season) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(game_log_road_vs_home_last_season, 'opp_pp_opps', game_log_road_vs_home_last_season) }}</b></td>
+                <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
+            </tr>
+            <!-- aktuelle Saison -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_road_vs_home | orderBy:sorting_config['h2h_recent_table']">
+                <td class="w-08 text-center">
+                    <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <td class="w-16">{{ game.round }}: <a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'road' ? '@' : ''}} {{ team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
+                <td class="w-08 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
+                    <b>
+                        {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </b>
+                </td>
+                <td class="w-12"><a href="#!/player_profile/{{season}}/{{game.gw_goal_team}}/{{game.gw_goal_player_id}}">{{ game.gw_goal_first_name.slice(0, 1) + '. ' + game.gw_goal_last_name }}</a></td>
+                <td class="w-09 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-07 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
+                <td class="w-06 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
+                <td class="w-07 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
+                <td class="w-06 text-right">{{ game.opp_pp_goals }} / {{ game.sh_opps }}</td>
+                <td class="w-07 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
+            </tr>
+            <tr data-ng-if="game_log_road_vs_home.length > 0">
+                <td class="text-center"><b>{{ current_season }}</b>:</td>
                 <td class="text-center"><b>{{ game_log_road_vs_home.length }} Spiel{{ game_log_road_vs_home.length == 1 ? '' : 'e'}}</b></td>
                 <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_road_vs_home, 'score', game_log_road_vs_home) }} ({{ (score_total / game_log_road_vs_home.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_road_vs_home, 'opp_score', game_log_road_vs_home) }} ({{ (opp_score_total / game_log_road_vs_home.length).toFixed(1) }})</b></td>
@@ -421,8 +499,8 @@
     </table>
 
     <div id="game_log_home" class="alert alert-info main-bg mb-2 shadow-sm">
-        <h4 data-ng-if="game_log_home.length > 0"><a href="#!/preview/2020/{{ current_game.game_id }}/game_log_home">Ergebnisse und ausstehende Spiele {{ current_home_team }}:</a></h4>
-        <h4 data-ng-if="game_log_home.length == 0"><a href="#!/preview/2020/{{ current_game.game_id }}/game_log_home">Ausstehende Spiele {{ current_home_team }}:</a></h4>
+        <h4 data-ng-if="game_log_home.length > 0"><a href="#!/preview/2020/{{ current_game.game_id }}/game_log_home">Ergebnisse und kommende Spiele {{ current_home_team }}:</a></h4>
+        <h4 data-ng-if="game_log_home.length == 0"><a href="#!/preview/2020/{{ current_game.game_id }}/game_log_home">Kommende Spiele {{ current_home_team }}:</a></h4>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
@@ -445,15 +523,15 @@
                     </a>
                 </td>
                 <td class="w-05 text-right">{{ game.round }}</td>
-                <td class="w-13"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'home' ? '' : '@' }} {{ team_location_lookup[game.opp_team] }}</a></td>
-                <td class="w-08 text-right">{{ game.score }}</td>
-                <td class="w-08 text-right">{{ game.opp_score }}</td>
+                <td class="w-16"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'home' ? '' : '@' }} {{ team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
                 <td class="w-07 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
                     <b>
                         {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
                     </b>
                 </td>
-                <td class="w-11 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-10 text-right">{{ game.shots_on_goal }}</td>
                 <td class="w-08 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
                 <td class="w-08 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
                 <td class="w-08 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
@@ -461,8 +539,8 @@
                 <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
             </tr>
             <tr data-ng-if="game_log_home.length > 0">
-                <td></td>
-                <td>Gesamt:</td>
+                <td class="text-center"><b>{{ current_season }}</b></td>
+                <td><b>Gesamt:</b></td>
                 <td class="text-right"><b>{{ game_log_home.length }} Spiel{{ game_log_home.length == 1 ? '' : 'e'}}</b></td>
                 <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_home, 'score', game_log_home) }} ({{ (score_total / game_log_home.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_home, 'opp_score', game_log_home) }} ({{ (opp_score_total / game_log_home.length).toFixed(1) }})</b></td>
@@ -497,8 +575,8 @@
     <div id="game_log_road" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4>
             <a href="#!/preview/2020/{{ current_game.game_id }}/game_log_road">
-                <span data-ng-if="game_log_road.length == 0">Ausstehende Spiele {{ current_road_team }}:</span>
-                <span data-ng-if="game_log_road.length > 0">Ergebnisse und ausstehende Spiele {{ current_road_team }}:</span>
+                <span data-ng-if="game_log_road.length == 0">Kommende Spiele {{ current_road_team }}:</span>
+                <span data-ng-if="game_log_road.length > 0">Ergebnisse und kommende Spiele {{ current_road_team }}:</span>
             </a>
         </h4>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
@@ -523,15 +601,15 @@
                     </a>
                 </td>
                 <td class="w-05 text-right">{{ game.round }}</td>
-                <td class="w-13"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{game.home_road == 'home' ? '' : '@'}} {{ team_location_lookup[game.opp_team] }}</a></td>
-                <td class="w-08 text-right">{{ game.score }}</td>
-                <td class="w-08 text-right">{{ game.opp_score }}</td>
+                <td class="w-16"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{game.home_road == 'home' ? '' : '@'}} {{ team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
                 <td class="w-07 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
                     <b>
                         {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
                     </b>
                 </td>
-                <td class="w-11 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-10 text-right">{{ game.shots_on_goal }}</td>
                 <td class="w-08 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
                 <td class="w-08 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
                 <td class="w-08 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
@@ -539,8 +617,8 @@
                 <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
             </tr>
             <tr data-ng-if="game_log_road.length > 0">
-                <td></td>
-                <td>Gesamt:</td>
+                <td class="text-center"><b>{{ current_season }}</b></td>
+                <td><b>Gesamt:</b></td>
                 <td class="text-right"><b>{{ game_log_road.length }} Spiel{{ game_log_road.length == 1 ? '' : 'e'}}</b></td>
                 <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_road, 'score', game_log_road) }} ({{ (score_total / game_log_road.length).toFixed(1) }})</b></td>
                 <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_road, 'opp_score', game_log_road) }} ({{ (opp_score_total / game_log_road.length).toFixed(1) }})</b></td>
@@ -605,7 +683,7 @@
 
     <div id="roster_home" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/roster_home">Kaderliste {{ current_home_team }}:</a></h4>
-        <p>(Zurzeit nicht aktive Spieler sind mit <b>(*)</b> gekennzeichnet.)</p>
+        <p>(Enthält nur zurzeit als aktiv registrierte Spieler.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
@@ -620,8 +698,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="!previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -633,21 +711,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-info" data-ng-repeat="goalie in home_career_stats | filter:{position: 'GK'} | orderBy:sorting_config['rosters']">
+            <tr class="table-info" data-ng-repeat="goalie in home_career_stats | filter:{position: 'GK'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ goalie.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].gaa.toFixed(2) : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].save_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].so : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gp : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].w : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].l : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gaa.toFixed(2) : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].so : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].gaa.toFixed(2) : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].save_pctg.toFixed(1) + ' %' : '' }}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].so : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gp : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].w : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].l : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gaa.toFixed(2) : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].so : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gp : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gaa.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
@@ -667,8 +745,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="!previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -680,21 +758,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'DE'} | orderBy:sorting_config['rosters']">
+            <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'DE'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
@@ -714,8 +792,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="!previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -727,21 +805,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'FO'} | orderBy:sorting_config['rosters']">
+            <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'FO'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
+                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
+                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
@@ -753,7 +831,7 @@
     
     <div id="roster_road" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/roster_road">Kaderliste {{ current_road_team }}:</a></h4>
-        <p>(Zurzeit nicht aktive Spieler sind mit <b>(*)</b> gekennzeichnet.)</p>
+        <p>(Enthält nur zurzeit als aktiv registrierte Spieler.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
     <table id="roster_road_g" class="table table-responsive-md table-bordered table-hover table-sm shadow">
@@ -767,8 +845,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="!previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -780,21 +858,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-warning" data-ng-repeat="goalie in road_career_stats | filter: {position: 'GK'} | orderBy:sorting_config['rosters']">
+            <tr class="table-warning" data-ng-repeat="goalie in road_career_stats | filter: {position: 'GK'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ goalie.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].gaa.toFixed(2) : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].save_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].so : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gp : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].w : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].l : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gaa.toFixed(2) : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].so : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].gaa.toFixed(2) : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].save_pctg.toFixed(1) + ' %' : '' }}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ goalie['statistics'].games ? goalie['statistics'].so : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gp : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].w : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-06 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].l : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].gaa.toFixed(2) : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ goalie['prev_season'].gp ? goalie['prev_season'].so : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gp : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gaa.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
@@ -814,8 +892,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="!previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -827,21 +905,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'DE'} | orderBy:sorting_config['rosters']">
+            <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'DE'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
@@ -861,8 +939,8 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="!previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
-                <th data-ng-click="previous_stats=!previous_stats" data-ng-show="previous_stats" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="!previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Aktuelle DEL-Saison {{ current_season }}</span></th>
+                <th data-ng-click="previous_stats_road=!previous_stats_road" data-ng-show="previous_stats_road" scope="col" colspan="6" class="text-center" style="cursor: pointer;"><span class="rank">Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</span></th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -874,21 +952,21 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'FO'} | orderBy:sorting_config['rosters']">
+            <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'FO'} | filter:{active: true} |orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
                 <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
-                <td data-ng-if="!previous_stats" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
-                <td data-ng-if="previous_stats" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
+                <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
+                <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
@@ -920,14 +998,47 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in full_season_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
+                <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
+                <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table class="table table-responsive-md table-bordered table-hover table-sm shadow" data-ng-repeat="div in divisions">
+        <caption class="pt-0 pb-2">Gruppe {{div}}:</caption>
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center"><span class="rank">#</span></th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['standings']">
+                    <abbr class="rank" title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['standings'][0].endsWith(col.data_key) && !sorting_config['standings'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in full_season_stats | filter: {division: div} | orderBy:sorting_config['standings']">
+                <td class="w-03 text-right">{{ $index + 1 }}</td>
+                <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
@@ -959,14 +1070,15 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in full_playoffs_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
@@ -995,14 +1107,15 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in home_season_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
@@ -1034,14 +1147,15 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in home_playoffs_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
@@ -1070,14 +1184,15 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in road_season_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
@@ -1109,14 +1224,15 @@
             <tr class="{{current_game.home.shortcut == stat.team ? 'table-info' : current_game.guest.shortcut == stat.team ? 'table-warning' : ''}}" data-ng-repeat="stat in road_playoffs_stats | orderBy:sorting_config['standings']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-17"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
-                <td class="w-08 text-right">{{ stat.games_played }}</td>
-                <td class="w-08 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.rw }}</td>
-                <td class="w-08 text-right">{{ stat.ow }}</td>
-                <td class="w-08 text-right">{{ stat.sw }}</td>
-                <td class="w-08 text-right">{{ stat.rl }}</td>
-                <td class="w-08 text-right">{{ stat.ol }}</td>
-                <td class="w-08 text-right">{{ stat.sl }}</td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-08 text-right">{{ stat.pt_pctg.toFixed(1) }} %</td>
+                <td class="w-07 text-right">{{ stat.rw }}</td>
+                <td class="w-07 text-right">{{ stat.ow }}</td>
+                <td class="w-07 text-right">{{ stat.sw }}</td>
+                <td class="w-07 text-right">{{ stat.rl }}</td>
+                <td class="w-07 text-right">{{ stat.ol }}</td>
+                <td class="w-07 text-right">{{ stat.sl }}</td>
                 <td class="w-08 text-right">{{ stat.score }} <span style="color: #A0A0A0;">({{ (stat.score / stat.games_played).toFixed(1) }})</span></td>
                 <td class="w-08 text-right">{{ stat.opp_score }} <span style="color: #A0A0A0;">({{ (stat.opp_score / stat.games_played).toFixed(1) }})</span></td>
             </tr>
