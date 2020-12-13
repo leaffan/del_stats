@@ -55,9 +55,13 @@ if __name__ == '__main__':
                         game['game_id'] = game['id']
                         # setting round for non-regular season games
                         if game['round'] and not game['round'].isdigit():
-                            rnd_type, rnd = game['round'].rsplit(maxsplit=1)
-                            rnd_type = ROUND_MAPPING[rnd_type]
-                            game['round'] = "_".join((rnd_type, rnd))
+                            try:
+                                rnd_type, rnd = game['round'].rsplit(maxsplit=1)
+                                rnd_type = ROUND_MAPPING[rnd_type]
+                                game['round'] = "_".join((rnd_type, rnd))
+                            except ValueError:
+                                rnd_type = ROUND_MAPPING[game['round']]
+                                game['round'] = rnd_type
                         del(game['id'])
                         games.append(game)
 
