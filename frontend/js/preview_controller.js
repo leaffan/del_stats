@@ -3,7 +3,14 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.Math = window.Math;
     $scope.season = $routeParams.season;
     $scope.current_game_id = $routeParams.game_id;
-    $scope.previous_stats = false;
+    $scope.previous_stats_home = false;
+    $scope.previous_stats_road = false;
+
+    $scope.divisions = ['Nord', 'Süd']
+    $scope.divisions_per_team = {
+        'WOB': 'Nord', 'EBB': 'Nord', 'BHV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'KEV': 'Nord',
+        'MAN': 'Süd', 'SWW': 'Süd', 'ING': 'Süd', 'STR': 'Süd', 'RBM': 'Süd', 'NIT': 'Süd', 'AEV': 'Süd',
+    };
 
     // loading current game data from full schedule
     $http.get('data/'+ $scope.season + '/full_schedule.json').then(function (res) {
@@ -53,6 +60,16 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             $scope.full_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS');
             $scope.home_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'home');
             $scope.road_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'road');
+
+            if ($scope.full_season_stats.length == 0) {
+                $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
+                    $scope.team_stats = res.data[1];
+                    $scope.full_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS');
+                    $scope.home_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'home');
+                    $scope.road_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'road');
+                });
+            };
+
             if ($scope.is_playoff_game) {
                 $scope.full_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO');
                 $scope.home_playoffs_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'PO', 'home');
@@ -64,26 +81,35 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
                 // returning all games of current home team
                 return value['team'] == $scope.current_game.home.shortcut;
             });
+            // toggling default display of last season's player stats if no regular season games have been played so far
+            if ($scope.game_log_home.filter(game => game.season_type != 'MSC').length == 0) {
+                $scope.previous_stats_home = true;
+            }
             $scope.game_log_road = $scope.team_stats.filter(function(value, index, arr) {
                 // returning only regular season games of current road team
                 // return value['season_type'] == 'RS' && value['team'] == $scope.current_game.guest.shortcut;
                 // returning all games of current home team
                 return value['team'] == $scope.current_game.guest.shortcut;
             });
+            // toggling default display of last season's player stats if no regular season games have been played so far
+            if ($scope.game_log_road.filter(game => game.season_type != 'MSC').length == 0) {
+                $scope.previous_stats_road = true;
+            }
             $scope.game_log_home_vs_road = $scope.game_log_home.filter(function(value, index, arr) {
                 return value['opp_team'] == $scope.current_game.guest.shortcut;
             });
 
             // if head-to-head game log is empty, i.e. no games between the current teams this season
             // then load it from previous season
-            if ($scope.game_log_home_vs_road.length == 0) {
-                $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
-                    $scope.team_stats_last_season = res.data[1];
-                    $scope.game_log_home_vs_road = $scope.team_stats_last_season.filter(function(value, index, arr) {
-                        return value['team'] == $scope.current_game.home.shortcut && value['opp_team'] == $scope.current_game.guest.shortcut;
-                    });
+            // if ($scope.game_log_home_vs_road.length == 0) {
+            $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
+                $scope.team_stats_last_season = res.data[1];
+                $scope.game_log_home_vs_road_last_season = $scope.team_stats_last_season.filter(function(value, index, arr) {
+                    return value['team'] == $scope.current_game.home.shortcut && value['opp_team'] == $scope.current_game.guest.shortcut;
                 });
-            }
+                // $scope.game_log_home_vs_road = $scope.game_log_home_vs_road.concat($scope.game_log_home_vs_road_last_season);
+            });
+            // }
 
             $scope.game_log_road_vs_home = $scope.game_log_road.filter(function(value, index, arr) {
                 return value['opp_team'] == $scope.current_game.home.shortcut;
@@ -91,14 +117,14 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
 
             // if head-to-head game log is empty, i.e. no games between the current teams this season
             // then load it from previous season
-            if ($scope.game_log_road_vs_home.length == 0) {
-                $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
-                    $scope.team_stats_last_season = res.data[1];
-                    $scope.game_log_road_vs_home = $scope.team_stats_last_season.filter(function(value, index, arr) {
-                        return value['team'] == $scope.current_game.guest.shortcut && value['opp_team'] == $scope.current_game.home.shortcut;
-                    });
+            // if ($scope.game_log_road_vs_home.length == 0) {
+            $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
+                $scope.team_stats_last_season = res.data[1];
+                $scope.game_log_road_vs_home_last_season = $scope.team_stats_last_season.filter(function(value, index, arr) {
+                    return value['team'] == $scope.current_game.guest.shortcut && value['opp_team'] == $scope.current_game.home.shortcut;
                 });
-            }
+            });
+            // }
         });
 
         // loading playoff series from external json file
@@ -132,7 +158,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.sorting_config = {
         'h2h_recent_table': ['game_date'],
         'game_log_table': ['game_date'],
-        'standings': ['-points', '-score_diff', '-score'],
+        'standings': ['-pt_pctg', '-points', '-score_diff', '-score'],
         'powerplay_standings': ['-pp_pctg', '-pp_goals', 'opp_sh_goals'],
         'penalty_killing_standings': ['-pk_pctg', 'opp_pp_goals', '-sh_goals'],
         'goals_by_period_1_standings': ['-goals_1', '-goals_diff_1'],
@@ -209,8 +235,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
 
 	$scope.readCSV = function(season_of_interest) {
 		// http get request to read CSV file content
-        // if ($scope.current_game.round == '1')
-        //     season_of_interest = $scope.season - 1;
         $http.get('data/' + season_of_interest + '/del_player_game_stats.csv').then($scope.processData);
         // console.log($scope.player_games.length);
 	};
@@ -396,6 +420,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             if (!full_team_stats[team]) {
                 full_team_stats[team] = {};
                 full_team_stats[team]['team'] = team;
+                full_team_stats[team]['division'] = $scope.divisions_per_team[team];
                 full_team_stats[team]['capacity'] = 0;
                 $scope.svc.stats_to_aggregate().forEach(category => {
                     full_team_stats[team][category] = 0;
