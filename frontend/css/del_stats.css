@@ -69,6 +69,7 @@ div.main-bg { background-color: rgb(216, 250, 250); }
 .w-28 { width: 28%;}
 .w-29 { width: 29%;}
 .w-30 { width: 30%;}
+.w-60 { width: 60%;}
 
 @font-face {
     font-family: jersey;
