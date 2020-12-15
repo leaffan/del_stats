@@ -9,6 +9,8 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.regional_display = 'active';
     $scope.league_display = '';
 
+    $scope.toggle_new_stuff = true;
+
     $scope.divisions = ['Nord', 'Süd']
     $scope.divisions_per_team = {
         'WOB': 'Nord', 'EBB': 'Nord', 'BHV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'KEV': 'Nord',
@@ -161,7 +163,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.sorting_config = {
         'h2h_recent_table': ['game_date'],
         'game_log_table': ['game_date'],
-        'standings': ['-pt_pctg', '-points', '-score_diff', '-score'],
+        'standings': ['-pts_per_game', '-points', '-score_diff', '-score'],
         'powerplay_standings': ['-pp_pctg', '-pp_goals', 'opp_sh_goals'],
         'penalty_killing_standings': ['-pk_pctg', 'opp_pp_goals', '-sh_goals'],
         'goals_by_period_1_standings': ['-goals_1', '-goals_diff_1'],
@@ -524,9 +526,15 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             team_game['goals_diff_3'] = team_game['goals_3'] - team_game['opp_goals_3'];
             // calculating points percentage
             if (team_game['games_played']) {
-                team_game['pt_pctg'] = parseFloat((team_game['points'] / (team_game['games_played'] * 3.) * 100).toFixed(2));
+                team_game['pt_pctg'] = team_game['points'] / (team_game['games_played'] * 3.) * 100;
+                team_game['pts_per_game'] = team_game['points'] / team_game['games_played'];
+                team_game['goals_per_game'] = team_game['score'] / team_game['games_played'];
+                team_game['opp_goals_per_game'] = team_game['opp_score'] / team_game['games_played'];
             } else {
-                team_game['pt_pctg'] = parseFloat((0).toFixed(2));
+                team_game['pt_pctg'] = 0;
+                team_game['pts_per_game'] = 0;
+                team_game['goals_per_game'] = 0;
+                team_game['opp_goals_per_game'] = 0;
             }
             // calculating shot zone percentages
             if (team_game['shots']) {
