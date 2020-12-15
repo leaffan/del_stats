@@ -105,8 +105,6 @@ venv.bak/
 
 # user-defined stuff
 backend/data/*
-backend/*.sh
-backend/*.bat
 */.ht*
 frontend/*.csv
 frontend/*.json
@@ -139,4 +137,3 @@ backend/create_facts_templates.py
 backend/get_facts.py
 backend/get_h2h_from_txt.py
 backend/get_pre_season_data.py
-backend/update_coaches.py
