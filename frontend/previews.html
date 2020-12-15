@@ -49,25 +49,25 @@
 
     <hr/>
 
-    <table class="table table-responsive-md table-striped table-bordered table-hover shadow">
-        <thead class="thead-light">
+    <table class="table table-responsive-md table-striped table-bordered table-hover shadow d-none d-xl-table">
+            <thead class="thead-light">
             <tr>
-                <th class="text-center px-2"><span class="rank">Spieltag</span></th>
-                <th class="text-center px-2"><span class="rank">Datum</span></th>
-                <th class="text-center px-2"><span class="rank">Uhrzeit</span></th>
-                <th class="text-center px-2"><span class="rank">Heimteam</span></th>
-                <th class="text-center px-2"><span class="rank">Gastteam</span></th>
-                <th class="text-center px-2"><span class="rank">Ergebnis</span></th>
-                <th class="text-center px-2"><span class="rank">Status</span></th>
-                <th class="text-center px-2"><span class="rank">Vorschaumappe</span></th>
+                <th class="text-center"><span class="rank">Spieltag</span></th>
+                <th class="text-center"><span class="rank">Datum</span></th>
+                <th class="text-center"><span class="rank">Uhrzeit</span></th>
+                <th class="text-center"><span class="rank">Heimteam</span></th>
+                <th class="text-center"><span class="rank">Gastteam</span></th>
+                <th class="text-center"><span class="rank">Ergebnis</span></th>
+                <th class="text-center"><span class="rank">Status</span></th>
+                <th class="text-center"><span class="rank">Vorschaumappe</span></th>
             </tr>
         </thead>
 
         <tbody>
             <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
-                <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right px-2">{{ game.round }}</td>
+                <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right">{{ game.round }}</td>
                 <td data-ng-if="!svc.isNumeric(game.round)" class="w-10">{{ svc.replaceRoundNames(game.round) }}</td>
-                <td class="w-10 px-2">
+                <td class="w-10">
                     <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YYYY' }}
                     </a>
@@ -77,17 +77,58 @@
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
                     </a>
                 </td> -->
-                <td class="w-10 px-2">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
-                <td class="w-20 px-2"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
-                <td class="w-20 px-2"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
-                <td class="w-10 px-2">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
-                <td class="w-15 px-2">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
-                <td class="w-10 px-2">
-                    <a data-ng-if="game.days_left <= 14" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
-                    <span data-ng-if="game.days_left > 14">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+                <td class="w-10">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
+                <td class="w-20"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
+                <td class="w-20"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
+                <td class="w-10">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
+                <td class="w-15">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.") }}</td>
+                <td class="w-10">
+                    <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                    <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
                 </td>
             </tr>
         </tbody>
     </table>
+
+    <table class="table table-responsive-md table-striped table-bordered table-hover table-sm shadow d-xl-none">
+        <thead class="thead-light">
+        <tr>
+            <th class="text-center"><span class="rank">Spieltag</span></th>
+            <th class="text-center"><span class="rank">Datum</span></th>
+            <th class="text-center"><span class="rank">Uhrzeit</span></th>
+            <th class="text-center"><span class="rank">Heimteam</span></th>
+            <th class="text-center"><span class="rank">Gastteam</span></th>
+            <th class="text-center"><span class="rank">Ergebnis</span></th>
+            <th class="text-center"><span class="rank">Status</span></th>
+            <th class="text-center"><span class="rank">Vorschaumappe</span></th>
+        </tr>
+    </thead>
+
+    <tbody>
+        <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
+            <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right">{{ game.round }}</td>
+            <td data-ng-if="!svc.isNumeric(game.round)" class="w-10">{{ svc.replaceRoundNames(game.round) }}</td>
+            <td class="w-06">
+                <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                    {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                </a>
+            </td>
+            <!-- <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
+                <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                    {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                </a>
+            </td> -->
+            <td class="w-10">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
+            <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
+            <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
+            <td class="w-10">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
+            <td class="w-11">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.").replace("vor dem", "vor") }}</td>
+            <td class="w-10">
+                <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+            </td>
+        </tr>
+    </tbody>
+</table>
 
 </div>
