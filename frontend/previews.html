@@ -92,43 +92,78 @@
 
     <table class="table table-responsive-md table-striped table-bordered table-hover table-sm shadow d-xl-none">
         <thead class="thead-light">
-        <tr>
-            <th class="text-center"><span class="rank">Spieltag</span></th>
-            <th class="text-center"><span class="rank">Datum</span></th>
-            <th class="text-center"><span class="rank">Uhrzeit</span></th>
-            <th class="text-center"><span class="rank">Heimteam</span></th>
-            <th class="text-center"><span class="rank">Gastteam</span></th>
-            <th class="text-center"><span class="rank">Ergebnis</span></th>
-            <th class="text-center"><span class="rank">Status</span></th>
-            <th class="text-center"><span class="rank">Vorschaumappe</span></th>
-        </tr>
-    </thead>
+            <tr>
+                <th class="text-center"><span class="rank">Spieltag</span></th>
+                <th class="text-center"><span class="rank">Datum</span></th>
+                <th class="text-center"><span class="rank">Uhrzeit</span></th>
+                <th class="text-center"><span class="rank">Heimteam</span></th>
+                <th class="text-center"><span class="rank">Gastteam</span></th>
+                <th class="text-center"><span class="rank">Ergebnis</span></th>
+                <th class="text-center"><span class="rank">Status</span></th>
+                <th class="text-center"><span class="rank">Vorschaumappe</span></th>
+            </tr>
+        </thead>
 
-    <tbody>
-        <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
-            <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right">{{ game.round }}</td>
-            <td data-ng-if="!svc.isNumeric(game.round)" class="w-10">{{ svc.replaceRoundNames(game.round) }}</td>
-            <td class="w-06">
-                <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
-                    {{ game.game_date | amDateFormat:'DD.MM.YY' }}
-                </a>
-            </td>
-            <!-- <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
-                <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
-                    {{ game.game_date | amDateFormat:'DD.MM.YY' }}
-                </a>
-            </td> -->
-            <td class="w-10">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
-            <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
-            <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
-            <td class="w-10">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
-            <td class="w-11">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.").replace("vor dem", "vor") }}</td>
-            <td class="w-10">
-                <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
-                <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
-            </td>
-        </tr>
-    </tbody>
-</table>
+        <tbody>
+            <tr data-ng-repeat="game in fixtures | orderBy:['game_date', 'game_id']:false | filter: {'round': roundFilter}: true">
+                <td data-ng-if="svc.isNumeric(game.round)" class="w-05 text-right">{{ game.round }}</td>
+                <td data-ng-if="!svc.isNumeric(game.round)" class="w-10">{{ svc.replaceRoundNames(game.round) }}</td>
+                <td class="w-06">
+                    <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <!-- <td class="col-xs-1 hidden-lg hidden-md hidden-sm">
+                    <a href="https://www.del.org/spielplan/{{game.game_date | amDateFormat:'YYYY-MM-DD' }}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td> -->
+                <td class="w-10">{{ game.game_date | amDateFormat: 'HH:mm' }} Uhr</td>
+                <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.home.shortcut}}">{{ game.home.name }}</a></td>
+                <td class="w-24"><a href="#!/team_profile/{{season}}/{{game.guest.shortcut}}">{{ game.guest.name }}</a></td>
+                <td class="w-10">{{ game.results.score.final.score_home}} - {{ game.results.score.final.score_guest}}</td>
+                <td class="w-11">{{ game.actual_time_name.replace("Penaltyschießen", "P.").replace("Verlängerung", "V.").replace("vor dem", "vor") }}</td>
+                <td class="w-10">
+                    <a data-ng-if="game.days_left <= 5" href="#!/preview/{{season}}/{{game.game_id}}">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</a>
+                    <span data-ng-if="game.days_left > 5">{{game.game_id}}_{{game.home.shortcut}}_{{game.guest.shortcut}}</span>
+                </td>
+            </tr>
+        </tbody>
+    </table>
 
+    <div class="alert alert-info main-bg my-3 shadow">
+        <span data-ng-click="toggle_new_stuff=!toggle_new_stuff">
+            <b>Neuerungen&#32;&#32;
+                <span data-ng-show="toggle_new_stuff" class="fa fa-minus"></span>
+                <span data-ng-show="!toggle_new_stuff" class="fa fa-plus"></span>
+            </b>
+        </span>
+        <div data-ng-show="toggle_new_stuff">
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">1) Beim Direktvergleich werden Partien aus der letzten Saison immer mit angezeigt und separat in einer Zeile zusammengefasst. Eventuell gegeneinander bestrittene Spiele im MagentaSport Cup sind mit <b>(MSC)</b> gekennzeichnet:</figcaption>
+                <img src="img/preview/2020_1_head_2_head.png" class="figure-img img-fluid rounded" alt="Direktvergleich" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">2) Auch in der Liste mit Ergebnissen und kommenden Spielen werden eventuelle Partien im MagentaSport Cup angezeigt. Andere Vorbereitungsturniere bzw. -spiele finden keine Berücksichtigung:</figcaption>
+                <img src="img/preview/2020_2_game_log.png" class="figure-img img-fluid rounded" alt="Liste der Spiele" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">3) In der Fußzeile der Liste mit kommenden Spielen werden alle noch ausstehenden Spiele für ein Team numerisch zusammengefasst:</figcaption>
+                <img src="img/preview/2020_3_game_log_footer.png" class="figure-img img-fluid rounded" alt="Zusammenfassung der ausstehenden Spiele" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">4) Die Kaderliste erlaubt das Umschalten zwischen Spielerstatistiken der aktuellen Saison und denen des Vorjahres durch Klick auf den Tabellenkopf:</figcaption>
+                <img src="img/preview/2020_4a_roster.png" class="figure-img img-fluid rounded" alt="Kaderliste mit aktuellen Spielerstatistiken" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+                <img src="img/preview/2020_4b_roster.png" class="figure-img img-fluid rounded" alt="Kaderliste mit Spielerstatistiken der letzten Saison" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">5) Alle Ranglisten mit Teams werden durch Klick auf die entsprechende Option entweder nach Regionalgruppen (Nord und Süd) getrennt oder für die ganze Liga dargestellt. In den in Frage kommenden Tabellen wird gemäß offizieller Ansage nach Punkten pro Spiel sortiert.</figcaption>
+                <img src="img/preview/2020_5_team_rankings.png" class="figure-img img-fluid rounded" alt="Teamranglisten nach Regionalgruppen" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+            <figure class="figure my-2">
+                <figcaption class="w-60 figure-caption mb-2">6) Bei den Torhüterstatistiken wurde ein (adaptiver) Grenzwert eingeführt, der dafür sorgt, dass nur Spieler mit hinreichend Spielminuten in der Rangliste angezeigt werden. Eventuell wird dieser Grenzwert im Laufe der Saison noch ab und zu angepasst.</figcaption>
+                <img src="img/preview/2020_6_goalie_stats.png" class="figure-img img-fluid rounded" alt="Modifizierte Torhühterstatistiken" width="50%" height="50%" style="border: 1px solid #CCCCCC;" /> 
+            </figure>
+        </div>
+    </div>
 </div>
