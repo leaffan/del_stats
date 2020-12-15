@@ -50,12 +50,6 @@ if __name__ == '__main__':
                     continue
                 team_schedule = json.loads(open(team_schedule_src_path).read())
                 for game in team_schedule['matches']:
-                    # dirty workaround to get around the fact the league didn't update changed team names in its
-                    # schedule data
-                    # hope this sorts itself out over time
-                    if season >= 2020:
-                        game['home']['name'] = game['home']['name'].replace("Thomas Sabo", "Nürnberg")
-                        game['guest']['name'] = game['guest']['name'].replace("Thomas Sabo", "Nürnberg")
                     if not game['id'] in game_ids:
                         game_ids.add(game['id'])
                         game['game_id'] = game['id']
@@ -67,7 +61,7 @@ if __name__ == '__main__':
                                 game['round'] = "_".join((rnd_type, rnd))
                             except ValueError:
                                 rnd_type = ROUND_MAPPING[game['round']]
-                                game['round'] = rnd_type
+                                game['round'] = "rnd_type_%d" % 1
                         del(game['id'])
                         games.append(game)
 
