@@ -70,6 +70,7 @@ if __name__ == '__main__':
     goalie_stats = json.loads(open(goalie_stats_src_path).read())
     career_stats_src_path = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'career_stats.json')
     career_stats = json.loads(open(career_stats_src_path).read())
+    career_stats_per_player_src_dir = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'per_player')
 
     tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'per_team')
     if not os.path.isdir(tgt_dir):
@@ -115,9 +116,14 @@ if __name__ == '__main__':
             curr_player_career_stats = list(filter(lambda d: plr_id == d['player_id'], career_stats))
             if len(curr_player_career_stats) == 1:
                 curr_player_career_stats = curr_player_career_stats.pop(0)
-            elif len(curr_player_career_stats) == 1:
+            elif len(curr_player_career_stats) > 1:
                 print("Multiple career stats datasets found for player %s" % plr['name'])
                 continue
+            elif len(curr_player_career_stats) == 0:
+                print("No career stats datasets found for player %s" % plr['name'])
+                per_player_src_path = os.path.join(career_stats_per_player_src_dir, "%d.json" % plr_id)
+                if os.path.isfile(per_player_src_path):
+                    curr_player_career_stats = json.loads(open(per_player_src_path).read())
             # retrieving current player's stats from last regular season
             prev_season_player_stats = list(filter(
                 lambda d: d['season'] == season - 1 and d['season_type'] == 'RS', curr_player_career_stats['seasons']))
