@@ -6,6 +6,9 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.previous_stats_home = false;
     $scope.previous_stats_road = false;
 
+    $scope.regional_display = 'active';
+    $scope.league_display = '';
+
     $scope.divisions = ['Nord', 'Süd']
     $scope.divisions_per_team = {
         'WOB': 'Nord', 'EBB': 'Nord', 'BHV': 'Nord', 'DEG': 'Nord', 'KEC': 'Nord', 'IEC': 'Nord', 'KEV': 'Nord',
@@ -227,16 +230,95 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.coaches = res.data;
     });
 
-    // loading aggregated player stats from external json file
-    $http.get('data/'+ $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
-        $scope.last_modified = res.data[0];
-        $scope.plr_stats = res.data[1];
+    // loading goalie stats from external json file
+    $http.get('data/'+ $scope.season + '/del_goalie_game_stats.json').then(function (res) {
+        $scope.goalie_stats = res.data.filter(game => game.season_type != 'MSC');
+        if ($scope.goalie_stats.length == 0) {
+            $http.get('data/'+ ($scope.season - 1) + '/del_goalie_game_stats.json').then(function (res) {
+                $scope.goalie_stats = res.data.filter(game => game.season_type != 'MSC');
+                $scope.full_goalie_stats = $scope.getGoalieSeasonStats($scope.goalie_stats, $scope.current_game);
+            });
+        } else {
+            $scope.full_goalie_stats = $scope.getGoalieSeasonStats($scope.goalie_stats, $scope.current_game);
+        }
     });
+
+    $scope.getGoalieSeasonStats = function(goalie_games, current_game) {
+        if (goalie_games === undefined)
+            return [];
+        // not including current team game element if game date was after the previewed game
+        goalie_games_before_current_game = goalie_games.filter(function(gg) {
+            return moment(gg['game_date']).diff(current_game['game_date'], 'days') < 0;
+        });
+        // preparing container for goalie stats
+        goalie_stats = {
+            'full': {}, 'home': {}, 'road': {}
+        }
+        goalie_games_before_current_game.forEach(goalie_game => {
+            goalie_id = goalie_game['goalie_id'];
+            if (!goalie_stats['full'][goalie_id]) {
+                ['full', 'home', 'road'].map(key => {
+                    goalie_stats[key][goalie_id] = {};
+                    goalie_stats[key][goalie_id]['full_name'] = goalie_game['first_name'] + ' ' + goalie_game['last_name'];
+                    goalie_stats[key][goalie_id]['position'] = goalie_game['position'];
+                    goalie_stats[key][goalie_id]['team'] = goalie_game['team'];
+                    $scope.svc.goalie_stats_to_aggregate().forEach(category => {
+                        goalie_stats[key][goalie_id][category] = 0;
+                    });
+                });
+            };
+            $scope.svc.goalie_stats_to_aggregate().forEach(category => {
+                goalie_stats['full'][goalie_id][category] += goalie_game[category];
+                goalie_stats[goalie_game['home_road']][goalie_id][category] += goalie_game[category];
+            });
+        });
+
+        full_goalie_stats = [];
+
+        Object.values(goalie_stats['full']).forEach(element => {
+            if (element['shots_against'] > 0) {
+                element['save_pctg'] = (1 - (element['goals_against'] / element['shots_against'])) * 100;
+            } else {
+                element['save_pctg'] = 0.;
+            }
+            if (element['toi']) {
+                element['gaa'] = (element['goals_against'] * 3600.) / element['toi'];
+            } else {
+                element['gaa'] = parseFloat(0);
+            }
+            // calculating save percentages by shot zone
+            if (element['sa_slot']) {
+                element['save_pctg_slot'] = (1 - element['ga_slot'] / element['sa_slot']) * 100.;
+            } else {
+                element['save_pctg_slot'] = null;
+            }
+            if (element['sa_left']) {
+                element['save_pctg_left'] = (1 - element['ga_left'] / element['sa_left']) * 100.;
+            } else {
+                element['save_pctg_left'] = null;
+            }
+            if (element['sa_right']) {
+                element['save_pctg_right'] = (1 - element['ga_right'] / element['sa_right']) * 100.;
+            } else {
+                element['save_pctg_right'] = null;
+            }
+            if (element['sa_blue_line']) {
+                element['save_pctg_blue_line'] = (1 - element['ga_blue_line'] / element['sa_blue_line']) * 100.;
+            } else {
+                element['save_pctg_blue_line'] = null;
+            }
+            full_goalie_stats.push(element);
+        });
+
+        $scope.max_goalie_games_played = Math.max.apply(Math, full_goalie_stats.map(function(o) { return o.games_played; }));
+        $scope.goalie_games_at_least_played = Math.ceil($scope.max_goalie_games_played / 3);
+
+        return full_goalie_stats;
+    }
 
 	$scope.readCSV = function(season_of_interest) {
 		// http get request to read CSV file content
         $http.get('data/' + season_of_interest + '/del_player_game_stats.csv').then($scope.processData);
-        // console.log($scope.player_games.length);
 	};
 
 	$scope.processData = function(allText) {
@@ -621,6 +703,17 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         return true;
     };
 
+    $scope.goalieMinutesPlayedFilter = function(a) {
+        if (!a['toi']) {
+            return false;
+        };
+        if (a['toi'] < ($scope.goalie_games_at_least_played * 3600)) {
+            return false;
+        };
+        return true;
+    };
+
+
     $scope.minPowerPlayPointsFilter = function(a) {
         if (!a['pp_points']) {
             return false;
@@ -647,5 +740,17 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         return $scope.po_series[$scope.current_game.home.shortcut].filter(series => series.opp_team === $scope.current_game.guest.shortcut);
     }
 
+    $scope.changeDisplay = function() {
+        if ($scope.league_display == 'active') {
+            $scope.league_display = '';
+        } else {
+            $scope.league_display = 'active';
+        }
+        if ($scope.regional_display == 'active') {
+            $scope.regional_display = '';
+        } else {
+            $scope.regional_display = 'active';
+        }
+    }
 
 });
