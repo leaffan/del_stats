@@ -223,6 +223,8 @@ def calculate_age(dob):
     """
     Calculates current age of player with specified date of birth.
     """
+    if dob is None:
+        return
     # parsing player's date of birth
     dob = parse(dob).date()
     # retrieving today's date
