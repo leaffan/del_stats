@@ -5,6 +5,7 @@ app.controller('plrProfileController', function($scope, $http, $routeParams, $lo
 
     $scope.season = $routeParams.season;
     $scope.player_id = $routeParams.player_id;
+    $scope.seasonTypeFilter = 'RS';
     $scope.fromRoundSelect = '1';
     $scope.shootoutParticipation = false;
 

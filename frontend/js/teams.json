@@ -17,10 +17,11 @@
             }
         },
         "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#C00D1E", "#32553B", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "EBB",
@@ -44,7 +45,8 @@
         "valid_to": 2020,
         "colors": [
             "#D61825", "#1C2B64", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "BHV",
@@ -68,7 +70,8 @@
         "valid_to": 2020,
         "colors": [
             "#C00D0E", "#FFFFFF", "#C00D0E"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "DEG",
@@ -92,7 +95,8 @@
         "valid_to": 2020,
         "colors": [
             "#E1051B", "#F9B800", "#E1051B"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "ING",
@@ -112,10 +116,11 @@
             }
         },
         "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#27A6C4", "#0D2C5D", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "IEC",
@@ -135,10 +140,11 @@
             }
         },
         "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#1A3C85", "#FFFFFF", "#1A3C85"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "KEC",
@@ -158,10 +164,11 @@
             }
         },
        "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#000000", "#E30613", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "KEV",
@@ -185,7 +192,8 @@
         "valid_to": 2020,
         "colors": [
             "#000000", "#FFEC00", "#000000"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "MAN",
@@ -209,7 +217,8 @@
         "valid_to": 2020,
         "colors": [
             "#F0192D", "#004289", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "RBM",
@@ -233,7 +242,8 @@
         "valid_to": 2020,
         "colors": [
             "#BB0508", "#1A2E56", "#FFFFFF"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "NIT",
@@ -253,10 +263,11 @@
             }
         },
         "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#878787", "#FFFFFF", "#E2001A"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "SWW",
@@ -280,7 +291,8 @@
         "valid_to": 2020,
         "colors": [
             "#1756AD", "#FFFFFF", "#1756AD"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "STR",
@@ -300,10 +312,11 @@
             }
         },
         "valid_from": 1994,
-        "valid_to": 2019,
+        "valid_to": 2020,
         "colors": [
             "#0055A4", "#FFFFFF", "#0055A4"
-        ]
+        ],
+        "msc_2020": false
     },
     {
         "abbr": "WOB",
@@ -327,7 +340,8 @@
         "valid_to": 2020,
         "colors": [
             "#000000", "#EB6911", "#000000"
-        ]
+        ],
+        "msc_2020": true
     },
     {
         "abbr": "FRA",
