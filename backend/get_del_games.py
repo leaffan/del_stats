@@ -85,8 +85,8 @@ def get_games_for_date(date, existing_games=None):
         single_game_data['weekday'] = date.weekday()
         season = get_season(date)
         single_game_data['season'] = season
-        # TODO: adjust for when 2020/21 regular season starts
-        if season == 2020:
+        # TODO: put date for 2020/21 regular season start somewhere else
+        if season == 2020 and date < datetime.date(2020, 12, 16):
             single_game_data['season_type'] = 'MSC'
             game_type = 4
         elif date < PLAYOFF_DATES[season]:
