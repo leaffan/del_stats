@@ -277,8 +277,8 @@ app.factory('svc', function() {
                 'dzone_faceoffs', 'dzone_faceoffs_won', 'dzone_faceoffs_lost',
                 'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
                 'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
-                'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals'
-            ];
+                'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
+                'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g'            ];
         },
         player_float_stats_to_aggregate: function() {
             return ['game_score'];
