@@ -5,6 +5,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.current_game_id = $routeParams.game_id;
     $scope.previous_stats_home = false;
     $scope.previous_stats_road = false;
+    $scope.loaded_data_from_last_season = false;
 
     $scope.regional_display = 'active';
     $scope.league_display = '';
@@ -66,7 +67,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             $scope.home_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'home');
             $scope.road_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS', 'road');
 
-            if ($scope.full_season_stats.length == 0) {
+            if ($scope.full_season_stats.length == 0 || $scope.current_game.round == 1) {
                 $http.get('data/'+ ($scope.season - 1) + '/del_team_game_stats.json').then(function (res) {
                     $scope.team_stats = res.data[1];
                     $scope.full_season_stats = $scope.getSeasonStats($scope.team_stats, $scope.current_game, 'RS');
@@ -235,7 +236,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     // loading goalie stats from external json file
     $http.get('data/'+ $scope.season + '/del_goalie_game_stats.json').then(function (res) {
         $scope.goalie_stats = res.data.filter(game => game.season_type != 'MSC');
-        if ($scope.goalie_stats.length == 0) {
+        if ($scope.goalie_stats.length == 0 || $scope.current_game.round == 1) {
             $http.get('data/'+ ($scope.season - 1) + '/del_goalie_game_stats.json').then(function (res) {
                 $scope.goalie_stats = res.data.filter(game => game.season_type != 'MSC');
                 $scope.full_goalie_stats = $scope.getGoalieSeasonStats($scope.goalie_stats, $scope.current_game);
@@ -361,11 +362,15 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         });
         // grouping retrieved player games by season type
         player_games_grouped_by_season_type = groupBy($scope.player_games, 'season_type');
-        // if no regular season games have been played previously...
-        if (!('RS' in player_games_grouped_by_season_type)) {
-            // loading data from previous season
-            $scope.readCSV($scope.season - 1);
-        }
+        if (!$scope.loaded_data_from_last_season) {
+            // if no regular season games have been played previously or we're in round one...
+            if (!('RS' in player_games_grouped_by_season_type) || $scope.current_game.round == 1) {
+                // loading data from previous season
+                $scope.readCSV($scope.season - 1);
+                // memorize that we've already loaded data from last season
+                $scope.loaded_data_from_last_season = true;
+            }
+        }        
         if ('RS' in player_games_grouped_by_season_type) {
             // retrieving regular season player stats from before current game
             full_player_stats = $scope.getPlayerSeasonStats(player_games_grouped_by_season_type['RS'], $scope.current_game);
