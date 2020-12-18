@@ -250,7 +250,7 @@ if __name__ == '__main__':
                     shot['shot_zone'] = poly_name[5:]
                     # checking whether determined shot zone matches polygon in original data
                     if poly_name in rd.polygon_to_original_mapping:
-                        if shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
+                        if 'polygon' in shot and shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
                             # print("\tRetrieved shot zone '%s' does not match original polygon '%s'" % (
                             #     poly_name, shot['polygon']))
                             # print(shot)
@@ -262,7 +262,7 @@ if __name__ == '__main__':
                     if poly.intersects(shot_pnt):
                         shot['shot_zone'] = poly_name[5:]
                         if poly_name in rd.polygon_to_original_mapping:
-                            if shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
+                            if 'polygon' in shot and shot['polygon'] != rd.polygon_to_original_mapping[poly_name]:
                                 # print(
                                 #     "\tRetrieved shot zone '%s' by intersect does not match original polygon '%s'" % (
                                 #         poly_name, shot['polygon']))
