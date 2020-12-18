@@ -38,6 +38,8 @@ def combine_season_statlines(season_stat_lines):
 
     return combined_statline
 
+# TODO: overhaul this complete script
+
 
 if __name__ == '__main__':
 
@@ -117,27 +119,35 @@ if __name__ == '__main__':
             if len(curr_player_career_stats) == 1:
                 curr_player_career_stats = curr_player_career_stats.pop(0)
             elif len(curr_player_career_stats) > 1:
-                print("Multiple career stats datasets found for player %s" % plr['name'])
+                print("Multiple career stats datasets found for %s" % plr['name'])
                 continue
             elif len(curr_player_career_stats) == 0:
-                print("No career stats datasets found for player %s" % plr['name'])
+                print("No career stats datasets found for %s" % plr['name'])
                 per_player_src_path = os.path.join(career_stats_per_player_src_dir, "%d.json" % plr_id)
                 if os.path.isfile(per_player_src_path):
                     curr_player_career_stats = json.loads(open(per_player_src_path).read())
             # retrieving current player's stats from last regular season
-            prev_season_player_stats = list(filter(
-                lambda d: d['season'] == season - 1 and d['season_type'] == 'RS', curr_player_career_stats['seasons']))
+            try:
+                prev_season_player_stats = list(filter(
+                    lambda d: d['season'] == season - 1 and
+                    d['season_type'] == 'RS', curr_player_career_stats['seasons']))
+            except TypeError:
+                print("No stats dataset for previous season found for %s" % plr['name'])
+                prev_season_player_stats = list()
             if prev_season_player_stats:
                 if len(prev_season_player_stats) > 1:
                     print("Multiple datasets from previous regular season found for player %s" % plr['name'])
-                    plr['prev_season'] = dict(combine_season_statlines(prev_season_player_stats))
-                    # TODO: take care of goalies with multiple season stat lines
+                    if plr['position'] != 'GK':
+                        plr['prev_season'] = dict(combine_season_statlines(prev_season_player_stats))
+                    else:
+                        pass
+                        # TODO: take care of goalies with multiple season stat lines
                 else:
                     # retaining previous season's stats (if available)
                     plr['prev_season'] = prev_season_player_stats.pop(0)
 
             # retaining career stats
-            if 'all' in curr_player_career_stats['career']:
+            if curr_player_career_stats and 'all' in curr_player_career_stats['career']:
                 plr['career'] = curr_player_career_stats['career']['all']
 
             updated_roster.append(plr)
