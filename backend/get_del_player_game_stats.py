@@ -83,6 +83,7 @@ OUT_FIELDS = [
     'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
     'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
     'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
+    'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g',
 ]
 
 # default empty line
@@ -300,6 +301,28 @@ def get_single_game_player_data(game, shots):
         goals_5v5 = list(filter(
             lambda d: d['scored'] is True, shots_on_goal_5v5))
         gsl['goals_5v5'] = len(goals_5v5)
+
+        # retrieving different types of goals
+        # using the score diff parameter calculated for each registered shot
+        go_ahead_goals = list(filter(lambda d: d['scored'] and d['score_diff'] == 0, per_player_game_shots))
+        gsl['go_ahead_g'] = len(go_ahead_goals)
+        tying_goals = list(filter(lambda d: d['scored'] and d['score_diff'] == -1, per_player_game_shots))
+        gsl['tying_g'] = len(tying_goals)
+        # clutch goals are goals scored in the last ten minutes of a game or overtime whilst the score difference
+        # was one or zero
+        clutch_goals = list(filter(
+            lambda d: d['scored'] and abs(d['score_diff']) <= 1 and d['time'] >= 3000, per_player_game_shots))
+        gsl['clutch_g'] = len(clutch_goals)
+        # garbage goals are goals when the score difference is four or higher
+        blowout_goals = list(filter(lambda d: d['scored'] and abs(d['score_diff']) >= 4, per_player_game_shots))
+        gsl['blowout_g'] = len(blowout_goals)
+        # goals scored whilst the team was losing
+        whilst_losing_goals = list(filter(lambda d: d['scored'] and d['score_diff'] < 0, per_player_game_shots))
+        gsl['w_losing_g'] = len(whilst_losing_goals)
+        # goals scored whilst the team was winning
+        whilst_winning_goals = list(filter(lambda d: d['scored'] and d['score_diff'] > 0, per_player_game_shots))
+        gsl['w_winning_g'] = len(whilst_winning_goals)
+
         gsl['goals_5v5_from_events'] = 0
         if gsl['player_id'] in scorers_5v5:
             gsl['goals_5v5_from_events'] = scorers_5v5[gsl['player_id']]
