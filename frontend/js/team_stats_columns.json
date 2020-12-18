@@ -9,6 +9,7 @@
         {"data_key": "sl", "col_header": "SOL", "expl_de": "Niederlagen nach Penaltyschießen", "expl_en": "Shootout Losses"},
         {"data_key": "rl", "col_header": "L", "expl_de": "Niederlagen nach regulärer Spielzeit", "expl_en": "Losses"},
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "pts_per_game", "col_header": "Pts/G", "expl_de": "Punkquotient", "expl_en": "Punkte pro Spiel"},
         {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
         {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
         {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
@@ -191,6 +192,7 @@
         {"data_key": "sl", "col_header": "SOL", "expl_de": "Niederlagen nach Penaltyschießen", "expl_en": "Shootout Losses"},
         {"data_key": "rl", "col_header": "L", "expl_de": "Niederlagen nach regulärer Spielzeit", "expl_en": "Losses"},
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
+        {"data_key": "pts_per_game", "col_header": "Pts/G", "expl_de": "Punkquotient", "expl_en": "Punkte pro Spiel"},
         {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
         {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
         {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
