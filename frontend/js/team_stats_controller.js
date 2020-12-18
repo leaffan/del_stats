@@ -5,11 +5,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     $scope.season = $routeParams.season;
     // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
-    if ($scope.season == 2020) {
-        $scope.seasonTypeSelect = 'MSC';
-    } else {
-        $scope.seasonTypeSelect = 'RS';
-    }
+    $scope.seasonTypeSelect = 'RS';
     // initially setting indicators which view we're currently in
     $scope.isStandingsView = true;
     $scope.sortConfig = {
@@ -86,19 +82,27 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         filtered_team_stats = {};
         if ($scope.team_stats === undefined)
             return filtered_team_stats;
+        $scope.teams.forEach(team => {
+            abbr = team['abbr'];
+            if (!filtered_team_stats[abbr]) {
+                if ($scope.seasonTypeSelect == 'MSC' && !team['msc_2020']) {
+                    return;
+                }
+                if ($scope.seasonTypeSelect == 'PO' && !team['po'][$scope.season]) {
+                    return;
+                }
+                filtered_team_stats[abbr] = {};
+                filtered_team_stats[abbr]['team'] = abbr;
+                if ($scope.season == 2020)
+                    filtered_team_stats[abbr]['division'] = team['division'][$scope.season][$scope.seasonTypeSelect];
+                $scope.svc.stats_to_aggregate().forEach(category => {
+                    filtered_team_stats[abbr][category] = 0;
+                });
+            }
+        });
+
         $scope.team_stats.forEach(element => {
             team = element['team'];
-            if (!filtered_team_stats[team]) {
-                // leaving out non-playoff teams in playoff standings
-                if ($scope.seasonTypeSelect != 'PO' || $scope.team_playoff_lookup[team]) {
-                    filtered_team_stats[team] = {};
-                    filtered_team_stats[team]['team'] = team;
-                    filtered_team_stats[team]['division'] = element['division'];
-                    $scope.svc.stats_to_aggregate().forEach(category => {
-                        filtered_team_stats[team][category] = 0;
-                    });
-                }
-            }
             is_equal_past_from_date = false;
             is_prior_equal_to_date = false;
             is_selected_home_away_type = false;
@@ -189,8 +193,10 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             // calculating points percentage
             if (element['games_played']) {
                 element['pt_pctg'] = parseFloat((element['points'] / (element['games_played'] * 3.) * 100).toFixed(2));
+                element['pts_per_game'] = element['points'] / element['games_played'];
             } else {
-                element['pt_pctg'] = parseFloat((0).toFixed(2));
+                element['pt_pctg'] = 0;
+                element['pts_per_game'] = 0;
             }
             // calculating shot zone percentages
             if (element['shots']) {
@@ -387,8 +393,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
 
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {
-        'standings': 'pt_pctg',
-        'group_standings': 'pt_pctg',
+        'standings': 'pts_per_game',
+        'group_standings': 'pts_per_game',
         'special_team_stats': 'pp_pctg',
         'goal_stats': 'goals_diff',
         'shot_stats': 'shots_on_goal',
@@ -411,6 +417,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         // standings
         "points": ['points', 'score_diff', 'score'],
         "pt_pctg": ['pt_pctg', 'points', 'score_diff', 'score'],
+        "pts_per_game": ['pts_per_game', 'pt_pctg', 'points', 'score_diff', 'score'],
         "games_played": ['games_played', '-team'],
         // goal stats
         "goals_diff": ['goals_diff', 'goals'],
