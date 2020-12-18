@@ -27,6 +27,20 @@
         {"data_key": "sh_goals", "col_header": "SHG", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals"},
         {"data_key": "sh_assists", "col_header": "SHA", "expl_de": "Vorlagen in Unterzahl", "expl_en": "Shorthanded Assists"}
     ],
+    "goal_categories": [
+        {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "opp_team", "col_header": "Gegner", "expl_de": null, "expl_en": null},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
+        {"data_key": "gw_goals", "col_header": "GWG", "expl_de": "Siegtor im Spiel", "expl_en": "Game-Winning Goals"},
+        {"data_key": "first_goals", "col_header": "FG", "expl_de": "Erstes Tor im Spiel", "expl_en": "First Goals"},
+        {"data_key": "go_ahead_g", "col_header": "GAG", "expl_de": "Führungstore", "expl_en": "Go-ahead Goals"},
+        {"data_key": "tying_g", "col_header": "TG", "expl_de": "Ausgleichstore", "expl_en": "Tying Goals"},
+        {"data_key": "clutch_g", "col_header": "CG", "expl_de": "Tore in den letzten Minuten eines engen Spiels", "expl_en": "Clutch Goals"},
+        {"data_key": "blowout_g", "col_header": "BOG", "expl_de": "Tore bei vier und mehr Toren Unterschied", "expl_en": "Blowout Goals"},
+        {"data_key": "w_winning_g", "col_header": "GWW", "expl_de": "Tore bei Vorsprung", "expl_en": "Goals Whilst Winning"},
+        {"data_key": "w_losing_g", "col_header": "GWL", "expl_de": "Tore bei Rückstand", "expl_en": "Goals Whilst Losing"}
+    ],
     "additional_game_by_game": [
         {"data_key": "date", "col_header": "Datum", "expl_de": null, "expl_en": null},
         {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
