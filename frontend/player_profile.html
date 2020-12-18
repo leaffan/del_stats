@@ -79,6 +79,7 @@
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="goal_categories">Torkategorien</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
                         <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
                         <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
@@ -197,6 +198,7 @@
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="goal_categories">Torkategorien</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="lines">Reihenpartner</option>
                         <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_stats">Torhüterstatistiken</option>
                         <option data-ng-if="player_stats[0].position == 'GK'" data-ng-option value="goalie_against_avg_stats">Torhüterwerte über Ligaschnitt</option>
@@ -682,6 +684,51 @@
                 <td class="text-right"><b>{{ total_sside_faceoffs_won = svc.getFilteredTotal(filtered_stats, 'strong_side_faceoffs_won', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'strong_side_faceoffs_lost', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ total_sside_faceoffs > 0 ? (total_sside_faceoffs_won / total_sside_faceoffs * 100).toFixed(1) : (0).toFixed(1) }} %</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="goal_categories" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'goal_categories'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.statsSortDescending = $parent.setSortOrder(col.data_key, $parent.sortCriterion, $parent.statsSortDescending); $parent.sortCriterion = col.data_key">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && $parent.statsSortDescending" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortCriterion == col.data_key && !$parent.statsSortDescending" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
+                <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
+                <td class="w-07 text-right">{{ stat.round }}</td>
+                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-08 text-right">{{ stat.goals }}</td>
+                <td class="w-08 text-right">{{ stat.gw_goals }}</td>
+                <td class="w-08 text-right">{{ stat.first_goals }}</td>
+                <td class="w-08 text-right">{{ stat.go_ahead_g }}</td>
+                <td class="w-08 text-right">{{ stat.tying_g }}</td>
+                <td class="w-08 text-right">{{ stat.clutch_g }}</td>
+                <td class="w-08 text-right">{{ stat.blowout_g }}</td>
+                <td class="w-08 text-right">{{ stat.w_winning_g }}</td>
+                <td class="w-08 text-right">{{ stat.w_losing_g }}</td>
+            </tr>
+            <tr>
+                <td></td>
+                <td></td>
+                <td><b>{{ filtered_stats.length }} Spiel{{ filtered_stats.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'goals', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'gw_goals', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'first_goals', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'go_ahead_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'tying_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'clutch_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'blowout_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_winning_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_losing_g', player_stats) }}</b></td>
             </tr>
         </tbody>
     </table>
