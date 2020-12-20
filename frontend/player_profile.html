@@ -705,16 +705,17 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-13 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="w-08 text-right">{{ stat.goals }}</td>
-                <td class="w-08 text-right">{{ stat.gw_goals }}</td>
-                <td class="w-08 text-right">{{ stat.first_goals }}</td>
-                <td class="w-08 text-right">{{ stat.go_ahead_g }}</td>
-                <td class="w-08 text-right">{{ stat.tying_g }}</td>
-                <td class="w-08 text-right">{{ stat.clutch_g }}</td>
-                <td class="w-08 text-right">{{ stat.blowout_g }}</td>
-                <td class="w-08 text-right">{{ stat.w_winning_g }}</td>
-                <td class="w-08 text-right">{{ stat.w_losing_g }}</td>
+                <td class="w-15 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-07 text-right">{{ stat.goals }}</td>
+                <td class="w-07 text-right">{{ stat.gw_goals }}</td>
+                <td class="w-07 text-right">{{ stat.first_goals }}</td>
+                <td class="w-07 text-right">{{ stat.go_ahead_g }}</td>
+                <td class="w-07 text-right">{{ stat.tying_g }}</td>
+                <td class="w-07 text-right">{{ stat.clutch_g }}</td>
+                <td class="w-07 text-right">{{ stat.blowout_g }}</td>
+                <td class="w-07 text-right">{{ stat.w_winning_g }}</td>
+                <td class="w-07 text-right">{{ stat.w_losing_g }}</td>
+                <td class="w-07 text-right">{{ stat.so_gw_goals }}</td>
             </tr>
             <tr>
                 <td></td>
@@ -729,6 +730,7 @@
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'blowout_g', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_winning_g', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_losing_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'so_gw_goals', player_stats) }}</b></td>
             </tr>
         </tbody>
     </table>
