@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import time
 import yaml
 import requests
 import argparse
@@ -87,7 +88,7 @@ if __name__ == '__main__':
         print(
             "+ Downloading %s for %d-%d" % (args.category, season, season + 1))
         for team_id in teams:
-            sys.stdout.write(teams[team_id])
+            sys.stdout.write("%s:" % teams[team_id])
             sys.stdout.flush()
             for game_type in game_types:
                 # setting up target url
@@ -142,6 +143,7 @@ if __name__ == '__main__':
                 # retrieving date of last modification
                 last_modified = r.headers['Last-Modified']
                 last_modified_dict[target_url] = last_modified
+                time.sleep(0.1)
             sys.stdout.write(' ')
         print()
 
