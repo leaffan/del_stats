@@ -64,7 +64,8 @@
         {"data_key": "clutch_g", "col_header": "CG", "expl_de": "Tore ab Minute 50:00 bei maximal einem Tor Unterschied", "expl_en": "Clutch Goals"},
         {"data_key": "blowout_g", "col_header": "BOG", "expl_de": "Tore bei vier und mehr Toren Unterschied", "expl_en": "Blowout Goals"},
         {"data_key": "w_winning_g", "col_header": "GWW", "expl_de": "Tore bei Vorsprung", "expl_en": "Goals Whilst Winning"},
-        {"data_key": "w_losing_g", "col_header": "GWL", "expl_de": "Tore bei Rückstand", "expl_en": "Goals Whilst Losing"}
+        {"data_key": "w_losing_g", "col_header": "GWL", "expl_de": "Tore bei Rückstand", "expl_en": "Goals Whilst Losing"},
+        {"data_key": "so_gw_goals", "col_header": "SOWG", "expl_de": "Siegtore im Penaltyschießen", "expl_en": "Shootout Winning Goals"}
     ],
     "penalty_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
