@@ -4,6 +4,7 @@
 import os
 import sys
 import json
+import time
 import yaml
 import requests
 import argparse
@@ -106,6 +107,8 @@ def download_task(tgt_url, tgt_path, last_modified_dict):
 
     # retrieving date of last modification
     last_modified = r.headers['Last-Modified']
+
+    time.sleep(0.1)
 
     return tgt_url, last_modified
 
