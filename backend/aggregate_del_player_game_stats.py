@@ -438,7 +438,13 @@ if __name__ == '__main__':
             item['pp_pts_pctg'] = 0.
         # calculating per-game relative values
         for attr in PER_GAME_ATTRS:
-            per_game_attr = item[attr] / float(item['games_played'])
+            if item['games_played']:
+                per_game_attr = item[attr] / float(item['games_played'])
+            else:
+                if "time_on_ice" in attr:
+                    per_game_attr = timedelta()
+                else:
+                    per_game_attr = 0
             try:
                 item["%s_per_game" % attr] = round(per_game_attr, 4)
             except TypeError:
