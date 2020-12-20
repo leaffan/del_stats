@@ -20,7 +20,7 @@ coaches = [
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
     'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak', 'Mihails Svarinskis',
-    'Boris Blank',
+    'Boris Blank', 'Frank Fischöder'
 ]
 
 
