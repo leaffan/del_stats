@@ -28,6 +28,9 @@ GOALIE_CATEGORIES = [
 
 ALL_PLAYERS_SRC = 'del_players.json'
 
+CURRENT_SEASON = 2020
+
+
 if __name__ == '__main__':
 
     del_base_url = CONFIG['del_base_url']
@@ -106,10 +109,83 @@ if __name__ == '__main__':
             plr_career_stats['seasons'] = list()
             plr_career_stats['career'] = dict()
 
+            # workaround to get stats for current season because it's no longer added to career data table below
+            single_stat_line = dict()
+            uls = doc.xpath("//ul[contains(@class, 'game-stats')]")
+            raw_gp = doc.xpath("//ul[@class='game-stats']/li[1]/strong/text()")
+            if position != 'GK':
+                if raw_gp and int(raw_gp.pop(0)):
+                    single_stat_line['season'] = CURRENT_SEASON
+                    single_stat_line['season_type'] = 'RS'
+                    single_stat_line['team'] = CONFIG['teams'][team_id]
+
+                    single_stat_line['gp'] = int(uls[0].xpath("li[1]/strong/text()")[0])
+                    single_stat_line['g'] = int(uls[0].xpath("li[2]/strong/text()")[0])
+                    single_stat_line['a'] = int(uls[0].xpath("li[3]/strong/text()")[0])
+                    single_stat_line['pts'] = int(uls[0].xpath("li[4]/strong/text()")[0])
+
+                    single_stat_line['plus_minus'] = int(uls[1].xpath("li[2]/strong/text()")[0])
+                    single_stat_line['pim'] = int(uls[1].xpath("li[1]/strong/text()")[0])
+
+                    single_stat_line['ppg'] = int(uls[3].xpath("li[1]/strong/text()")[0])
+                    single_stat_line['shg'] = int(uls[3].xpath("li[2]/strong/text()")[0])
+                    single_stat_line['gwg'] = int(uls[3].xpath("li[3]/strong/text()")[0])
+
+                    raw_sog = doc.xpath("//div[@class='player-pie'][4]/div/strong[@class='chartvalue']/text()")
+                    if raw_sog:
+                        single_stat_line['sog'] = int(raw_sog.pop(0))
+
+                    if single_stat_line['sog']:
+                        single_stat_line['sh_pctg'] = round(single_stat_line['g'] / single_stat_line['sog'] * 100., 2)
+                    else:
+                        single_stat_line['sh_pctg'] = 0.0
+                    if single_stat_line['gp']:
+                        single_stat_line['gpg'] = round(single_stat_line['g'] / single_stat_line['gp'], 2)
+                        single_stat_line['apg'] = round(single_stat_line['a'] / single_stat_line['gp'], 2)
+                        single_stat_line['ptspg'] = round(single_stat_line['pts'] / single_stat_line['gp'], 2)
+                    else:
+                        single_stat_line['gpg'] = 0.
+                        single_stat_line['apg'] = 0.
+                        single_stat_line['ptspg'] = 0.
+
+            else:
+                if raw_gp and int(raw_gp.pop(0)):
+                    single_stat_line['season'] = CURRENT_SEASON
+                    single_stat_line['season_type'] = 'RS'
+                    single_stat_line['team'] = CONFIG['teams'][team_id]
+
+                    single_stat_line['gp'] = int(uls[0].xpath("li[1]/strong/text()")[0])
+                    single_stat_line['sv'] = int(uls[0].xpath("li[2]/strong/text()")[0])
+                    single_stat_line['ga'] = int(uls[0].xpath("li[3]/strong/text()")[0])
+
+                    single_stat_line['min'] = uls[1].xpath("li[1]/strong/text()")[0]
+                    single_stat_line['so'] = int(uls[1].xpath("li[2]/strong/text()")[0])
+
+                    single_stat_line['w'] = int(uls[-1].xpath("li[1]/strong/text()")[0])
+                    single_stat_line['l'] = int(uls[-1].xpath("li[2]/strong/text()")[0])
+
+                    # transforming minutes string to time on ice in seconds
+                    minutes, seconds = [int(t) for t in single_stat_line['min'].split(":")]
+                    single_stat_line['toi'] = minutes * 60 + seconds
+                    # calculating shots against
+                    single_stat_line['sa'] = single_stat_line['sv'] + single_stat_line['ga']
+                    # re-calculating save percentage
+                    if single_stat_line['sa']:
+                        single_stat_line['sv_pctg'] = round(
+                            100 - single_stat_line['ga'] / single_stat_line['sa'] * 100., 3)
+                    # re-calculating goals against average
+                    if single_stat_line['ga']:
+                        single_stat_line['gaa'] = round(single_stat_line['ga'] * 3600 / single_stat_line['toi'], 2)
+                    else:
+                        single_stat_line['gaa'] = 0
+
+            if single_stat_line:
+                plr_career_stats['seasons'].append(single_stat_line)
+
+            # otherwise get stats from career table rows
             for tr in trs:
                 single_stat_line = dict()
-                season_season_type_team = tr.xpath(
-                    "th/span[@class='hidedesktop']/text()")
+                season_season_type_team = tr.xpath("th/span[@class='hidedesktop']/text()")
                 # retrieving season, season type and team from table row
                 if len(season_season_type_team) == 2:
                     season_season_type, team = season_season_type_team
@@ -121,8 +197,7 @@ if __name__ == '__main__':
                     try:
                         season = int(season.split("/")[0])
                     except ValueError:
-                        # print(
-                        #     "+ Unable to retrieve season from '%s'" % season)
+                        # print("+ Unable to retrieve season from '%s'" % season)
                         continue
                     single_stat_line['season'] = season
                     single_stat_line['season_type'] = season_type
@@ -154,16 +229,12 @@ if __name__ == '__main__':
                             # re-calculating shooting percentage
                             if single_stat_line['sog']:
                                 single_stat_line[category] = round(
-                                    single_stat_line['g'] /
-                                    single_stat_line['sog'] * 100., 2)
+                                    single_stat_line['g'] / single_stat_line['sog'] * 100., 2)
                             else:
                                 single_stat_line[category] = 0.0
-                    single_stat_line['gpg'] = round(
-                        single_stat_line['g'] / single_stat_line['gp'], 2)
-                    single_stat_line['apg'] = round(
-                        single_stat_line['a'] / single_stat_line['gp'], 2)
-                    single_stat_line['ptspg'] = round(
-                        single_stat_line['pts'] / single_stat_line['gp'], 2)
+                    single_stat_line['gpg'] = round(single_stat_line['g'] / single_stat_line['gp'], 2)
+                    single_stat_line['apg'] = round(single_stat_line['a'] / single_stat_line['gp'], 2)
+                    single_stat_line['ptspg'] = round(single_stat_line['pts'] / single_stat_line['gp'], 2)
                 # retrieving goalie stats
                 else:
                     for category, td in zip(GOALIE_CATEGORIES, tds):
@@ -175,22 +246,17 @@ if __name__ == '__main__':
                             single_stat_line[category] = int(td)
                     else:
                         # transforming minutes string to time on ice in seconds
-                        minutes, seconds = [
-                            int(t) for t in single_stat_line['min'].split(":")]
+                        minutes, seconds = [int(t) for t in single_stat_line['min'].split(":")]
                         single_stat_line['toi'] = minutes * 60 + seconds
                         # calculating shots against
-                        single_stat_line['sa'] = (
-                            single_stat_line['sv'] + single_stat_line['ga'])
+                        single_stat_line['sa'] = single_stat_line['sv'] + single_stat_line['ga']
                         # re-calculating save percentage
                         if single_stat_line['sa']:
                             single_stat_line['sv_pctg'] = round(
-                                100 - single_stat_line['ga'] /
-                                single_stat_line['sa'] * 100., 3)
+                                100 - single_stat_line['ga'] / single_stat_line['sa'] * 100., 3)
                         # re-calculating goals against average
                         if single_stat_line['ga']:
-                            single_stat_line['gaa'] = round(
-                                single_stat_line['ga'] * 3600 /
-                                single_stat_line['toi'], 2)
+                            single_stat_line['gaa'] = round(single_stat_line['ga'] * 3600 / single_stat_line['toi'], 2)
                         else:
                             single_stat_line['gaa'] = 0
 
@@ -199,15 +265,69 @@ if __name__ == '__main__':
                     plr_career_stats['seasons'].append(single_stat_line)
                 # adding full career stats to according container
                 else:
-                    plr_career_stats['career'][
-                        single_stat_line['season_type']] = single_stat_line
+                    plr_career_stats['career'][single_stat_line['season_type']] = single_stat_line
+
+            # adding possibly existing current season stats to career stats
+            curr_season_stats = list(filter(lambda d: d['season'] == CURRENT_SEASON, plr_career_stats['seasons']))
+
+            if curr_season_stats and position != 'GK':
+                for category in SKATER_CATEGORIES:
+                    if category.endswith('pctg'):
+                        continue
+                    for key in ['RS', 'all']:
+                        if key not in plr_career_stats['career']:
+                            plr_career_stats['career'][key] = dict()
+                        if category not in plr_career_stats['career'][key]:
+                            plr_career_stats['career'][key][category] = 0
+                        plr_career_stats['career'][key][category] += curr_season_stats[0][category]
+                else:
+                    for key in ['RS', 'all']:
+                        recalc_stats = plr_career_stats['career'][key]
+                        if recalc_stats['sog']:
+                            recalc_stats['sh_pctg'] = round(recalc_stats['g'] / recalc_stats['sog'] * 100., 2)
+                        if recalc_stats['gp']:
+                            recalc_stats['gpg'] = round(recalc_stats['g'] / recalc_stats['gp'], 2)
+                            recalc_stats['apg'] = round(recalc_stats['a'] / recalc_stats['gp'], 2)
+                            recalc_stats['ptspg'] = round(recalc_stats['pts'] / recalc_stats['gp'], 2)
+                        else:
+                            recalc_stats['gpg'] = 0.
+                            recalc_stats['apg'] = 0.
+                            recalc_stats['ptspg'] = 0.
+
+            elif curr_season_stats and position == 'GK':
+                for category in GOALIE_CATEGORIES + ['toi', 'sa']:
+                    if category in ['gaa', 'sv_pctg', 'min', 't']:
+                        continue
+                    for key in ['RS', 'all']:
+                        if key not in plr_career_stats['career']:
+                            plr_career_stats['career'][key] = dict()
+                        if category not in plr_career_stats['career'][key]:
+                            plr_career_stats['career'][key][category] = 0
+                        plr_career_stats['career'][key][category] += curr_season_stats[0][category]
+                else:
+                    for key in ['RS', 'all']:
+                        recalc_stats = plr_career_stats['career'][key]
+                        if recalc_stats['sa']:
+                            recalc_stats['sv_pctg'] = round(100 - recalc_stats['ga'] / recalc_stats['sa'] * 100., 3)
+                        else:
+                            recalc_stats['sv_pctg'] = 0.
+                        # re-calculating goals against average
+                        if recalc_stats['ga']:
+                            recalc_stats['gaa'] = round(recalc_stats['ga'] * 3600 / recalc_stats['toi'], 2)
+                        else:
+                            recalc_stats['gaa'] = 0.
+                        recalc_stats['min'] = "%d:%02d" % (recalc_stats['toi'] // 60, recalc_stats['toi'] % 60)
 
             # exporting single player career stats
-            plr_career_stats['seasons'] = list(
-                reversed(plr_career_stats['seasons']))
+            plr_career_stats['seasons'] = list(reversed(plr_career_stats['seasons']))
+            if 'PO' in plr_career_stats['career']:
+                plr_career_stats['career'] = {
+                    'RS': plr_career_stats['career']['RS'],
+                    'PO': plr_career_stats['career']['PO'],
+                    'all': plr_career_stats['career']['all']
+                }
             plr_tgt_path = os.path.join(per_player_tgt_dir, "%d.json" % plr_id)
-            open(plr_tgt_path, 'w').write(
-                json.dumps(plr_career_stats, indent=2))
+            open(plr_tgt_path, 'w').write(json.dumps(plr_career_stats, indent=2))
 
             careers.append(plr_career_stats)
             # adding current player id to set of already processed ones
