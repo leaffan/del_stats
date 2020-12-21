@@ -98,6 +98,8 @@ if __name__ == '__main__':
             # calculaing goalie statistics
             if plr['position'] == 'GK':
                 for goalie_stat in goalie_stats:
+                    if goalie_stat['season_type'] == 'MSC':
+                        continue
                     if goalie_stat['player_id'] == plr_id:
                         plr['statistics']['w'] = goalie_stat['w']
                         plr['statistics']['l'] = goalie_stat['l']
