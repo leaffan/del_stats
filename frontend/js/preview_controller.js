@@ -203,7 +203,8 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
 
     // loading teams from external json file
     $http.get('./js/teams.json').then(function (res) {
-        $scope.teams = res.data;
+        // only retaining teams valid for current season
+        $scope.teams = res.data.filter(team => team.valid_from <= $scope.season && team.valid_to >= $scope.season);
         // creating lookup structures...
         // ...for team locations
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
@@ -495,6 +496,21 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         full_team_stats = {};
         if (stats === undefined)
             return full_team_stats;
+
+        // setting up team stats by creating stub list with all valid teams (just in case any team hasn't
+        // played a game yet)
+        $scope.teams.forEach(team => {
+            team_abbr = team['abbr'];
+            if (!full_team_stats[team_abbr]) {
+                full_team_stats[team_abbr] = {};
+                full_team_stats[team_abbr]['team'] = team_abbr;
+                full_team_stats[team_abbr]['division'] = $scope.divisions_per_team[team_abbr];
+                full_team_stats[team_abbr]['capacity'] = 0;
+                $scope.svc.stats_to_aggregate().forEach(category => {
+                    full_team_stats[team_abbr][category] = 0;
+                });
+            };
+        });
         stats.forEach(team_game => {
             team = team_game['team'];
             game_date = moment(team_game['game_date']);
@@ -506,15 +522,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             // only retain home/road games if specified
             if (home_road_type && home_road_type != team_game['home_road'])
                 return;
-            if (!full_team_stats[team]) {
-                full_team_stats[team] = {};
-                full_team_stats[team]['team'] = team;
-                full_team_stats[team]['division'] = $scope.divisions_per_team[team];
-                full_team_stats[team]['capacity'] = 0;
-                $scope.svc.stats_to_aggregate().forEach(category => {
-                    full_team_stats[team][category] = 0;
-                });
-            };
             $scope.svc.stats_to_aggregate().forEach(category => {
                 full_team_stats[team][category] += team_game[category];
             });
