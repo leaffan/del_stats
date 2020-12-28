@@ -30,6 +30,8 @@ ALL_PLAYERS_SRC = 'del_players.json'
 
 CURRENT_SEASON = 2020
 
+PLR_IDS_TO_SKIP = [1567]
+
 
 if __name__ == '__main__':
 
@@ -326,8 +328,10 @@ if __name__ == '__main__':
                     'PO': plr_career_stats['career']['PO'],
                     'all': plr_career_stats['career']['all']
                 }
-            plr_tgt_path = os.path.join(per_player_tgt_dir, "%d.json" % plr_id)
-            open(plr_tgt_path, 'w').write(json.dumps(plr_career_stats, indent=2))
+
+            if plr_id not in PLR_IDS_TO_SKIP:
+                plr_tgt_path = os.path.join(per_player_tgt_dir, "%d.json" % plr_id)
+                open(plr_tgt_path, 'w').write(json.dumps(plr_career_stats, indent=2))
 
             careers.append(plr_career_stats)
             # adding current player id to set of already processed ones
@@ -337,5 +341,17 @@ if __name__ == '__main__':
 
     careers = sorted(careers, key=lambda k: k['player_id'])
 
+    if os.path.isfile(tgt_path):
+        old_careers = json.loads(open(tgt_path).read())
+        old_careers = dict((plr['player_id'], plr) for plr in old_careers)
+
+    tgt_careers = list()
+
+    for plr in careers:
+        if plr['player_id'] in PLR_IDS_TO_SKIP:
+            tgt_careers.append(old_careers[plr['player_id']])
+        else:
+            tgt_careers.append(plr)
+
     # exporting all players' career stats to single file
-    open(tgt_path, 'w').write(json.dumps(careers, indent=2))
+    open(tgt_path, 'w').write(json.dumps(tgt_careers, indent=2))
