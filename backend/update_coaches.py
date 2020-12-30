@@ -74,6 +74,7 @@ if __name__ == '__main__':
             print("+ Creating new coaching-all-time record for %s (%s)" % (coach, team))
             new_coach_all_time = dict()
             new_coach_all_time['team'] = team
+            new_coach_all_time['active'] = True
             # splitting full name into first and last name naively
             first_name, last_name = coach.split()
             new_coach_all_time['first_name'] = first_name
