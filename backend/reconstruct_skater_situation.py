@@ -211,9 +211,7 @@ def reconstruct_skater_situation(game, verbose=False):
     """
     Reconstruct skater on-ice situation for specified game.
     """
-    print(
-        "+ Reconstructing on-ice skater situation for " +
-        "game %s" % get_game_info(game))
+    print("+ Reconstructing on-ice skater situation for game %s" % get_game_info(game))
 
     # building interval tree to query goalies and player situations
     # receiving a list of times when goals has been scored
@@ -263,7 +261,7 @@ def reconstruct_skater_situation(game, verbose=False):
             t, goalies_on_ice, curr_goalie_delta)
 
         if t in goal_times and verbose:
-            print("--> Goal: %d:%02d" % (t // 60, t % 60))
+            print("- Goal: %d:%02d (%dv%d)" % (t // 60, t % 60, skr_count['home'], skr_count['road']))
 
         # retrieving all currently valid goalie and penalty intervals, i.e.
         # on-going goalie shifts and currently served penalties
@@ -274,8 +272,8 @@ def reconstruct_skater_situation(game, verbose=False):
         # if currently valid intervals have changed from previous second of
         # the game
         if current_intervals != last_intervals:
-            if verbose:
-                print("--> %d:%02d (%d)" % (t // 60, t % 60, t))
+            # if verbose:
+            #     print("%d:%02d (%d) --> " % (t // 60, t % 60, t), end='')
             # retaining only penalty intervals
             penalty_intervals = list(filter(lambda item: (
                 isinstance(item.data, Penalty)), current_intervals))
@@ -287,7 +285,7 @@ def reconstruct_skater_situation(game, verbose=False):
                 if penalty.duration in (120, 300):
                     if verbose:
                         print(
-                            "%d:%02d" % (pi.end // -60, -pi.end % 60),
+                            "- Penalty: %d:%02d" % (pi.end // -60, -pi.end % 60),
                             "%d:%02d" % (pi.begin // -60, -pi.begin % 60),
                             penalty.duration, penalty.team, penalty.infraction,
                             penalty.actual_duration, penalty.surname)
@@ -510,6 +508,9 @@ def reconstruct_skater_situation(game, verbose=False):
             effective_penalties.difference_update(expired_penalties)
             started_penalties.difference_update(expired_penalties)
 
+            if verbose:
+                print("%d:%02d (%d) --> " % (t // 60, t % 60, t), end='')
+
         # actually calculating current skater count from previous count
         # and deltas collected from all current intervals
         for key in skr_count:
@@ -523,11 +524,14 @@ def reconstruct_skater_situation(game, verbose=False):
         test_skater_counts(skr_count)
 
         if verbose:
+            addendum = ''
+            if any(extra_attackers[t].values()):
+                addendum = '(with extra attacker)'
             if current_intervals != last_intervals:
-                print(skr_count)
+                print("%dv%d %s" % (skr_count['home'], skr_count['road'], addendum))
             if t == 3601:
                 print("--> %d:%02d (%d)" % (t // 60, t % 60, t))
-                print(skr_count)
+                print("%dv%d %s" % (skr_count['home'], skr_count['road'], addendum))
 
         time_dict[t] = {**skr_count, **current_goalies}
         # saving currently valid intervals for comparison at next
