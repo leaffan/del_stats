@@ -1,0 +1,44 @@
+{
+  "definitions": {
+    "rosterEntry": {
+      "type": "object",
+      "name":"rosterEntry",
+      "playerId": {"type": "number"},
+      "matchPlayerId": {"type": "number"},
+      "name": {"type": "string"},
+      "surname": {"type": "string"},
+      "jersey": {"type": "number"},
+      "position": {"type": "string"},
+      "roster": {"type": "string"}
+    },
+    "teamRoster": {
+      "type": "object",
+      "101": { "$ref" : "#/definitions/rosterEntry" },
+      "102": { "$ref" : "#/definitions/rosterEntry" },
+      "211": { "$ref" : "#/definitions/rosterEntry" },
+      "212": { "$ref" : "#/definitions/rosterEntry" },
+      "221": { "$ref" : "#/definitions/rosterEntry" },
+      "222": { "$ref" : "#/definitions/rosterEntry" },
+      "231": { "$ref" : "#/definitions/rosterEntry" },
+      "232": { "$ref" : "#/definitions/rosterEntry" },
+      "241": { "$ref" : "#/definitions/rosterEntry" },
+      "311": { "$ref" : "#/definitions/rosterEntry" },
+      "312": { "$ref" : "#/definitions/rosterEntry" },
+      "313": { "$ref" : "#/definitions/rosterEntry" },
+      "321": { "$ref" : "#/definitions/rosterEntry" },
+      "322": { "$ref" : "#/definitions/rosterEntry" },
+      "323": { "$ref" : "#/definitions/rosterEntry" },
+      "331": { "$ref" : "#/definitions/rosterEntry" },
+      "332": { "$ref" : "#/definitions/rosterEntry" },
+      "333": { "$ref" : "#/definitions/rosterEntry" },
+      "341": { "$ref" : "#/definitions/rosterEntry" },
+      "342": { "$ref" : "#/definitions/rosterEntry" },
+      "343": { "$ref" : "#/definitions/rosterEntry" }
+    }
+  },
+  "type": "object",
+  "properties": {
+    "home": { "$ref" : "#/definitions/teamRoster" },
+    "visitor": { "$ref" : "#/definitions/teamRoster" }
+  }
+}

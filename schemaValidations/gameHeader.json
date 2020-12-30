@@ -1,0 +1,73 @@
+{
+  "actualTimeName":"Ende",
+  "actualTimeAlias":"K",
+  "stadium":"Olympiaeishalle Muc",
+  "numberOfViewers":4710,
+  "referees":{
+    "headReferee1":{
+      "id":137,
+      "name":"Markus Schütz"
+    },
+    "headReferee2":{
+      "id":139,
+      "name":"Jens Steinecke"
+    },
+    "lineReferee1":{
+      "id":122,
+      "name":"Lukas Kohlmüller"
+    },
+    "lineReferee2":{
+      "id":140,
+      "name":"David Tschirner"
+    }
+  },
+  "teamInfo":{
+    "home":{
+      "id":12,
+      "name":"EHC Red Bull München",
+      "shortcut":"RBM"
+    },
+    "visitor": {
+      "id":6,
+      "name":"Straubing Tigers",
+      "shortcut":"STR"
+    }
+  },
+  "trainers":{
+    "homeHeadCoach":{
+      "id":82,
+      "name":"Don Jackson"
+    },
+    "visitorHeadCoach":{
+      "id":21,
+      "name":"Larry Mitchell"
+    }
+  },
+  "teamBilance": {
+    "homeWin":4,
+    "visitorWin":4
+  },
+  "results":{
+    "extra_time":false,
+    "shooting":false,
+    "contumacy":false,
+    "score":{
+      "final":{
+        "score_home":5,
+        "score_guest":1
+      },
+      "first_period": {
+        "score_home":2,
+        "score_guest":0
+      },
+      "second_period":{
+        "score_home":3,
+        "score_guest":1
+      },
+      "third_period":{
+        "score_home":0,
+        "score_guest":0
+      }
+    }
+  }
+}

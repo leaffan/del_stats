@@ -1,0 +1,157 @@
+{
+  "type": "object",
+  "properties": {
+    "actualTimeName": {
+      "type": "string"
+    },
+    "actualTimeAlias": {
+      "type": "string"
+    },
+    "stadium": {
+      "type": "string"
+    },
+    "numberOfViewers": {
+      "type": "number"
+    },
+    "referees": {
+      "type": "object",
+      "headReferee1": {
+        "type": "object",
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "headReferee2": {
+        "type": "object",
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "lineReferee1": {
+        "type": "object",
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      },
+      "lineReferee2": {
+        "type": "object",
+        "id": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        }
+      }
+    },
+    "teamInfo": {
+      "type": "object",
+      "home": {
+        "type": "object",
+        "id": {
+          "type": "number",
+          "name": {
+            "type": "string"
+          },
+          "shortcut": {
+            "type": "string"
+          }
+        },
+        "visitor": {
+          "type": "object",
+          "id": {
+            "type": "number",
+            "name": {
+              "type": "string"
+            },
+            "shortcut": {
+              "type": "string"
+            }
+          }
+        },
+        "trainers": {
+          "type": "object",
+          "homeHeadCoach": {
+            "type": "object",
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          },
+          "visitorHeadCoach": {
+            "id": {
+              "type": "number"
+            },
+            "name": {
+              "type": "string"
+            }
+          }
+        },
+        "teamBilance": {
+          "type": "object",
+          "homeWin": {
+            "type": "number"
+          },
+          "visitorWin": {
+            "type": "number"
+          }
+        },
+        "results": {
+          "type": "object",
+          "extra_time": {"type": "boolean"},
+          "shooting": {"type": "boolean"},
+          "contumacy": {"type": "boolean"},
+          "score": {
+            "type": "object",
+            "final": {
+              "type": "object",
+              "score_home": {
+                "type": "number"
+              },
+              "score_guest": {
+                "type": "number"
+              }
+            },
+            "first_period": {
+              "type": "object",
+              "score_home": {
+                "type": "number"
+              },
+              "score_guest": {
+                "type": "number"
+              }
+            },
+            "second_period": {
+              "type": "object",
+              "score_home": {
+                "type": "number"
+              },
+              "score_guest": {
+                "type": "number"
+              }
+            },
+            "third_period": {
+              "type": "object",
+              "score_home": {
+                "type": "number"
+              },
+              "score_guest": {
+                "type": "number"
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
