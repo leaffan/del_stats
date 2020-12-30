@@ -265,7 +265,7 @@
         "valid_from": 1994,
         "valid_to": 2020,
         "colors": [
-            "#878787", "#FFFFFF", "#E2001A"
+            "#FFFFFF", "#000000", "#FFFFFF"
         ],
         "msc_2020": false
     },
