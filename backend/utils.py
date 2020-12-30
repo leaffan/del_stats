@@ -60,6 +60,7 @@ name_corrections = {
     'J. O`Leary': "Jason O'Leary",
     'Pellegrims Mike': 'Mike Pellegrims',
     'Krupp Uwe': 'Uwe Krupp',
+    'Uwe Krup': 'Uwe Krupp',
     'Jackson Don': 'Don Jackson',
     'Simpson Sean': 'Sean Simpson',
     'Robert Daum': 'Rob Daum',
@@ -71,6 +72,7 @@ name_corrections = {
     'Pasanen Jari': 'Jari Pasanen',
     'Franz Fritzmeier': 'Franz-David Fritzmeier',
     'Fritzmeier': 'Franz-David Fritzmeier',
+    'aprey': 'Thomas Popiesch',
     # at times former assistants become head coaches and
     # therefore their names no longer need to be adjusted
     # hence: the following name corrections are only valid until the date
