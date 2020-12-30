@@ -15,8 +15,8 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_shots.csv /home/doms/
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del/data/$season/per_player/
 
 # copying career stats to standard site location
-cp -v /home/pacs/mre00/users/markus/_del/_dlds/career_stats/career_stats.json /home/doms/leaffan.net/subs/www/del/data/career_stats
-cp -TRv /home/pacs/mre00/users/markus/_del/_dlds/career_stats/per_player/ /home/doms/leaffan.net/subs/www/del/data/career_stats/per_player/
+cp -v /home/pacs/mre00/users/markus/_del/_data/career_stats/updated_career_stats.json /home/doms/leaffan.net/subs/www/del/data/career_stats/career_stats.json
+cp -TRv /home/pacs/mre00/users/markus/_del/_data/career_stats/per_player/ /home/doms/leaffan.net/subs/www/del/data/career_stats/per_player/
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/career_stats/per_team/ /home/doms/leaffan.net/subs/www/del/data/career_stats/per_team/
 
 # copying data sets to extended site location
@@ -35,6 +35,6 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_strict.json /
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del_extended/data/$season/per_player/
 
 # copying career stats to extended site location
-cp -v /home/pacs/mre00/users/markus/_del/_dlds/career_stats/career_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/career_stats
-cp -TRv /home/pacs/mre00/users/markus/_del/_dlds/career_stats/per_player/ /home/doms/leaffan.net/subs/www/del_extended/data/career_stats/per_player/
+cp -v /home/pacs/mre00/users/markus/_del/_data/career_stats/updated_career_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/career_stats/career_stats.json
+cp -TRv /home/pacs/mre00/users/markus/_del/_data/career_stats/per_player/ /home/doms/leaffan.net/subs/www/del_extended/data/career_stats/per_player/
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/career_stats/per_team/ /home/doms/leaffan.net/subs/www/del_extended/data/career_stats/per_team/

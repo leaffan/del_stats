@@ -33,9 +33,9 @@ xcopy /i /y /d data\%SEASON%\per_player %TGT_BASE_DIR%\%SEASON%\per_player
 
 echo + Copying career stats:
 echo + Copying full career stats file...
-copy %DEL_DATA_BASE_DIR%\career_stats\career_stats.json %TGT_BASE_DIR%\career_stats
+copy data\career_stats\updated_career_stats.json %TGT_BASE_DIR%\career_stats\career_stats.json
 echo + Copying modified per-player career stats...
-xcopy /i /y /d %DEL_DATA_BASE_DIR%\career_stats\per_player %TGT_BASE_DIR%\career_stats\per_player
+xcopy /i /y /d data\career_stats\per_player %TGT_BASE_DIR%\career_stats\per_player
 echo + Copying modified per-team career stats...
 xcopy /i /y /d data\career_stats\per_team %TGT_BASE_DIR%\career_stats\per_team
 
@@ -69,8 +69,8 @@ xcopy /i /y /d data\%SEASON%\per_player %TGT_EXTENDED_DIR%\%SEASON%\per_player
 
 echo + Copying career stats for extended version:
 echo + Copying full career stats file...
-copy %DEL_DATA_BASE_DIR%\career_stats\career_stats.json %TGT_EXTENDED_DIR%\career_stats
+copy data\career_stats\updated_career_stats.json %TGT_EXTENDED_DIR%\career_stats\career_stats.json
 echo + Copying modified per-player career stats...
-xcopy /i /y /d %DEL_DATA_BASE_DIR%\career_stats\per_player %TGT_EXTENDED_DIR%\career_stats\per_player
+xcopy /i /y /d data\career_stats\per_player %TGT_EXTENDED_DIR%\career_stats\per_player
 echo + Copying modified per-team career stats...
 xcopy /i /y /d data\career_stats\per_team %TGT_EXTENDED_DIR%\career_stats\per_team
