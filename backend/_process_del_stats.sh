@@ -13,5 +13,5 @@ python3 /home/pacs/mre00/users/markus/_del/aggregate_del_player_game_stats.py -s
 python3 /home/pacs/mre00/users/markus/_del/get_streaks.py -s "$season"
 python3 /home/pacs/mre00/users/markus/_del/update_coaches.py
 python3 /home/pacs/mre00/users/markus/_del/update_h2h_records.py
-
+python3 /home/pacs/mre00/users/markus/_del/update_career_stats.py
 python3 /home/pacs/mre00/users/markus/_del/add_career_stats_to_rosters.py -s "$season"

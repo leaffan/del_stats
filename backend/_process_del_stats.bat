@@ -24,5 +24,6 @@ rem TODO: check base stats
 if [%SEASON%] EQU [2020] (
     python update_coaches.py
     python update_h2h_records.py
+    python update_career_stats.py
     python add_career_stats_to_rosters.py -s %SEASON%
 )
