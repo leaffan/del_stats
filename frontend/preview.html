@@ -13,9 +13,9 @@
         <a href="#!/previews/2020"><b>Übersicht Vorschaumappen</b></a> | <a href="#!/team_stats/{{season}}"><b>Teamstatistiken</b></a> | <a href="#!/del_stats/{{season}}"><b>Spielerstatistiken</b></a> | <a href="#!"><b>Startseite</b></a>
     </div>
 
-    <div class="alert alert-danger mb-2 shadow">
+    <!-- <div class="alert alert-danger mb-2 shadow">
         <p class="mb-0"><b>Achtung:</b> Für DEL-Rückkehrer, d.h. Spieler, die vor einigen Jahren schon mal in der Liga gespielt haben, das in der letzten Saison aber nicht getan haben (betrifft bisher nur <b>Ziga Jeglic</b>), zeigt die offizielle DEL-Seite zurzeit keine Karrierestatistiken an. Da diese auch als Quelle für die in den Kaderlisten angezeigten All-Time-DEL-Werte dient, finden sich dort für die betroffenen Spieler im Augenblick keine verlässlichen Werte. An der Lösung des Problems bzw. einem Workaround wird gearbeitet.</p>
-    </div>
+    </div> -->
 
     <div id="contents" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><b>Inhaltsübersicht</b></h4>
@@ -520,7 +520,9 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_home | orderBy:sorting_config['game_log_table']">
+            <!-- MSC -->
+            <!-- <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in pre_season_game_log_road = (game_log_road | filter:{'season_type': 'MSC'} | orderBy:sorting_config['game_log_table'])"> -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in pre_season_game_log_home = (game_log_home | filter:{season_type: 'MSC'} | orderBy:sorting_config['game_log_table'])">
                 <td class="w-08 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
                         {{ game.game_date| amDateFormat:'DD.MM.YY' }}
@@ -542,18 +544,55 @@
                 <td class="w-08 text-right">{{ game.opp_pp_goals }} / {{ game.sh_opps }}</td>
                 <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
             </tr>
-            <tr data-ng-if="game_log_home.length > 0">
+            <tr data-ng-if="pre_season_game_log_home.length > 0">
+                <td class="text-center"><b>{{ current_season }}</b></td>
+                <td><b>MSC:</b></td>
+                <td class="text-right"><b>{{ pre_season_game_log_home.length }} Spiel{{ pre_season_game_log_home.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(pre_season_game_log_home, 'score', game_log_home) }} ({{ (score_total / pre_season_game_log_home.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(pre_season_game_log_home, 'opp_score', game_log_home) }} ({{ (opp_score_total / pre_season_game_log_home.length).toFixed(1) }})</b></td>
+                <td></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(pre_season_game_log_home, 'shots_on_goal', game_log_home) }} ({{ (shots_on_goal_total / pre_season_game_log_home.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(pre_season_game_log_home, 'goals', game_log_home) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(pre_season_game_log_home, 'pp_goals', game_log_home) }} / {{ pp_opps_total = svc.getFilteredTotal(pre_season_game_log_home, 'pp_opps', game_log_home) }}</b></td>
+                <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(pre_season_game_log_home, 'opp_pp_goals', game_log_home) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(pre_season_game_log_home, 'opp_pp_opps', game_log_home) }}</b></td>
+                <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
+            </tr>
+            <!-- Hauptprunde -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in regular_game_log_home = (game_log_home | filter:{season_type: '!MSC'} | orderBy:sorting_config['game_log_table'])">
+                <td class="w-08 text-center">
+                    <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
+                        {{ game.game_date| amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <td class="w-05 text-right">{{ game.round }}</td>
+                <td class="w-16"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{ game.home_road == 'home' ? '' : '@' }} {{ team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
+                <td class="w-07 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
+                    <b>
+                        {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </b>
+                </td>
+                <td class="w-10 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-08 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
+                <td class="w-08 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.opp_pp_goals }} / {{ game.sh_opps }}</td>
+                <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
+            </tr>
+            <tr data-ng-if="regular_game_log_home.length > 0">
                 <td class="text-center"><b>{{ current_season }}</b></td>
                 <td><b>Gesamt:</b></td>
-                <td class="text-right"><b>{{ game_log_home.length }} Spiel{{ game_log_home.length == 1 ? '' : 'e'}}</b></td>
-                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_home, 'score', game_log_home) }} ({{ (score_total / game_log_home.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_home, 'opp_score', game_log_home) }} ({{ (opp_score_total / game_log_home.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ regular_game_log_home.length }} Spiel{{ regular_game_log_home.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(regular_game_log_home, 'score', game_log_home) }} ({{ (score_total / regular_game_log_home.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(regular_game_log_home, 'opp_score', game_log_home) }} ({{ (opp_score_total / regular_game_log_home.length).toFixed(1) }})</b></td>
                 <td></td>
-                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(game_log_home, 'shots_on_goal', game_log_home) }} ({{ (shots_on_goal_total / game_log_home.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ ((svc.getFilteredTotal(game_log_home, 'goals', game_log_home) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(game_log_home, 'pp_goals', game_log_home) }} / {{ pp_opps_total = svc.getFilteredTotal(game_log_home, 'pp_opps', game_log_home) }}</b></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(regular_game_log_home, 'shots_on_goal', game_log_home) }} ({{ (shots_on_goal_total / regular_game_log_home.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(regular_game_log_home, 'goals', game_log_home) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(regular_game_log_home, 'pp_goals', game_log_home) }} / {{ pp_opps_total = svc.getFilteredTotal(regular_game_log_home, 'pp_opps', game_log_home) }}</b></td>
                 <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
-                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(game_log_home, 'opp_pp_goals', game_log_home) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(game_log_home, 'opp_pp_opps', game_log_home) }}</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(regular_game_log_home, 'opp_pp_goals', game_log_home) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(regular_game_log_home, 'opp_pp_opps', game_log_home) }}</b></td>
                 <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
             </tr>
             <tr class="{{ current_home_team == fixture.home.name ? 'table-info' : 'table-warning' }}" data-ng-repeat="fixture in current_home_team_fixtures | orderBy:sorting_config['game_log_table']">
@@ -598,7 +637,8 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in game_log_road | orderBy:sorting_config['game_log_table']">
+            <!-- MSC -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in pre_season_game_log_road = (game_log_road | filter:{season_type: 'MSC'} | orderBy:sorting_config['game_log_table'])">
                 <td class="w-08 text-center">
                     <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
                         {{ game.game_date | amDateFormat:'DD.MM.YY' }}
@@ -622,16 +662,53 @@
             </tr>
             <tr data-ng-if="game_log_road.length > 0">
                 <td class="text-center"><b>{{ current_season }}</b></td>
-                <td><b>Gesamt:</b></td>
-                <td class="text-right"><b>{{ game_log_road.length }} Spiel{{ game_log_road.length == 1 ? '' : 'e'}}</b></td>
-                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(game_log_road, 'score', game_log_road) }} ({{ (score_total / game_log_road.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(game_log_road, 'opp_score', game_log_road) }} ({{ (opp_score_total / game_log_road.length).toFixed(1) }})</b></td>
+                <td><b>MSC:</b></td>
+                <td class="text-right"><b>{{ pre_season_game_log_road.length }} Spiel{{ pre_season_game_log_road.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(pre_season_game_log_road, 'score', game_log_road) }} ({{ (score_total / pre_season_game_log_road.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(pre_season_game_log_road, 'opp_score', game_log_road) }} ({{ (opp_score_total / pre_season_game_log_road.length).toFixed(1) }})</b></td>
                 <td></td>
-                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(game_log_road, 'shots_on_goal', game_log_road) }} ({{ (shots_on_goal_total / game_log_road.length).toFixed(1) }})</b></td>
-                <td class="text-right"><b>{{ ((svc.getFilteredTotal(game_log_road, 'goals', game_log_road) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
-                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(game_log_road, 'pp_goals', game_log_road) }} / {{ pp_opps_total = svc.getFilteredTotal(game_log_road, 'pp_opps', game_log_road) }}</b></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(pre_season_game_log_road, 'shots_on_goal', game_log_road) }} ({{ (shots_on_goal_total / pre_season_game_log_road.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(pre_season_game_log_road, 'goals', game_log_road) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(pre_season_game_log_road, 'pp_goals', game_log_road) }} / {{ pp_opps_total = svc.getFilteredTotal(pre_season_game_log_road, 'pp_opps', game_log_road) }}</b></td>
                 <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
-                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(game_log_road, 'opp_pp_goals', game_log_road) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(game_log_road, 'opp_pp_opps', game_log_road) }}</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(pre_season_game_log_road, 'opp_pp_goals', game_log_road) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(pre_season_game_log_road, 'opp_pp_opps', game_log_road) }}</b></td>
+                <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
+            </tr>
+            <!-- Hauptrunde -->
+            <tr class="{{game.home_road == 'home' ? 'table-info' : game.home_road == 'road' ? 'table-warning' : ''}}" data-ng-repeat="game in regular_game_log_road = (game_log_road | filter:{season_type: '!MSC'} | orderBy:sorting_config['game_log_table'])">
+                <td class="w-08 text-center">
+                    <a href="https://www.del.org/spielplan/{{game.game_date}}#schedule">
+                        {{ game.game_date | amDateFormat:'DD.MM.YY' }}
+                    </a>
+                </td>
+                <td class="w-05 text-right">{{ game.round }}</td>
+                <td class="w-16"><a href="#!/team_profile/{{season}}/{{game.opp_team}}">{{game.home_road == 'home' ? '' : '@'}} {{ team_location_lookup[game.opp_team] }}<b>{{ game.season_type == 'MSC' ? ' (MSC)' : '' }}</b></a></td>
+                <td class="w-07 text-right">{{ game.score }}</td>
+                <td class="w-07 text-right">{{ game.opp_score }}</td>
+                <td class="w-07 {{ svc.setTextColor(game.score, game.opp_score) }} text-center">
+                    <b>
+                        {{ game.score }}:{{ game.opp_score }} {{game.game_type === 'SO' ? '(SO)' : game.game_type === 'OT' ? '(VL)' : ''}}
+                    </b>
+                </td>
+                <td class="w-10 text-right">{{ game.shots_on_goal }}</td>
+                <td class="w-08 text-right">{{ game.shot_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.pp_goals }} / {{ game.pp_opps }}</td>
+                <td class="w-08 text-right">{{ game.pp_pctg.toFixed(1) }} %</td>
+                <td class="w-08 text-right">{{ game.opp_pp_goals }} / {{ game.sh_opps }}</td>
+                <td class="w-08 text-right">{{ game.pk_pctg.toFixed(1) }} %</td>
+            </tr>
+            <tr data-ng-if="regular_game_log_road.length > 0">
+                <td class="text-center"><b>{{ current_season }}</b></td>
+                <td><b>Gesamt:</b></td>
+                <td class="text-right"><b>{{ regular_game_log_road.length }} Spiel{{ regular_game_log_road.length == 1 ? '' : 'e'}}</b></td>
+                <td class="text-right"><b>{{ score_total = svc.getFilteredTotal(regular_game_log_road, 'score', game_log_road) }} ({{ (score_total / regular_game_log_road.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ opp_score_total = svc.getFilteredTotal(regular_game_log_road, 'opp_score', game_log_road) }} ({{ (opp_score_total / regular_game_log_road.length).toFixed(1) }})</b></td>
+                <td></td>
+                <td class="text-right"><b>{{ shots_on_goal_total = svc.getFilteredTotal(regular_game_log_road, 'shots_on_goal', game_log_road) }} ({{ (shots_on_goal_total / regular_game_log_road.length).toFixed(1) }})</b></td>
+                <td class="text-right"><b>{{ ((svc.getFilteredTotal(regular_game_log_road, 'goals', game_log_road) / shots_on_goal_total) * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ pp_goals_total = svc.getFilteredTotal(regular_game_log_road, 'pp_goals', game_log_road) }} / {{ pp_opps_total = svc.getFilteredTotal(regular_game_log_road, 'pp_opps', game_log_road) }}</b></td>
+                <td class="text-right"><b>{{ (pp_goals_total / pp_opps_total * 100).toFixed(1) }} %</b></td>
+                <td class="text-right"><b>{{ opp_pp_goals_total = svc.getFilteredTotal(regular_game_log_road, 'opp_pp_goals', game_log_road) }} / {{ opp_pp_opps_total = svc.getFilteredTotal(regular_game_log_road, 'opp_pp_opps', game_log_road) }}</b></td>
                 <td class="text-right"><b>{{ (100 - opp_pp_goals_total / opp_pp_opps_total * 100).toFixed(1) }} %</b></td>
             </tr>
             <tr class="{{ current_road_team == fixture.home.name ? 'table-info' : 'table-warning' }}" data-ng-repeat="fixture in current_road_team_fixtures | orderBy:sorting_config['game_log_table']">
