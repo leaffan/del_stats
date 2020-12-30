@@ -1,0 +1,23 @@
+{
+  "type": "array",
+    "items" : {
+        "playerId": { "type" : "number" },
+        "name": { "type" : "string" },
+        "surname" : { "type" : "string" },
+        "teamId": { "type" : "number"},
+        "teamName": { "type" : "string"},
+        "teamShortcut": { "type" : "string"},
+        "jersey": { "type" : "number"},
+        "matches": { "type" : "number"},
+        "wonMatches": { "type" : "number"},
+        "lostMatches": { "type" : "number"},
+        "saves": { "type" : "number"},
+        "goalsAgainst": { "type" : "number"},
+        "savesPercent": { "type" : "number"},
+        "average": { "type" : "number"},
+        "zeros": { "type" : "number"},
+        "timeOnIce": { "type" : "number"},
+        "secondsPerGame": { "type" : "number"},
+        "minutesInPlay": { "type" : "number"}
+    }
+}

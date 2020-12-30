@@ -1,0 +1,76 @@
+{
+    "type" : "array",
+    "items" : {
+      "id" : {"type": "number"},
+      "name" : {"type": "str"},
+      "firstname" : { "type" : "str" },
+      "surname" : { "type" : "str" },
+      "dateOfBirth" : { "type" : "str" },
+      "active" : { "type" : "bool" },
+      "position" : { "type" : "str" },
+      "stick" : { "type" : "str" },
+      "weight" : { "type" : "number" },
+      "height" : { "type" : "number" },
+      "jersey" : { "type" : "number" },
+      "birthCountry" : { "type" : "string" },
+      "nationality" : { "type" : "string" },
+      "nationalityShort" : { "type" : "string" },
+      "statistics" : {
+        "type" : "object",
+        "properties":{
+          "teamShortcut" : { "type" : "string" },
+          "games" : { "type" : "number" },
+          "goals" : {
+            "type" : "object",
+            "properties": {
+              "home": { "type" : "string"},
+              "away": { "type" : "string"}
+            }
+          },
+          "assists" : {
+            "type": "object",
+            "properties": {
+              "home": { "type" : "string"},
+              "away": { "type" : "string"}
+            }
+          },
+          "ponumbers": {
+            "type": "object",
+            "properties": {
+              "home": { "type" : "string"},
+              "away": { "type" : "string"}
+            }
+          },
+          "penaltyMinutes": {"type" : "number" },
+          "positive": {"type" : "number" },
+          "negative": {"type" : "number" },
+          "ponumbersPerGame": {"type" : "number" },
+          "shotEfficiency": {"type" : "number" },
+          "penaltyMinutesPerGame": {"type" : "number" },
+          "ppGoals": {"type" : "number" },
+          "shGoals": {"type" : "number" },
+          "gwGoals": {"type" : "number" },
+          "shotsAttempts": {"type" : "number" },
+          "shotsOnGoal":{
+            "type": "object",
+            "properties": {
+              "home": { "type" : "string"},
+              "away": { "type" : "string"}
+            }
+          },
+          "shotsMissed": {"type" : "number" },
+          "shotsBlocked": {"type" : "number" },
+          "blockedShotsByPlayer": {"type" : "number" },
+          "faceoffsWin": {"type" : "number" },
+          "faceoffsLosses": {"type" : "number" },
+          "faceoffsCount": {"type" : "number" },
+          "timeOnIce": {"type" : "number" },
+          "timeOnIcePP": {"type" : "number" },
+          "timeOnIceSH": {"type" : "number" },
+          "timeOnIcePerGame": {"type" : "number" },
+          "shifts": {"type" : "number" },
+          "shiftsPerGame": {"type" : "number" }
+        }
+      }
+    }
+}

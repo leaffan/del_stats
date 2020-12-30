@@ -1,0 +1,19 @@
+[
+  { "id":4055,
+    "startTime": {
+      "time":0,
+      "realtime":"2018-09-07 19:33:11"
+    },
+    "endTime":{
+      "time":46,
+      "realtime":null
+    },
+    "player":{
+      "id":57,
+      "name":"Colton Jobke"},
+    "team":{
+      "id":6,
+      "name":"Straubing Tigers"
+    }
+  }
+]

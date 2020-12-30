@@ -1,0 +1,53 @@
+{
+    "type": "array",
+    "items" : {
+      "type": "object",
+      "properties": {
+        "id": { "type" : "number"},
+        "startTime": {
+          "type": "object",
+          "properties": {
+            "time": { "type" : "number"},
+            "realtime": { "type": "string"}
+          },
+          "required": [
+            "time",
+            "realtime"
+          ]
+        },
+        "endTime": {
+            "type": "object",
+            "properties": {
+              "time": { "type" : "number"},
+              "realtime": {"type": ["string", "null"]}
+            },
+            "required": [
+              "time",
+              "realtime"
+              ]
+          },
+        "player": {
+            "type": "object",
+            "properties": {
+              "id": { "type" : "number"},
+              "name": {"type": "string"}
+            },
+            "required": [
+              "id",
+              "name"
+              ]
+          },
+        "team": {
+            "type": "object",
+            "properties": {
+              "id": { "type" : "number"},
+              "name": {"type": "string"}
+            },
+            "required": [
+              "id",
+              "name"
+              ]
+          }
+      }
+    }
+}
