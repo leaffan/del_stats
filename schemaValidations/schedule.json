@@ -1,0 +1,2264 @@
+{
+    "matches": [
+        {
+            "id": 10,
+            "start_date": "2016-08-09 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "1. Drittel",
+            "actual_time_alias": "1",
+            "last_event_time": 0
+        },
+        {
+            "id": 372,
+            "start_date": "2016-08-12 12:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "33",
+            "home": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 1200
+        },
+        {
+            "id": 375,
+            "start_date": "2016-08-12 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "5",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 376,
+            "start_date": "2016-08-12 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "2",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 379,
+            "start_date": "2016-08-13 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 4,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 2,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 380,
+            "start_date": "2016-08-13 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 382,
+            "start_date": "2016-08-15 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 2
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "1. Drittel",
+            "actual_time_alias": "1",
+            "last_event_time": 3900
+        },
+        {
+            "id": 384,
+            "start_date": "2016-08-15 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 386,
+            "start_date": "2016-08-15 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 387,
+            "start_date": "2016-08-15 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 388,
+            "start_date": "2016-08-15 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 389,
+            "start_date": "2016-08-16 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 6,
+                        "score_guest": 3
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 3,
+                        "score_guest": 3
+                    },
+                    "overtime": {
+                        "score_home": 2,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 3900
+        },
+        {
+            "id": 392,
+            "start_date": "2016-08-16 15:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 393,
+            "start_date": "2016-08-16 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 395,
+            "start_date": "2016-08-16 21:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 397,
+            "start_date": "2016-08-16 16:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "1. Drittel",
+            "actual_time_alias": "1",
+            "last_event_time": 0
+        },
+        {
+            "id": 398,
+            "start_date": "2016-08-17 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 401,
+            "start_date": "2016-08-17 18:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 5,
+                        "score_guest": 6
+                    },
+                    "first_period": {
+                        "score_home": 3,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 2
+                    },
+                    "third_period": {
+                        "score_home": 2,
+                        "score_guest": 3
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 403,
+            "start_date": "2016-08-18 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 405,
+            "start_date": "2016-08-18 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 407,
+            "start_date": "2016-08-18 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Verlängerung",
+            "actual_time_alias": "KP",
+            "last_event_time": 3760
+        },
+        {
+            "id": 408,
+            "start_date": "2016-08-19 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 409,
+            "start_date": "2016-08-19 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 3
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 2,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 2
+                    },
+                    "overtime": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 411,
+            "start_date": "2016-08-19 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 412,
+            "start_date": "2016-08-19 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 413,
+            "start_date": "2016-08-19 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 414,
+            "start_date": "2016-08-20 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 415,
+            "start_date": "2016-08-20 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 416,
+            "start_date": "2016-08-20 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 417,
+            "start_date": "2016-08-20 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 3900
+        },
+        {
+            "id": 418,
+            "start_date": "2016-08-22 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 419,
+            "start_date": "2016-08-22 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 421,
+            "start_date": "2016-08-22 19:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 3,
+                "name": "Eisbären Berlin",
+                "shortcut": "EBB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 422,
+            "start_date": "2016-08-19 14:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 424,
+            "start_date": "2016-08-19 14:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "0",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 425,
+            "start_date": "2016-08-23 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 427,
+            "start_date": "2016-08-23 20:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 445,
+            "start_date": "2016-09-12 15:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 11,
+                "name": "Kölner Haie",
+                "shortcut": "KEC"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 446,
+            "start_date": "2016-09-13 15:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 11,
+                "name": "Kölner Haie",
+                "shortcut": "KEC"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 452,
+            "start_date": "2016-09-16 16:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 11,
+                "name": "Kölner Haie",
+                "shortcut": "KEC"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 453,
+            "start_date": "2016-09-22 12:30:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 13,
+                "name": "Augsburger Panther",
+                "shortcut": "AUG"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "1. Pause",
+            "actual_time_alias": "10",
+            "last_event_time": 1200
+        },
+        {
+            "id": 454,
+            "start_date": "2016-09-25 12:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 8,
+                "name": "Grizzlys Wolfsburg",
+                "shortcut": "WOB"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 455,
+            "start_date": "2016-09-30 09:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 13,
+                "name": "Augsburger Panther",
+                "shortcut": "AUG"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 456,
+            "start_date": "2016-09-30 11:10:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 7,
+                "name": "Iserlohn Roosters",
+                "shortcut": "IEC"
+            },
+            "status": "BEFORE_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "vor dem Spiel",
+            "actual_time_alias": "0",
+            "last_event_time": 0
+        },
+        {
+            "id": 458,
+            "start_date": "2016-10-02 11:30:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 13,
+                "name": "Augsburger Panther",
+                "shortcut": "AUG"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Verlängerung",
+            "actual_time_alias": "KP",
+            "last_event_time": 3805
+        },
+        {
+            "id": 469,
+            "start_date": "2016-11-08 16:30:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 4,
+                "name": "Düsseldorfer EG",
+                "shortcut": "DEG"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": false,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende",
+            "actual_time_alias": "K",
+            "last_event_time": 3600
+        },
+        {
+            "id": 470,
+            "start_date": "2016-11-09 14:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 4,
+                "name": "Düsseldorfer EG",
+                "shortcut": "DEG"
+            },
+            "guest": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": true,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 3,
+                        "score_guest": 2
+                    },
+                    "first_period": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 1
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "overtime": {
+                        "score_home": 1,
+                        "score_guest": 0
+                    },
+                    "shootout": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Penaltyschießen",
+            "actual_time_alias": "KN",
+            "last_event_time": 3900
+        },
+        {
+            "id": 530,
+            "start_date": "2017-03-01 13:00:00",
+            "league_id": 2,
+            "league": "Test-Liga",
+            "season": "2016",
+            "round": "",
+            "home": {
+                "id": 2,
+                "name": "Adler Mannheim",
+                "shortcut": "MAN"
+            },
+            "guest": {
+                "id": 1,
+                "name": "ERC Ingolstadt",
+                "shortcut": "ING"
+            },
+            "status": "AFTER_MATCH",
+            "results": {
+                "extra_time": true,
+                "shooting": false,
+                "contumacy": false,
+                "score": {
+                    "final": {
+                        "score_home": 2,
+                        "score_guest": 1
+                    },
+                    "first_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "second_period": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    },
+                    "third_period": {
+                        "score_home": 1,
+                        "score_guest": 1
+                    },
+                    "overtime": {
+                        "score_home": 0,
+                        "score_guest": 0
+                    }
+                }
+            },
+            "actual_time_name": "Ende n. Verlängerung",
+            "actual_time_alias": "KP",
+            "last_event_time": 7115
+        }
+    ]
+}

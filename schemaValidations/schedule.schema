@@ -1,0 +1,88 @@
+{
+  "definitions": {
+    "score": {
+      "type": "object",
+      "score_home": { "type": "number" },
+      "score_guest": { "type": "number"}
+    },
+    "team": {
+      "type": "object",
+      "id": { "type": "number" },
+      "name": { "type": "string" },
+      "shortcut": { "type": "string"}
+    }
+  },
+  "type": "object",
+  "properties": {
+      "matches": {
+          "type": "array",
+          "items": {
+          "type": "object",
+          "properties": {
+              "id": {
+                  "type": "number"
+              },
+              "start_date": {
+                  "type": "string"
+              },
+              "league_id": {
+                  "type": "number"
+              },
+              "league": {
+                  "type": ["number", "string"]
+              },
+              "season": {
+                  "type": ["number", "string"]
+              },
+              "round": {
+                  "type": ["number", "string"]
+              },
+              "home": {
+                  "$ref": "#/definitions/team"
+              },
+              "guest": {
+                  "$ref": "#/definitions/team"
+              },
+              "status": {
+                  "type": "string"
+              },
+              "results": {
+                  "extra_time": {
+                      "type": "boolean"
+                  },
+                  "shooting": {
+                      "type": "boolean"
+                  },
+                  "contumacy": {
+                      "type": "boolean"
+                  },
+                  "score": {
+                      "final": {
+                          "$ref": "#/definitions/score"
+                      },
+                      "first_period": {
+                          "$ref": "#/definitions/score"
+                      },
+                      "second_period": {
+                          "$ref": "#/definitions/score"
+                      },
+                      "third_period": {
+                          "$ref": "#/definitions/score"
+                      }
+                  },
+                  "actual_time_name": {
+                      "type": "string"
+                  },
+                  "actual_time_alias": {
+                      "type": "string"
+                  },
+                  "last_event_time": {
+                      "type": "number"
+                  }
+              }
+          }
+      }
+      }
+
+  }
+}
