@@ -8,6 +8,8 @@ import argparse
 
 from collections import defaultdict
 
+from utils import player_name_corrections
+
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
@@ -70,9 +72,9 @@ if __name__ == '__main__':
     goalie_stats_src_dir = os.path.join(CONFIG['tgt_processing_dir'], str(season))
     goalie_stats_src_path = os.path.join(goalie_stats_src_dir, 'del_goalie_game_stats_aggregated.json')
     goalie_stats = json.loads(open(goalie_stats_src_path).read())
-    career_stats_src_path = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'career_stats.json')
+    career_stats_src_path = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'updated_career_stats.json')
     career_stats = json.loads(open(career_stats_src_path).read())
-    career_stats_per_player_src_dir = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'per_player')
+    career_stats_per_player_src_dir = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'per_player')
 
     tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'per_team')
     if not os.path.isdir(tgt_dir):
@@ -95,6 +97,14 @@ if __name__ == '__main__':
             # checking if player has already been processed
             if plr_id in plr_ids_processed:
                 continue
+            if plr_id in player_name_corrections:
+                corrected_player_name = player_name_corrections[plr_id]
+                if 'first_name' in corrected_player_name:
+                    plr['firstname'] = corrected_player_name['first_name']
+                if 'last_name' in corrected_player_name:
+                    plr['surname'] = corrected_player_name['last_name']
+                if 'full_name' in corrected_player_name:
+                    plr['name'] = corrected_player_name['full_name']
             # calculaing goalie statistics
             if plr['position'] == 'GK':
                 for goalie_stat in goalie_stats:
