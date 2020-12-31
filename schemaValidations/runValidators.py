@@ -28,25 +28,25 @@ with open("gameTeamStats.schema", "r") as content:
 with open("leagueTeamStats.schema", "r") as content:
     leagueTeamStatsSchema = (json.load(content))
 
-with open("shiftData.json", "r") as content:
+with open("exampleFiles/shiftData.json", "r") as content:
     shiftTimeTestString = (json.load(content))
 
-with open("gameHeader.json", "r") as content:
+with open("exampleFiles/gameHeader.json", "r") as content:
     gameHeaderTestString = (json.load(content))
 
-with open("roster.json", "r") as content:
+with open("exampleFiles/roster.json", "r") as content:
     rosterTestString = (json.load(content))
 
-with open("schedule.json", "r") as content:
+with open("exampleFiles/schedule.json", "r") as content:
     scheduleTestString = (json.load(content))
 
-with open("periodEvents.json", "r") as content:
+with open("exampleFiles/periodEvents.json", "r") as content:
     periodEventsTestString = (json.load(content))
 
-with open("gameTeamStats.json", "r") as content:
+with open("exampleFiles/gameTeamStats.json", "r") as content:
     gameTeamStatsTestString = (json.load(content))
 
-with open("leagueTeamStats.json", "r") as content:
+with open("exampleFiles/leagueTeamStats.json", "r") as content:
     leagueTeamStatsTestString = (json.load(content))
 
 validate(instance=shiftTimeTestString, schema=shiftTimeSchema)
