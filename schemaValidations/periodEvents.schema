@@ -1,18 +1,5 @@
 {
   "definitions": {
-    "balance": {
-      "type": "array",
-      "items": {
-        "type": "string",
-        "enum": [
-          "EQ",
-          "SH1",
-          "SH2",
-          "PP1",
-          "PP2"
-        ]
-      }
-    },
     "player": {
       "type": "object",
       "properties": {
@@ -39,24 +26,27 @@
         "oneOf": [
           {
             "type": "object",
-            "properties": {
-              "time": {
-                "type": "number",
-                "enum": [0, 1200, 2400, 3600, 3900]
-              },
-              "type": {
-                "type": "string"
-              }
-            }
-          },
-          {
-            "type": "object",
+            "name": "periodBoundaries",
             "properties": {
               "time": {
                 "type": "number"
               },
               "type": {
-                "type": "string"
+                "type": "string",
+                "enum": ["periodStart", "periodEnd"]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "name": "penalty",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "type": {
+                "type": "string",
+                "enum": ["penalty"]
               },
               "data": {
                 "type": "object",
@@ -110,7 +100,27 @@
                     "type": "boolean"
                   },
                   "codename": {
-                    "type": "string"
+                    "type": "string",
+                    "enum": [
+                      "BENCH",
+                      "BOARD",
+                      "CHARG",
+                      "CHE-B",
+                      "CHE-H",
+                      "CROSS",
+                      "DELAY",
+                      "ELBOW",
+                      "HI-ST",
+                      "HO-STOCK",
+                      "HOLD",
+                      "HOOK",
+                      "INTRF",
+                      "KNEE",
+                      "ROUGH",
+                      "SLASH",
+                      "TRIP",
+                      "TOO-M"
+                    ]
                   }
                 }
               }
@@ -118,7 +128,12 @@
           },
           {
             "type": "object",
+            "name": "goalkeeperChange",
             "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["goalkeeperChange"]
+              },
               "id": {
                 "type": "number"
               },
@@ -138,7 +153,12 @@
           },
           {
             "type": "object",
+            "name": "goal",
             "properties": {
+              "type": {
+                "type": "string",
+                "enum": ["goal"]
+              },
               "id": {
                 "type": "number"
               },
@@ -155,7 +175,14 @@
                 "type": "number"
               },
               "balance": {
-                "type": "string"
+                "type": "string",
+                "enum": [
+                  "EQ",
+                  "SH1",
+                  "SH2",
+                  "PP1",
+                  "PP2"
+                ]
               },
               "ea": {
                 "type": "boolean"
