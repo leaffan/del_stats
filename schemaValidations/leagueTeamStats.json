@@ -1,0 +1,53 @@
+{
+    "teamId": "2",
+    "teamName": "Adler Mannheim",
+    "eurohockeyId": 14,
+    "coach_id": 100010,
+    "coach": "Sean Simpson",
+    "arena": "SAP-Arena",
+    "games": 52,
+    "regularWins": {
+        "home": 15,
+        "away": 15
+    },
+    "regularLosses": {
+        "home": 6,
+        "away": 6
+    },
+    "overtimeWins": {
+        "home": 3,
+        "away": 2
+    },
+    "overtimeLosses": {
+        "home": 1,
+        "away": 2
+    },
+    "shootoutWins": {
+        "home": 1,
+        "away": 0
+    },
+    "shootoutLosses": {
+        "home": 0,
+        "away": 1
+    },
+    "goalScored": {
+        "home": 89,
+        "away": 94
+    },
+    "goalsAgainst": {
+        "home": 59,
+        "away": 76
+    },
+    "faceOffs": 3145,
+    "faceOffsWins": 1717,
+    "faceOffsWinsPercent": 54.59,
+    "numberOfPowerPlays": 191,
+    "powerPlayGoalsScored": 45,
+    "powerPlayEfficiency": 23.56,
+    "numberOfPenaltyKills": 200,
+    "shorthandedGoalsReceived": 34,
+    "penaltyKillingEfficiency": 83,
+    "rank": "2",
+    "last10": "9-1",
+    "bilance": "36-16"
+}

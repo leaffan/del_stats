@@ -1,0 +1,20 @@
+{
+    "shotEfficiency": 13.89,
+    "ppEfficiency": 66.67,
+    "shEfficiency": 85.71,
+    "ppCount": 3,
+    "shCount": 7,
+    "goals": 5,
+    "shotsAttempts": 50,
+    "shotsOnGoal": 36,
+    "shotsMissed": 8,
+    "shotsBlocked": 6,
+    "saves": 26,
+    "savesPercent": 86.67,
+    "ppGoals": 2,
+    "shGoals": 0,
+    "ppLosses": 1,
+    "penaltyMinutes": 14,
+    "faceOffsWon": 37,
+    "faceOffsWonPercent": 57.81
+}

@@ -1,0 +1,107 @@
+{
+    "type": "object",
+    "name": "gameTeamStats",
+    "shotEfficiency": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    },
+    "ppEfficiency": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    },
+    "shEfficiency": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    },
+    "ppCount": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shCount": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "goals": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shotsAttempts": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shotsOnGoal": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shotsMissed": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shotsBlocked": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "saves": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "savesPercent": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    },
+    "ppGoals": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "shGoals": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "ppLosses": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "penaltyMinutes": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "faceOffsWon": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100,
+        "multipleOf": 1
+    },
+    "faceOffsWonPercent": {
+        "type": "number",
+        "minimum": 0,
+        "maximum": 100
+    }
+}

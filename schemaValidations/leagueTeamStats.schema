@@ -1,0 +1,123 @@
+{
+    "definition": {
+        "homeAway": {
+            "type": "object",
+            "properties": {
+                "home" : {
+                    "type": "integer",
+                    "minimum": 0,
+                    "multipleOf": 1
+                },
+                "away": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "multipleOf": 1
+                }
+            }
+        }
+    },
+    "teamId": {
+        "type": "number"
+    },
+    "teamName": {
+        "type": "string"
+    },
+    "eurohockeyId": {
+        "type": "number"
+    },
+    "coach_id": {
+        "type": "number"
+    },
+    "coach": {
+        "type": "string"
+    },
+    "arena": {
+        "type": "string"
+    },
+    "games": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "regularWins": {
+       "$ref": "#/definitions/homeAway"
+    },
+    "regularLosses": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "overtimeWins": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "overtimeLosses": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "shootoutWins": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "shootoutLosses": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "goalScored": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "goalsAgainst": {
+        "$ref": "#/definitions/homeAway"
+    },
+    "faceOffs": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "faceOffsWins": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "faceOffsWinsPercent": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 100.0
+    },
+    "numberOfPowerPlays": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "powerPlayGoalsScored": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "powerPlayEfficiency": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 100.0
+    },
+    "numberOfPenaltyKills": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "shorthandedGoalsReceived": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+    },
+    "penaltyKillingEfficiency": {
+        "type": "number",
+        "minimum": 0.0,
+        "maximum": 100.0
+    },
+    "rank": {
+        "type": "string",
+        "enum": ["1", "2","3","4","5","6","7","8","9","10","11","12","13","14"]
+    },
+    "last10": {
+        "type": "string",
+        "pattern": "[0-9]+-[0-9]+"
+    },
+    "bilance": {
+        "type": "string",
+        "pattern": "[0-9]+-[0-9]+"
+    }
+}
