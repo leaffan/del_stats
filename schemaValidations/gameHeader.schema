@@ -7,14 +7,28 @@
     },
     "score": {
       "type": "object",
-      "score_home": { "type": "number" },
-      "score_guest": { "type": "number"}
+      "score_home": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+      },
+      "score_guest": {
+        "type": "number",
+        "minimum": 0,
+        "multipleOf": 1
+      }
     },
     "team": {
       "type": "object",
       "id": { "type": "number" },
-      "name": { "type": "string" },
-      "shortcut": { "type": "string"}
+      "name": {
+        "type": "string",
+        "pattern": "[a-zA-Z]{4}"
+      },
+      "shortcut": {
+        "type": "string",
+        "pattern": "[a-zA-Z]{3}"
+      }
     }
   },
   "type": "object",
@@ -29,7 +43,9 @@
       "type": "string"
     },
     "numberOfViewers": {
-      "type": "number"
+      "type": "number",
+      "minimum": 0,
+      "multipleOf": 1
     },
     "referees": {
       "type": "object",
@@ -61,8 +77,16 @@
       },
       "teamBilance": {
         "type": "object",
-        "homeWin": { "type": "number" },
-        "visitorWin": { "type": "number" }
+        "homeWin": {
+          "type": "number",
+          "minimum": 0,
+          "multipleOf": 1
+        },
+        "visitorWin": {
+          "type": "number",
+          "minimum": 0,
+          "multipleOf": 1
+        }
       },
       "results": {
         "type": "object",
