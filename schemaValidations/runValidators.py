@@ -49,6 +49,9 @@ with open("exampleFiles/gameTeamStats.json", "r") as content:
 with open("exampleFiles/leagueTeamStats.json", "r") as content:
     leagueTeamStatsTestString = (json.load(content))
 
+with open("exampleFiles/topGoalies.json", "r") as content:
+    topGoaliesTestString = (json.load(content))
+
 validate(instance=shiftTimeTestString, schema=shiftTimeSchema)
 validate(instance=gameHeaderTestString, schema=gameHeaderSchema)
 validate(instance=rosterTestString, schema=rosterSchema)
@@ -56,5 +59,6 @@ validate(instance=scheduleTestString, schema=scheduleSchema)
 validate(instance=periodEventsTestString, schema=periodEventsSchema)
 validate(instance=gameTeamStatsTestString, schema=gameTeamStatsSchema)
 validate(instance=leagueTeamStatsTestString, schema=leagueTeamStatsSchema)
+validate(instance=topGoaliesTestString, schema=topGoaliesSchema)
 
 print('All validations passed.')
