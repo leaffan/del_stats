@@ -1,0 +1,1212 @@
+{
+    "1": [
+        {
+            "time": 0,
+            "type": "periodStart"
+        },
+        {
+            "time": 0,
+            "type": "goalkeeperChange",
+            "data": {
+                "id": 4136,
+                "team": "home",
+                "time": 0,
+                "player": {
+                    "playerId": 12,
+                    "matchPlayerId": 39254,
+                    "jersey": 51,
+                    "name": "Timo",
+                    "surname": "Pielmeier"
+                },
+                "outgoingGoalkeeper": null
+            }
+        },
+        {
+            "time": 0,
+            "type": "goalkeeperChange",
+            "data": {
+                "id": 4141,
+                "team": "visitor",
+                "time": 0,
+                "player": {
+                    "playerId": 536,
+                    "matchPlayerId": 39248,
+                    "jersey": 25,
+                    "name": "Sebastian",
+                    "surname": "Vogl"
+                },
+                "outgoingGoalkeeper": null
+            }
+        },
+        {
+            "time": 297,
+            "type": "goal",
+            "data": {
+                "id": 2707,
+                "team": "home",
+                "currentScore": "1:0",
+                "realTime": "2017-09-08 19:37:27",
+                "scoreboardTime": 297,
+                "balance": "EQ",
+                "ea": false,
+                "en": false,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 34,
+                    "matchPlayerId": 39260,
+                    "jersey": 39,
+                    "name": "Thomas",
+                    "surname": "Greilinger"
+                },
+                "assistants": [],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 12,
+                            "matchPlayerId": 39254,
+                            "jersey": 51,
+                            "name": "Timo",
+                            "surname": "Pielmeier"
+                        },
+                        {
+                            "playerId": 34,
+                            "matchPlayerId": 39260,
+                            "jersey": 39,
+                            "name": "Thomas",
+                            "surname": "Greilinger"
+                        },
+                        {
+                            "playerId": 19,
+                            "matchPlayerId": 39258,
+                            "jersey": 61,
+                            "name": "David",
+                            "surname": "Elsner"
+                        },
+                        {
+                            "playerId": 16,
+                            "matchPlayerId": 39257,
+                            "jersey": 5,
+                            "name": "Fabio",
+                            "surname": "Wagner"
+                        },
+                        {
+                            "playerId": 13,
+                            "matchPlayerId": 39255,
+                            "jersey": 14,
+                            "name": "Dustin",
+                            "surname": "Friesen"
+                        },
+                        {
+                            "playerId": 46,
+                            "matchPlayerId": 39266,
+                            "jersey": 17,
+                            "name": "Petr",
+                            "surname": "Taticek"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 60,
+                            "matchPlayerId": 39237,
+                            "jersey": 2,
+                            "name": "Austin",
+                            "surname": "Madaisky"
+                        },
+                        {
+                            "playerId": 48,
+                            "matchPlayerId": 39230,
+                            "jersey": 12,
+                            "name": "Thomas",
+                            "surname": "Brandl"
+                        },
+                        {
+                            "playerId": 50,
+                            "matchPlayerId": 39231,
+                            "jersey": 22,
+                            "name": "Michael",
+                            "surname": "Connolly"
+                        },
+                        {
+                            "playerId": 52,
+                            "matchPlayerId": 39232,
+                            "jersey": 23,
+                            "name": "Maurice",
+                            "surname": "Edwards"
+                        },
+                        {
+                            "playerId": 62,
+                            "matchPlayerId": 39238,
+                            "jersey": 47,
+                            "name": "Adam",
+                            "surname": "Mitchell"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 529,
+            "type": "penalty",
+            "data": {
+                "id": 4675,
+                "team": "visitor",
+                "createTime": 529,
+                "disciplinedPlayer": {
+                    "playerId": 52,
+                    "matchPlayerId": 39232,
+                    "jersey": 23,
+                    "name": "Maurice",
+                    "surname": "Edwards"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 19:44:44",
+                        "scoreboardTime": 529
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 19:46:44",
+                        "scoreboardTime": 557
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOOK"
+            }
+        },
+        {
+            "time": 557,
+            "type": "goal",
+            "data": {
+                "id": 2713,
+                "team": "home",
+                "currentScore": "2:0",
+                "realTime": "2017-09-08 19:45:47",
+                "scoreboardTime": 557,
+                "balance": "PP1",
+                "ea": false,
+                "en": false,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 40,
+                    "matchPlayerId": 39263,
+                    "jersey": 2,
+                    "name": "Patrick",
+                    "surname": "McNeill"
+                },
+                "assistants": [
+                    {
+                        "playerId": 1007,
+                        "matchPlayerId": 39273,
+                        "jersey": 12,
+                        "name": "Jacob",
+                        "surname": "Berglund"
+                    },
+                    {
+                        "playerId": 46,
+                        "matchPlayerId": 39266,
+                        "jersey": 17,
+                        "name": "Petr",
+                        "surname": "Taticek"
+                    }
+                ],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 46,
+                            "matchPlayerId": 39266,
+                            "jersey": 17,
+                            "name": "Petr",
+                            "surname": "Taticek"
+                        },
+                        {
+                            "playerId": 12,
+                            "matchPlayerId": 39254,
+                            "jersey": 51,
+                            "name": "Timo",
+                            "surname": "Pielmeier"
+                        },
+                        {
+                            "playerId": 40,
+                            "matchPlayerId": 39263,
+                            "jersey": 2,
+                            "name": "Patrick",
+                            "surname": "McNeill"
+                        },
+                        {
+                            "playerId": 1007,
+                            "matchPlayerId": 39273,
+                            "jersey": 12,
+                            "name": "Jacob",
+                            "surname": "Berglund"
+                        },
+                        {
+                            "playerId": 32,
+                            "matchPlayerId": 39259,
+                            "jersey": 9,
+                            "name": "Brandon",
+                            "surname": "Buck"
+                        },
+                        {
+                            "playerId": 1008,
+                            "matchPlayerId": 39274,
+                            "jersey": 20,
+                            "name": "Gregory",
+                            "surname": "Mauldin"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 57,
+                            "matchPlayerId": 39235,
+                            "jersey": 7,
+                            "name": "Colton",
+                            "surname": "Jobke"
+                        },
+                        {
+                            "playerId": 59,
+                            "matchPlayerId": 39236,
+                            "jersey": 13,
+                            "name": "Stefan",
+                            "surname": "Loibl"
+                        },
+                        {
+                            "playerId": 56,
+                            "matchPlayerId": 39234,
+                            "jersey": 26,
+                            "name": "Michael",
+                            "surname": "Hedden"
+                        },
+                        {
+                            "playerId": 68,
+                            "matchPlayerId": 39243,
+                            "jersey": 27,
+                            "name": "Sandro",
+                            "surname": "Schönberger"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 599,
+            "type": "penalty",
+            "data": {
+                "id": 4678,
+                "team": "visitor",
+                "createTime": 599,
+                "disciplinedPlayer": {
+                    "playerId": 52,
+                    "matchPlayerId": 39232,
+                    "jersey": 23,
+                    "name": "Maurice",
+                    "surname": "Edwards"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 19:47:43",
+                        "scoreboardTime": 599
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 19:49:43",
+                        "scoreboardTime": 719
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HO-ST"
+            }
+        },
+        {
+            "time": 1116,
+            "type": "penalty",
+            "data": {
+                "id": 4686,
+                "team": "home",
+                "createTime": 1116,
+                "disciplinedPlayer": {
+                    "playerId": 1011,
+                    "matchPlayerId": 39277,
+                    "jersey": 23,
+                    "name": "Matthew",
+                    "surname": "Pelech"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:02:12",
+                        "scoreboardTime": 1116
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:04:12",
+                        "scoreboardTime": 1236
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "CROSS"
+            }
+        },
+        {
+            "time": 1200,
+            "type": "periodEnd"
+        }
+    ],
+    "2": [
+        {
+            "time": 1200,
+            "type": "periodStart"
+        },
+        {
+            "time": 1493,
+            "type": "goal",
+            "data": {
+                "id": 2720,
+                "team": "visitor",
+                "currentScore": "2:1",
+                "realTime": "2017-09-08 20:28:23",
+                "scoreboardTime": 1493,
+                "balance": "EQ",
+                "ea": false,
+                "en": false,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 56,
+                    "matchPlayerId": 39234,
+                    "jersey": 26,
+                    "name": "Michael",
+                    "surname": "Hedden"
+                },
+                "assistants": [
+                    {
+                        "playerId": 60,
+                        "matchPlayerId": 39237,
+                        "jersey": 2,
+                        "name": "Austin",
+                        "surname": "Madaisky"
+                    },
+                    {
+                        "playerId": 48,
+                        "matchPlayerId": 39230,
+                        "jersey": 12,
+                        "name": "Thomas",
+                        "surname": "Brandl"
+                    }
+                ],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 56,
+                            "matchPlayerId": 39234,
+                            "jersey": 26,
+                            "name": "Michael",
+                            "surname": "Hedden"
+                        },
+                        {
+                            "playerId": 60,
+                            "matchPlayerId": 39237,
+                            "jersey": 2,
+                            "name": "Austin",
+                            "surname": "Madaisky"
+                        },
+                        {
+                            "playerId": 48,
+                            "matchPlayerId": 39230,
+                            "jersey": 12,
+                            "name": "Thomas",
+                            "surname": "Brandl"
+                        },
+                        {
+                            "playerId": 62,
+                            "matchPlayerId": 39238,
+                            "jersey": 47,
+                            "name": "Adam",
+                            "surname": "Mitchell"
+                        },
+                        {
+                            "playerId": 1089,
+                            "matchPlayerId": 39250,
+                            "jersey": 3,
+                            "name": "Samuel",
+                            "surname": "Klassen"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 12,
+                            "matchPlayerId": 39254,
+                            "jersey": 51,
+                            "name": "Timo",
+                            "surname": "Pielmeier"
+                        },
+                        {
+                            "playerId": 40,
+                            "matchPlayerId": 39263,
+                            "jersey": 2,
+                            "name": "Patrick",
+                            "surname": "McNeill"
+                        },
+                        {
+                            "playerId": 32,
+                            "matchPlayerId": 39259,
+                            "jersey": 9,
+                            "name": "Brandon",
+                            "surname": "Buck"
+                        },
+                        {
+                            "playerId": 1007,
+                            "matchPlayerId": 39273,
+                            "jersey": 12,
+                            "name": "Jacob",
+                            "surname": "Berglund"
+                        },
+                        {
+                            "playerId": 1011,
+                            "matchPlayerId": 39277,
+                            "jersey": 23,
+                            "name": "Matthew",
+                            "surname": "Pelech"
+                        },
+                        {
+                            "playerId": 1008,
+                            "matchPlayerId": 39274,
+                            "jersey": 20,
+                            "name": "Gregory",
+                            "surname": "Mauldin"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 1520,
+            "type": "penalty",
+            "data": {
+                "id": 4695,
+                "team": "visitor",
+                "createTime": 1520,
+                "disciplinedPlayer": {
+                    "playerId": 519,
+                    "matchPlayerId": 39247,
+                    "jersey": 8,
+                    "name": "Alexander",
+                    "surname": "Dotzler"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:29:36",
+                        "scoreboardTime": 1520
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:31:36",
+                        "scoreboardTime": 1640
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOLD"
+            }
+        },
+        {
+            "time": 1696,
+            "type": "penalty",
+            "data": {
+                "id": 4699,
+                "team": "home",
+                "createTime": 1696,
+                "disciplinedPlayer": {
+                    "playerId": 497,
+                    "matchPlayerId": 39269,
+                    "jersey": 91,
+                    "name": "Laurin",
+                    "surname": "Braun"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:34:36",
+                        "scoreboardTime": 1696
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:36:36",
+                        "scoreboardTime": 1816
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "ROUGH"
+            }
+        },
+        {
+            "time": 1937,
+            "type": "penalty",
+            "data": {
+                "id": 4705,
+                "team": "visitor",
+                "createTime": 1937,
+                "disciplinedPlayer": {
+                    "playerId": 73,
+                    "matchPlayerId": 39245,
+                    "jersey": 5,
+                    "name": "Dylan",
+                    "surname": "Yeo"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:41:34",
+                        "scoreboardTime": 1937
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:43:34",
+                        "scoreboardTime": 2057
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOOK"
+            }
+        },
+        {
+            "time": 2174,
+            "type": "penalty",
+            "data": {
+                "id": 4710,
+                "team": "visitor",
+                "createTime": 2174,
+                "disciplinedPlayer": {
+                    "playerId": 48,
+                    "matchPlayerId": 39230,
+                    "jersey": 12,
+                    "name": "Thomas",
+                    "surname": "Brandl"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:49:25",
+                        "scoreboardTime": 2174
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:51:25",
+                        "scoreboardTime": 2294
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "ROUGH"
+            }
+        },
+        {
+            "time": 2174,
+            "type": "penalty",
+            "data": {
+                "id": 4709,
+                "team": "home",
+                "createTime": 2174,
+                "disciplinedPlayer": {
+                    "playerId": 39,
+                    "matchPlayerId": 39262,
+                    "jersey": 15,
+                    "name": "John",
+                    "surname": "Laliberte"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 20:48:34",
+                        "scoreboardTime": 2174
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 20:50:34",
+                        "scoreboardTime": 2294
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "ROUGH"
+            }
+        },
+        {
+            "time": 2400,
+            "type": "periodEnd"
+        }
+    ],
+    "3": [
+        {
+            "time": 2400,
+            "type": "periodStart"
+        },
+        {
+            "time": 2709,
+            "type": "goal",
+            "data": {
+                "id": 2733,
+                "team": "visitor",
+                "currentScore": "2:2",
+                "realTime": "2017-09-08 21:20:19",
+                "scoreboardTime": 2709,
+                "balance": "EQ",
+                "ea": false,
+                "en": false,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 56,
+                    "matchPlayerId": 39234,
+                    "jersey": 26,
+                    "name": "Michael",
+                    "surname": "Hedden"
+                },
+                "assistants": [
+                    {
+                        "playerId": 52,
+                        "matchPlayerId": 39232,
+                        "jersey": 23,
+                        "name": "Maurice",
+                        "surname": "Edwards"
+                    },
+                    {
+                        "playerId": 1090,
+                        "matchPlayerId": 39251,
+                        "jersey": 10,
+                        "name": "Kyle",
+                        "surname": "MacKinnon"
+                    }
+                ],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 56,
+                            "matchPlayerId": 39234,
+                            "jersey": 26,
+                            "name": "Michael",
+                            "surname": "Hedden"
+                        },
+                        {
+                            "playerId": 52,
+                            "matchPlayerId": 39232,
+                            "jersey": 23,
+                            "name": "Maurice",
+                            "surname": "Edwards"
+                        },
+                        {
+                            "playerId": 1090,
+                            "matchPlayerId": 39251,
+                            "jersey": 10,
+                            "name": "Kyle",
+                            "surname": "MacKinnon"
+                        },
+                        {
+                            "playerId": 72,
+                            "matchPlayerId": 39244,
+                            "jersey": 18,
+                            "name": "Jeremy",
+                            "surname": "Williams"
+                        },
+                        {
+                            "playerId": 63,
+                            "matchPlayerId": 39239,
+                            "jersey": 20,
+                            "name": "Alexander",
+                            "surname": "Oblinger"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 12,
+                            "matchPlayerId": 39254,
+                            "jersey": 51,
+                            "name": "Timo",
+                            "surname": "Pielmeier"
+                        },
+                        {
+                            "playerId": 236,
+                            "matchPlayerId": 39268,
+                            "jersey": 13,
+                            "name": "Michael",
+                            "surname": "Collins"
+                        },
+                        {
+                            "playerId": 1010,
+                            "matchPlayerId": 39276,
+                            "jersey": 16,
+                            "name": "Brett",
+                            "surname": "Olson"
+                        },
+                        {
+                            "playerId": 1011,
+                            "matchPlayerId": 39277,
+                            "jersey": 23,
+                            "name": "Matthew",
+                            "surname": "Pelech"
+                        },
+                        {
+                            "playerId": 606,
+                            "matchPlayerId": 39271,
+                            "jersey": 37,
+                            "name": "Sean",
+                            "surname": "Sullivan"
+                        },
+                        {
+                            "playerId": 497,
+                            "matchPlayerId": 39269,
+                            "jersey": 91,
+                            "name": "Laurin",
+                            "surname": "Braun"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 2941,
+            "type": "penalty",
+            "data": {
+                "id": 4725,
+                "team": "home",
+                "createTime": 2941,
+                "disciplinedPlayer": {
+                    "playerId": 1009,
+                    "matchPlayerId": 39275,
+                    "jersey": 22,
+                    "name": "Kael",
+                    "surname": "Mouillierat"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 21:28:34",
+                        "scoreboardTime": 2941
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 21:30:34",
+                        "scoreboardTime": 3061
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOOK"
+            }
+        },
+        {
+            "time": 3109,
+            "type": "goal",
+            "data": {
+                "id": 2738,
+                "team": "visitor",
+                "currentScore": "2:3",
+                "realTime": "2017-09-08 21:32:31",
+                "scoreboardTime": 3109,
+                "balance": "EQ",
+                "ea": false,
+                "en": false,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 1170,
+                    "matchPlayerId": 39253,
+                    "jersey": 67,
+                    "name": "Levko",
+                    "surname": "Koper"
+                },
+                "assistants": [
+                    {
+                        "playerId": 74,
+                        "matchPlayerId": 39246,
+                        "jersey": 15,
+                        "name": "Steven",
+                        "surname": "Zalewski"
+                    }
+                ],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 1170,
+                            "matchPlayerId": 39253,
+                            "jersey": 67,
+                            "name": "Levko",
+                            "surname": "Koper"
+                        },
+                        {
+                            "playerId": 74,
+                            "matchPlayerId": 39246,
+                            "jersey": 15,
+                            "name": "Steven",
+                            "surname": "Zalewski"
+                        },
+                        {
+                            "playerId": 63,
+                            "matchPlayerId": 39239,
+                            "jersey": 20,
+                            "name": "Alexander",
+                            "surname": "Oblinger"
+                        },
+                        {
+                            "playerId": 47,
+                            "matchPlayerId": 39229,
+                            "jersey": 16,
+                            "name": "James",
+                            "surname": "Bettauer"
+                        },
+                        {
+                            "playerId": 73,
+                            "matchPlayerId": 39245,
+                            "jersey": 5,
+                            "name": "Dylan",
+                            "surname": "Yeo"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 12,
+                            "matchPlayerId": 39254,
+                            "jersey": 51,
+                            "name": "Timo",
+                            "surname": "Pielmeier"
+                        },
+                        {
+                            "playerId": 40,
+                            "matchPlayerId": 39263,
+                            "jersey": 2,
+                            "name": "Patrick",
+                            "surname": "McNeill"
+                        },
+                        {
+                            "playerId": 32,
+                            "matchPlayerId": 39259,
+                            "jersey": 9,
+                            "name": "Brandon",
+                            "surname": "Buck"
+                        },
+                        {
+                            "playerId": 1007,
+                            "matchPlayerId": 39273,
+                            "jersey": 12,
+                            "name": "Jacob",
+                            "surname": "Berglund"
+                        },
+                        {
+                            "playerId": 1008,
+                            "matchPlayerId": 39274,
+                            "jersey": 20,
+                            "name": "Gregory",
+                            "surname": "Mauldin"
+                        },
+                        {
+                            "playerId": 14,
+                            "matchPlayerId": 39256,
+                            "jersey": 34,
+                            "name": "Benedikt",
+                            "surname": "Kohl"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 3141,
+            "type": "penalty",
+            "data": {
+                "id": 4733,
+                "team": "visitor",
+                "createTime": 3141,
+                "disciplinedPlayer": {
+                    "playerId": 73,
+                    "matchPlayerId": 39245,
+                    "jersey": 5,
+                    "name": "Dylan",
+                    "surname": "Yeo"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 21:34:14",
+                        "scoreboardTime": 3141
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 21:36:14",
+                        "scoreboardTime": 3261
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOLD"
+            }
+        },
+        {
+            "time": 3378,
+            "type": "penalty",
+            "data": {
+                "id": 4734,
+                "team": "visitor",
+                "createTime": 3378,
+                "disciplinedPlayer": {
+                    "playerId": 48,
+                    "matchPlayerId": 39230,
+                    "jersey": 12,
+                    "name": "Thomas",
+                    "surname": "Brandl"
+                },
+                "replacedPlayer": null,
+                "fouledPlayer": null,
+                "time": {
+                    "from": {
+                        "realTime": "2017-09-08 21:39:12",
+                        "scoreboardTime": 3378
+                    },
+                    "to": {
+                        "realTime": "2017-09-08 21:41:12",
+                        "scoreboardTime": 3498
+                    }
+                },
+                "duration": 120,
+                "shooting": false,
+                "disciplined_functionary": false,
+                "disciplined_bm": false,
+                "codename": "HOOK"
+            }
+        },
+        {
+            "time": 3506,
+            "type": "goalkeeperChange",
+            "data": {
+                "id": 4176,
+                "team": "home",
+                "time": 3506,
+                "player": null,
+                "outgoingGoalkeeper": {
+                    "playerId": 12,
+                    "matchPlayerId": 39254,
+                    "jersey": 51,
+                    "name": "Timo",
+                    "surname": "Pielmeier"
+                }
+            }
+        },
+        {
+            "time": 3511,
+            "type": "goal",
+            "data": {
+                "id": 2740,
+                "team": "visitor",
+                "currentScore": "2:4",
+                "realTime": "2017-09-08 21:43:12",
+                "scoreboardTime": 3511,
+                "balance": "EQ",
+                "ea": false,
+                "en": true,
+                "shooting": false,
+                "technical": false,
+                "scorer": {
+                    "playerId": 59,
+                    "matchPlayerId": 39236,
+                    "jersey": 13,
+                    "name": "Stefan",
+                    "surname": "Loibl"
+                },
+                "assistants": [],
+                "attendants": {
+                    "positive": [
+                        {
+                            "playerId": 536,
+                            "matchPlayerId": 39248,
+                            "jersey": 25,
+                            "name": "Sebastian",
+                            "surname": "Vogl"
+                        },
+                        {
+                            "playerId": 59,
+                            "matchPlayerId": 39236,
+                            "jersey": 13,
+                            "name": "Stefan",
+                            "surname": "Loibl"
+                        },
+                        {
+                            "playerId": 48,
+                            "matchPlayerId": 39230,
+                            "jersey": 12,
+                            "name": "Thomas",
+                            "surname": "Brandl"
+                        },
+                        {
+                            "playerId": 68,
+                            "matchPlayerId": 39243,
+                            "jersey": 27,
+                            "name": "Sandro",
+                            "surname": "Schönberger"
+                        },
+                        {
+                            "playerId": 57,
+                            "matchPlayerId": 39235,
+                            "jersey": 7,
+                            "name": "Colton",
+                            "surname": "Jobke"
+                        },
+                        {
+                            "playerId": 52,
+                            "matchPlayerId": 39232,
+                            "jersey": 23,
+                            "name": "Maurice",
+                            "surname": "Edwards"
+                        }
+                    ],
+                    "negative": [
+                        {
+                            "playerId": 39,
+                            "matchPlayerId": 39262,
+                            "jersey": 15,
+                            "name": "John",
+                            "surname": "Laliberte"
+                        },
+                        {
+                            "playerId": 1010,
+                            "matchPlayerId": 39276,
+                            "jersey": 16,
+                            "name": "Brett",
+                            "surname": "Olson"
+                        },
+                        {
+                            "playerId": 606,
+                            "matchPlayerId": 39271,
+                            "jersey": 37,
+                            "name": "Sean",
+                            "surname": "Sullivan"
+                        },
+                        {
+                            "playerId": 34,
+                            "matchPlayerId": 39260,
+                            "jersey": 39,
+                            "name": "Thomas",
+                            "surname": "Greilinger"
+                        },
+                        {
+                            "playerId": 508,
+                            "matchPlayerId": 39270,
+                            "jersey": 40,
+                            "name": "Darin",
+                            "surname": "Olver"
+                        },
+                        {
+                            "playerId": 1009,
+                            "matchPlayerId": 39275,
+                            "jersey": 22,
+                            "name": "Kael",
+                            "surname": "Mouillierat"
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            "time": 3511,
+            "type": "goalkeeperChange",
+            "data": {
+                "id": 4177,
+                "team": "home",
+                "time": 3511,
+                "player": {
+                    "playerId": 12,
+                    "matchPlayerId": 39254,
+                    "jersey": 51,
+                    "name": "Timo",
+                    "surname": "Pielmeier"
+                },
+                "outgoingGoalkeeper": null
+            }
+        },
+        {
+            "time": 3547,
+            "type": "goalkeeperChange",
+            "data": {
+                "id": 4178,
+                "team": "home",
+                "time": 3547,
+                "player": null,
+                "outgoingGoalkeeper": {
+                    "playerId": 12,
+                    "matchPlayerId": 39254,
+                    "jersey": 51,
+                    "name": "Timo",
+                    "surname": "Pielmeier"
+                }
+            }
+        },
+        {
+            "time": 3600,
+            "type": "periodEnd"
+        }
+    ],
+    "overtime": [],
+    "shootout": []
+}

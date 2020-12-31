@@ -1,0 +1,217 @@
+{
+  "definitions": {
+    "balance": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "EQ",
+          "SH1",
+          "SH2",
+          "PP1",
+          "PP2"
+        ]
+      }
+    },
+    "player": {
+      "type": "object",
+      "properties": {
+        "playerId": {
+          "type": "number"
+        },
+        "matchPlayerId": {
+          "type": "number"
+        },
+        "jersey": {
+          "type": "number"
+        },
+        "name": {
+          "type": "string"
+        },
+        "surname": {
+          "type": "string"
+        }
+      }
+    },
+    "periodEvents": {
+      "type": "array",
+      "items": {
+        "oneOf": [
+          {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number",
+                "enum": [0, 1200, 2400, 3600, 3900]
+              },
+              "type": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "time": {
+                "type": "number"
+              },
+              "type": {
+                "type": "string"
+              },
+              "data": {
+                "type": "object",
+                "properties": {
+                  "id": {
+                    "type": "number"
+                  },
+                  "team": {
+                    "type": "string"
+                  },
+                  "createTime": {
+                    "type": "number"
+                  },
+                  "disciplinedPlayer": {
+                    "$ref": "#/definitions/player"
+                  },
+                  "replacedPlayer": {
+                    "$ref": "#/definitions/player"
+                  },
+                  "fouledPlayer": {
+                    "$ref": "#/definitions/player"
+                  },
+                  "time": {
+                    "from": {
+                      "realTime": {
+                        "type": "string"
+                      },
+                      "scoreboardTime": {
+                        "type": "number"
+                      }
+                    },
+                    "to": {
+                      "realTime": {
+                        "type": "string"
+                      },
+                      "scoreboardTime": {
+                        "type": "number"
+                      }
+                    }
+                  },
+                  "duration": {
+                    "type": "number"
+                  },
+                  "shooting": {
+                    "type": "boolean"
+                  },
+                  "disciplined_functionary": {
+                    "type": "boolean"
+                  },
+                  "disciplined_bm": {
+                    "type": "boolean"
+                  },
+                  "codename": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "team": {
+                "type": "string"
+              },
+              "time": {
+                "type": "number"
+              },
+              "player": {
+                "$ref": "#/definitions/player"
+              },
+              "outgoingGoalkeeper": {
+                "$ref": "#/definitions/player"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "properties": {
+              "id": {
+                "type": "number"
+              },
+              "team": {
+                "type": "string"
+              },
+              "currentScore": {
+                "type": "string"
+              },
+              "realTime": {
+                "type": "string"
+              },
+              "scoreboardTime": {
+                "type": "number"
+              },
+              "balance": {
+                "type": "string"
+              },
+              "ea": {
+                "type": "boolean"
+              },
+              "en": {
+                "type": "boolean"
+              },
+              "shooting": {
+                "type": "boolean"
+              },
+              "technical": {
+                "type": "boolean"
+              },
+              "scorer": {
+                "$ref": "#/definitions/player"
+              },
+              "assistants": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/definitions/player"
+                }
+              },
+              "attendants": {
+                "positive": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/player"
+                  }
+                },
+                "negative": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/definitions/player"
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "type": "object",
+  "1": {
+    "$ref": "#/definitions/periodEvents"
+  },
+  "2": {
+     "$ref": "#/definitions/periodEvents"
+  },
+  "3": {
+     "$ref": "#/definitions/periodEvents"
+  },
+  "overtime": {
+     "$ref": "#/definitions/periodEvents"
+  },
+  "shootout": {
+     "$ref": "#/definitions/periodEvents"
+  }
+}

@@ -19,6 +19,9 @@ with open("roster.schema", "r") as content:
 with open("schedule.schema", "r") as content:
     scheduleSchema = (json.load(content))
 
+with open("periodEvents.schema") as content:
+    periodEventsSchema = (json.load(content))
+
 with open("shiftData.json", "r") as content:
     shiftTimeTestString = (json.load(content))
 
@@ -31,8 +34,13 @@ with open("roster.json", "r") as content:
 with open("schedule.json", "r") as content:
     scheduleTestString = (json.load(content))
 
+with open("periodEvents.json", "r") as content:
+    periodEventsTestString = (json.load(content))
+
 validate(instance=shiftTimeTestString, schema=shiftTimeSchema)
 validate(instance=gameHeaderTestString, schema=gameHeaderSchema)
 validate(instance=rosterTestString, schema=rosterSchema)
 validate(instance=scheduleTestString, schema=scheduleSchema)
+validate(instance=periodEventsTestString, schema=periodEventsSchema)
+
 print('All validations passed.')
