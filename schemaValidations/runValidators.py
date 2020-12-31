@@ -10,7 +10,7 @@ with open("gamePerTeam.schema", "r") as content:
 with open("topGoalies.schema", "r") as content:
     topGoaliesSchema = (json.load(content))
 
-with open("gameHeader.schema", "r") as content:
+with open("gameInfo.schema", "r") as content:
     gameHeaderSchema = (json.load(content))
 
 with open("roster.schema", "r") as content:
@@ -31,7 +31,7 @@ with open("leagueTeamStats.schema", "r") as content:
 with open("exampleFiles/shiftData.json", "r") as content:
     shiftTimeTestString = (json.load(content))
 
-with open("exampleFiles/gameHeader.json", "r") as content:
+with open("exampleFiles/gameInfo.json", "r") as content:
     gameHeaderTestString = (json.load(content))
 
 with open("exampleFiles/roster.json", "r") as content:
