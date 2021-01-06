@@ -19,8 +19,7 @@ LEAGUE_WIDE_STATS_TGT = 'del_league_stats.json'
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
-    parser = argparse.ArgumentParser(
-        description='Calculate league-wide statistics.')
+    parser = argparse.ArgumentParser(description='Calculate league-wide statistics.')
     parser.add_argument(
         '--initial', dest='initial', required=False,
         action='store_true', help='Re-create list of league-wide statistics')
@@ -42,14 +41,12 @@ if __name__ == '__main__':
 
     shots = json.loads(open(shot_src_path).read())
 
-    all_shots_on_goal = list(filter(
-        lambda d: d['target_type'] == 'on_goal', shots))
-    all_goals = list(filter(
-        lambda d: d['scored'] is True, all_shots_on_goal))
-    shots_on_goal_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', all_shots_on_goal))
-    goals_5v5 = list(filter(
-        lambda d: d['plr_situation'] == '5v5', all_goals))
+    # retaining only shots from regular season or playoff games
+    shots = list(filter(lambda d: d['season_type'] in ['RS', 'PO'], shots))
+    all_shots_on_goal = list(filter(lambda d: d['target_type'] == 'on_goal', shots))
+    all_goals = list(filter(lambda d: d['scored'] is True, all_shots_on_goal))
+    shots_on_goal_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', all_shots_on_goal))
+    goals_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', all_goals))
 
     all_shots_on_goal = len(all_shots_on_goal)
     all_goals = len(all_goals)
