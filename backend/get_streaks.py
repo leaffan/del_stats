@@ -284,6 +284,10 @@ if __name__ == '__main__':
     players = json.loads(open(player_src_path).read())
     players = {int(k): v for (k, v) in players.items()}
 
+    # filtering games and player stats to only contain non-pre-season data
+    games = list(filter(lambda g: g['season_type'] != 'MSC', games))
+    player_stats = list(filter(lambda g: g['season_type'] != 'MSC', player_stats))
+
     teams = set()
     player_teams = set()
     # collecting teams
