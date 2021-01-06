@@ -83,7 +83,7 @@ name_corrections = {
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
     # following are individual corrections valid only for the accompanying
     # game date
-    'Don Jackson': 'Steve Walker//2020-01-19',
+    'Don Jackson': 'Steve Walker//2020-02-02',
     # following are individual corrections valid only for the specified
     # combination of game id and team abbreviation as a workaround for
     # entirely missing coach information
