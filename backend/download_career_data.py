@@ -39,8 +39,7 @@ if __name__ == '__main__':
     team_url_component = CONFIG['url_components']['team_profile']
     teams = CONFIG['teams']
 
-    all_player_src_path = os.path.join(
-        CONFIG['tgt_processing_dir'], ALL_PLAYERS_SRC)
+    all_player_src_path = os.path.join(CONFIG['tgt_processing_dir'], ALL_PLAYERS_SRC)
     all_players = json.loads(open(all_player_src_path).read())
 
     # setting up target directories and paths
@@ -58,12 +57,9 @@ if __name__ == '__main__':
     processed_plr_ids = set()
 
     existing_career_datasets = set()
-    for fname in os.listdir(per_player_tgt_dir):
-        try:
-            existing_dataset_plr_id = int(fname.replace(".json", ""))
-            existing_career_datasets.add(existing_dataset_plr_id)
-        except Exception:
-            print("Unable to get player id from file name %s" % fname)
+    pre_season_career_data = json.loads(open(tgt_path).read())
+    for item in pre_season_career_data:
+        existing_career_datasets.add(item['player_id'])
 
     for team_id in list(teams.keys())[:]:
         # setting up team page url
