@@ -19,7 +19,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     $scope.fromRoundSelect = '1';
     // default filter values
     $scope.nameFilter = ''; // empty name filter
-    $scope.teamFilter = ''; // empty name filter
+    $scope.teamSelect = ''; // empty name filter
 
     // for some reason the previous way to load all players doesn't work with 2020 data
     // some problem with asynchronous loading I don't clearly understand
@@ -60,6 +60,19 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         $scope.team_location_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.location}), {});
         // ...for playoff participation indicator
         $scope.team_playoff_lookup = $scope.teams.reduce((o, key) => Object.assign(o, {[key.abbr]: key.po[$scope.season]}), {});
+        // ...divisions
+        $scope.divisions = {};
+        $scope.teams.forEach(team => {
+            for (const [season_type, division_name] of Object.entries(team['division'][$scope.season])) {
+                if (!$scope.divisions[season_type]) {
+                    $scope.divisions[season_type] = {};
+                }
+                if (!$scope.divisions[season_type][division_name]) {
+                    $scope.divisions[season_type][division_name] = [];
+                }
+                $scope.divisions[season_type][division_name].push(team.abbr)
+            };
+        });
     });
 
     // starting to watch filter selection lists
@@ -927,5 +940,26 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
         }
     }
+
+    $scope.teamFilter = function (a) {
+        if ($scope.teamSelect) {
+            if (['Nord', 'Süd', 'A', 'B'].includes($scope.teamSelect)) {
+                if ($scope.divisions[$scope.seasonTypeSelect][$scope.teamSelect] && $scope.divisions[$scope.seasonTypeSelect][$scope.teamSelect].includes(a.team)) {
+                    return true;
+                } else {
+                    return false;
+                }
+            } else {
+                if (a.team == $scope.teamSelect) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else {
+            return true;
+        }
+    };
+
 
 });
