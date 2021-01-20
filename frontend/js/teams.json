@@ -37,7 +37,7 @@
         "division":
         {
             "2020": {
-                "MSC": "A",
+                "MSC": "B",
                 "RS": "Nord"
             }
         },
@@ -62,7 +62,7 @@
         "division":
         {
             "2020": {
-                "MSC": "B",
+                "MSC": "A",
                 "RS": "Nord"
             }
         },
@@ -283,7 +283,7 @@
         "division":
         {
             "2020": {
-                "MSC": "A",
+                "MSC": "B",
                 "RS": "Süd"
             }
         },
