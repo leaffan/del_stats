@@ -79,8 +79,11 @@ if __name__ == '__main__':
                     if param == 'time_on_ice':
                         new_career_stats_line['min'] = "%d:%02d" % (ssl['toi'] // 60, ssl['toi'] % 60)
                         continue
-                    career['career'][season_type][GOALIE_MAPPING[param]] += ssl[param]
-                    career['career']['all'][GOALIE_MAPPING[param]] += ssl[param]
+                    try:
+                        career['career'][season_type][GOALIE_MAPPING[param]] += ssl[param]
+                        career['career']['all'][GOALIE_MAPPING[param]] += ssl[param]
+                    except Exception:
+                        print("+ Unable to retrieve '%s' from season stat line" % param)
             upd_career['seasons'].append(new_career_stats_line)
 
         plr_career = upd_career['career']
