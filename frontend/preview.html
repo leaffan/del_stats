@@ -812,8 +812,8 @@
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gp : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gaa.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].so : '' }}</td>
-                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(goalie['career'].so / 10) * 10 - goalie['career'].so == 1 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? goalie['career'].so : '' }}</td>
+                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 50) * 50 - goalie['career'].gp < 5 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -859,10 +859,10 @@
                 <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
                 <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].pts / 100) * 100 - skater['career'].pts == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
-                <td class="w-12 {{ Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].pts / 50) * 50 - skater['career'].pts <= 5 && skater['career'].pts != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
+                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -908,10 +908,10 @@
                 <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
                 <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].pts / 100) * 100 - skater['career'].pts == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
-                <td class="w-12 {{ Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].pts / 50) * 50 - skater['career'].pts <= 5 && skater['career'].pts != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
+                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -965,8 +965,8 @@
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gp : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gaa.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
-                <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].so : '' }}</td>
-                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(goalie['career'].so / 10) * 10 - goalie['career'].so == 1 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? goalie['career'].so : '' }}</td>
+                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp < 10 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 50) * 50 - goalie['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -1012,10 +1012,10 @@
                 <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
                 <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].pts / 100) * 100 - skater['career'].pts == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
-                <td class="w-12 {{ Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].pts / 50) * 50 - skater['career'].pts <= 5 && skater['career'].pts != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
+                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -1061,10 +1061,10 @@
                 <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
                 <td data-ng-if="previous_stats_road" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].g / 100) * 100 - skater['career'].g == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].a / 100) * 100 - skater['career'].a == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
-                <td class="w-07 {{ Math.ceil(skater['career'].pts / 100) * 100 - skater['career'].pts == 1 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
-                <td class="w-12 {{ Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp  < 10 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
+                <td class="w-07 {{ Math.ceil(skater['career'].pts / 50) * 50 - skater['career'].pts <= 5 && skater['career'].pts != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
+                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
