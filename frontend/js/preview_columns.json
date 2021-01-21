@@ -371,6 +371,20 @@
         {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen während der Streak", "expl_en": "Assists during Streak"},
         {"data_key": "points", "col_header": "P", "expl_de": "Punkte während der Streak", "expl_en": "Points during Streak"}
     ],
+    "slumps_goals": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "length", "col_header": "Spiele", "expl_de": null, "expl_en": null},
+        {"data_key": "from_date", "col_header": "Beginn", "expl_de": null, "expl_en": null},
+        {"data_key": "to_date", "col_header": "Ende", "expl_de": null, "expl_en": null}
+    ], 
+    "slumps_points": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "length", "col_header": "Spiele", "expl_de": null, "expl_en": null},
+        {"data_key": "from_date", "col_header": "Beginn", "expl_de": null, "expl_en": null},
+        {"data_key": "to_date", "col_header": "Ende", "expl_de": null, "expl_en": null}
+    ], 
     "slot_shots_goals": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},

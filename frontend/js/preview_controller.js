@@ -193,6 +193,8 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         'streaks_goals': ['-length', '-goals'],
         'streaks_assists': ['-length', '-assists'],
         'streaks_points': ['-length', '-points'],
+        'slumps_goals': ['-length', '-to_date'],
+        'slumps_points': ['-length', '-to_date'],
         'slot_shots_goals': ['-sl_og']
     }
 
@@ -227,6 +229,11 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     // loading player scoring streaks from external json file
     $http.get('data/'+ $scope.season + '/del_streaks_loose.json').then(function (res) {
         $scope.streaks = res.data;
+    });
+
+    // loading player scoring streaks from external json file
+    $http.get('data/'+ $scope.season + '/del_slumps_loose.json').then(function (res) {
+        $scope.slumps = res.data;
     });
 
     // loading coaches from external json file

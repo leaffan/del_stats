@@ -102,6 +102,7 @@
                         <li><a href data-ng-click="scrollTo('plr_toi_forwards')">Eiszeit Stürmer</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('plr_toi_forwards_playoffs')">Playoffs</a></span></li>
                         <li><a href data-ng-click="scrollTo('plr_toi_defensemen')">Eiszeit Verteidiger</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('plr_toi_defensemen_playoffs')">Playoffs</a></span></li>
                         <li><a href data-ng-click="scrollTo('plr_scoring_streaks')">Scoring Streaks</a></li>
+                        <li><a href data-ng-click="scrollTo('plr_scoring_slumps')">Scoring Slumps</a></li>
                         <li><a href data-ng-click="scrollTo('plr_shots_on_goal')">Torschüsse</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('plr_shots_on_goal_playoffs')">Playoffs</a></span></li>
                         <li><a href data-ng-click="scrollTo('plr_faceoffs')">Faceoffs</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('plr_faceoffs_playoffs')">Playoffs</a></span></li>
                         <li><a href data-ng-click="scrollTo('plr_blocks')">Geblockte Schüsse</a><span data-ng-if="is_playoff_game"> | <a href data-ng-click="scrollTo('plr_blocks_playoffs')">Playoffs</a></span></li>
@@ -3877,7 +3878,7 @@
     <div id="plr_scoring_streaks" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/plr_scoring_streaks">Scoring Streaks:</a></h4>
         <p>Aktuell andauernde Folgen von mindestens drei Spielen mit Toren, Vorlagen oder Punkten eines Spielers. Spiele, in denen der Spieler nicht im Kader steht, unterbrechen die andauernde Folge <b>nicht</b>.</p>
-        <p>(Unter Berücksichtigung <b>aller</b> bisher in der Saison absolvierten Spiele.)</p>
+        <p>(Unter Berücksichtigung <b>aller</b> bisher in der Saison absolvierten Spiele. Abgeschnitten nach maximal 20 Spielern.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
@@ -3967,6 +3968,67 @@
                 <td class="w-12 text-right">{{ streak.goals }}</td>
                 <td class="w-12 text-right">{{ streak.assists }}</td>
                 <td class="w-12 text-right"><b>{{ streak.points }}</b></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <div id="plr_scoring_slumps" class="alert alert-info main-bg mb-2 shadow-sm">
+        <h4><a href="#!/preview/2020/{{ current_game.game_id }}/plr_scoring_slumps">Scoring Slumps:</a></h4>
+        <p>Aktuell andauernde Folgen von mindestens fünf Spielen ohne Tore oder Punkte eines Spielers. Spiele, in denen der Spieler nicht im Kader steht, unterbrechen die andauernde Folge <b>nicht</b>.</p>
+        <p>(Unter Berücksichtigung <b>aller</b> bisher in der Saison absolvierten Spiele. Abgeschnitten nach maximal 25 Spielern.)</p>
+        <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
+    </div>
+
+    <table id="slumps_points" class="table table-responsive-md table-bordered table-hover table-sm shadow">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" colspan="9" class="text-center"><b>Punkte</b></th>
+            </tr>
+            <tr>
+                <th scope="col" class="text-center"><span class="rank">#</span></th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['slumps_points']">
+                    <abbr class="rank" title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['slumps_points'][0].slice(1) == col.data_key && sorting_config['slumps_points'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['slumps_points'][0].slice(0) == col.date.key && !sorting_config['slumps_points'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'points'} | filter: {current: true} | orderBy:sorting_config['slumps_points'] | limitTo: 25">
+                <td class="w-03 text-right">{{ $index + 1 }}</td>
+                <td class="w-20"><a href="#!/player_profile/{{season}}/{{slump.team}}/{{slump.player_id}}">{{ slump.full_name }}</a></td>
+                <td class="w-05"><a href="#!/team_profile/{{season}}/{{slump.team}}">{{ slump.team }}</a></td>
+                <td class="w-12 text-right">{{ slump.length }}</td>
+                <td class="w-12 text-right">{{ slump.from_date }}</td>
+                <td class="w-12 text-right">{{ slump.to_date }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="slumps_goals" class="table table-responsive-md table-bordered table-hover table-sm shadow">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" colspan="9" class="text-center"><b>Tore</b></th>
+            </tr>
+            <tr>
+                <th scope="col" class="text-center"><span class="rank">#</span></th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols['slumps_goals']">
+                    <abbr class="rank" title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                    <span class="rank" data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                    <span data-ng-show="sorting_config['slumps_goals'][0].slice(1) == col.data_key && sorting_config['slumps_goals'][0].startsWith('-')" class="fa fa-caret-down"></span>
+                    <span data-ng-show="sorting_config['slumps_goals'][0].slice(0) == col.date.key && !sorting_config['slumps_goals'][0].startsWith('-')" class="fa fa-caret-up"></span>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'goals'} | filter: {current: true} | orderBy:sorting_config['slumps_goals'] | limitTo: 25">
+                <td class="w-03 text-right">{{ $index + 1 }}</td>
+                <td class="w-20"><a href="#!/player_profile/{{season}}/{{slump.team}}/{{slump.player_id}}">{{ slump.full_name }}</a></td>
+                <td class="w-05"><a href="#!/team_profile/{{season}}/{{slump.team}}">{{ slump.team }}</a></td>
+                <td class="w-12 text-right">{{ slump.length }}</td>
+                <td class="w-12 text-right">{{ slump.from_date }}</td>
+                <td class="w-12 text-right">{{ slump.to_date }}</td>
             </tr>
         </tbody>
     </table>
