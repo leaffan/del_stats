@@ -115,6 +115,16 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         $scope.loose_streaks = res.data;
     });
 
+    // loading strictly defined player scoring slumps from external json file
+    $http.get('data/' + $scope.season + '/del_slumps_strict.json').then(function (res) {
+        $scope.strict_slumps = res.data;
+        $scope.slumps = $scope.strict_slumps;
+    });
+    // loading loosely defined player scoring streaks from external json file
+    $http.get('data/' + $scope.season + '/del_slumps_loose.json').then(function (res) {
+        $scope.loose_slumps = res.data;
+    });
+
 	$scope.readCSV = function() {
 		// http get request to read CSV file content
         $http.get('data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
@@ -729,6 +739,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     $scope.tableSortCriteria = {
         'player_information': 'last_name',
         'streaks': 'length',
+        'slumps': 'length',
         'basic_stats': 'points',
         'basic_stats_5v5': 'points_5v5',
         'on_goal_shot_zones': 'shots_on_goal',

@@ -47,6 +47,7 @@
                     <option data-ng-option value="shot_zones">Schusszonen-Statistiken (alle Schüsse)</option>
                     <option data-ng-option value="game_score_stats">Game-Score-Statistiken</option>
                     <option data-ng-option value="streaks">Scoringstreaks</option>
+                    <option data-ng-option value="slumps">Scoringslumps</option>
                     <option data-ng-option value="additional_stats">Weitere Statistiken</option>
                     <option data-ng-option value="shootout_stats">Statistiken im Penaltyschießen</option>
                     <option data-ng-option value="goal_categories">Torkategorien</option>
@@ -68,27 +69,27 @@
                     <option data-ng-option value="player_information">Spielerinformationen</option>
                 </select>
             </div>
-            <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks'">
+            <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
                 <select class="form-control" data-ng-model="$parent.scoringStreakTypeFilter">
                     <option data-ng-option value="goals">Tore</option>
-                    <option data-ng-option value="assists">Vorlagen</option>
+                    <option data-ng-option data-ng-if="tableSelect == 'streaks'" value="assists">Vorlagen</option>
                     <option data-ng-option value="points">Punkte</option>
                 </select>
             </div>
-            <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'streaks'">
+            <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps'">
                 <div class="input-group-prepend w-10">
                     <span class="input-group-text w-100 justify-content-center"><i class="fa fa-search"></i></span>
                 </div>
                 <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.nameFilter" />
             </div>
-            <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks'">
+            <div class="input-group col-3 pl-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
                 <div class="input-group-prepend w-20">
                     <span class="input-group-text w-100 justify-content-center"><i class="fa fa-search"></i></span>
                 </div>
                 <input type="text" class="form-control" placeholder="Spieler filtern" data-ng-model="$parent.streaknameFilter" />
             </div>
         </div>
-        <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks'">
+        <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps'">
             <div class="col-3">
                 <select class="form-control" data-ng-model="$parent.seasonTypeSelect">
                     <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
@@ -122,7 +123,7 @@
                 </select>
             </div>
         </div>
-        <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks'">
+        <div class="form-row mb-1" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps'">
             <div class="col-6">
                 <select class="form-control" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
@@ -203,32 +204,32 @@
             </div>
         </div>
 
-        <div class="border-0" data-ng-if="tableSelect != 'streaks'">
+        <div class="border-0" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps'">
             <label for="u23Check">
                 <input type="checkbox" id="u23Check" data-ng-model="$parent.u23Check" value="">
                 <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                 Nur U23-Spieler anzeigen
             </label>
         </div>
-        <div class="border-0" data-ng-if="tableSelect == 'streaks'">
+        <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
             <label for="longestStreak">
                 <input type="checkbox" id="longestStreak" data-ng-model="$parent.showOnlyLongestStreak" value="">
                 <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                Nur längste Streaks anzeigen
+                Nur längste Serien anzeigen
             </label>
         </div>
-        <div class="border-0" data-ng-if="tableSelect == 'streaks'">
+        <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
             <label for="currentStreak">
                 <input type="checkbox" id="currentStreak" data-ng-model="$parent.showOnlyCurrentStreak" value="">
                 <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                Nur aktuelle Streaks anzeigen
+                Nur aktuelle Serien anzeigen
             </label>
         </div>
-        <div class="border-0" data-ng-if="tableSelect == 'streaks'">
+        <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
             <label for="strictStreak">
                 <input type="checkbox" id="strictStreak" data-ng-model="$parent.showStrictStreaks" data-ng-change="changeStreakType()" value="">
                 <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
-                Spiele nicht im Kader unterbrechen eine andauernde Streak
+                Spiele nicht im Kader unterbrechen eine andauernde Serie
             </label>
         </div>
 
@@ -1335,6 +1336,33 @@
                 <td class="w-10 text-right">{{ streak.goals }}</td>
                 <td class="w-10 text-right">{{ streak.assists }}</td>
                 <td class="w-10 text-right">{{ streak.points }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="slumps" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'slumps'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="slump in slumps | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:longestStreakFilter | filter:currentStreakFilter | filter:{type: scoringStreakTypeFilter} | filter:{full_name: streaknameFilter} | filter:teamFilter | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter}">
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
+                <td class="w-31"><a href="#!/player_profile/{{season}}/{{slump.team}}/{{slump.player_id}}">{{ slump.full_name }}</a></td>
+                <td class="w-05"><a href="#!/team_profile/{{season}}/{{ slump.team }}">{{ slump.team }}</a></td>
+                <td class="w-10">{{ slump.type == 'points' ? 'Punkte' : slump.type == 'goals' ? 'Tore' : 'Vorlagen' }}</td>
+                <td class="w-10 text-right">{{ slump.length }}</td>
+                <td class="w-20 text-right">{{ slump.from_date }}</td>
+                <td class="w-20 text-right">{{ slump.to_date }}</td>
             </tr>
         </tbody>
     </table>
