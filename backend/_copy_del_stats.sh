@@ -11,6 +11,8 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats.csv
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_team_game_stats.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_loose.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_strict.json /home/doms/leaffan.net/subs/www/del/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_loose.json /home/doms/leaffan.net/subs/www/del/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_strict.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_shots.csv /home/doms/leaffan.net/subs/www/del/data/$season
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del/data/$season/per_player/
 
@@ -32,6 +34,8 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats.csv
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_team_game_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_loose.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_strict.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_loose.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_strict.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del_extended/data/$season/per_player/
 
 # copying career stats to extended site location
