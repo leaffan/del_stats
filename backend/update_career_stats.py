@@ -29,6 +29,7 @@ if __name__ == '__main__':
     skater_season_stats_src_path = os.path.join(
         CONFIG['tgt_processing_dir'], str(SEASON), 'del_player_game_stats_aggregated.json')
 
+    # creating target directory for per player career stats data (if necessary)
     per_player_career_stats_tgt_dir = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'per_player')
     if not os.path.isdir(per_player_career_stats_tgt_dir):
         os.makedirs(per_player_career_stats_tgt_dir)
@@ -67,8 +68,11 @@ if __name__ == '__main__':
             if career['position'] != 'GK':
                 for param in SKATER_MAPPING:
                     new_career_stats_line[SKATER_MAPPING[param]] = ssl[param]
-                    career['career'][season_type][SKATER_MAPPING[param]] += ssl[param]
-                    career['career']['all'][SKATER_MAPPING[param]] += ssl[param]
+                    try:
+                        career['career'][season_type][SKATER_MAPPING[param]] += ssl[param]
+                        career['career']['all'][SKATER_MAPPING[param]] += ssl[param]
+                    except Exception:
+                        print("+ Unable to retrieve '%s' from season stat line" % param)
             else:
                 for param in GOALIE_MAPPING:
                     new_career_stats_line[GOALIE_MAPPING[param]] = ssl[param]
