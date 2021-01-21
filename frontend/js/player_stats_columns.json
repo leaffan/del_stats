@@ -370,5 +370,13 @@
         {"data_key": "goals", "col_header": "G", "expl_de": "Tore während der Streak", "expl_en": "Goals during Streak"},
         {"data_key": "assists", "col_header": "A", "expl_de": "Vorlagen während der Streak", "expl_en": "Assists during Streak"},
         {"data_key": "points", "col_header": "P", "expl_de": "Punkte während der Streak", "expl_en": "Points during Streak"}
+    ],
+    "slumps": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "type", "col_header": "Kategorie", "expl_de": null, "expl_en": null},
+        {"data_key": "length", "col_header": "Spiele", "expl_de": null, "expl_en": null},
+        {"data_key": "from_date", "col_header": "Beginn", "expl_de": null, "expl_en": null},
+        {"data_key": "to_date", "col_header": "Ende", "expl_de": null, "expl_en": null}
     ]
 }
