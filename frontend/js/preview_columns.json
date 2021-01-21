@@ -185,7 +185,8 @@
         {"data_key": "opp_goals", "col_header": "GA", "expl_de": "Gegentore", "expl_en": "Goals Against"},
         {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
         {"data_key": "opp_shots_on_goal_per_game", "col_header": "SOG-/GP", "expl_de": "Zugelassene Torschüsse pro Spiel", "expl_en": "Shots on Goal Against per Game"},
-        {"data_key": "opp_shots_blocked", "col_header": "BS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Blocked Shots"}
+        {"data_key": "opp_shots_blocked", "col_header": "BS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Blocked Shots"},
+        {"data_key": "opp_shots_blocked_per_game", "col_header": "BS/GP", "expl_de": "Aktiv geblockte Schüsse pro Spiel", "expl_en": "Blocked Shots per Game"}
     ],
     "shots_for_zones_standings": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
