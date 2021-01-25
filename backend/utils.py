@@ -81,6 +81,7 @@ name_corrections = {
     'Pierre Beaulie': 'Pierre Beaulieu',
     'Pierre Beaulien': 'Pierre Beaulieu',
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
+    'Boris Blank': 'Mihails Svarinskis|2021-01-21',
     # following are individual corrections valid only for the accompanying
     # game date
     'Don Jackson': 'Steve Walker//2020-02-02',
