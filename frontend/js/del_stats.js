@@ -250,7 +250,7 @@ app.factory('svc', function() {
                 'shots_on_goal_5v5', 'goals_5v5', 'opp_shots_on_goal_5v5', 'opp_goals_5v5',
                 'capacity', 'sl_g', 'tied', 'leading', 'trailing', 'time_played',
                 'shots_5v5', 'opp_shots_5v5', 'shots_unblocked_5v5', 'opp_shots_unblocked_5v5',
-                'so_rounds', 'so_a', 'so_g', 'opp_so_a', 'opp_so_g'
+                'so_rounds', 'so_a', 'so_g', 'opp_so_a', 'opp_so_g', 'hit_post', 'opp_hit_post'
             ];    
         },
         player_stats_to_aggregate: function() {
@@ -278,7 +278,7 @@ app.factory('svc', function() {
                 'left_side_faceoffs', 'left_side_faceoffs_won', 'left_side_faceoffs_lost',
                 'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
                 'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
-                'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g'            ];
+                'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g', 'hit_post'            ];
         },
         player_float_stats_to_aggregate: function() {
             return ['game_score'];
