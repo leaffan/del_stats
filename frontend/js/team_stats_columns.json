@@ -41,7 +41,7 @@
         {"data_key": "opp_goals_3", "col_header": "GA3", "expl_de": "Gegentore im dritten Drittel", "expl_en": "Goals Against in 3rd Period"},
         {"data_key": "goals_diff_3", "col_header": "GDiff3", "expl_de": "Tordifferenz im dritten Drittel", "expl_en": "Goal Differential in 3rd Period"}
     ],
-    "shot_stats": [
+    "shot_save_rates": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "shots_on_goal", "col_header": "SOG+", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
@@ -52,7 +52,7 @@
         {"data_key": "save_pctg", "col_header": "SV%", "expl_de": "Fangquote", "expl_en": "Save Percentage"},
         {"data_key": "pdo", "col_header": "PDO", "expl_de": "PDO-Wert (Schuss- und Fangquote kombiniert)", "expl_en": "PDO"}
     ],
-    "shot_stats_5v5": [
+    "shot_save_rates_5v5": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "shots_on_goal_5v5", "col_header": "SOG+ 5v5", "expl_de": "Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal in 5-on-5"},
@@ -89,16 +89,26 @@
         {"data_key": "opp_shots_on_goal_5v5", "col_header": "SGA 5v5", "expl_de": "Gegnerische Torschüsse im 5-gegen-5", "expl_en": "Shots on Goal Against in 5-on-5"},
         {"data_key": "shots_on_goal_5v5_pctg", "col_header": "SGF% 5v5", "expl_de": "Eigener Anteil an Torschüssen im 5-gegen-5", "expl_en": "Shots on Goal For Percentage in 5-on-5"}
     ],
+    "shot_stats": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "shots", "col_header": "SH", "expl_de": "Schüsse", "expl_en": "Shots"},
+        {"data_key": "shots_on_goal", "col_header": "SOG+", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
+        {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse am Tor vorbei", "expl_en": "Missed Shots"},
+        {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots"},
+        {"data_key": "hit_post", "col_header": "PT/CB", "expl_de": "Schüsse an Pfosten oder Latte", "expl_en": "Shots Hitting Post or Crossbar"},
+        {"data_key": "opp_shots", "col_header": "SHA", "expl_de": "Gegnerische Schüsse", "expl_en": "Shots Against"},
+        {"data_key": "opp_shots_on_goal", "col_header": "SOGA", "expl_de": "Gegnerische Torschüsse", "expl_en": "Shots On Goal Against"},
+        {"data_key": "opp_shots_missed", "col_header": "MSA", "expl_de": "Gegnerische Schüsse am Tor vorbei", "expl_en": "Missed Shots Against"},
+        {"data_key": "opp_shots_blocked", "col_header": "BSA", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Blocked Shots Against"},
+        {"data_key": "opp_hit_post", "col_header": "PT/CBA", "expl_de": "Gegnerische Schüsse an Pfosten oder Latte", "expl_en": "Shots Hitting Post or Crossbar Against"}
+    ],
     "additional_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
-        {"data_key": "points", "col_header": "Pts.", "expl_de": "Punkte", "expl_en": "Points"},
-        {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
         {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
         {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
-        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies", "expl_en": "Faceoff Percentage"},
-        {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse am Tor vorbei", "expl_en": "Missed Shots"},
-        {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Vom Gegner geblockte Schüsse", "expl_en": "Blocked Shots"}
+        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil der gewonnenen Bullies", "expl_en": "Faceoff Percentage"}
     ],
     "attendance_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
