@@ -84,7 +84,7 @@ OUT_FIELDS = [
     'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
     'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
     'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g',
-    'hit_post'
+    'hit_post', 'empty_net_goals'
 ]
 
 # default empty line
@@ -254,11 +254,9 @@ def get_single_game_player_data(game, shots):
         CONFIG['base_data_dir'], 'game_player_stats',
         str(game['season']), str(game_type), "%d_%d.json" % (game_id, road_id))
     game_events_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'game_events',
-        str(game['season']), str(game_type), "%d.json" % game['game_id'])
+        CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
     faceoffs_src_path = os.path.join(
-        CONFIG['base_data_dir'], 'faceoffs',
-        str(game['season']), str(game_type), "%d.json" % game['game_id'])
+        CONFIG['base_data_dir'], 'faceoffs', str(game['season']), str(game_type), "%d.json" % game['game_id'])
 
     home_stats = json.loads(open(home_stats_src_path).read())
     road_stats = json.loads(open(road_stats_src_path).read())
@@ -269,19 +267,16 @@ def get_single_game_player_data(game, shots):
         faceoffs = list()
 
     for home_stat_line in home_stats:
-        player_game = retrieve_single_player_game_stats(
-            home_stat_line, game, 'home')
+        player_game = retrieve_single_player_game_stats(home_stat_line, game, 'home')
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
     for road_stat_line in road_stats:
-        player_game = retrieve_single_player_game_stats(
-            road_stat_line, game, 'away')
+        player_game = retrieve_single_player_game_stats(road_stat_line, game, 'away')
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
-    assistants, scorers_5v5 = retrieve_assistants_from_event_data(
-        period_events)
+    assistants, scorers_5v5, empty_net_goals = retrieve_assistants_from_event_data(period_events)
     penalties = retrieve_penalties_from_event_data(period_events)
 
     for gsl in game_stat_lines:
@@ -322,9 +317,8 @@ def get_single_game_player_data(game, shots):
         whilst_winning_goals = list(filter(lambda d: d['scored'] and d['score_diff'] > 0, per_player_game_shots))
         gsl['w_winning_g'] = len(whilst_winning_goals)
 
-        gsl['goals_5v5_from_events'] = 0
-        if gsl['player_id'] in scorers_5v5:
-            gsl['goals_5v5_from_events'] = scorers_5v5[gsl['player_id']]
+        gsl['goals_5v5_from_events'] = scorers_5v5.get(gsl['player_id'], 0)
+        gsl['empty_net_goals'] = empty_net_goals.get(gsl['player_id'], 0)
         if gsl['player_id'] in assistants:
             single_assist_dict = assistants[gsl['player_id']]
             gsl['primary_assists'] = single_assist_dict.get('A1', 0)
@@ -396,6 +390,9 @@ def get_single_game_player_data(game, shots):
 
         if 'shootout' in period_events and period_events['shootout']:
             gsl = retrieve_shootout_stats(gsl, period_events['shootout'])
+
+        if 'so_gw_goals' not in gsl:
+            gsl['so_gw_goals'] = 0
 
     return game_stat_lines
 
@@ -733,16 +730,24 @@ def retrieve_single_player_game_stats(data_dict, game, key):
 
 def retrieve_assistants_from_event_data(period_events):
     """
-    Retrieves primary and secondary assists from game event data.
+    Retrieves primary/secondary assists, 5v5-goals and empty net goals from game event data.
     """
     goals_5v5_dict = dict()
     assists_dict = dict()
+    empty_net_goals_dict = dict()
 
     for period in period_events:
         events = period_events[period]
         for event in events:
             if event['type'] != 'goal':
                 continue
+            # fixing bug where penalty shot goals are designated with a balance attribute *PP0*
+            # e.g. game id 1053 and game id 1866
+            if event['data']['balance'] == 'PP0':
+                print(
+                    "\t+ Adjusting balance type from 'PP0' to 'PS' for goal " +
+                    "scored by %s %s" % (event['data']['scorer']['name'], event['data']['scorer']['surname']))
+                event['data']['balance'] = 'PS'
             assist_cnt = 0
             # retrieving goals in 5v5
             scorer_plr_id = event['data']['scorer']['playerId']
@@ -755,6 +760,11 @@ def retrieve_assistants_from_event_data(period_events):
                     if scorer_plr_id not in goals_5v5_dict:
                         goals_5v5_dict[scorer_plr_id] = 0
                     goals_5v5_dict[scorer_plr_id] += 1
+            # retrieving empty net goals
+            if event['data']['en']:
+                if scorer_plr_id not in empty_net_goals_dict:
+                    empty_net_goals_dict[scorer_plr_id] = 0
+                empty_net_goals_dict[scorer_plr_id] += 1
             # retrieving assists
             for assistant in event['data']['assistants']:
                 assist_cnt += 1
@@ -776,7 +786,7 @@ def retrieve_assistants_from_event_data(period_events):
                         assists_dict[assist_plr_id]["5v5A"] += 1
                         assists_dict[assist_plr_id]["5v5A%d" % assist_cnt] += 1
 
-    return assists_dict, goals_5v5_dict
+    return assists_dict, goals_5v5_dict, empty_net_goals_dict
 
 
 def retrieve_penalties_from_event_data(period_events):
@@ -816,13 +826,10 @@ def retrieve_penalties_from_event_data(period_events):
             penalties_dict[plr_id]['durations'][pim] += 1
 
             if infraction not in REVERSE_PENALTY_CATEGORIES:
-                print(
-                    "Previously unknown infraction '%s' " % infraction +
-                    "discovered. Added to 'other' category.")
+                print("\t+ Previously unknown infraction '%s' discovered. Added to 'other' category." % infraction)
                 penalties_dict[plr_id]['categories']['other'] += 1
             else:
-                penalties_dict[plr_id]['categories'][
-                    REVERSE_PENALTY_CATEGORIES[infraction]] += 1
+                penalties_dict[plr_id]['categories'][REVERSE_PENALTY_CATEGORIES[infraction]] += 1
 
             if event['data']['shooting']:
                 penalties_dict[plr_id]['penalty_shots'] += 1
