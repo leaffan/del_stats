@@ -256,8 +256,11 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         # retrieving raw stats for team and opposing team
         for category, raw_category in RAW_STATS_MAPPING:
             game_stat_line[category] = raw_stats[key].get(raw_category, None)
-            game_stat_line["opp_%s" % category] = raw_stats[opp_key].get(
-                raw_category, None)
+            game_stat_line["opp_%s" % category] = raw_stats[opp_key].get(raw_category, None)
+
+        # checking number of power play goals retrieved from team stats with those registered in event data
+        game_stat_line = check_pp_goals(game, key, opp_key, game_stat_line)
+
         # calculating shooting percentages
         if game_stat_line['shots_on_goal']:
             game_stat_line['shot_pctg'] = round(
@@ -425,6 +428,45 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         game_stat_lines.append(game_stat_line)
 
     return game_stat_lines
+
+
+def check_pp_goals(game, key, opp_key, gsl):
+    """
+    Checks power play goals retrieved from team stats by looking at power play goals in event data.
+    """
+    # loading events data
+    game_type = get_game_type_from_season_type(game)
+    game_events_src_path = os.path.join(
+        CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
+    events_data = json.loads(open(game_events_src_path).read())
+
+    pp_goals_from_events = {'home': 0, 'visitor': 0}
+
+    for period in events_data:
+        for event in events_data[period]:
+            if event['type'] != 'goal':
+                continue
+            # fixing penalty shots erroneously identified as power play goals
+            if event['data']['balance'] == 'PP0':
+                event['data']['balance'] = 'PS'
+            if event['data']['balance'].startswith('PP'):
+                pp_goals_from_events[event['data']['team']] += 1
+
+    pp_goals_discrepancy = False
+
+    pp_goals_from_events['road'] = pp_goals_from_events['visitor']
+
+    if pp_goals_from_events[key] != gsl['pp_goals']:
+        pp_goals_discrepancy = True
+        gsl['pp_goals'] = pp_goals_from_events[key]
+    if pp_goals_from_events[opp_key] != gsl['opp_pp_goals']:
+        pp_goals_discrepancy = True
+        gsl['opp_pp_goals'] = pp_goals_from_events[opp_key]
+
+    if pp_goals_discrepancy:
+        print("\t+ Found and corrected different number of pp goals retrieved from team stats and game event data")
+
+    return gsl
 
 
 def group_shot_data_by_game_team(shots):
@@ -653,7 +695,7 @@ def get_shootout_stats(game, key, opp_key):
     """
     Gets shootout statistics for specified game and teams.
     """
-    # loding events data
+    # loading events data
     game_type = get_game_type_from_season_type(game)
     game_events_src_path = os.path.join(
         CONFIG['base_data_dir'], 'game_events', str(game['season']), str(game_type), "%d.json" % game['game_id'])
