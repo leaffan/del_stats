@@ -335,7 +335,7 @@
                 <td class="w-08 text-right">{{ stat.faceoffs_won }}</td>
                 <td class="w-08 text-right">{{ stat.faceoffs_lost }}</td>
                 <td class="w-08 text-right">{{ stat.faceoff_pctg.toFixed(2  ) }} %</td>
-                <td class="w-08 text-right">{{ stat.pim }}</td>
+                <td class="w-08 text-right">{{ stat.pim_from_events }}</td>
                 <td class="w-08 text-right">{{ stat.blocked_shots }}</td>
             </tr>
             <tr>
@@ -349,7 +349,7 @@
                 <td class="text-right"><b>{{ totalFaceoffsWon = svc.getFilteredTotal(filtered_stats, 'faceoffs_won', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'faceoffs_lost', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ totalFaceoffs != 0 ? (totalFaceoffsWon / totalFaceoffs * 100.).toFixed(2) : (0).toFixed(2)}} %</b></td>
-                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pim', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'pim_from_events', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'blocked_shots', player_stats) }}</b></td>
             </tr>
         </tbody>
@@ -705,17 +705,18 @@
             <tr class="{{stat.home_road === 'home'? 'table-info' : 'table-warning'}}" data-ng-repeat="stat in filtered_stats = (player_stats | orderBy:sortCriterion:statsSortDescending | filter:dayFilter | filter:fromRoundFilter | filter:toRoundFilter | filter:weekdayFilter | filter: {home_road: homeRoadFilter} | filter: {opp_team: oppFilter} | filter: {season_type: seasonTypeFilter})">
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
-                <td class="w-15 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="w-07 text-right">{{ stat.goals }}</td>
-                <td class="w-07 text-right">{{ stat.gw_goals }}</td>
-                <td class="w-07 text-right">{{ stat.first_goals }}</td>
-                <td class="w-07 text-right">{{ stat.go_ahead_g }}</td>
-                <td class="w-07 text-right">{{ stat.tying_g }}</td>
-                <td class="w-07 text-right">{{ stat.clutch_g }}</td>
-                <td class="w-07 text-right">{{ stat.blowout_g }}</td>
-                <td class="w-07 text-right">{{ stat.w_winning_g }}</td>
-                <td class="w-07 text-right">{{ stat.w_losing_g }}</td>
-                <td class="w-07 text-right">{{ stat.so_gw_goals }}</td>
+                <td class="w-19 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
+                <td class="w-06 text-right">{{ stat.goals }}</td>
+                <td class="w-06 text-right">{{ stat.gw_goals }}</td>
+                <td class="w-06 text-right">{{ stat.first_goals }}</td>
+                <td class="w-06 text-right">{{ stat.go_ahead_g }}</td>
+                <td class="w-06 text-right">{{ stat.tying_g }}</td>
+                <td class="w-06 text-right">{{ stat.clutch_g }}</td>
+                <td class="w-06 text-right">{{ stat.blowout_g }}</td>
+                <td class="w-06 text-right">{{ stat.w_winning_g }}</td>
+                <td class="w-06 text-right">{{ stat.w_losing_g }}</td>
+                <td class="w-06 text-right">{{ stat.empty_net_goals }}</td>
+                <td class="w-06 text-right">{{ stat.so_gw_goals }}</td>
             </tr>
             <tr>
                 <td></td>
@@ -730,6 +731,7 @@
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'blowout_g', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_winning_g', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'w_losing_g', player_stats) }}</b></td>
+                <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'empty_net_goals', player_stats) }}</b></td>
                 <td class="text-right"><b>{{ svc.getFilteredTotal(filtered_stats, 'so_gw_goals', player_stats) }}</b></td>
             </tr>
         </tbody>

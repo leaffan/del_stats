@@ -365,7 +365,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:teamFilter | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
-                <td class="w-25">
+                <td class="w-19">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
@@ -383,6 +383,7 @@
                 <td class="w-06 text-right">{{ stat.blowout_g }}</td>
                 <td class="w-06 text-right">{{ stat.w_winning_g }}</td>
                 <td class="w-06 text-right">{{ stat.w_losing_g }}</td>
+                <td class="w-06 text-right">{{ stat.empty_net_goals }}</td>
                 <td class="w-06 text-right">{{ stat.so_gw_goals }}</td>
             </tr>
         </tbody>
