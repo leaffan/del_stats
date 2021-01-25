@@ -40,6 +40,7 @@
         {"data_key": "blowout_g", "col_header": "BOG", "expl_de": "Tore bei vier und mehr Toren Unterschied", "expl_en": "Blowout Goals"},
         {"data_key": "w_winning_g", "col_header": "GWW", "expl_de": "Tore bei Vorsprung", "expl_en": "Goals Whilst Winning"},
         {"data_key": "w_losing_g", "col_header": "GWL", "expl_de": "Tore bei Rückstand", "expl_en": "Goals Whilst Losing"},
+        {"data_key": "empty_net_goals", "col_header": "ENG", "expl_de": "Treffer ins leere Tor", "expl_en": "Empty Net Goals"},
         {"data_key": "so_gw_goals", "col_header": "SOWG", "expl_de": "Siegtor im Penaltyschießen", "expl_en": "Shootout Winning Goals"}
     ],
     "additional_game_by_game": [
@@ -53,7 +54,7 @@
         {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
         {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
         {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"},
-        {"data_key": "pim", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
+        {"data_key": "pim_from_events", "col_header": "PIM", "expl_de": "Strafminuten", "expl_en": "Penalties in Minutes"},
         {"data_key": "blocked_shots", "col_header": "BLKS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked Actively"}
     ],
     "shootout_stats": [
