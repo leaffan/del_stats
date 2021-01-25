@@ -43,12 +43,12 @@
                     <option data-ng-option value="per_60_stats">Eiszeitbezogene Statistiken</option>
                     <option data-ng-option value="power_play_stats">Überzahl-Statistiken</option>
                     <option data-ng-option value="penalty_stats">Strafzeit-Statistiken</option>
+                    <option data-ng-option value="shot_stats">Schussstatistiken</option>
                     <option data-ng-option value="on_goal_shot_zones">Schusszonen-Statistiken (Torschüsse)</option>
                     <option data-ng-option value="shot_zones">Schusszonen-Statistiken (alle Schüsse)</option>
                     <option data-ng-option value="game_score_stats">Game-Score-Statistiken</option>
                     <option data-ng-option value="streaks">Scoringstreaks</option>
                     <option data-ng-option value="slumps">Scoringslumps</option>
-                    <option data-ng-option value="additional_stats">Weitere Statistiken</option>
                     <option data-ng-option value="shootout_stats">Statistiken im Penaltyschießen</option>
                     <option data-ng-option value="goal_categories">Torkategorien</option>
                     <option data-ng-option value="on_ice_stats">On-Ice-Statistiken</option>
@@ -56,6 +56,7 @@
                     <option data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussstatistiken (5-gegen-5)</option>
                     <option data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussstatistiken (alle Situationen)</option>
                     <option data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussstatistiken (5-gegen-5)</option>
+                    <option data-ng-option value="faceoff_stats">Bullystatistiken (allgemein)</option>
                     <option data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
                     <option data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
                     <option data-ng-option value="goalie_stats">Torhüterstatistiken</option>
@@ -275,7 +276,7 @@
         </tbody>
     </table>
 
-    <table id="additional_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'additional_stats'">
+    <table id="shot_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'shot_stats'">
         <thead class="thead-light">
             <tr>
                 <th scope="col" class="text-center">Rang</th>
@@ -292,7 +293,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:teamFilter | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
-                <td class="w-19">
+                <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
@@ -300,15 +301,49 @@
                     <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
-                <td class="w-08 text-right">{{ stat.shots }}</td>
-                <td class="w-08 text-right">{{ stat.shots_on_goal }}</td>
-                <td class="w-08 text-right">{{ stat.shots_missed }}</td>
-                <td class="w-08 text-right">{{ stat.shots_blocked }}</td>
-                <td class="w-08 text-right">{{ stat.faceoffs }}</td>
-                <td class="w-08 text-right">{{ stat.faceoffs_won }}</td>
-                <td class="w-08 text-right">{{ stat.faceoffs_lost }}</td>
-                <td class="w-08 text-right">{{ stat.faceoff_pctg.toFixed(2) }} %</td>
-                <td class="w-08 text-right">{{ stat.blocked_shots }}</td>
+                <td class="w-10 text-right">{{ stat.shots }}</td>
+                <td class="w-10 text-right">{{ stat.shots_on_goal }}</td>
+                <td class="w-10 text-right">{{ stat.shots_missed }}</td>
+                <td class="w-10 text-right">{{ stat.shots_blocked }}</td>
+                <td class="w-10 text-right">{{ stat.hit_post }}</td>
+                <td class="w-10 text-right">{{ stat.goals }}</td>
+                <td class="w-10 text-right">{{ stat.blocked_shots }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="faceoff_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'faceoff_stats'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:teamFilter | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:u23Filter | filter:greaterThanFilter('games_played', 0)">
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
+                <td class="w-21">
+                    <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
+                </td>
+                <td class="w-05">
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
+                </td>
+                <td class="w-10 text-right">{{ stat.games_played }}</td>
+                <td class="w-10 text-right">{{ stat.faceoffs }}</td>
+                <td class="w-10 text-right">{{ stat.faceoffs_per_game.toFixed(1) }}</td>
+                <td class="w-10 text-right">{{ stat.faceoffs_per_60.toFixed(1) }}</td>
+                <td class="w-10 text-right">{{ stat.faceoffs_won }}</td>
+                <td class="w-10 text-right">{{ stat.faceoffs_lost }}</td>
+                <td class="w-10 text-right">{{ stat.faceoff_pctg.toFixed(2) }} %</td>
             </tr>
         </tbody>
     </table>

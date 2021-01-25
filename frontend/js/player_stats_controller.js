@@ -621,6 +621,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
                 element['shots_per_60'] = element['shots'] / (element['time_on_ice'] / 60) * 60;
                 element['shots_on_goal_per_60'] = element['shots_on_goal'] / (element['time_on_ice'] / 60) * 60;
                 element['game_score_per_60'] = element['game_score'] / (element['time_on_ice'] / 60) * 60;
+                element['faceoffs_per_60'] = element['faceoffs'] / (element['time_on_ice'] / 60) * 60;
             } else {
                 element['goals_per_60'] = parseFloat((0).toFixed(2));
                 element['assists_per_60'] = parseFloat((0).toFixed(2));
@@ -631,6 +632,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
                 element['shots_per_60'] = parseFloat((0).toFixed(2));
                 element['shots_on_goal_per_60'] = parseFloat((0).toFixed(2));
                 element['game_score_per_60'] = 0.;
+                element['faceoffs_per_60'] = 0.;
             }
             // calculating goals, assists, points, shots, shots on goal, pim per game
             if (element['games_played']) {
@@ -749,13 +751,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'time_on_ice_shift_stats': 'time_on_ice',
         'power_play_stats': 'time_on_ice_pp',
         'penalty_stats': 'pim_from_events',
-        'additional_stats': 'faceoff_pctg',
+        'shot_stats': 'shots_on_goal',
         'shootout_stats': 'so_goals',
         'on_ice_stats': 'plus_minus',
         'on_ice_shot_stats': 'on_ice_sh_pctg',
         'on_ice_shot_on_goal_stats': 'on_ice_sog_pctg',
         'on_ice_shot_stats_5v5': 'on_ice_sh_pctg_5v5',
         'on_ice_shot_on_goal_stats_5v5': 'on_ice_sog_pctg_5v5',
+        'faceoff_stats': 'faceoff_pctg',
         'faceoff_by_zone_stats': 'ozone_faceoff_pctg',
         'faceoff_by_side_stats': 'left_side_faceoff_pctg',
         'per_60_stats': 'points_per_60',
