@@ -214,12 +214,30 @@ if __name__ == '__main__':
 
         home_score_diff, road_score_diff = 0, 0
 
-        for shot in match_data['match']['shots'][:]:
+        orig_shots = match_data['match']['shots']
+        # sorting original shots to get score differences right all the time
+        orig_shots = sorted(orig_shots, key=lambda s: s['time'])
+        # preparing set of shots to avoid registering duplicate ones later on
+        shots_set = set()
 
+        for shot in orig_shots[:]:
             shot['game_id'] = game['game_id']
             # TODO: activate when schedule game id is available again
             # shot['schedule_game_id'] = game['schedule_game_id']
             shot['season_type'] = game['season_type']
+
+            # checking if shot with same characteristics has already been registered
+            # cases in 2020/21: game_id 1865, time: 106 & game_id 1870, time_ids: 1175/2153
+            shot_pseudo_hash = (
+                shot['game_id'], shot['time'], shot['player_id'], shot['coordinate_x'], shot['coordinate_y'])
+            if shot_pseudo_hash in shots_set:
+                print(
+                    "\t+ Shot with same characteristics (%s at %02d:%02d from (%d, %d)) already registered, " % (
+                        shot['last_name'], shot['time'] // 60, shot['time'] % 60,
+                        shot['coordinate_x'], shot['coordinate_y']
+                    ) + "therefore skipping it")
+                continue
+            shots_set.add(shot_pseudo_hash)
 
             # converting arbitrary coordinates to actual coordinates in meters
             x = rd.X_TO_M * shot['coordinate_x']
@@ -290,17 +308,15 @@ if __name__ == '__main__':
 
             # retrieving skater situation at time of shot
             if not shot['time']:
-                print(
-                    "Shot at zero time encountered in " +
-                    "game %s" % get_game_info(game))
+                print("\t+ Shot registered at 00:00, therefore unable to retrieve skater situation for this one")
             else:
                 try:
                     skr_situation = times[shot['time']]
                 except KeyError:
                     if shot['time'] > max(times.keys()):
                         print(
-                            "+ Shot at %d after the actual " % shot['time'] +
-                            "end of game (%d) registered" % max(times.keys()))
+                            "\t+ Shot at %02d:%02d after the actual " % (shot['time'] // 60, shot['time'] % 60) +
+                            "end of game (%02d:%02d) registered" % (max(times.keys()) // 60, max(times.keys()) % 60))
                         shot['time'] = max(times.keys())
 
                 if (
