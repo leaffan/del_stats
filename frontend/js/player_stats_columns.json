@@ -110,17 +110,15 @@
         {"data_key": "blue_line_pctg", "col_header": "Point%", "expl_de": "Anteil der Schüsse von der blauen Linie", "expl_en": "Shots from Point Percentage"},
         {"data_key": "neutral_zone_shots", "col_header": "Neu. Zone", "expl_de": "Schüsse aus der neutralen Zone", "expl_en": "Shots from Neutral Zone"}
     ],
-    "additional_stats": [
+    "shot_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "shots", "col_header": "S", "expl_de": "Schüsse (auf das Tor, daneben, geblockt)", "expl_en": "Shots"},
         {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
         {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse neben das Tor", "expl_en": "Missed Shots"},
         {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Schüsse, geblockt durch den Gegner", "expl_en": "Blocked Shots"},
-        {"data_key": "faceoffs", "col_header": "FAC", "expl_de": "Gespielte Bullies", "expl_en": "Faceoffs"},
-        {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
-        {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
-        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"},
+        {"data_key": "hit_post", "col_header": "PT/CB", "expl_de": "Schüsse an Pfosten oder Latte", "expl_en": "Shots Hitting Post or Crossbar"},
+        {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
         {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"}
     ],
     "game_score_stats": [
@@ -213,6 +211,17 @@
         {"data_key": "on_ice_shooting_pctg_5v5", "col_header": "OISH%5v5", "expl_de": "Schussquote des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Shooting Percentage with Player on Ice"},
         {"data_key": "on_ice_save_pctg_5v5", "col_header": "OISV%5v5", "expl_de": "Fangquote des Teams mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 Save Percentage with Player on Ice"},
         {"data_key": "on_ice_pdo_5v5", "col_header": "OIPDO5v5", "expl_de": "PDO-Wert mit Spieler auf dem Eis im 5-gegen-5", "expl_en": "5v5 PDO with Player on Ice"}
+    ],
+    "faceoff_stats": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "faceoffs", "col_header": "FAC", "expl_de": "Gespielte Bullies", "expl_en": "Faceoffs"},
+        {"data_key": "faceoffs_per_game", "col_header": "FAC/G", "expl_de": "Gespielte Bullies pro Spiel", "expl_en": "Faceoffs per Game"},
+        {"data_key": "faceoffs_per_60", "col_header": "FAC/60", "expl_de": "Gespielte Bullies pro 60 Minuten Eiszeit", "expl_en": "Faceoffs per 60 Minutes"},
+        {"data_key": "faceoffs_won", "col_header": "FAC+", "expl_de": "Gewonnene Bullies", "expl_en": "Faceoffs Won"},
+        {"data_key": "faceoffs_lost", "col_header": "FAC-", "expl_de": "Verlorene Bullies", "expl_en": "Faceoffs Lost"},
+        {"data_key": "faceoff_pctg", "col_header": "FAC%", "expl_de": "Anteil gewonnener Bullies", "expl_en": "Faceoff Percentage"}
     ],
     "faceoff_by_zone_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
