@@ -84,6 +84,7 @@ OUT_FIELDS = [
     'right_side_faceoffs', 'right_side_faceoffs_won', 'right_side_faceoffs_lost',
     'so_games_played', 'so_attempts', 'so_goals', 'so_gw_goals',
     'go_ahead_g', 'tying_g', 'clutch_g', 'blowout_g', 'w_winning_g', 'w_losing_g',
+    'hit_post'
 ]
 
 # default empty line
@@ -287,19 +288,17 @@ def get_single_game_player_data(game, shots):
         # retrieving on-ice statistics
         gsl = retrieve_on_ice_stats(gsl, shots)
         # retrieving actual shots
-        per_player_game_shots = list(filter(
-            lambda d: d['player_id'] == gsl['player_id'], shots))
-        shots_5v5 = list(filter(
-            lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
+        per_player_game_shots = list(filter(lambda d: d['player_id'] == gsl['player_id'], shots))
+        # retrieving shots hitting posts or crossbars (available since 2020)
+        shots_post_crossbar = list(filter(lambda d: 'hit_post' in d and d['hit_post'], per_player_game_shots))
+        gsl['hit_post'] = len(shots_post_crossbar)
+        shots_5v5 = list(filter(lambda d: d['plr_situation'] == '5v5', per_player_game_shots))
         gsl['shots_5v5'] = len(shots_5v5)
-        shots_missed_5v5 = list(filter(
-            lambda d: d['target_type'] == 'missed', shots_5v5))
+        shots_missed_5v5 = list(filter(lambda d: d['target_type'] == 'missed', shots_5v5))
         gsl['shots_missed_5v5'] = len(shots_missed_5v5)
-        shots_on_goal_5v5 = list(filter(
-            lambda d: d['target_type'] == 'on_goal', shots_5v5))
+        shots_on_goal_5v5 = list(filter(lambda d: d['target_type'] == 'on_goal', shots_5v5))
         gsl['shots_on_goal_5v5'] = len(shots_on_goal_5v5)
-        goals_5v5 = list(filter(
-            lambda d: d['scored'] is True, shots_on_goal_5v5))
+        goals_5v5 = list(filter(lambda d: d['scored'] is True, shots_on_goal_5v5))
         gsl['goals_5v5'] = len(goals_5v5)
 
         # retrieving different types of goals

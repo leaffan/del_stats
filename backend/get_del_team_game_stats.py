@@ -364,7 +364,7 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             'shots_ev', 'shots_5v5', 'shots_pp', 'shots_sh', 'shots_unblocked',
             'shots_unblocked_ev', 'shots_unblocked_5v5', 'shots_unblocked_pp',
             'shots_unblocked_sh', 'shots_on_goal_ev', 'shots_on_goal_5v5',
-            'shots_on_goal_pp', 'shots_on_goal_sh', 'goals_5v5']
+            'shots_on_goal_pp', 'shots_on_goal_sh', 'goals_5v5', 'hit_post']
 
         # retrieving shot data for current game and team
         shot_data = grouped_shot_data.get(
@@ -435,8 +435,7 @@ def group_shot_data_by_game_team(shots):
     grouped_shot_data = dict()
 
     # definining zones
-    zones = [
-        'slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
+    zones = ['slot', 'left', 'right', 'blue_line', 'neutral_zone', 'behind_goal']
 
     for shot in shots[:]:
         game_team_key = (shot['game_id'], shot['team'])
@@ -503,6 +502,8 @@ def group_shot_data_by_game_team(shots):
             d['game_id'] == game_id and
             d['team'] == team, shots))
         grouped_shot_data[key]['shots'] = len(per_team_game_shots)
+        per_team_post_crossbar_shots = list(filter(lambda d: 'hit_post' in d and d['hit_post'], per_team_game_shots))
+        grouped_shot_data[key]['hit_post'] = len(per_team_post_crossbar_shots)
         per_team_game_ev_shots = list(filter(
             lambda d: d['situation'] == 'EV', per_team_game_shots))
         grouped_shot_data[key]['shots_ev'] = len(per_team_game_ev_shots)
