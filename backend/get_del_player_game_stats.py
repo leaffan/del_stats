@@ -26,6 +26,8 @@ SHOT_SRC = 'del_shots.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 # TODO: reduced csv output
 
+PLAYER_CAREER_SRC_DIR = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'per_player')
+
 PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
@@ -42,16 +44,31 @@ for key, values in PENALTY_CATEGORIES.items():
         REVERSE_PENALTY_CATEGORIES[value] = key
 
 U23_CUTOFF_DATES = {
-    2016: parse("1994-01-01"),
-    2017: parse("1995-01-01"),
-    2018: parse("1996-01-01"),
-    2019: parse("1997-01-01"),
-    2020: parse("1998-01-01"),
+    # a player needs to be born after the specified date to be
+    # considered a U23 player during the designated season
+    2016: parse("1993-12-31"),
+    2017: parse("1994-12-31"),
+    2018: parse("1995-12-31"),
+    2019: parse("1996-12-31"),
+    2020: parse("1997-12-31"),
 }
+
+U20_CUTOFF_DATES = {
+    # a player needs to be born after the specified date to be
+    # eligible for the World Junions during the designated season
+    2016: parse("1996-12-31"),
+    2017: parse("1997-12-31"),
+    2018: parse("1998-12-31"),
+    2019: parse("1999-12-31"),
+    2020: parse("2000-12-31"),
+}
+
+ROOKIE_PLAYER_IDS = list()
+NO_ROOKIE_PLAYER_IDS = list()
 
 OUT_FIELDS = [
     "game_id", "player_id", "no", "position", "first_name", "last_name",
-    "country", "shoots", "weight", "height", "date_of_birth",
+    "country", "shoots", "weight", "height", "date_of_birth", "status",
     "u23", "home_road", "game_date", "season", "season_type", "round",
     "team", "score", "opp_team", "opp_score", "game_type",
     "games_played", "goals", "assists", "primary_assists",
@@ -627,15 +644,38 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     single_player_game['weight'] = data_dict['weight']
     single_player_game['height'] = data_dict['height']
     single_player_game['date_of_birth'] = data_dict['dateOfBirth']
-    # setting u23 status
+
+    # identifying u23 status
     if (
+        single_player_game['date_of_birth'] and  # very seldomly there null date of births set in player game stats
         single_player_game['country'] == 'GER' and
-        parse(single_player_game['date_of_birth']) >= U23_CUTOFF_DATES[
-            game['season']]
+        parse(single_player_game['date_of_birth']) > U23_CUTOFF_DATES[game['season']]
     ):
         single_player_game['u23'] = True
     else:
         single_player_game['u23'] = False
+    # identifying u20 status
+    if (
+        single_player_game['date_of_birth'] and  # very seldomly there null date of births set in player game stats
+        parse(single_player_game['date_of_birth']) > U20_CUTOFF_DATES[game['season']]
+    ):
+        single_player_game['u20'] = True
+    else:
+        single_player_game['u20'] = False
+    # identifying rookie status
+    if single_player_game['player_id'] in ROOKIE_PLAYER_IDS:
+        single_player_game['rookie'] = True
+    elif single_player_game['player_id'] in NO_ROOKIE_PLAYER_IDS:
+        single_player_game['rookie'] = False
+    else:
+        single_player_game['rookie'] = is_rookie(single_player_game, game['season'])
+
+    # combinining player statuses into single status code
+    u23_code = "t" if single_player_game['u23'] else "f"
+    u20_code = "t" if single_player_game['u20'] else "f"
+    rookie_code = "t" if single_player_game['rookie'] else "f"
+    single_player_game['status'] = "%s%s%s" % (u23_code, u20_code, rookie_code)
+
     # setting up actual stats dictionary
     stat_dict = data_dict['statistics']
     # retrieving game stats for current player
@@ -726,6 +766,50 @@ def retrieve_single_player_game_stats(data_dict, game, key):
         single_player_game[category] = 0
 
     return single_player_game
+
+
+def is_rookie(single_player_game, season_of_interest):
+
+    if not single_player_game['u23']:
+        NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+        return False
+
+    print("\t+ Checking rookie status of %s" % single_player_game['full_name'])
+
+    plr_career_src_path = os.path.join(PLAYER_CAREER_SRC_DIR, "%d.json" % single_player_game['player_id'])
+    if not os.path.isfile(plr_career_src_path):
+        print("\t+ Career stats for %s [%d] not available from %s" % (
+            single_player_game['full_name'], single_player_game['player_id'], plr_career_src_path))
+        return False
+    # loading player career
+    plr_career = json.loads(open(plr_career_src_path).read())
+    if not plr_career['seasons']:
+        # print("%s was a rookie in %d/%d" % (
+        #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+        ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+        return True
+
+    games_per_season = defaultdict(int)
+    for season in plr_career['seasons']:
+        if season['season'] >= season_of_interest:
+            continue
+        # print(season['season'], season['season_type'], season['gp'])
+        if season['gp'] >= 20:
+            NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+            # print("%s was not a rookie in %d/%d" % (
+            #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+            return False
+        games_per_season[season['season']] += season['gp']
+        if games_per_season[season['season']] >= 20:
+            NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+            # print("%s was not a rookie in %d/%d" % (
+            #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+            return False
+    else:
+        ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+        # print("%s was a rookie in %d/%d" % (
+        #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+        return True
 
 
 def retrieve_assistants_from_event_data(period_events):
