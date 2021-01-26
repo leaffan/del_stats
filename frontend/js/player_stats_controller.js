@@ -63,14 +63,17 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         // ...divisions
         $scope.divisions = {};
         $scope.teams.forEach(team => {
-            for (const [season_type, division_name] of Object.entries(team['division'][$scope.season])) {
-                if (!$scope.divisions[season_type]) {
-                    $scope.divisions[season_type] = {};
-                }
-                if (!$scope.divisions[season_type][division_name]) {
-                    $scope.divisions[season_type][division_name] = [];
-                }
-                $scope.divisions[season_type][division_name].push(team.abbr)
+            // only if divisions are defined for the current season
+            if (team['division'][$scope.season]) {
+                for (const [season_type, division_name] of Object.entries(team['division'][$scope.season])) {
+                    if (!$scope.divisions[season_type]) {
+                        $scope.divisions[season_type] = {};
+                    }
+                    if (!$scope.divisions[season_type][division_name]) {
+                        $scope.divisions[season_type][division_name] = [];
+                    }
+                    $scope.divisions[season_type][division_name].push(team.abbr)
+                };
             };
         });
     });
