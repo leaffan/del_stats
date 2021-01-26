@@ -182,6 +182,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
     $scope.readCSV();
 
+
     $scope.filterGoalieStats = function(stats) {
         filtered_goalie_stats = {};
         goalie_teams = {};
@@ -490,7 +491,12 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
                 filtered_player_stats[key]['last_name'] = element['last_name'];
                 filtered_player_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
                 filtered_player_stats[key]['age'] = $scope.all_players[plr_id]['age'];
-                filtered_player_stats[key]['u23'] = element['u23'];
+                if (filtered_player_stats['status'].charAt(0) == 't') {
+                    filtered_player_stats[key]['u23'] = true;
+                } else {
+                    filtered_player_stats[key]['u23'] = false;
+                }
+                // filtered_player_stats[key]['u23'] = element['u23'];
                 filtered_player_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
                 filtered_player_stats[key]['position'] = $scope.all_players[plr_id]['position'];
                 filtered_player_stats[key]['shoots'] = element['shoots'];
