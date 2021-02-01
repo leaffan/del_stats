@@ -31,12 +31,8 @@ PLAYER_CAREER_SRC_DIR = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'p
 PENALTY_CATEGORIES = {
     'lazy': ['TRIP', 'HOLD', 'HOOK', 'HO-ST', 'INTRF', 'SLASH'],
     'roughing': ['CHARG', 'ROUGH', 'BOARD', 'CROSS', 'FIST'],
-    'reckless': [
-        'HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP',
-        'BUT-E', 'SPEAR'],
-    'other': [
-        'THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE',
-        'BENCH', 'BR-ST'],
+    'reckless': ['HI-ST', 'ELBOW', 'L-HIT', 'CHE-H', 'KNEE', 'CHE-B', 'CLIP', 'BUT-E', 'SPEAR'],
+    'other': ['THR-S', 'UN-SP', 'DELAY', 'ABUSE', 'TOO-M', 'L-BCH', 'DIVE', 'BENCH', 'BR-ST'],
 }
 REVERSE_PENALTY_CATEGORIES = dict()
 for key, values in PENALTY_CATEGORIES.items():
@@ -647,7 +643,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
 
     # identifying u23 status
     if (
-        single_player_game['date_of_birth'] and  # very seldomly there null date of births set in player game stats
+        single_player_game['date_of_birth'] and  # very seldomly there are null date of births set in player game stats
         single_player_game['country'] == 'GER' and
         parse(single_player_game['date_of_birth']) > U23_CUTOFF_DATES[game['season']]
     ):
@@ -656,7 +652,7 @@ def retrieve_single_player_game_stats(data_dict, game, key):
         single_player_game['u23'] = False
     # identifying u20 status
     if (
-        single_player_game['date_of_birth'] and  # very seldomly there null date of births set in player game stats
+        single_player_game['date_of_birth'] and  # very seldomly there are null date of births set in player game stats
         parse(single_player_game['date_of_birth']) > U20_CUTOFF_DATES[game['season']]
     ):
         single_player_game['u20'] = True
