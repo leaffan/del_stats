@@ -222,16 +222,22 @@ def get_home_road(game, event):
         return game['road_abbr'], 'road'
 
 
-def calculate_age(dob):
+def calculate_age(dob, reference_date=None):
     """
-    Calculates current age of player with specified date of birth.
+    Calculates current age of player with specified date of birth. Optionally calculates age
+    at specified reference date.
     """
     if dob is None:
         return
     # parsing player's date of birth
     dob = parse(dob).date()
-    # retrieving today's date
-    today = date.today()
+    # setting reference date
+    if not reference_date:
+        today = date.today()
+    else:
+        today = parse(reference_date).date()
+    # # retrieving today's date
+    # today = date.today()
     # projecting player's date of birth to this year
     # checking if player was born in a leap year first
     if dob.month == 2 and dob.day == 29:
