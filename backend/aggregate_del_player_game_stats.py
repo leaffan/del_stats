@@ -12,7 +12,7 @@ from collections import defaultdict
 
 from dateutil.parser import parse
 
-from utils import calculate_age, iso_country_codes
+from utils import calculate_age, iso_country_codes, get_season
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(
@@ -23,13 +23,13 @@ GOALIE_GAME_STATS_SRC = 'del_goalie_game_stats.json'
 SHOTS_DATA_SRC = 'del_shots.json'
 AGGREGATED_PLAYER_STATS_TGT = 'del_player_game_stats_aggregated.json'
 AGGREGATED_GOALIE_STATS_TGT = 'del_goalie_game_stats_aggregated.json'
-ALL_PLAYER_TGT = 'del_players.json'
+PLAYER_PERSONAL_DATA_TGT = 'del_player_personal_data.json'
 
 
 # attributes to simply collect from single-game player statistics
 TO_COLLECT = [
     'no', 'position', 'first_name', 'last_name', 'full_name', 'country',
-    'shoots', 'date_of_birth', 'weight', 'height', 'season_type',
+    'shoots', 'date_of_birth', 'weight', 'height', 'season_type', 'status'
 ]
 # attributes from single-game player statistics to aggregate as integers
 TO_AGGREGATE_INTS = [
@@ -122,14 +122,6 @@ OUT_FIELDS = [
     'pp_primary_assists_per_60', 'pp_secondary_assists_per_60',
     'pp_points_per_60', 'sh_goals_per_60',
 ]
-
-U23_CUTOFF_DATES = {
-    2016: parse("1994-01-01"),
-    2017: parse("1995-01-01"),
-    2018: parse("1996-01-01"),
-    2019: parse("1997-01-01"),
-    2020: parse("1998-01-01"),
-}
 
 
 def convert_to_minutes(td):
@@ -263,6 +255,7 @@ if __name__ == '__main__':
     tgt_goalies_path = os.path.join(tgt_dir, AGGREGATED_GOALIE_STATS_TGT)
     tgt_csv_path = os.path.join(
         tgt_dir, AGGREGATED_PLAYER_STATS_TGT.replace('json', 'csv'))
+    tgt_personal_data_path = os.path.join(tgt_dir, PLAYER_PERSONAL_DATA_TGT)
 
     # loading collected single-game player data
     last_modified, player_game_stats = json.loads(open(src_path).read())
@@ -348,6 +341,8 @@ if __name__ == '__main__':
 
     # post-processing aggregated attributes
     aggregated_stats_as_list = list()
+    # preparing container for non-fluctuating data
+    personal_player_data = dict()
 
     for player_id, team, season_type in aggregated_stats:
         # constructing reference key
@@ -371,19 +366,31 @@ if __name__ == '__main__':
         basic_values = dict()
         basic_values['player_id'] = player_id
         basic_values['team'] = team
-        # retaining single valiue for personal player attribute
+        # retaining single (and most recent) value for personal player attribute
         for attr in TO_COLLECT:
             basic_values[attr] = list(player_data[key][attr])[-1]
         # calculating player age
-        basic_values['age'] = calculate_age(basic_values['date_of_birth'])
+        current_season = get_season()
+        if current_season == season:
+            basic_values['age'] = calculate_age(basic_values['date_of_birth'])
+        else:
+            # if we're not aggregating data for the current season, calculate age for
+            # mid-point (i.e. turn of the year) in season of interest
+            basic_values['age'] = calculate_age(basic_values['date_of_birth'], "%d-12-31" % season)
 
-        if (
-            basic_values['country'] == 'GER' and
-            parse(basic_values['date_of_birth']) >= U23_CUTOFF_DATES[season]
-        ):
+        # turning status code into different player type statuses
+        if basic_values['status'][0] == 't':
             basic_values['u23'] = True
         else:
             basic_values['u23'] = False
+        if basic_values['status'][1] == 't':
+            basic_values['u20'] = True
+        else:
+            basic_values['u20'] = False
+        if basic_values['status'][2] == 't':
+            basic_values['rookie'] = True
+        else:
+            basic_values['rookie'] = False
 
         if basic_values['country'] in iso_country_codes:
             basic_values['iso_country'] = iso_country_codes[basic_values['country']]
@@ -410,6 +417,7 @@ if __name__ == '__main__':
             **shot_stats, **goalie_stats
         }
         aggregated_stats_as_list.append(all_values)
+        personal_player_data[basic_values['player_id']] = basic_values
 
     # deriving further attributes
     for item in aggregated_stats_as_list:
@@ -478,6 +486,7 @@ if __name__ == '__main__':
                     (item[time_attr].total_seconds() / 60) * 60, 4)
 
     output = [last_modified, aggregated_stats_as_list]
+    output_personal_data = [last_modified, list(personal_player_data.values())]
 
     aggregated_goalie_stats = list()
     for item in aggregated_stats_as_list:
@@ -488,29 +497,22 @@ if __name__ == '__main__':
         adjusted_player_stats_tgt = AGGREGATED_PLAYER_STATS_TGT
         if to_date is not None:
             to_prefix = "to%s" % to_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (
-                to_prefix, adjusted_player_stats_tgt)
+            adjusted_player_stats_tgt = "%s_%s" % (to_prefix, adjusted_player_stats_tgt)
         if from_date is not None:
             from_prefix = "from%s" % from_date.strftime('%Y-%m-%d')
-            adjusted_player_stats_tgt = "%s_%s" % (
-                from_prefix, adjusted_player_stats_tgt)
+            adjusted_player_stats_tgt = "%s_%s" % (from_prefix, adjusted_player_stats_tgt)
 
         tgt_path = os.path.join(tgt_dir, adjusted_player_stats_tgt)
-        tgt_csv_path = os.path.join(
-            tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
+        tgt_csv_path = os.path.join(tgt_dir, adjusted_player_stats_tgt.replace('json', 'csv'))
 
-    open(tgt_path, 'w').write(
-        json.dumps(output, indent=2, default=convert_to_minutes))
-    open(tgt_goalies_path, 'w').write(
-        json.dumps(
-            aggregated_goalie_stats, indent=2, default=convert_to_minutes))
+    open(tgt_path, 'w').write(json.dumps(output, indent=2, default=convert_to_minutes))
+    open(tgt_goalies_path, 'w').write(json.dumps(aggregated_goalie_stats, indent=2, default=convert_to_minutes))
+    open(tgt_personal_data_path, 'w').write(json.dumps(output_personal_data, indent=2))
 
     keys = aggregated_stats_as_list[0].keys()
 
     with open(tgt_csv_path, 'w', encoding='utf-8') as output_file:
         output_file.write('\ufeff')
-        dict_writer = csv.DictWriter(
-            output_file, OUT_FIELDS, delimiter=';', lineterminator='\n',
-            extrasaction='ignore')
+        dict_writer = csv.DictWriter(output_file, OUT_FIELDS, delimiter=';', lineterminator='\n', extrasaction='ignore')
         dict_writer.writeheader()
         dict_writer.writerows(aggregated_stats_as_list)
