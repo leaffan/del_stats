@@ -4,6 +4,7 @@ season="${1:-2020}"
 
 # copying data sets to standard site location
 cp -v /home/pacs/mre00/users/markus/_del/_data/del_players.json /home/doms/leaffan.net/subs/www/del/data/del_players.json
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_personal_data.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_league_stats.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_game_stats_aggregated.* /home/doms/leaffan.net/subs/www/del/data/$season
@@ -23,9 +24,11 @@ cp -TRv /home/pacs/mre00/users/markus/_del/_data/career_stats/per_team/ /home/do
 
 # copying data sets to extended site location
 cp -v /home/pacs/mre00/users/markus/_del/_data/del_players.json /home/doms/leaffan.net/subs/www/del_extended/data/del_players.json
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_player_personal_data.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/coaches.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/h2h.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/full_schedule.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_calendar.ics /home/doms/leaffan.net/subs/www/del
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_league_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_goalie_game_stats_aggregated.json /home/doms/leaffan.net/subs/www/del_extended/data/$season

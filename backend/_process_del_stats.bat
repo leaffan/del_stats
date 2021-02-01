@@ -22,6 +22,7 @@ python get_streaks.py -s %SEASON%
 
 rem TODO: check base stats
 if [%SEASON%] EQU [2020] (
+    python create_calendar.py
     python update_coaches.py
     python update_h2h_records.py
     python update_career_stats.py
