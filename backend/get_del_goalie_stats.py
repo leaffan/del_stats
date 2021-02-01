@@ -7,7 +7,6 @@ import yaml
 import argparse
 
 from collections import defaultdict
-from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
 from reconstruct_skater_situation import build_interval_tree
@@ -17,25 +16,15 @@ GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 PLR_SRC = 'del_players.json'
 LEAGUE_SRC = 'del_league_stats.json'
+PLAYER_GAME_STATS_SRC = 'del_player_game_stats.json'
 
 # loading external configuration
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 GOALIE_GAME_STATS_TGT = 'del_goalie_game_stats.json'
 
-SKR_SITUATIONS = [
-    '5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
-SHOT_ZONES = [
-    'blue_line', 'left', 'right', 'slot', 'neutral_zone']
-
-U23_CUTOFF_DATES = {
-    2016: parse("1994-01-01"),
-    2017: parse("1995-01-01"),
-    2018: parse("1996-01-01"),
-    2019: parse("1997-01-01"),
-    2020: parse("1998-01-01"),
-}
+SKR_SITUATIONS = ['5v5', '4v4', '3v3', '5v4', '5v3', '4v3', '4v5', '3v5', '3v4']
+SHOT_ZONES = ['blue_line', 'left', 'right', 'slot', 'neutral_zone']
 
 
 def retrieve_goalies_in_game(game):
@@ -223,12 +212,14 @@ if __name__ == '__main__':
     shot_src_path = os.path.join(tgt_dir, SHOT_SRC)
     plr_src_path = os.path.join(CONFIG['tgt_processing_dir'], PLR_SRC)
     league_src_path = os.path.join(tgt_dir, LEAGUE_SRC)
+    plr_game_stats_src_path = os.path.join(CONFIG['tgt_processing_dir'], str(season), PLAYER_GAME_STATS_SRC)
     tgt_path = os.path.join(tgt_dir, GOALIE_GAME_STATS_TGT)
 
     # loading games and shots
     games = json.loads(open(src_path).read())
     shots = json.loads(open(shot_src_path).read())
     players = json.loads(open(plr_src_path).read())
+    player_game_stats = json.loads(open(plr_game_stats_src_path).read())[-1]
     league_data = json.loads(open(league_src_path).read())
 
     # loading existing player game stats
@@ -239,6 +230,10 @@ if __name__ == '__main__':
 
     # retrieving set of games we already have retrieved player stats for
     registered_games = set([gpg['game_id'] for gpg in goalies_per_game])
+    # retrieving player statuses from regular player game stats
+    plr_status_dict = dict()
+    for plr_game in player_game_stats:
+        plr_status_dict[plr_game['player_id']] = plr_game['status']
 
     for game in games[:]:
 
@@ -306,15 +301,11 @@ if __name__ == '__main__':
             goalie_dict['first_name'] = players[str(goalie_id)]['first_name']
             goalie_dict['last_name'] = players[str(goalie_id)]['last_name']
             goalie_dict['country'] = players[str(goalie_id)]['iso_country']
-            # setting u23 status
-            if (
-                goalie_dict['country'] == 'de' and
-                parse(players[str(goalie_id)]['dob']) >= U23_CUTOFF_DATES[
-                    game['season']]
-            ):
-                goalie_dict['u23'] = True
+            # retaining player status from corresponding lookup table
+            if goalie_id in plr_status_dict:
+                goalie_dict['status'] = plr_status_dict[goalie_id]
             else:
-                goalie_dict['u23'] = False
+                goalie_dict['status'] = 'fff'
 
             print("\t+ Retrieving goalie stats for %s %s (%s)" % (
                 goalie_dict['first_name'], goalie_dict['last_name'], goalie_team))
@@ -397,8 +388,7 @@ if __name__ == '__main__':
                     goalie_dict["sa_%s" % shot['shot_zone'].lower()] += 1
                     if shot['scored']:
                         goalie_dict['goals_against'] += 1
-                        goalie_dict[
-                            "ga_%s" % shot['plr_situation_against']] += 1
+                        goalie_dict["ga_%s" % shot['plr_situation_against']] += 1
                         goalie_dict["ga_%s" % shot['shot_zone'].lower()] += 1
             else:
                 # calculating save percentages
@@ -412,9 +402,7 @@ if __name__ == '__main__':
                 calculate_save_pctg(goalie_dict)
                 # calculating goals against average
                 if goalie_dict['goals_against']:
-                    goalie_dict['gaa'] = round(
-                        goalie_dict['goals_against'] * 3600 /
-                        goalie_dict['toi'], 2)
+                    goalie_dict['gaa'] = round(goalie_dict['goals_against'] * 3600 / goalie_dict['toi'], 2)
                 else:
                     goalie_dict['gaa'] = 0
 
@@ -427,9 +415,7 @@ if __name__ == '__main__':
 
             goalie_dict['game_score'] = round(
                 -0.75 * goalie_dict['goals_against'] +
-                0.1 * (
-                    goalie_dict['shots_against'] -
-                    goalie_dict['goals_against']), 2)
+                0.1 * (goalie_dict['shots_against'] - goalie_dict['goals_against']), 2)
 
             if game['shootout_game']:
                 goalie_dict = get_shootout_stats(goalie_dict, game)
