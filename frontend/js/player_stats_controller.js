@@ -96,10 +96,10 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         $scope.league_data = res.data;
     });
 
-    // loading stats from external json file
-    $http.get('data/' + $scope.season + '/del_player_game_stats_aggregated.json').then(function (res) {
+    // loading personal player data from external json file
+    $http.get('data/' + $scope.season + '/del_player_personal_data.json').then(function (res) {
         $scope.last_modified = res.data[0];
-        $scope.stats = res.data[1];
+        $scope.personal_data = res.data[1];
     });
 
     // loading goalie stats from external json file
@@ -199,7 +199,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
                 filtered_goalie_stats[key]['last_name'] = element['last_name'];
                 filtered_goalie_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
                 filtered_goalie_stats[key]['age'] = $scope.all_players[plr_id]['age'];
-                filtered_goalie_stats[key]['u23'] = element['u23'];
+                // splitting up original player status into three single player statuses
+                filtered_goalie_stats[key] = $scope.setPlayerStatus(element['status'], filtered_goalie_stats[key])
                 filtered_goalie_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
                 filtered_goalie_stats[key]['position'] = $scope.all_players[plr_id]['position'];
                 filtered_goalie_stats[key]['team'] = element['team'];
@@ -491,12 +492,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
                 filtered_player_stats[key]['last_name'] = element['last_name'];
                 filtered_player_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
                 filtered_player_stats[key]['age'] = $scope.all_players[plr_id]['age'];
-                if (filtered_player_stats['status'].charAt(0) == 't') {
-                    filtered_player_stats[key]['u23'] = true;
-                } else {
-                    filtered_player_stats[key]['u23'] = false;
-                }
-                // filtered_player_stats[key]['u23'] = element['u23'];
+                // setting player statuses from combined player status
+                filtered_player_stats[key] = $scope.setPlayerStatus(element['status'], filtered_player_stats[key])
                 filtered_player_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
                 filtered_player_stats[key]['position'] = $scope.all_players[plr_id]['position'];
                 filtered_player_stats[key]['shoots'] = element['shoots'];
@@ -746,6 +743,26 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         return filtered_player_stats;
     };
 
+    $scope.setPlayerStatus = function(original_status, stats_item) {
+        // splitting up player status into three single player statuses
+        if (original_status.charAt(0) == 't') {
+            stats_item['u23'] = true;
+        } else {
+            stats_item['u23'] = false;
+        }
+        if (original_status.charAt(1) == 't') {
+            stats_item['u20'] = true;
+        } else {
+            stats_item['u20'] = false;
+        }
+        if (original_status.charAt(2) == 't') {
+            stats_item['rookie'] = true;
+        } else {
+            stats_item['rookie'] = false;
+        }
+        return stats_item;
+    }
+
     // default sorting criteria for all defined tables
     $scope.tableSortCriteria = {
         'player_information': 'last_name',
@@ -864,15 +881,31 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         }
     }
 
-    $scope.u23Filter = function(a) {
-        if (!$scope.u23Check)
+    $scope.playerStatusFilter = function(a) {
+        if (!$scope.playerStatusSelect)
             return true;
-        if ($scope.u23Check && a.u23) {
-            return true;
-        } else {
-            return false;
+        switch ($scope.playerStatusSelect) {
+            case 'u23':
+                if (a.u23) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'u20':
+                if (a.u20) {
+                    return true;
+                } else {
+                    return false;
+                }
+            case 'rookie':
+                if (a.rookie) {
+                    return true;
+                } else {
+                    return false;
+                }
         }
     };
+
 
     $scope.longestStreakFilter = function(a) {
         if (!$scope.showOnlyLongestStreak) {
