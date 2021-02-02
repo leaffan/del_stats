@@ -446,6 +446,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         "so_pctg": ['so_pctg', 'so_g'],
         // shot shares
         "corsi_for_pctg": ['corsi_for_pctg', 'shots'],
+        "shots_5v5_pctg": ['shots_5v5_pctg', 'shots_5v5'],
         "shots_on_goal_5v5": ['shots_on_goal_5v5', 'goals_5v5', '-games_played'],
         "goals_diff": ['goals_diff', 'goals', '-games_played'],
         "pt_pctg": ['pt_pctg', 'points', 'goals_diff', '-games_played', 'score'],
