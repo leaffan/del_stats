@@ -141,7 +141,12 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
             $scope.series_wins = $scope.filtered_po_series.filter(series => series.series_win === 1).length;
             $scope.series_losses = $scope.filtered_po_series.filter(series => series.series_loss === 1).length;
         });
-        
+
+        // loading player scoring streaks from external json file
+        $http.get('data/'+ $scope.season + '/del_slumps_loose.json').then(function (res) {
+            $scope.slumps = res.data.filter(slump => (slump.team == $scope.current_game.home.shortcut || slump.team == $scope.current_game.guest.shortcut));;
+        });
+    
     });
 
     // loading game facts
@@ -229,11 +234,6 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     // loading player scoring streaks from external json file
     $http.get('data/'+ $scope.season + '/del_streaks_loose.json').then(function (res) {
         $scope.streaks = res.data;
-    });
-
-    // loading player scoring streaks from external json file
-    $http.get('data/'+ $scope.season + '/del_slumps_loose.json').then(function (res) {
-        $scope.slumps = res.data;
     });
 
     // loading coaches from external json file
