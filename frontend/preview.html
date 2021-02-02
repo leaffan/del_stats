@@ -814,7 +814,7 @@
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].gaa.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ goalie['career'].gp ? goalie['career'].sv_pctg.toFixed(1) + ' %' : '' }}</td>
                 <td class="w-07 {{ Math.ceil(goalie['career'].so / 10) * 10 - goalie['career'].so == 1 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? goalie['career'].so : '' }}</td>
-                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 50) * 50 - goalie['career'].gp < 5 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 100) * 100 - goalie['career'].gp : '' }}</td>
+                <td class="w-15 {{ Math.ceil(goalie['career'].gp / 50) * 50 - goalie['career'].gp < 5 ? 'marker ': '' }}text-right">{{ goalie['career'].gp ? Math.ceil(goalie['career'].gp / 50) * 50 - goalie['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -863,7 +863,7 @@
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].pts / 50) * 50 - skater['career'].pts <= 5 && skater['career'].pts != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].pts : '' }}</td>
-                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 100) * 100 - skater['career'].gp : '' }}</td>
+                <td class="w-12 {{ Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp <= 5 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? Math.ceil(skater['career'].gp / 50) * 50 - skater['career'].gp : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -1104,7 +1104,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1136,7 +1136,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1176,7 +1176,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1223,7 +1223,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1255,7 +1255,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1295,7 +1295,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1342,7 +1342,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1374,7 +1374,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -1414,7 +1414,7 @@
                 <td class="w-13"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
-                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(2) }}</td>
+                <td class="w-08 text-right">{{ stat.pts_per_game.toFixed(3) }}</td>
                 <td class="w-07 text-right">{{ stat.rw }}</td>
                 <td class="w-07 text-right">{{ stat.ow }}</td>
                 <td class="w-07 text-right">{{ stat.sw }}</td>
@@ -3974,8 +3974,8 @@
 
     <div id="plr_scoring_slumps" class="alert alert-info main-bg mb-2 shadow-sm">
         <h4><a href="#!/preview/2020/{{ current_game.game_id }}/plr_scoring_slumps">Scoring Slumps:</a></h4>
-        <p>Aktuell andauernde Folgen von mindestens fünf Spielen ohne Tore oder Punkte eines Spielers. Spiele, in denen der Spieler nicht im Kader steht, unterbrechen die andauernde Folge <b>nicht</b>.</p>
-        <p>(Unter Berücksichtigung <b>aller</b> bisher in der Saison absolvierten Spiele. Abgeschnitten nach maximal 25 Spielern.)</p>
+        <p>Aktuell andauernde Folgen von mindestens fünf Spielen ohne Tore oder Punkte eines Spielers. Spiele, in denen der Spieler nicht im Kader steht, unterbrechen die andauernde Folge <b>nicht</b>. Angezeigt werden nur Feldspieler der beiden gegeneinander antretenden Teams.</p>
+        <p>(Unter Berücksichtigung <b>aller</b> bisher in der Saison absolvierten Spiele.)</p>
         <a href data-ng-click="scrollTo('contents')"><i class="fas fa-arrow-up" aria-hidden="true"></i> Zurück nach oben</a>
     </div>
 
@@ -3995,7 +3995,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'points'} | filter: {current: true} | orderBy:sorting_config['slumps_points'] | limitTo: 25">
+            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'points'} | filter: {current: true} | orderBy:sorting_config['slumps_points']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-20"><a href="#!/player_profile/{{season}}/{{slump.team}}/{{slump.player_id}}">{{ slump.full_name }}</a></td>
                 <td class="w-05"><a href="#!/team_profile/{{season}}/{{slump.team}}">{{ slump.team }}</a></td>
@@ -4022,7 +4022,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'goals'} | filter: {current: true} | orderBy:sorting_config['slumps_goals'] | limitTo: 25">
+            <tr class="{{current_game.home.shortcut == slump.team ? 'table-info' : current_game.guest.shortcut == slump.team ? 'table-warning' : ''}}" data-ng-repeat="slump in slumps | filter: {type: 'goals'} | filter: {current: true} | orderBy:sorting_config['slumps_goals']">
                 <td class="w-03 text-right">{{ $index + 1 }}</td>
                 <td class="w-20"><a href="#!/player_profile/{{season}}/{{slump.team}}/{{slump.player_id}}">{{ slump.full_name }}</a></td>
                 <td class="w-05"><a href="#!/team_profile/{{season}}/{{slump.team}}">{{ slump.team }}</a></td>

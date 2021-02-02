@@ -100,7 +100,7 @@
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
-        {"data_key": "pts_per_game", "col_header": "PT/GP", "expl_de": "Punkte pro Spiel", "expl_en": "Points per Game"},
+        {"data_key": "pts_per_game", "col_header": "PTS/GP", "expl_de": "Punkte pro Spiel", "expl_en": "Points per Game"},
         {"data_key": "rw", "col_header": "W", "expl_de": "Siege nach regulärer Spielzeit", "expl_en": "Wins"},
         {"data_key": "ow", "col_header": "OTW", "expl_de": "Siege nach Verlängerung", "expl_en": "Overtime Wins"},
         {"data_key": "sw", "col_header": "SOW", "expl_de": "Siege nach Penaltyschießen", "expl_en": "Shootout Wins"},
@@ -332,14 +332,14 @@
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"},
-        {"data_key": "blocked_shots_per_game", "col_header": "BLS/G", "expl_de": "Aktiv geblockte Schüsse/Spiel", "expl_en": "Shots Blocked/Game"}
+        {"data_key": "blocked_shots_per_game", "col_header": "BLS/GP", "expl_de": "Aktiv geblockte Schüsse/Spiel", "expl_en": "Shots Blocked/Game"}
     ],
     "plr_missed_rankings": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
         {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse neben das Tor", "expl_en": "Missed Shots"},
-        {"data_key": "shots_missed_per_game", "col_header": "MS/G", "expl_de": "Schüsse neben das Tor/Spiel", "expl_en": "Missed Shots/Game"}
+        {"data_key": "shots_missed_per_game", "col_header": "MS/GP", "expl_de": "Schüsse neben das Tor/Spiel", "expl_en": "Missed Shots/Game"}
     ],
     "streaks_goals": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
