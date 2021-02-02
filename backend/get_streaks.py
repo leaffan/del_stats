@@ -351,6 +351,10 @@ if __name__ == '__main__':
             all_streaks_loose.extend(streaks)
             all_slumps_loose.extend(slumps)
 
+    # removing goaltenders from slump data
+    all_slumps_loose = list(filter(lambda d: d['position'] != 'GK', all_slumps_loose))
+    all_slumps_strict = list(filter(lambda d: d['position'] != 'GK', all_slumps_strict))
+
     # dumping results to JSON
     tgt_streak_path = os.path.join(tgt_dir, STREAK_DATA_STRICT_TGT)
     open(tgt_streak_path, 'w').write(json.dumps(all_streaks_strict, indent=2))
