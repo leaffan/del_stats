@@ -11,7 +11,7 @@ import itertools
 from datetime import datetime
 from collections import defaultdict
 
-from dateutil.parser import parse
+# from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
 from utils import player_name_corrections, correct_player_name
@@ -23,6 +23,7 @@ CONFIG = yaml.safe_load(open(os.path.join(
 PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
+PERSONAL_DATA_SRC = 'del_player_personal_data.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
 # TODO: reduced csv output
 
@@ -39,33 +40,33 @@ for key, values in PENALTY_CATEGORIES.items():
     for value in values:
         REVERSE_PENALTY_CATEGORIES[value] = key
 
-U23_CUTOFF_DATES = {
-    # a player needs to be born after the specified date to be
-    # considered a U23 player during the designated season
-    2016: parse("1993-12-31"),
-    2017: parse("1994-12-31"),
-    2018: parse("1995-12-31"),
-    2019: parse("1996-12-31"),
-    2020: parse("1997-12-31"),
-}
+# U23_CUTOFF_DATES = {
+#     # a player needs to be born after the specified date to be
+#     # considered a U23 player during the designated season
+#     2016: parse("1993-12-31"),
+#     2017: parse("1994-12-31"),
+#     2018: parse("1995-12-31"),
+#     2019: parse("1996-12-31"),
+#     2020: parse("1997-12-31"),
+# }
 
-U20_CUTOFF_DATES = {
-    # a player needs to be born after the specified date to be
-    # eligible for the World Junions during the designated season
-    2016: parse("1996-12-31"),
-    2017: parse("1997-12-31"),
-    2018: parse("1998-12-31"),
-    2019: parse("1999-12-31"),
-    2020: parse("2000-12-31"),
-}
+# U20_CUTOFF_DATES = {
+#     # a player needs to be born after the specified date to be
+#     # eligible for the World Junions during the designated season
+#     2016: parse("1996-12-31"),
+#     2017: parse("1997-12-31"),
+#     2018: parse("1998-12-31"),
+#     2019: parse("1999-12-31"),
+#     2020: parse("2000-12-31"),
+# }
 
-ROOKIE_PLAYER_IDS = list()
-NO_ROOKIE_PLAYER_IDS = list()
+# ROOKIE_PLAYER_IDS = list()
+# NO_ROOKIE_PLAYER_IDS = list()
 
 OUT_FIELDS = [
     "game_id", "player_id", "no", "position", "first_name", "last_name",
     "country", "shoots", "weight", "height", "date_of_birth", "status",
-    "u23", "home_road", "game_date", "season", "season_type", "round",
+    "home_road", "game_date", "season", "season_type", "round",
     "team", "score", "opp_team", "opp_score", "game_type",
     "games_played", "goals", "assists", "primary_assists",
     "secondary_assists", "points", "primary_points", "pim", "plus",
@@ -250,7 +251,7 @@ def retrieve_on_ice_stats(gsl, shots):
     return gsl
 
 
-def get_single_game_player_data(game, shots):
+def get_single_game_player_data(game, shots, personal_data):
     """
     Retrieves statistics for all players participating in specified game.
     """
@@ -280,12 +281,12 @@ def get_single_game_player_data(game, shots):
         faceoffs = list()
 
     for home_stat_line in home_stats:
-        player_game = retrieve_single_player_game_stats(home_stat_line, game, 'home')
+        player_game = retrieve_single_player_game_stats(home_stat_line, game, 'home', personal_data)
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
     for road_stat_line in road_stats:
-        player_game = retrieve_single_player_game_stats(road_stat_line, game, 'away')
+        player_game = retrieve_single_player_game_stats(road_stat_line, game, 'away', personal_data)
         if player_game['games_played']:
             game_stat_lines.append(player_game)
 
@@ -617,7 +618,7 @@ def calculate_faceoff_percentage(all_faceoffs, faceoffs_won):
     return faceoff_pctg
 
 
-def retrieve_single_player_game_stats(data_dict, game, key):
+def retrieve_single_player_game_stats(data_dict, game, key, personal_data):
     """
     Retrieves single player's statistics in specified game.
     """
@@ -637,40 +638,23 @@ def retrieve_single_player_game_stats(data_dict, game, key):
         correct_player_name(single_player_game)
     single_player_game['country'] = data_dict['nationalityShort']
     single_player_game['shoots'] = data_dict['stick']
-    single_player_game['weight'] = data_dict['weight']
-    single_player_game['height'] = data_dict['height']
-    single_player_game['date_of_birth'] = data_dict['dateOfBirth']
 
-    # identifying u23 status
-    if (
-        single_player_game['date_of_birth'] and  # very seldomly there are null date of births set in player game stats
-        single_player_game['country'] == 'GER' and
-        parse(single_player_game['date_of_birth']) > U23_CUTOFF_DATES[game['season']]
-    ):
-        single_player_game['u23'] = True
-    else:
-        single_player_game['u23'] = False
-    # identifying u20 status
-    if (
-        single_player_game['date_of_birth'] and  # very seldomly there are null date of births set in player game stats
-        parse(single_player_game['date_of_birth']) > U20_CUTOFF_DATES[game['season']]
-    ):
-        single_player_game['u20'] = True
-    else:
-        single_player_game['u20'] = False
-    # identifying rookie status
-    if single_player_game['player_id'] in ROOKIE_PLAYER_IDS:
-        single_player_game['rookie'] = True
-    elif single_player_game['player_id'] in NO_ROOKIE_PLAYER_IDS:
-        single_player_game['rookie'] = False
-    else:
-        single_player_game['rookie'] = is_rookie(single_player_game, game['season'])
+    per_player_personal_data = list(filter(lambda d: d['player_id'] == single_player_game['player_id'], personal_data))
+    if not per_player_personal_data:
+        print("\t+ No personal data available for %s [%d]" % (
+            single_player_game['full_name'], single_player_game['player_id']))
+    assert len(per_player_personal_data) <= 1
+    if per_player_personal_data:
+        per_player_personal_data = per_player_personal_data.pop(0)
 
-    # combinining player statuses into single status code
-    u23_code = "t" if single_player_game['u23'] else "f"
-    u20_code = "t" if single_player_game['u20'] else "f"
-    rookie_code = "t" if single_player_game['rookie'] else "f"
-    single_player_game['status'] = "%s%s%s" % (u23_code, u20_code, rookie_code)
+    if per_player_personal_data:
+        # combinining player statuses into single status code
+        u23_code = "t" if per_player_personal_data['u23'] else "f"
+        u20_code = "t" if per_player_personal_data['u20'] else "f"
+        rookie_code = "t" if per_player_personal_data['rookie'] else "f"
+        single_player_game['status'] = "%s%s%s" % (u23_code, u20_code, rookie_code)
+    else:
+        single_player_game['status'] = 'fff'
 
     # setting up actual stats dictionary
     stat_dict = data_dict['statistics']
@@ -764,48 +748,48 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     return single_player_game
 
 
-def is_rookie(single_player_game, season_of_interest):
+# def is_rookie(single_player_game, season_of_interest):
 
-    if not single_player_game['u23']:
-        NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
-        return False
+#     if not single_player_game['u23']:
+#         NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+#         return False
 
-    print("\t+ Checking rookie status of %s" % single_player_game['full_name'])
+#     print("\t+ Checking rookie status of %s" % single_player_game['full_name'])
 
-    plr_career_src_path = os.path.join(PLAYER_CAREER_SRC_DIR, "%d.json" % single_player_game['player_id'])
-    if not os.path.isfile(plr_career_src_path):
-        print("\t+ Career stats for %s [%d] not available from %s" % (
-            single_player_game['full_name'], single_player_game['player_id'], plr_career_src_path))
-        return False
-    # loading player career
-    plr_career = json.loads(open(plr_career_src_path).read())
-    if not plr_career['seasons']:
-        # print("%s was a rookie in %d/%d" % (
-        #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
-        ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
-        return True
+#     plr_career_src_path = os.path.join(PLAYER_CAREER_SRC_DIR, "%d.json" % single_player_game['player_id'])
+#     if not os.path.isfile(plr_career_src_path):
+#         print("\t+ Career stats for %s [%d] not available from %s" % (
+#             single_player_game['full_name'], single_player_game['player_id'], plr_career_src_path))
+#         return False
+#     # loading player career
+#     plr_career = json.loads(open(plr_career_src_path).read())
+#     if not plr_career['seasons']:
+#         # print("%s was a rookie in %d/%d" % (
+#         #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+#         ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+#         return True
 
-    games_per_season = defaultdict(int)
-    for season in plr_career['seasons']:
-        if season['season'] >= season_of_interest:
-            continue
-        # print(season['season'], season['season_type'], season['gp'])
-        if season['gp'] >= 20:
-            NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
-            # print("%s was not a rookie in %d/%d" % (
-            #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
-            return False
-        games_per_season[season['season']] += season['gp']
-        if games_per_season[season['season']] >= 20:
-            NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
-            # print("%s was not a rookie in %d/%d" % (
-            #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
-            return False
-    else:
-        ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
-        # print("%s was a rookie in %d/%d" % (
-        #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
-        return True
+#     games_per_season = defaultdict(int)
+#     for season in plr_career['seasons']:
+#         if season['season'] >= season_of_interest:
+#             continue
+#         # print(season['season'], season['season_type'], season['gp'])
+#         if season['gp'] >= 20:
+#             NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+#             # print("%s was not a rookie in %d/%d" % (
+#             #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+#             return False
+#         games_per_season[season['season']] += season['gp']
+#         if games_per_season[season['season']] >= 20:
+#             NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+#             # print("%s was not a rookie in %d/%d" % (
+#             #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+#             return False
+#     else:
+#         ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+#         # print("%s was a rookie in %d/%d" % (
+#         #     single_player_game['full_name'], season_of_interest, season_of_interest + 1))
+#         return True
 
 
 def retrieve_assistants_from_event_data(period_events):
@@ -989,11 +973,13 @@ if __name__ == '__main__':
     # setting up source and target paths
     src_path = os.path.join(tgt_dir, GAME_SRC)
     src_shots_path = os.path.join(tgt_dir, SHOT_SRC)
+    src_personal_data_path = os.path.join(tgt_dir, PERSONAL_DATA_SRC)
     tgt_path = os.path.join(tgt_dir, PLAYER_GAME_STATS_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
     shots = json.loads(open(src_shots_path).read())
+    personal_data = json.loads(open(src_personal_data_path).read())[-1]
 
     # loading existing player game stats
     if not initial and os.path.isfile(tgt_path):
@@ -1015,12 +1001,10 @@ if __name__ == '__main__':
             continue
 
         # retrieving shots for current game
-        game_shots = list(
-            filter(lambda d: d['game_id'] == game['game_id'], shots))
+        game_shots = list(filter(lambda d: d['game_id'] == game['game_id'], shots))
 
         print("+ Retrieving player stats for game %s" % get_game_info(game))
-        single_player_game_stats = get_single_game_player_data(
-            game, game_shots)
+        single_player_game_stats = get_single_game_player_data(game, game_shots, personal_data)
         player_game_stats.extend(single_player_game_stats)
 
         # collecting stat lines on a per-player basis

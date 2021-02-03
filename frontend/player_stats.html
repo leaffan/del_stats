@@ -997,10 +997,10 @@
                     <span data-ng-if="!personal_data_item.single_team">{{ personal_data_item.team }}</span>
                 </td>
                 <td class="w-10 text-left">{{ personal_data_item.position }}</td>
-                <td class="w-12 text-left">{{ personal_data_item.shoots }}</td>
+                <td class="w-12 text-left">{{ personal_data_item.hand }}</td>
                 <td class="w-08 text-right">{{ personal_data_item.height }} cm</td>
                 <td class="w-08 text-right">{{ personal_data_item.weight }} kg</td>
-                <td class="w-10 text-right">{{ personal_data_item.date_of_birth | date : 'yyyy-MM-dd' }}</td>
+                <td class="w-10 text-right">{{ personal_data_item.dob | date : 'yyyy-MM-dd' }}</td>
                 <td class="w-10 text-right">{{ personal_data_item.age.toFixed(3) }}</td>
                 <td class="w-12 text-center"><span class="flag-icon flag-icon-{{ personal_data_item.iso_country }}"></span></td>
             </tr>
