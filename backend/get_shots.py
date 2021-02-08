@@ -319,53 +319,38 @@ if __name__ == '__main__':
                             "end of game (%02d:%02d) registered" % (max(times.keys()) // 60, max(times.keys()) % 60))
                         shot['time'] = max(times.keys())
 
-                if (
-                    skr_situation[shot['team']] ==
-                    skr_situation[shot['team_against']]
-                ):
+                if skr_situation[shot['team']] == skr_situation[shot['team_against']]:
                     shot['situation'] = 'EV'
-                elif (
-                    skr_situation[shot['team']] >
-                    skr_situation[shot['team_against']]
-                ):
+                elif skr_situation[shot['team']] > skr_situation[shot['team_against']]:
                     shot['situation'] = 'PP'
-                elif (
-                    skr_situation[shot['team']] <
-                    skr_situation[shot['team_against']]
-                ):
+                elif skr_situation[shot['team']] < skr_situation[shot['team_against']]:
                     shot['situation'] = 'SH'
 
-                shot['plr_situation'] = "%dv%d" % (
-                    skr_situation[shot['team']],
-                    skr_situation[shot['team_against']])
+                shot['plr_situation'] = "%dv%d" % (skr_situation[shot['team']], skr_situation[shot['team_against']])
                 shot['plr_situation_against'] = "%dv%d" % (
-                    skr_situation[shot['team_against']],
-                    skr_situation[shot['team']])
+                    skr_situation[shot['team_against']], skr_situation[shot['team']])
+
+                # setting 6v5 or 5v6 situations back to 'EV'
+                if '6' in shot['plr_situation'] and '5' in shot['plr_situation']:
+                    shot['situation'] = 'EV'
 
                 # retrieving players on ice via event data in case of a goal
                 if shot['scored'] and goals:
                     goal = goals[shot['time']]
                     # re-calculating home and road score differentials
-                    home_score, road_score = [
-                        int(x) for x in goal['currentScore'].split(":")]
+                    home_score, road_score = [int(x) for x in goal['currentScore'].split(":")]
                     home_score_diff = home_score - road_score
                     road_score_diff = road_score - home_score
                     # retrieving players on ice for goal from events data
-                    shot['players_on_for'] = sorted(
-                        [plr['playerId'] for plr in goal[
-                            'attendants']['positive']])
-                    shot['players_on_against'] = sorted(
-                        [plr['playerId'] for plr in goal[
-                            'attendants']['negative']])
+                    shot['players_on_for'] = sorted([plr['playerId'] for plr in goal['attendants']['positive']])
+                    shot['players_on_against'] = sorted([plr['playerId'] for plr in goal['attendants']['negative']])
                 # retrieving players on ice from shifts data
                 elif shifts:
                     skaters = shifts[-shot['time']]
                     shot['players_on_for'] = sorted([
-                        plr[-1]['player_id'] for plr in skaters if
-                        plr[-1]['team'] == shot['team']])
+                        plr[-1]['player_id'] for plr in skaters if plr[-1]['team'] == shot['team']])
                     shot['players_on_against'] = sorted([
-                        plr[-1]['player_id'] for plr in skaters if
-                        plr[-1]['team'] == shot['team_against']])
+                        plr[-1]['player_id'] for plr in skaters if plr[-1]['team'] == shot['team_against']])
                 # using empty lists if no shift data is available
                 else:
                     shot['players_on_for'] = list()
