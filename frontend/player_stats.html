@@ -228,21 +228,21 @@
                     Nur U23-Spieler anzeigen
                 </label>
             </div> -->
-            <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
-                <label for="longestStreak">
+            <div class="border-0">
+                    <label for="longestStreak">
                     <input type="checkbox" id="longestStreak" data-ng-model="$parent.showOnlyLongestStreak" value="">
                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                     Nur längste Serien anzeigen
                 </label>
             </div>
-            <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
+            <div class="border-0">
                 <label for="currentStreak">
                     <input type="checkbox" id="currentStreak" data-ng-model="$parent.showOnlyCurrentStreak" value="">
                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
                     Nur aktuelle Serien anzeigen
                 </label>
             </div>
-            <div class="border-0" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
+            <div class="border-0">
                 <label for="strictStreak">
                     <input type="checkbox" id="strictStreak" data-ng-model="$parent.showStrictStreaks" data-ng-change="changeStreakType()" value="">
                     <span class="cr"><i class="cr-icon glyphicon glyphicon-ok"></i></span>
@@ -1377,6 +1377,7 @@
                 </th>
             </tr>
         </thead>
+
         <tbody>
             <tr data-ng-repeat="streak in streaks | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:longestStreakFilter | filter:currentStreakFilter | filter:{type: scoringStreakTypeFilter} | filter:{full_name: nameFilter} | filter:teamFilter | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter}">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
