@@ -797,7 +797,7 @@
         <tbody>
             <tr class="table-info" data-ng-repeat="goalie in home_career_stats | filter:{position: 'GK'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ goalie.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="goalie['prev_teams'].indexOf(current_game.guest.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
                 <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
                 <td data-ng-if="!previous_stats_home" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
@@ -846,7 +846,7 @@
         <tbody>
             <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'DE'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="skater['prev_teams'].indexOf(current_game.guest.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
@@ -895,7 +895,7 @@
         <tbody>
             <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'FO'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="skater['prev_teams'].indexOf(current_game.guest.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
                 <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
@@ -950,7 +950,7 @@
         <tbody>
             <tr class="table-warning" data-ng-repeat="goalie in road_career_stats | filter: {position: 'GK'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ goalie.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="goalie['prev_teams'].indexOf(current_game.home.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{goalie.id}}">{{ goalie.firstname }} {{ goalie.surname }}{{ goalie.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].games : '' }}</td>
                 <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].w : '' }}</td>
                 <td data-ng-if="!previous_stats_road" class="w-06 text-right">{{ goalie['statistics'].games ? goalie['statistics'].l : '' }}</td>
@@ -999,7 +999,7 @@
         <tbody>
             <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'DE'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="skater['prev_teams'].indexOf(current_game.home.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
@@ -1048,7 +1048,7 @@
         <tbody>
             <tr class="table-warning" data-ng-repeat="skater in road_career_stats | filter:{position: 'FO'} | filter:{active: true} |orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
-                <td class="w-15"><a href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
+                <td class="w-15"><a data-ng-style="skater['prev_teams'].indexOf(current_game.home.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.guest.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
                 <td data-ng-if="!previous_stats_road" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
