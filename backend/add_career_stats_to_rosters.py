@@ -6,6 +6,7 @@ import yaml
 import json
 import argparse
 
+from operator import itemgetter
 from collections import defaultdict
 
 from utils import player_name_corrections
@@ -14,6 +15,8 @@ from utils import player_name_corrections
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 SKATER_INTEGERS = ['gp', 'g', 'a', 'pts', 'plus_minus', 'pim', 'ppg', 'shg', 'gwg', 'sog']
+
+TEAMGETTER = itemgetter('team')
 
 
 def combine_season_statlines(season_stat_lines):
@@ -157,6 +160,10 @@ if __name__ == '__main__':
                 else:
                     # retaining previous season's stats (if available)
                     plr['prev_season'] = prev_season_player_stats.pop(0)
+            # retrieving current player's previous DEL teams
+            prev_teams = set(map(TEAMGETTER, curr_player_career_stats['seasons']))
+            prev_teams.discard(team)
+            plr['prev_teams'] = list(prev_teams)
 
             # retaining career stats
             if curr_player_career_stats and 'all' in curr_player_career_stats['career']:
