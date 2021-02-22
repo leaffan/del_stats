@@ -143,7 +143,7 @@ app.factory('svc', function() {
         },
         // formats time (in seconds) as mm:ss
         formatTime: function(timeInSeconds) {
-            return Math.floor(timeInSeconds / 60) + ":" + ('00' + (Math.floor(timeInSeconds) % 60)).slice(-2);
+            return this.pad(Math.floor(timeInSeconds / 60), 2) + ":" + ('00' + (Math.floor(timeInSeconds) % 60)).slice(-2);
         },
         // gets total sum of filtered attribute values
         getFilteredTotal: function(list, attribute, dataSource) {
