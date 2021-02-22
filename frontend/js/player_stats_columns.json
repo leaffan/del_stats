@@ -167,6 +167,7 @@
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
         {"data_key": "on_ice_sh_f", "col_header": "OISF", "expl_de": "Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Shots with Player on Ice, i.e Corsi For"},
         {"data_key": "on_ice_sh_a", "col_header": "OISA", "expl_de": "Gegnerische Schüsse mit Spieler auf dem Eis", "expl_en": "Shots Against with Player on Ice, i.e. Corsi Against"},
         {"data_key": "on_ice_sh_pctg", "col_header": "OIS%", "expl_de": "Anteil der Schüsse des Teams mit Spieler auf dem Eis", "expl_en": "Percentage of Shots with Player on Ice, i.e. Corsi For Percentage"},
