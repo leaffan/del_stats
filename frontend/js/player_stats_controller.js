@@ -7,6 +7,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     $scope.tableSelect = 'basic_stats';
     $scope.seasonTypeSelect = 'RS';
     $scope.scoringStreakTypeFilter = 'points';
+    $scope.minGamesPlayed = 1;
+    $scope.minTimeOnIce = 0;
+    $scope.minTimeOnIceInMinutes = 0;
+    $scope.minTimeOnIceInMinutesFormatted = '00:00';
+    $scope.minGoalieGamesPlayed = 1;
+    $scope.minGoalieTimeOnIce = 0;
+    $scope.minGoalieTimeOnIceInMinutes = 0;
+    $scope.minGoalieTimeOnIceInMinutesFormatted = '00:00';
     $scope.showStrictStreaks = true;
     $scope.u23Check = false;
     $scope._5v5Check = false;
@@ -83,10 +91,10 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'homeAwaySelect', 'seasonTypeSelect',
         'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
     ], function () {
-        if ($scope.player_games) {
+        if ($scope.player_games && !$scope.tableSelect.includes('goalie')) {
             $scope.filtered_player_stats = $scope.filterStats($scope.player_games);
         }
-        if ($scope.goalie_games) {
+        if ($scope.goalie_games && $scope.tableSelect.includes('goalie')) {
             $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
         }
     }, true);
@@ -325,6 +333,17 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             }
 
         });
+
+        $scope.maxGoalieGamesPlayed = Math.max.apply(Math, filtered_goalie_stats.map(function(o) { return o.games_played; }));
+        $scope.maxGoalieTimeOnIce = Math.max.apply(Math, filtered_goalie_stats.map(function(o) { return o.toi; }));
+        $scope.maxGoalieTimeOnIceInMinutes = Math.floor($scope.maxGoalieTimeOnIce / 60);
+        if ($scope.minGoalieGamesPlayed > 1) {
+            filtered_goalie_stats = filtered_goalie_stats.filter(stat_line => stat_line.games_played >= $scope.minGoalieGamesPlayed);
+        }
+        if ($scope.minGoalieTimeOnIce > 0) {
+            filtered_goalie_stats = filtered_goalie_stats.filter(stat_line => stat_line.toi >= $scope.minGoalieTimeOnIce);
+        }
+
         return filtered_goalie_stats;
     }
 
@@ -740,6 +759,23 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             }
 
         });
+
+        // retrieving maximum number of games played from filtered player stats
+        $scope.maxGamesPlayed = Math.max.apply(Math, filtered_player_stats.map(function(o) { return o.games_played; }));
+        // retrieving maximum amount of time on ice from filtered players
+        $scope.maxTimeOnIce = Math.max.apply(Math, filtered_player_stats.map(function(o) { return o.time_on_ice; }));
+        // converting time on ice from seconds into full minutes
+        $scope.maxTimeOnIceInMinutes = Math.floor($scope.maxTimeOnIce / 60);
+
+        // applying minimum games played filter
+        if ($scope.minGamesPlayed > 1) {
+            filtered_player_stats = filtered_player_stats.filter(stat_line => stat_line.games_played >= $scope.minGamesPlayed);
+        }
+        // applying minimum time on ice filter
+        if ($scope.minTimeOnIce > 0) {
+            filtered_player_stats = filtered_player_stats.filter(stat_line => stat_line.time_on_ice >= $scope.minTimeOnIce);
+        }
+
         return filtered_player_stats;
     };
 
@@ -1017,5 +1053,36 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         }
     };
 
+    changeMinGamesPlayed = function() {
+        if ($scope.tableSelect.includes('goalie')) {
+            $scope.filtered_goalie_stats = $scope.filterGoalieStats();
+        } else {
+            $scope.filtered_player_stats = $scope.filterStats();
+        }
+        $scope.$apply();
+    }
+
+    inputMinTimeOnIce = function() {
+        if ($scope.tableSelect.includes('goalie')) {
+            $scope.minGoalieTimeOnIce = $scope.minGoalieTimeOnIceInMinutes * 60;
+            $scope.minGoalieTimeOnIceInMinutesFormatted = svc.pad($scope.minGoalieTimeOnIceInMinutes, 2) + ':00';
+        } else {
+            $scope.minTimeOnIce = $scope.minTimeOnIceInMinutes * 60;
+            $scope.minTimeOnIceInMinutesFormatted = svc.pad($scope.minTimeOnIceInMinutes, 2) + ':00';
+        }
+    }
+
+    changeMinTimeOnIce = function() {
+        if ($scope.tableSelect.includes('goalie')) {
+            $scope.minGoalieTimeOnIce = $scope.minGoalieTimeOnIceInMinutes * 60;
+            $scope.minGoalieTimeOnIceInMinutesFormatted = svc.pad($scope.minGoalieTimeOnIceInMinutes, 2) + ':00';
+            $scope.filtered_goalie_stats = $scope.filterGoalieStats();
+        } else {
+            $scope.minTimeOnIce = $scope.minTimeOnIceInMinutes * 60;
+            $scope.minTimeOnIceInMinutesFormatted = svc.pad($scope.minTimeOnIceInMinutes, 2) + ':00';
+            $scope.filtered_player_stats = $scope.filterStats();
+        }
+        $scope.$apply();
+    }
 
 });
