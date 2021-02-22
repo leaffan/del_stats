@@ -166,7 +166,7 @@
                 data-ng-model="ctrl.toDate" data-ng-model-options="{ updateOn: 'blur' }" change="changeDate()">
             </div>
         </div>
-        <div class="form-row mb-3">
+        <div class="form-row mb-1">
             <div class="input-group col-4">
                 <select class="form-control" data-ng-model="teamSelect">
                     <option data-ng-option value selected="selected">alle Teams</option>
@@ -218,6 +218,45 @@
                 </div>
                 <input class="form-control" id="maximumAgeInput" type="text" placeholder="Alter (JJ.DDD)" data-ng-model="maximumAge" data-ng-minlength="2" />
             </div>
+        </div>
+
+
+
+        <div class="form-row mb-3" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps' && tableSelect != 'player_information'">
+
+            <div class="input-group col-6" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
+                <div class="input-group-prepend w-65">
+                    <label class="input-group-text w-100 justify-content-center">Mindestens absolvierte Spiele:</label>
+                </div>
+                <input class="form-control" type="text" data-ng-model="$parent.$parent.minGamesPlayed" readonly />
+                <input type="range" data-ng-model="$parent.$parent.minGamesPlayed" class="custom-range" min="1" max="{{$parent.$parent.maxGamesPlayed}}" onchange="changeMinGamesPlayed()">
+            </div>
+
+            <div class="input-group col-6" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
+                <div class="input-group-prepend w-65">
+                    <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
+                </div>
+                <input class="form-control" type="text" data-ng-model="$parent.$parent.minTimeOnIceInMinutesFormatted" readonly />
+                <input type="range" data-ng-model="$parent.$parent.minTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
+            </div>
+
+            <div class="input-group col-6" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
+                <div class="input-group-prepend w-65">
+                    <label class="input-group-text w-100 justify-content-center">Mindestens absolvierte Spiele:</label>
+                </div>
+                <input class="form-control" type="text" data-ng-model="$parent.$parent.minGoalieGamesPlayed" readonly />
+                <input type="range" data-ng-model="$parent.$parent.minGoalieGamesPlayed" class="custom-range" min="1" max="{{$parent.$parent.maxGoalieGamesPlayed}}" onchange="changeMinGamesPlayed()">
+            </div>
+
+            <div class="input-group col-6" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
+                <div class="input-group-prepend w-65">
+                    <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
+                </div>
+                <input class="form-control" type="text" data-ng-model="$parent.$parent.minGoalieTimeOnIceInMinutesFormatted" readonly />
+                <input type="range" data-ng-model="$parent.$parent.minGoalieTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxGoalieTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
+            </div>
+    
+
         </div>
 
         <div class="mt-0 mb-3" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
@@ -525,7 +564,7 @@
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:teamFilter | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:greaterThanFilter('games_played', 0)">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
-                <td class="w-21">
+                <td class="w-19">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
                 </td>
@@ -533,13 +572,14 @@
                     <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
-                <td class="w-10 text-right">{{ stat.games_played }}</td>
-                <td class="w-10 text-right">{{ stat.on_ice_sh_f }}</td>
-                <td class="w-10 text-right">{{ stat.on_ice_sh_a }}</td>
-                <td class="w-10 text-right">{{ stat.on_ice_sh_pctg.toFixed(1) }} %</td>
-                <td class="w-10 text-right">{{ stat.on_ice_unblocked_sh_f }}</td>
-                <td class="w-10 text-right">{{ stat.on_ice_unblocked_sh_a }}</td>
-                <td class="w-10 text-right">{{ stat.on_ice_unblocked_sh_pctg.toFixed(1) }} %</td>
+                <td class="w-09 text-right">{{ stat.games_played }}</td>
+                <td class="w-09 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
+                <td class="w-09 text-right">{{ stat.on_ice_sh_f }}</td>
+                <td class="w-09 text-right">{{ stat.on_ice_sh_a }}</td>
+                <td class="w-09 text-right">{{ stat.on_ice_sh_pctg.toFixed(1) }} %</td>
+                <td class="w-09 text-right">{{ stat.on_ice_unblocked_sh_f }}</td>
+                <td class="w-09 text-right">{{ stat.on_ice_unblocked_sh_a }}</td>
+                <td class="w-09 text-right">{{ stat.on_ice_unblocked_sh_pctg.toFixed(1) }} %</td>
             </tr>
         </tbody>
     </table>
