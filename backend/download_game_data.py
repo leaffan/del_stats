@@ -108,7 +108,7 @@ def download_task(tgt_url, tgt_path, last_modified_dict):
     # retrieving date of last modification
     last_modified = r.headers['Last-Modified']
 
-    time.sleep(0.1)
+    time.sleep(0.2)
 
     return tgt_url, last_modified
 
