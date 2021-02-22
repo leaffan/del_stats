@@ -12,7 +12,7 @@ CONFIG = yaml.safe_load(open(os.path.join(
 
 ALL_PLAYERS = os.path.join(CONFIG['tgt_processing_dir'], 'del_players.json')
 TGT_DIR = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data')
-SEASON = 2019
+SEASON = 2020
 
 
 def get_power_play_combos_in_period(
