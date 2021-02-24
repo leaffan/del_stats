@@ -224,6 +224,7 @@
 
         <div class="form-row mb-3" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps' && tableSelect != 'player_information'">
 
+            <!-- skater filters for minimum games played/time on ice -->
             <div class="input-group col-6" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
                 <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens absolvierte Spiele:</label>
@@ -232,7 +233,7 @@
                 <input type="range" data-ng-model="$parent.$parent.minGamesPlayed" class="custom-range" min="1" max="{{$parent.$parent.maxGamesPlayed}}" onchange="changeMinGamesPlayed()">
             </div>
 
-            <div class="input-group col-6" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
+            <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
                 <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
                 </div>
@@ -240,6 +241,7 @@
                 <input type="range" data-ng-model="$parent.$parent.minTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
             </div>
 
+            <!-- goaltender filters for minimum games played/time on ice -->
             <div class="input-group col-6" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
                 <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens absolvierte Spiele:</label>
@@ -248,7 +250,7 @@
                 <input type="range" data-ng-model="$parent.$parent.minGoalieGamesPlayed" class="custom-range" min="1" max="{{$parent.$parent.maxGoalieGamesPlayed}}" onchange="changeMinGamesPlayed()">
             </div>
 
-            <div class="input-group col-6" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
+            <div class="input-group col-6 pl-0" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
                 <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
                 </div>
