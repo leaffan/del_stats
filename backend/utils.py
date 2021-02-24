@@ -20,12 +20,12 @@ coaches = [
     'Hans Kossmann', 'Dan Lacroix', 'Jürgen Rumrich', 'Franz-David Fritzmeier',
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
     'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak', 'Mihails Svarinskis',
-    'Boris Blank', 'Frank Fischöder'
+    'Boris Blank', 'Frank Fischöder', 'Clark Donatelli', 'Brad Tapper',
 ]
 
 
 name_corrections = {
-    # coaches
+    # regular corrections for names of coaches
     'Thomas Popisch': 'Thomas Popiesch',
     'Tom Pokle': 'Tom Pokel',
     'Paul Thompsen': 'Paul Thompson',
@@ -73,17 +73,14 @@ name_corrections = {
     'Franz Fritzmeier': 'Franz-David Fritzmeier',
     'Fritzmeier': 'Franz-David Fritzmeier',
     'aprey': 'Thomas Popiesch',
-    # at times former assistants become head coaches and
-    # therefore their names no longer need to be adjusted
-    # hence: the following name corrections are only valid until the date
-    # specified after the pipe symbol
     'Pienne Beaulieu': 'Pierre Beaulieu',
     'Pierre Beaulie': 'Pierre Beaulieu',
     'Pierre Beaulien': 'Pierre Beaulieu',
+    # the following name corrections are only valid until the date specified after the pipe symbol
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
-    'Boris Blank': 'Mihails Svarinskis|2021-01-21',
-    # following are individual corrections valid only for the accompanying
-    # game date
+    # the following corrections also includes a replacement only valid after a specified date designated by the ~ symbol
+    'Boris Blank': ['Mihails Svarinskis|2021-01-21', 'Clark Donatelli~2021-02-02'],
+    # following are individual corrections valid only for the accompanying game date
     'Don Jackson': 'Steve Walker//2020-02-02',
     # following are individual corrections valid only for the specified
     # combination of game id and team abbreviation as a workaround for
