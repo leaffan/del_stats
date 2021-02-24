@@ -24,7 +24,6 @@ PER_PLAYER_TGT_DIR = 'per_player'
 GAME_SRC = 'del_games.json'
 SHOT_SRC = 'del_shots.json'
 PLAYER_GAME_STATS_TGT = 'del_player_game_stats.json'
-GAME_SCORE_TGT = 'del_game_score_per_game.json'
 # TODO: reduced csv output
 
 PLAYER_CAREER_SRC_DIR = os.path.join(CONFIG['base_data_dir'], 'career_stats', 'per_player')
@@ -991,7 +990,6 @@ if __name__ == '__main__':
     src_path = os.path.join(tgt_dir, GAME_SRC)
     src_shots_path = os.path.join(tgt_dir, SHOT_SRC)
     tgt_path = os.path.join(tgt_dir, PLAYER_GAME_STATS_TGT)
-    tgt_gs_path = os.path.join(tgt_dir, GAME_SCORE_TGT)
 
     # loading games
     games = json.loads(open(src_path).read())
@@ -1029,26 +1027,6 @@ if __name__ == '__main__':
 
         if limit and cnt >= limit:
             break
-
-    game_scores = list()
-    cnt = 0
-    for item in player_game_stats:
-        single_gs = dict()
-        cnt += 1
-        for key in [
-            'game_id', 'season_type', 'round', 'home_road', 'game_date', 'team', 'opp_team', 'player_id', 'game_score'
-        ]:
-            single_gs[key] = item[key]
-        game_scores.append(single_gs)
-
-    open(tgt_gs_path, 'w').write(json.dumps(game_scores, indent=2))
-    tgt_gs_csv_path = tgt_gs_path.replace(".json", ".csv")
-    with open(tgt_gs_csv_path, 'w', encoding='utf-8') as output_file:
-        output_file.write('\ufeff')
-        dict_writer = csv.DictWriter(
-            output_file, list(game_scores[0].keys()), delimiter=';', lineterminator='\n', extrasaction='ignore')
-        dict_writer.writeheader()
-        dict_writer.writerows(game_scores)
 
     # retrieving current timestamp to indicate last modification of dataset
     current_datetime = datetime.now().timestamp() * 1000
