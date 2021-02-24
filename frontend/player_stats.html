@@ -38,6 +38,7 @@
             <div class="input-group col-4">
                 <select class="form-control" id="table_select" data-ng-model="tableSelect" data-ng-change="changeTable()">
                     <option data-ng-option value="basic_stats">Basisstatistiken</option>
+                    <option data-ng-option value="basic_stats_5v5">Basisstatistiken (5-gegen-5)</option>
                     <option data-ng-option value="per_game_stats">Spielbezogene Statistiken</option>
                     <option data-ng-option value="time_on_ice_shift_stats">Eiszeiten / Wechsel</option>
                     <option data-ng-option value="per_60_stats">Eiszeitbezogene Statistiken</option>
@@ -233,13 +234,23 @@
                 <input type="range" data-ng-model="$parent.$parent.minGamesPlayed" class="custom-range" min="1" max="{{$parent.$parent.maxGamesPlayed}}" onchange="changeMinGamesPlayed()">
             </div>
 
+            <!-- <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats' && tableSelect != 'basic_stats_5v5' && tableSelect != 'on_ice_shot_stats_5v5' && tableSelect != 'on_ice_shot_on_goal_stats_5v5'"> -->
             <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
-                <div class="input-group-prepend w-65">
+                    <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
                 </div>
                 <input class="form-control" type="text" data-ng-model="$parent.$parent.minTimeOnIceInMinutesFormatted" readonly />
                 <input type="range" data-ng-model="$parent.$parent.minTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
             </div>
+
+            <!-- 5v5 time on ice is used for corresponding table displays -->
+            <!-- <div class="input-group col-6 pl-0" data-ng-if="tableSelect == 'basic_stats_5v5' && tableSelect == 'on_ice_shot_stats_5v5' && tableSelect == 'on_ice_shot_on_goal_stats_5v5'">
+                <div class="input-group-prepend w-65">
+                    <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
+                </div>
+                <input class="form-control" type="text" data-ng-model="$parent.$parent.minTimeOnIceInMinutesFormatted" readonly />
+                <input type="range" data-ng-model="$parent.$parent.minTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
+            </div> -->
 
             <!-- goaltender filters for minimum games played/time on ice -->
             <div class="input-group col-6" data-ng-if="tableSelect == 'goalie_stats' || tableSelect == 'goalie_against_avg_stats' || tableSelect == 'goalie_stats_ev' || tableSelect == 'goalie_stats_pp' || tableSelect == 'goalie_stats_sh' || tableSelect == 'goalie_zone_stats_far' || tableSelect == 'goalie_zone_stats_near' || tableSelect == 'goalie_shootout_stats'">
@@ -872,7 +883,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="game_score in top_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
+            <tr data-ng-repeat="game_score in filtered_top_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a href="#!/player_profile/{{season}}/{{game_score.team}}/{{game_score.player_id}}">{{ game_score.full_name }}</a>
@@ -906,7 +917,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="game_score in bottom_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
+            <tr data-ng-repeat="game_score in filtered_bottom_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a href="#!/player_profile/{{season}}/{{game_score.team}}/{{game_score.player_id}}">{{ game_score.full_name }}</a>
@@ -1055,7 +1066,6 @@
         </thead>
         <tbody>
             <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:teamFilter | filter:greaterThanFilter('games_played', 0)">
-            <!-- <tr data-ng-repeat="stat in filtered_player_stats"> -->
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
@@ -1066,15 +1076,54 @@
                     <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
                 <td class="w-07 text-right">{{ stat.games_played }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.goals_5v5_from_events : stat.goals }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.assists_5v5 : stat.assists }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.points_5v5 : stat.points }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.primary_assists_5v5 : stat.primary_assists }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.primary_points_5v5 : stat.primary_points }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.secondary_assists_5v5 : stat.secondary_assists }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.shots_on_goal_5v5 : stat.shots_on_goal }}</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.shot_pctg_5v5.toFixed(2) : stat.shot_pctg.toFixed(2) }} %</td>
-                <td class="w-07 text-right">{{ _5v5Check ? stat.points_per_game_5v5.toFixed(2) : stat.points_per_game.toFixed(2) }}</td>
+                <td class="w-07 text-right">{{ stat.goals }}</td>
+                <td class="w-07 text-right">{{ stat.assists }}</td>
+                <td class="w-07 text-right">{{ stat.points }}</td>
+                <td class="w-07 text-right">{{ stat.primary_assists }}</td>
+                <td class="w-07 text-right">{{ stat.primary_points }}</td>
+                <td class="w-07 text-right">{{ stat.secondary_assists }}</td>
+                <td class="w-07 text-right">{{ stat.shots_on_goal }}</td>
+                <td class="w-07 text-right">{{ stat.shot_pctg.toFixed(2) }} %</td>
+                <td class="w-07 text-right">{{ stat.points_per_game.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="basic_stats_5v5" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow" data-ng-if="tableSelect == 'basic_stats_5v5'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:minimumAgeFilter | filter:maximumAgeFilter | filter: {iso_country: countryFilter} | filter: {position: positionFilter} | filter:teamFilter | filter:greaterThanFilter('games_played', 0)">
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
+                <td class="w-21">
+                    <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.full_name }}</span>
+                </td>
+                <td class="w-05">
+                    <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
+                    <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
+                </td>
+                <td class="w-07 text-right">{{ stat.games_played }}</td>
+                <td class="w-07 text-right">{{ stat.goals_5v5_from_events }}</td>
+                <td class="w-07 text-right">{{ stat.assists_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.points_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.primary_assists_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.primary_points_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.secondary_assists_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.shots_on_goal_5v5 }}</td>
+                <td class="w-07 text-right">{{ stat.shot_pctg_5v5.toFixed(2) }} %</td>
+                <td class="w-07 text-right">{{ stat.points_per_game_5v5.toFixed(2) }}</td>
             </tr>
         </tbody>
     </table>
