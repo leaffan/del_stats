@@ -136,6 +136,28 @@
         {"data_key": "game_score_per_game", "col_header": "GS/G", "expl_de": "Game-Score pro Spiel", "expl_en": "Game Score/Game"},
         {"data_key": "game_score_per_60", "col_header": "GS/60", "expl_de": "Game-Score pro 60 Minuten Eiszeit", "expl_en": "Game Score/60"}
     ],
+    "top_game_scores_per_game": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "season_type", "col_header": "Saisonphase", "expl_de": null, "expl_en": null},
+        {"data_key": "game_date", "col_header": "Spieldatum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "game_id", "col_header": "Spiel", "expl_de": null, "expl_en": null},
+        {"data_key": "single_game_score", "col_header": "GS", "expl_de": "Game-Score", "expl_en": "Game Score"},
+        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
+        {"data_key": "game_score_per_60", "col_header": "GS/60", "expl_de": "Game-Score pro 60 Minuten Eiszeit", "expl_en": "Game Score/60"}
+    ],
+    "bottom_game_scores_per_game": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "season_type", "col_header": "Saisonphase", "expl_de": null, "expl_en": null},
+        {"data_key": "game_date", "col_header": "Spieldatum", "expl_de": null, "expl_en": null},
+        {"data_key": "round", "col_header": "Spieltag", "expl_de": null, "expl_en": null},
+        {"data_key": "game_id", "col_header": "Spiel", "expl_de": null, "expl_en": null},
+        {"data_key": "b_single_game_score", "col_header": "GS", "expl_de": "Game-Score", "expl_en": "Game Score"},
+        {"data_key": "time_on_ice", "col_header": "TOI", "expl_de": "Eiszeit insgesamt", "expl_en": "Time On Ice"},
+        {"data_key": "game_score_per_60", "col_header": "GS/60", "expl_de": "Game-Score pro 60 Minuten Eiszeit", "expl_en": "Game Score/60"}
+    ],
     "on_ice_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
