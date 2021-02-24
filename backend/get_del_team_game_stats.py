@@ -628,35 +628,48 @@ def correct_name(name, game_date=None, corrections=name_corrections):
     # at times coaches' name are specified in upper case
     if name.upper() == name:
         name = name.title()
-    # conducting manual coach replacement, indicated in list of name corrections
-    # by *name of replacement coach//date for which the replacement should be made*
-    if name in name_corrections:
-        single_date_correction, *valid_on_date = name_corrections[name].split("//")
-        if game_date and valid_on_date:
-            valid_on_date = parse(valid_on_date[0])
-            # checking if current game was actually played on date of coach replacement
-            if game_date == valid_on_date:
-                name = single_date_correction
-        else:
-            name = name
-    # at times former assistants become head coaches and therefore their names no longer need to be adjusted,
-    # the corresponding name correction is indicated in list of all name corrections by a *valid until* date
-    # specified after a pipe symbol, e.g. *'Pierre Beaulieu': 'Brandon Reid|2019-12-12'* means Pierre Beaulieu
-    # is adjusted to Brandon Reid but only for games played until Dec 12, 2019
+
     tries = 0
     while name in name_corrections and tries < 3:
-        if "//" in name_corrections[name]:
-            break
-        corrected_name, *valid_to_date = name_corrections[name].split("|")
-        # checking whether a game date was provided and the current correction
-        # has an expiration date
-        if game_date and valid_to_date:
-            valid_to_date = parse(valid_to_date[0])
-            # checking if game had been played before expiration date
-            if game_date <= valid_to_date:
-                name = corrected_name
+        if type(name_corrections[name]) is list:
+            corrections = name_corrections[name]
         else:
-            name = corrected_name
+            corrections = [name_corrections[name]]
+
+        for correction in corrections:
+            # corrections for a specific date are marked with a '//'
+            if "//" in correction:
+                valid_on_correction, valid_on_date = correction.split("//")
+                if game_date and valid_on_date:
+                    valid_on_date = parse(valid_on_date)
+                    # checking if current game was actually played on date of coach replacement
+                    if game_date == valid_on_date:
+                        name = valid_on_correction
+                        break
+            # at times former assistants become head coaches and therefore their names no longer need to be adjusted,
+            # the corresponding name correction is indicated in list of all name corrections by a *valid until* date
+            # specified after a pipe symbol, e.g. *'Pierre Beaulieu': 'Brandon Reid|2019-12-12'* means Pierre Beaulieu
+            # is adjusted to Brandon Reid but only for games played until Dec 12, 2019
+            # corrections until a specific date are marked with a '|'
+            elif "|" in correction:
+                valid_to_correction, valid_to_date = correction.split("|")
+                if game_date and valid_to_date:
+                    valid_to_date = parse(valid_to_date)
+                    # checking if current game was actually played prior to valid to date
+                    if game_date <= valid_to_date:
+                        name = valid_to_correction
+                        break
+            # corrections from a specific date on are marked with a '~'
+            elif "~" in correction:
+                valid_from_correction, valid_from_date = correction.split("~")
+                if game_date and valid_from_date:
+                    valid_from_date = parse(valid_from_date)
+                    # checking if current game was actually played after valid from date
+                    if game_date >= valid_from_date:
+                        name = valid_from_correction
+                        break
+            else:
+                name = correction
         tries += 1
 
     return name
