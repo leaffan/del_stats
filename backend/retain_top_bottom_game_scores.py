@@ -9,8 +9,6 @@ import statistics
 
 from operator import itemgetter
 
-from utils import calculate_age
-
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
@@ -59,7 +57,7 @@ def strip_game_scores(orig_game_scores, personal_data, rename_game_score='single
 
     # data keys to retain from personal player data
     personal_data_keys = [
-        'position', 'first_name', 'last_name', 'full_name', 'u23', 'u20', 'rookie', 'iso_country', 'date_of_birth'
+        'position', 'first_name', 'last_name', 'full_name', 'u23', 'u20', 'rookie', 'iso_country', 'age'
     ]
 
     # data keys to retaing from player game stats
@@ -90,8 +88,6 @@ def strip_game_scores(orig_game_scores, personal_data, rename_game_score='single
 
         stripped_gs["game_score_per_60"] = round(
             stripped_gs[rename_game_score] / (stripped_gs['time_on_ice'] / 60) * 60, 4)
-        stripped_gs['age'] = calculate_age(stripped_gs['date_of_birth'], stripped_gs['game_date'])
-        del stripped_gs['date_of_birth']
 
         stripped_game_scores.append(stripped_gs)
 
@@ -124,10 +120,11 @@ if __name__ == '__main__':
 
     # loading player and goalie stats
     player_stats = json.loads(open(src_player_stats_path).read())[-1]
-    print(len(player_stats))
+    print("+ %d player stats items loaded" % len(player_stats))
     skater_stats = list(filter(lambda ps: ps['position'] != 'GK', player_stats))
-    print(len(skater_stats))
+    print("+ Retained %d skater stats items" % len(skater_stats))
     goalie_stats = json.loads(open(src_goalie_stats_path).read())
+    print("+ %d goalie stats items loaded" % len(goalie_stats))
     orig_personal_data = json.loads(open(src_personal_data_path).read())[-1]
 
     personal_data = dict()
