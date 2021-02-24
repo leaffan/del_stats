@@ -13,6 +13,20 @@
         {"data_key": "shot_pctg", "col_header": "SH%", "expl_de": "Schussquote", "expl_en": "Shooting Percentage", "width": 8},
         {"data_key": "points_per_game", "col_header": "PPG", "expl_de": "Punkte/Spiel", "expl_en": "Points/Game", "width": 8}
     ],
+    "basic_stats_5v5": [
+        {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null, "width": 19},
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null, "width": 5},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played", "width": 8},
+        {"data_key": "goals_5v5_from_events", "col_header": "G 5v5", "expl_de": "Tore im 5-gegen-5", "expl_en": "5v5 Goals", "width": 8},
+        {"data_key": "assists_5v5", "col_header": "A 5v5", "expl_de": "Vorlagen im 5-gegen-5", "expl_en": "5v5 Assists", "width": 8},
+        {"data_key": "points_5v5", "col_header": "P 5v5", "expl_de": "Punkte im 5-gegen-5", "expl_en": "5v5 Points", "width": 8},
+        {"data_key": "primary_assists_5v5", "col_header": "A1 5v5", "expl_de": "Direkte Vorlagen im 5-gegen-5", "expl_en": "5v5 Primary Assists", "width": 8},
+        {"data_key": "primary_points_5v5", "col_header": "P1 5v5", "expl_de": "Direkte Punkte im 5-gegen-5", "expl_en": "5v5 Primary Points", "width": 8},
+        {"data_key": "secondary_assists_5v5", "col_header": "A2 5v5", "expl_de": "Indirekte Vorlagen im 5-gegen-5", "expl_en": "5v5 Secondary Assists", "width": 8},
+        {"data_key": "shots_on_goal_5v5", "col_header": "SOG 5v5", "expl_de": "Torschüsse im 5-gegen-5", "expl_en": "5v5 Shots On Goal", "width": 8},
+        {"data_key": "shot_pctg_5v5", "col_header": "SH% 5v5", "expl_de": "Schussquote im 5-gegen-5", "expl_en": "5v5 Shooting Percentage", "width": 8},
+        {"data_key": "points_per_game_5v5", "col_header": "PPG 5v5", "expl_de": "Punkte/Spiel im 5-gegen-5", "expl_en": "5v5 Points/Game", "width": 8}
+    ],
     "per_game_stats": [
         {"data_key": "last_name", "col_header": "Name", "expl_de": null, "expl_en": null},
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
