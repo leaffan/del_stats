@@ -17,7 +17,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     $scope.minGoalieTimeOnIceInMinutesFormatted = '00:00';
     $scope.showStrictStreaks = true;
     $scope.u23Check = false;
-    $scope._5v5Check = false;
     // setting default sort configuration
     $scope.sortConfig = {
         'sortKey': 'points',
@@ -97,6 +96,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         if ($scope.goalie_games && $scope.tableSelect.includes('goalie')) {
             $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
         }
+        $scope.filtered_top_game_scores = $scope.filterGameScores($scope.top_game_scores);
+        $scope.filtered_bottom_game_scores = $scope.filterGameScores($scope.bottom_game_scores);
     }, true);
 
     // loading league-wide stats from external json file
@@ -198,6 +199,18 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
     $scope.readCSV();
 
+    $scope.filterGameScores = function(game_scores) {
+        if (game_scores === undefined)
+            return game_scores;
+        filtered_game_scores = [];
+        game_scores.forEach(element => {
+            element_passed = $scope.elementPassedFilters(element)
+            if (element_passed) {
+                filtered_game_scores.push(element);
+            }
+        });
+        return filtered_game_scores;
+    }
 
     $scope.filterGoalieStats = function(stats) {
         filtered_goalie_stats = {};
@@ -1043,6 +1056,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         if ($scope.goalie_games) {
             $scope.filtered_goalie_stats = $scope.filterGoalieStats($scope.goalie_games);
         }
+        $scope.filtered_top_game_scores = $scope.filterGameScores($scope.top_game_scores);
+        $scope.filtered_bottom_game_scores = $scope.filterGameScores($scope.bottom_game_scores);
     }
 
     $scope.teamFilter = function (a) {
