@@ -19,6 +19,7 @@ python get_league_wide_stats.py --initial -s %SEASON%
 python get_del_goalie_stats.py --initial -s %SEASON%
 python aggregate_del_player_game_stats.py -s %SEASON%
 python get_streaks.py -s %SEASON%
+python retain_top_bottom_game_scores.py -s %SEASON%
 
 rem TODO: check base stats
 if [%SEASON%] EQU [2020] (

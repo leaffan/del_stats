@@ -11,6 +11,7 @@ python3 /home/pacs/mre00/users/markus/_del/get_league_wide_stats.py -s "$season"
 python3 /home/pacs/mre00/users/markus/_del/get_del_goalie_stats.py -s "$season" --initial
 python3 /home/pacs/mre00/users/markus/_del/aggregate_del_player_game_stats.py -s "$season"
 python3 /home/pacs/mre00/users/markus/_del/get_streaks.py -s "$season"
+python3 /home/pacs/mre00/users/markus/_del/retain_top_bottom_game_scores.py -s "$season"
 python3 /home/pacs/mre00/users/markus/_del/create_calendar.py
 python3 /home/pacs/mre00/users/markus/_del/update_coaches.py
 python3 /home/pacs/mre00/users/markus/_del/update_h2h_records.py
