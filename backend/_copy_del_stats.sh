@@ -15,7 +15,10 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_strict.json /
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_loose.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_strict.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_shots.csv /home/doms/leaffan.net/subs/www/del/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_game_scores_per_game_top.json /home/doms/leaffan.net/subs/www/del/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_game_scores_per_game_bottom.json /home/doms/leaffan.net/subs/www/del/data/$season
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del/data/$season/per_player/
+
 
 # copying career stats to standard site location
 cp -v /home/pacs/mre00/users/markus/_del/_data/career_stats/updated_career_stats.json /home/doms/leaffan.net/subs/www/del/data/career_stats/career_stats.json
@@ -39,6 +42,8 @@ cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_loose.json /h
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_streaks_strict.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_loose.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_slumps_strict.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_game_scores_per_game_top.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
+cp -v /home/pacs/mre00/users/markus/_del/_data/$season/del_game_scores_per_game_bottom.json /home/doms/leaffan.net/subs/www/del_extended/data/$season
 cp -TRv /home/pacs/mre00/users/markus/_del/_data/$season/per_player/ /home/doms/leaffan.net/subs/www/del_extended/data/$season/per_player/
 
 # copying career stats to extended site location
