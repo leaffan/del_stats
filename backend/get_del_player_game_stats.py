@@ -72,7 +72,7 @@ OUT_FIELDS = [
     "minus", "plus_minus", "pp_goals", "pp_assists",
     "pp_primary_assists", "pp_secondary_assists", "pp_points",
     "sh_goals", "sh_assists", "sh_points", "assists_5v5",
-    "primary_assists_5v5", "points_5v5", "primary_points_5v5", "gw_goals",
+    "primary_assists_5v5", "points_5v5", "primary_points_5v5", "secondary_assists_5v5", "gw_goals",
     "shots", "shots_on_goal", "shots_missed", "shots_blocked",
     "faceoffs", "faceoffs_won", "faceoffs_lost", "blocked_shots",
     "time_on_ice", "time_on_ice_pp", "time_on_ice_sh", "shifts", "penalties",
