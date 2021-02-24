@@ -257,7 +257,7 @@ app.factory('svc', function() {
             return [
                 'assists', 'blocked_shots', 'faceoffs', 'faceoffs_lost', 'faceoffs_won',
                 'first_goals', 'games_played', 'goals', 'goals_5v5', 'assists_5v5', 'points_5v5',
-                'primary_assists_5v5', 'primary_points_5v5', 'gw_goals', 'lazy',
+                'primary_assists_5v5', 'primary_points_5v5', 'secondary_assists_5v5', 'gw_goals', 'lazy',
                 'minus', 'other', 'penalties', 'penalty_shots', 'pim', 'pim_from_events',
                 'plus', 'plus_minus', 'points', 'pp_points', 'pp_goals', 'pp_assists',
                 'pp_primary_assists', 'pp_secondary_assists', 'primary_assists', 'primary_points',
