@@ -47,6 +47,8 @@
                     <option data-ng-option value="on_goal_shot_zones">Schusszonen-Statistiken (Torschüsse)</option>
                     <option data-ng-option value="shot_zones">Schusszonen-Statistiken (alle Schüsse)</option>
                     <option data-ng-option value="game_score_stats">Game-Score-Statistiken</option>
+                    <option data-ng-option value="top_game_scores_per_game">Beste Game-Scores pro Spiel</option>
+                    <option data-ng-option value="bottom_game_scores_per_game">Schlechteste Game-Scores pro Spiel</option>
                     <option data-ng-option value="streaks">Scoringstreaks</option>
                     <option data-ng-option value="slumps">Scoringslumps</option>
                     <option data-ng-option value="shootout_stats">Statistiken im Penaltyschießen</option>
@@ -220,9 +222,7 @@
             </div>
         </div>
 
-
-
-        <div class="form-row mb-3" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps' && tableSelect != 'player_information'">
+        <div class="form-row mb-3" data-ng-if="tableSelect != 'streaks' && tableSelect != 'slumps' && tableSelect != 'player_information' && tableSelect != 'top_game_scores_per_game' && tableSelect != 'bottom_game_scores_per_game'">
 
             <!-- skater filters for minimum games played/time on ice -->
             <div class="input-group col-6" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
@@ -257,8 +257,6 @@
                 <input class="form-control" type="text" data-ng-model="$parent.$parent.minGoalieTimeOnIceInMinutesFormatted" readonly />
                 <input type="range" data-ng-model="$parent.$parent.minGoalieTimeOnIceInMinutes" class="custom-range" min="1" max="{{$parent.$parent.maxGoalieTimeOnIceInMinutes}}" oninput="inputMinTimeOnIce()" onchange="changeMinTimeOnIce()">
             </div>
-    
-
         </div>
 
         <div class="mt-0 mb-3" data-ng-if="tableSelect == 'streaks' || tableSelect == 'slumps'">
@@ -855,6 +853,74 @@
                 <td class="w-07 text-right">{{ stat.game_score.toFixed(2) }}</td>
                 <td class="w-07 text-right">{{ stat.game_score_per_game.toFixed(2) }}</td>
                 <td class="w-07 text-right">{{ stat.game_score_per_60.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="top_game_scores_per_game_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow mt-3" data-ng-if="tableSelect == 'top_game_scores_per_game'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="game_score in top_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
+                <td class="w-21">
+                    <a href="#!/player_profile/{{season}}/{{game_score.team}}/{{game_score.player_id}}">{{ game_score.full_name }}</a>
+                </td>
+                <td class="w-05">
+                    <a href="#!/team_profile/{{season}}/{{game_score.team}}">{{ game_score.team }}</a>
+                </td>
+                <td class="w-10">{{ game_score.season_type }}</td>
+                <td class="w-10 text-right">{{ game_score.game_date }}</td>
+                <td class="w-10 text-right">{{ game_score.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game_score.score, game_score.opp_score) }}"><b>{{game_score.score}}:{{game_score.opp_score}} </b>{{game_score.home_road === 'home'? 'vs.' : '@'}} {{ game_score.opp_team }} {{game_score.game_type === 'SO' ? '(SO)' : game_score.game_type === 'OT' ? '(VL)' : ''}}</td>
+                <td class="w-10 text-right">{{ game_score.single_game_score.toFixed(2) }}</td>
+                <td class="w-10 text-right">{{ svc.formatTime(game_score.time_on_ice) }}</td>
+                <td class="w-10 text-right">{{ game_score.game_score_per_60.toFixed(2) }}</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <table id="bottom_game_scores_per_game_stats" class="table table-responsive-md table-striped table-bordered table-hover table-sm small shadow mt-3" data-ng-if="tableSelect == 'bottom_game_scores_per_game'">
+        <thead class="thead-light">
+            <tr>
+                <th scope="col" class="text-center">Rang</th>
+                <th scope="col" class="text-center" data-ng-repeat="col in stats_cols[tableSelect]">
+                    <a href="" data-ng-click="$parent.sortConfig = $parent.setSortOrder(col.data_key, $parent.sortConfig)">
+                        <abbr title="{{col.expl_de}}" data-ng-if="col.expl_de">{{col.col_header}}</abbr>
+                        <span data-ng-if="!col.expl_de">{{col.col_header}}</span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && $parent.sortConfig['sortDescending']" class="fa fa-caret-down"></span>
+                        <span data-ng-show="$parent.sortConfig['sortKey'] == col.data_key && !$parent.sortConfig['sortDescending']" class="fa fa-caret-up"></span>
+                    </a>
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr data-ng-repeat="game_score in bottom_game_scores | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{position: positionFilter} | filter:teamFilter | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:{iso_country: countryFilter} | filter:minimumAgeFilter | filter:maximumAgeFilter">
+                <td class="w-04 text-right">{{ $index + 1 }}</td>
+                <td class="w-21">
+                    <a href="#!/player_profile/{{season}}/{{game_score.team}}/{{game_score.player_id}}">{{ game_score.full_name }}</a>
+                </td>
+                <td class="w-05">
+                    <a href="#!/team_profile/{{season}}/{{game_score.team}}">{{ game_score.team }}</a>
+                </td>
+                <td class="w-10">{{ game_score.season_type }}</td>
+                <td class="w-10 text-right">{{ game_score.game_date }}</td>
+                <td class="w-10 text-right">{{ game_score.round }}</td>
+                <td class="w-10 {{ svc.setTextColor(game_score.score, game_score.opp_score) }}"><b>{{game_score.score}}:{{game_score.opp_score}} </b>{{game_score.home_road === 'home'? 'vs.' : '@'}} {{ game_score.opp_team }} {{game_score.game_type === 'SO' ? '(SO)' : game_score.game_type === 'OT' ? '(VL)' : ''}}</td>
+                <td class="w-10 text-right">{{ game_score.b_single_game_score.toFixed(2) }}</td>
+                <td class="w-10 text-right">{{ svc.formatTime(game_score.time_on_ice) }}</td>
+                <td class="w-10 text-right">{{ game_score.game_score_per_60.toFixed(2) }}</td>
             </tr>
         </tbody>
     </table>

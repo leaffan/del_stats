@@ -136,6 +136,14 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         $scope.loose_slumps = res.data;
     });
 
+    // loading game scores per game and player from external json file
+    $http.get('data/' + $scope.season + '/del_game_scores_per_game_top.json').then(function (res) {
+        $scope.top_game_scores = res.data;
+    });
+    $http.get('data/' + $scope.season + '/del_game_scores_per_game_bottom.json').then(function (res) {
+        $scope.bottom_game_scores = res.data;
+    });
+
 	$scope.readCSV = function() {
 		// http get request to read CSV file content
         $http.get('data/' + $scope.season + '/del_player_game_stats.csv').then($scope.processData);
@@ -832,7 +840,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'goalie_zone_stats_near': 'save_pctg_slot',
         'goalie_zone_stats_far': 'save_pctg_blue_line',
         'goalie_shootout_stats': 'so_sv_pctg',
-        'game_score_stats': 'game_score'
+        'game_score_stats': 'game_score',
+        'top_game_scores_per_game': 'single_game_score',
+        'bottom_game_scores_per_game': 'b_single_game_score'
     }
 
     // sorting attributes to be used in ascending order
@@ -873,6 +883,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         'on_ice_sog_pctg': ['on_ice_sog_pctg'],
         'on_ice_sog_pctg_5v5': ['on_ice_sog_pctg_5v5'],
         'game_score': ['game_score', 'goals', 'primary_assists'],
+        'single_game_score': ['single_game_score', 'game_date'],
+        'b_single_game_score': ['-b_single_game_score', 'game_date'],
         'gsaa': ['gsaa'],
         'so_sv_pctg': ['so_sv_pctg'],
         'left_side_faceoff_pctg': ['left_side_faceoff_pctg', 'left_side_faceoffs'],
