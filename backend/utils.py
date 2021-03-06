@@ -76,6 +76,8 @@ name_corrections = {
     'Pienne Beaulieu': 'Pierre Beaulieu',
     'Pierre Beaulie': 'Pierre Beaulieu',
     'Pierre Beaulien': 'Pierre Beaulieu',
+    'Kristof Kreutzer': 'Niklas Sundblad',
+    'Christian Hommel': 'Brad Tapper',
     # the following name corrections are only valid until the date specified after the pipe symbol
     'Pierre Beaulieu': 'Brandon Reid|2019-12-12',
     # the following corrections also includes a replacement only valid after a specified date designated by the ~ symbol
@@ -97,6 +99,8 @@ name_corrections = {
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
+    # Referees
+    'Andre Schrader': 'André Schrader',
 }
 
 # defining player name corrections
@@ -151,6 +155,7 @@ iso_country_codes = {
     'ITA': 'it', 'NOR': 'no', 'FRA': 'fr', 'LVA': 'lv', 'SVK': 'sk',
     'DNK': 'dk', 'RUS': 'ru', 'SVN': 'si', 'HUN': 'hu', 'SLO': 'si',
     'AUT': 'at', 'CRO': 'hr', 'CZE': 'cz', 'DEN': 'dk', 'LAT': 'lv',
+    'BEL': 'be',
 }
 
 
