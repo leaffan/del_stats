@@ -25,8 +25,7 @@ PLAYOFF_DATES = {
     2017: datetime.date(2018, 3, 6),
     2018: datetime.date(2019, 3, 5),
     2019: datetime.date(2020, 3, 9),
-    # TODO: adjust once the full DEL schedule is known
-    2020: datetime.date(2021, 3, 1),
+    2020: datetime.date(2021, 4, 19),
 }
 
 POS_KEYS = {'1': 'G', '2': 'D', '3': 'F'}
