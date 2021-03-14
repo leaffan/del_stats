@@ -9,18 +9,15 @@ import requests
 
 from lxml import html
 
-CONFIG = yaml.safe_load(open(os.path.join(
-    os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 PLR_ID_REGEX = re.compile(R"\-(\d+)\/")
 
 POSITIONS = {
     'Stürmer': 'FO', 'Verteidiger': 'DE', 'Torwart': 'GK'
 }
-
 SKATER_CATEGORIES = [
-    'gp', 'g', 'a', 'pts', 'plus_minus', 'pim',
-    'ppg', 'shg', 'gwg', 'sog', 'sh_pctg'
+    'gp', 'g', 'a', 'pts', 'plus_minus', 'pim', 'ppg', 'shg', 'gwg', 'sog', 'sh_pctg'
 ]
 GOALIE_CATEGORIES = [
     'gp', 'min', 'w', 't', 'l', 'so', 'ga', 'gaa', 'sv', 'sv_pctg'
@@ -55,7 +52,7 @@ if __name__ == '__main__':
     # set of processed player ids to avoid duplicate entries in final data set
     # have to check whether this will lead to problems with legitimate player team changes during the season
     processed_plr_ids = set()
-
+    # loading players ids where there is an existing career dataset available
     existing_career_datasets = set()
     pre_season_career_data = json.loads(open(tgt_path).read())
     for item in pre_season_career_data:
@@ -81,10 +78,13 @@ if __name__ == '__main__':
             if match:
                 plr_id = int(match.group(1))
 
+            # checking whether current player has already been processed in this run, i.e. because he switched
+            # teams but is still registered with both
             if plr_id in processed_plr_ids:
                 print("=> Career data for player id %d (URL: %s) already collected previously" % (plr_id, plr_url))
                 continue
 
+            # checking whether an existing career dataset is already available for current player
             if plr_id not in existing_career_datasets:
                 print("+ Downloading new dataset for player id %d from %s" % (plr_id, plr_url))
             else:
@@ -112,8 +112,7 @@ if __name__ == '__main__':
             # retrieving name of player from dictionary of all players
             plr_career_stats['first_name'] = all_players[str(plr_id)]['first_name']
             plr_career_stats['last_name'] = all_players[str(plr_id)]['last_name']
-            # TODO: check and mark different position from dictionary of all
-            # players (?)
+            # TODO: check and mark different position from dictionary of all players (?)
             plr_career_stats['position'] = position
             plr_career_stats['seasons'] = list()
             plr_career_stats['career'] = dict()
