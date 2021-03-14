@@ -37,7 +37,7 @@ def get_download_targets(args, config):
     return seasons, game_types
 
 
-def get_game_ids_and_teams(schedule_dir, season='', game_type='', team=''):
+def get_game_ids_dates_and_teams(schedule_dir, season='', game_type='', team=''):
     '''
     Retrieves ids for games to be downloaded from specified schedule directory,
     season, game type, and team. If either one of the latter parameters is not
@@ -45,6 +45,7 @@ def get_game_ids_and_teams(schedule_dir, season='', game_type='', team=''):
     downloaded. Additionally retrieves ids of teams involved in each game.
     '''
     game_ids_team_ids = defaultdict(set)
+    game_dates = dict()
 
     for dirpath, _, filenames in os.walk(schedule_dir):
         # checking for specified season
@@ -65,8 +66,9 @@ def get_game_ids_and_teams(schedule_dir, season='', game_type='', team=''):
                     if game['status'] == 'AFTER_MATCH':
                         game_ids_team_ids[game['id']].add(game['home']['id'])
                         game_ids_team_ids[game['id']].add(game['guest']['id'])
+                        game_dates[game['id']] = game['start_date']
 
-    return game_ids_team_ids
+    return game_ids_team_ids, game_dates
 
 
 def download_task(tgt_url, tgt_path, last_modified_dict):
@@ -136,8 +138,7 @@ if __name__ == '__main__':
         ])
 
     # loading external configuration
-    config = yaml.safe_load(open(os.path.join(
-        os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
+    config = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
     args = parser.parse_args()
     seasons, game_types = get_download_targets(args, config)
@@ -166,17 +167,17 @@ if __name__ == '__main__':
     for season in seasons:
         for game_type in game_types:
 
+            # setting up target directory and path
+            tgt_dir = os.path.join(tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
+
             print(
                 "+ Downloading %s data for %s games in %d-%d" % (
-                    args.category, config['game_types'][game_type],
-                    season, season + 1))
+                    args.category, config['game_types'][game_type], season, season + 1))
 
             download_tasks = list()
 
-            # retrieving games and teams involved for current season and game
-            # type
-            games_and_teams = get_game_ids_and_teams(
-                schedule_src_dir, season, game_type)
+            # retrieving games, game dates and teams involved for current season and game type
+            games_and_teams, game_dates = get_game_ids_dates_and_teams(schedule_src_dir, season, game_type)
 
             for game_id in games_and_teams:
                 # game player stats are divided in two files for each of the
@@ -193,15 +194,7 @@ if __name__ == '__main__':
                                 base_url, 'match-detail', target_url_component,
                                 str(game_id), "%s.json" % team_id))
 
-                        # setting up target directory and path
-                        tgt_dir = os.path.join(
-                            tgt_base_dir, tgt_sub_dir,
-                            str(season), str(game_type))
-                        if not os.path.isdir(tgt_dir):
-                            os.makedirs(tgt_dir)
-                        tgt_path = os.path.join(
-                            tgt_dir, "%d_%d.json" % (game_id, team_id))
-
+                        tgt_path = os.path.join(tgt_dir, "%d_%d.json" % (game_id, team_id))
                         download_tasks.append((target_url, tgt_path))
                 # regular game stats are stored in a single file for each game
                 else:
@@ -216,14 +209,13 @@ if __name__ == '__main__':
                             base_url, 'matches', str(game_id),
                             "%s.json" % target_url_component))
 
-                    # setting up target directory and path
-                    tgt_dir = os.path.join(
-                        tgt_base_dir, tgt_sub_dir, str(season), str(game_type))
-                    if not os.path.isdir(tgt_dir):
-                        os.makedirs(tgt_dir)
                     tgt_path = os.path.join(tgt_dir, "%d.json" % game_id)
-
                     download_tasks.append((target_url, tgt_path))
+
+            # creating target directory (if necessary)
+            if download_tasks:
+                if not os.path.isdir(tgt_dir):
+                    os.makedirs(tgt_dir)
 
             # downloading data concurrently
             with ThreadPoolExecutor(max_workers=4) as threads:
@@ -240,5 +232,4 @@ if __name__ == '__main__':
                         last_modified_dict[tgt_url] = last_modified
             print()
 
-    open(last_modified_path, 'w').write(
-        json.dumps(last_modified_dict, indent=2))
+    open(last_modified_path, 'w').write(json.dumps(last_modified_dict, indent=2))
