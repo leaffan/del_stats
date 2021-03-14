@@ -24,7 +24,7 @@ python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_roster
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_team_stats
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_player_stats
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% game_goalies
-@REM python download_game_data.py -s %SEASON% -g %GAME_TYPE% shifts
+python download_game_data.py -s %SEASON% -g %GAME_TYPE% shifts
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% shots
 python download_game_data.py -s %SEASON% -g %GAME_TYPE% faceoffs
 
