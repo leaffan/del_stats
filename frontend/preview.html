@@ -829,10 +829,15 @@
             </tr>
             <tr>
                 <th scope="col" colspan="2" class="text-center"></th>
-                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="!previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer;">
-                    <span class="rank"><a>Aktuelle DEL-Saison {{ current_season }}</a></span></th>
-                <th data-ng-click="previous_stats_home=!previous_stats_home" data-ng-show="previous_stats_home" scope="col" colspan="6" class="text-center" style="cursor: pointer; background-color: lightsalmon;">
-                    <span class="rank"><a>Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</a></span></th>
+                    <th data-ng-click="toggleRosterDisplay()" data-ng-show="roster_stats_display_item=='current'" scope="col" colspan="6" class="text-center" style="cursor: pointer;">
+                        <span class="rank"><a>Aktuelle DEL-Saison {{ current_season }}</a></span>
+                    </th>
+                    <th data-ng-click="toggleRosterDisplay()" data-ng-show="roster_stats_display_item=='previous'" scope="col" colspan="6" class="text-center" style="cursor: pointer; background-color: lightsalmon;">
+                        <span class="rank"><a>Vergangene DEL-Saison {{ season - 1 }}/{{ season - 2000 }}</a></span>
+                    </th>
+                    <th data-ng-click="toggleRosterDisplay()" data-ng-show="roster_stats_display_item=='career_against'" scope="col" colspan="6" class="text-center" style="cursor: pointer; background-color: lightyellow;">
+                        <span class="rank"><a>Karriere gegen {{ current_road_team }}</a></span>
+                    </th>
                 <th scope="col" colspan="5" class="text-center"><span class="rank">All-Time-DEL</span></th>
             </tr>
             <tr>
@@ -847,18 +852,24 @@
             <tr class="table-info" data-ng-repeat="skater in home_career_stats | filter:{position: 'DE'} | filter:{active: true} | orderBy:sorting_config['rosters']">
                 <td class="w-03 text-right">{{ skater.jersey }}</td>
                 <td class="w-15"><a data-ng-style="skater['prev_teams'].indexOf(current_game.guest.shortcut) !== -1 && {'font-weight':'bold'}" href="#!/player_profile/{{season}}/{{current_game.home.shortcut}}/{{skater.id}}">{{ skater.firstname }} {{ skater.surname }}{{ skater.active ? '' : ' (*)'}}</a></td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
-                <td data-ng-if="!previous_stats_home" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
-                <td data-ng-if="previous_stats_home" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].games : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].goals['home'] + skater['statistics'].goals['away'] : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].assists['home'] + skater['statistics'].assists['away'] : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].points['home'] + skater['statistics'].points['away'] : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].gwGoals : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='current'" class="w-07 text-right">{{ skater['statistics'].games ? skater['statistics'].penaltyMinutes : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gp : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].g : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].a : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pts : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].gwg : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='previous'" class="w-07 text-right">{{ skater['prev_season'].gp ? skater['prev_season'].pim : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].gp : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].g : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].a : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].pts : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].gwg : ''}}</td>
+                <td data-ng-if="roster_stats_display_item=='career_against'" class="w-07 text-right">{{ skater['opp_team_stats'][current_game.guest.shortcut].gp ? skater['opp_team_stats'][current_game.guest.shortcut].pim : ''}}</td>
                 <td class="w-07 text-right">{{ skater['career'].gp ? skater['career'].gp : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].g / 50) * 50 - skater['career'].g <= 5 && skater['career'].g != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].g : '' }}</td>
                 <td class="w-07 {{ Math.ceil(skater['career'].a / 50) * 50 - skater['career'].a <= 5 && skater['career'].a != 0 ? 'marker ': '' }}text-right">{{ skater['career'].gp ? skater['career'].a : '' }}</td>

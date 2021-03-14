@@ -5,6 +5,11 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
     $scope.current_game_id = $routeParams.game_id;
     $scope.previous_stats_home = false;
     $scope.previous_stats_road = false;
+
+    $scope.roster_stats_display_item = 'current';
+    // $scope.roster_stats_display_item = 'previous';
+    // $scope.roster_stats_display_item = 'career_against';
+
     $scope.loaded_data_from_last_season = false;
 
     $scope.regional_display = 'active';
@@ -54,6 +59,7 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         $scope.current_road_team_road_fixtures_cnt = ($scope.current_road_team_fixtures.filter(fixture => $scope.current_game.guest.name == fixture['guest']['name'])).length;
         $http.get('data/career_stats/per_team/'+ $scope.current_game.home.shortcut + '_stats.json').then(function (res) {
             $scope.home_career_stats = res.data;
+            console.log($scope.home_career_stats[10]);
         });
         $http.get('data/career_stats/per_team/'+ $scope.current_game.guest.shortcut + '_stats.json').then(function (res) {
             $scope.road_career_stats = res.data;
@@ -778,6 +784,17 @@ app.controller('previewController', function($scope, $http, $routeParams, $locat
         } else {
             $scope.regional_display = 'active';
         }
+    }
+
+    $scope.toggleRosterDisplay = function() {
+        if ($scope.roster_stats_display_item == 'current') {
+            $scope.roster_stats_display_item = 'previous';
+        } else if ($scope.roster_stats_display_item == 'previous') {
+            $scope.roster_stats_display_item = 'career_against';
+        } else {
+            $scope.roster_stats_display_item = 'current';
+        }
+        console.log($scope.roster_stats_display_item);
     }
 
 });
