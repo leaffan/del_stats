@@ -9,6 +9,7 @@ import yaml
 import requests
 import argparse
 
+from datetime import datetime
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -198,7 +199,18 @@ if __name__ == '__main__':
                         download_tasks.append((target_url, tgt_path))
                 # regular game stats are stored in a single file for each game
                 else:
-                    if args.category in ['shots']:
+                    if args.category in ['shifts']:
+                        # shift data files after a certain cutoff date need special treatment
+                        game_date = datetime.strptime(game_dates[game_id], '%Y-%m-%d %H:%M:%S').date()
+                        suffix_valid_from_date = datetime.strptime(config['url_suffix_valid_from'], '%Y-%m-%d').date()
+                        if game_date >= suffix_valid_from_date:
+                            target_url = R"/".join((
+                                base_url, 'matches', str(game_id),
+                                "%s%s.json" % (target_url_component, config['url_suffix'])))
+                        else:
+                            target_url = R"/".join((
+                                base_url, 'matches', str(game_id), "%s.json" % target_url_component))
+                    elif args.category in ['shots']:
                         # setting up target url
                         target_url = R"/".join((
                             del_base_url, target_url_component,
