@@ -77,6 +77,7 @@ if __name__ == '__main__':
     career_stats_src_path = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'updated_career_stats.json')
     career_stats = json.loads(open(career_stats_src_path).read())
     career_stats_per_player_src_dir = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'per_player')
+    career_stats_against_per_player_src_dir = os.path.join(CONFIG['base_data_dir'], 'career_stats_against')
 
     player_game_stats_src_path = os.path.join(CONFIG['tgt_processing_dir'], str(season), 'del_player_game_stats.json')
     player_game_stats = json.loads(open(player_game_stats_src_path).read())[-1]
@@ -193,6 +194,35 @@ if __name__ == '__main__':
                     single_opp_team_stats['pim'] = sum(map(itemgetter('pim_from_events'), curr_player_opp_game_stats))
                     opp_team_stats[opp_team] = single_opp_team_stats
             plr['opp_team_stats'] = opp_team_stats
+
+            # calculating overall career stats against other teams
+            career_against_stats_src_path = os.path.join(career_stats_against_per_player_src_dir, '%d.json' % plr_id)
+            if os.path.isfile(career_against_stats_src_path):
+                career_against_stats = json.loads(open(career_against_stats_src_path).read())['career_against']
+            else:
+                career_against_stats = dict()
+
+            opp_team_stats_career = dict()
+
+            for opp_team in CONFIG['teams'].values():
+                single_career_opp_team_stats = defaultdict(int)
+                if opp_team in career_against_stats:
+                    single_career_opp_team_stats['gp'] = career_against_stats[opp_team]['games_played']
+                    single_career_opp_team_stats['g'] = career_against_stats[opp_team]['goals']
+                    single_career_opp_team_stats['a'] = career_against_stats[opp_team]['assists']
+                    single_career_opp_team_stats['pts'] = career_against_stats[opp_team]['points']
+                    single_career_opp_team_stats['gwg'] = None
+                    single_career_opp_team_stats['pim'] = career_against_stats[opp_team]['pim']
+                if opp_team in plr['opp_team_stats']:
+                    single_career_opp_team_stats['gp'] += plr['opp_team_stats'][opp_team]['gp']
+                    single_career_opp_team_stats['g'] += plr['opp_team_stats'][opp_team]['g']
+                    single_career_opp_team_stats['a'] += plr['opp_team_stats'][opp_team]['a']
+                    single_career_opp_team_stats['pts'] += plr['opp_team_stats'][opp_team]['pts']
+                    single_career_opp_team_stats['pim'] += plr['opp_team_stats'][opp_team]['pim']
+                if single_career_opp_team_stats:
+                    opp_team_stats_career[opp_team] = single_career_opp_team_stats
+
+            plr['opp_team_stats_career'] = opp_team_stats_career
 
             updated_roster.append(plr)
             plr_ids_processed.add(plr_id)
