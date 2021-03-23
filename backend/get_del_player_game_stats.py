@@ -765,12 +765,20 @@ def retrieve_single_player_game_stats(data_dict, game, key):
 
 
 def is_rookie(single_player_game, season_of_interest):
-
+    """
+    Determines whether player represented by specified player game
+    is/has been a rookie in provided season of interest.
+    """
     if not single_player_game['u23']:
         NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
         return False
 
     print("\t+ Checking rookie status of %s" % single_player_game['full_name'])
+
+    # special treatment for Michal Barinka
+    if single_player_game['player_id'] == 1648:
+        NO_ROOKIE_PLAYER_IDS.append(single_player_game['player_id'])
+        return False
 
     plr_career_src_path = os.path.join(PLAYER_CAREER_SRC_DIR, "%d.json" % single_player_game['player_id'])
     if not os.path.isfile(plr_career_src_path):
