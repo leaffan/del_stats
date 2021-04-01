@@ -7,6 +7,11 @@ import yaml
 
 from collections import defaultdict
 
+'''
+Script to update career stats for all active DEL players using a dataset containing pre-season career stats and current
+season's aggregated stats.
+'''
+
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 SEASON = 2020
@@ -34,7 +39,9 @@ if __name__ == '__main__':
     if not os.path.isdir(per_player_career_stats_tgt_dir):
         os.makedirs(per_player_career_stats_tgt_dir)
 
+    # loading pre-season career stats
     pre_career_data = json.loads(open(pre_career_stats_src_path).read())
+    # loading aggregated season stats
     goalie_season_stats = json.loads(open(goalie_season_stats_src_path).read())
     skater_season_stats = json.loads(open(skater_season_stats_src_path).read())[-1]
 
@@ -48,6 +55,7 @@ if __name__ == '__main__':
 
         upd_career = career
 
+        # retrieving current player's season stats, depending on position
         if career['position'] != 'GK':
             season_stats = list(filter(lambda d: d['player_id'] == plr_id, skater_season_stats))
         else:
@@ -55,8 +63,10 @@ if __name__ == '__main__':
 
         for ssl in season_stats:
             season_type = ssl['season_type']
+            # skipping all non-regular-season or non-playoff games
             if season_type not in ['RS', 'PO']:
                 continue
+            # setting up stat line for current season and season type, i.e. phase
             new_career_stats_line = dict()
             new_career_stats_line['season'] = SEASON
             new_career_stats_line['season_type'] = season_type
@@ -65,7 +75,9 @@ if __name__ == '__main__':
                 career['career'][season_type] = defaultdict(int)
             if 'all' not in career['career']:
                 career['career']['all'] = defaultdict(int)
+            # adding current season's stats to pre-season career stats...
             if career['position'] != 'GK':
+                # ...for skaters
                 for param in SKATER_MAPPING:
                     new_career_stats_line[SKATER_MAPPING[param]] = ssl[param]
                     try:
@@ -74,6 +86,7 @@ if __name__ == '__main__':
                     except Exception:
                         print("+ Unable to retrieve '%s' from season stat line" % param)
             else:
+                # ...for goaltenders
                 for param in GOALIE_MAPPING:
                     new_career_stats_line[GOALIE_MAPPING[param]] = ssl[param]
                     if param == 'w':
@@ -88,12 +101,13 @@ if __name__ == '__main__':
                         career['career']['all'][GOALIE_MAPPING[param]] += ssl[param]
                     except Exception:
                         print("+ Unable to retrieve '%s' from season stat line" % param)
+            # updating current player's full career stats
             upd_career['seasons'].append(new_career_stats_line)
 
         plr_career = upd_career['career']
         # finally re-calculating percentages and rates for each season type group ('RS', 'PO', 'all')
         for key in list(plr_career.keys()):
-            # first for skaters...
+            # either for skaters...
             if upd_career['position'] != 'GK':
                 if not plr_career[key]['gp']:
                     del plr_career[key]
@@ -110,7 +124,7 @@ if __name__ == '__main__':
                     plr_career[key]['gpg'] = None
                     plr_career[key]['apg'] = None
                     plr_career[key]['ptspg'] = None
-            # ...then for goalies
+            # ...or for goalies
             else:
                 if not plr_career[key]['toi']:
                     del plr_career[key]
@@ -129,10 +143,12 @@ if __name__ == '__main__':
 
         upd_career_data.append(upd_career)
 
+        # saving updated career stats per player
         per_player_career_stats_tgt_path = os.path.join(per_player_career_stats_tgt_dir, "%d.json" % plr_id)
         if upd_career:
             open(per_player_career_stats_tgt_path, 'w').write(json.dumps(upd_career, indent=2))
 
+    # saving updated career stats for all players
     upd_career_stats_tgt_path = os.path.join(CONFIG['tgt_processing_dir'], 'career_stats', 'updated_career_stats.json')
 
     if upd_career_data:
