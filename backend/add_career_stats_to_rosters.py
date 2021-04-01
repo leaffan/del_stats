@@ -179,11 +179,9 @@ if __name__ == '__main__':
             curr_player_game_stats = list(
                 filter(lambda pg: pg['player_id'] == plr_id and pg['season_type'] != 'MSC', player_game_stats))
             opp_teams = set(list(map(itemgetter('opp_team'), curr_player_game_stats)))
-            print(opp_teams)
             for opp_team in opp_teams:
                 curr_player_opp_game_stats = list(
                     filter(lambda pg: pg['opp_team'] == opp_team and pg['time_on_ice'] > 0, curr_player_game_stats))
-                print(opp_team, len(curr_player_opp_game_stats))
                 if curr_player_opp_game_stats:
                     single_opp_team_stats = dict()
                     single_opp_team_stats['gp'] = len(curr_player_opp_game_stats)
