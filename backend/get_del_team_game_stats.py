@@ -11,7 +11,7 @@ from datetime import datetime
 from dateutil.parser import parse
 
 from utils import get_game_info, get_game_type_from_season_type
-from utils import name_corrections, coaches, capacities, divisions
+from utils import name_corrections, coaches, capacities, divisions, game_score_corrections
 
 # loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
@@ -149,6 +149,13 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
         game_stat_line['goals'] = game["%s_score" % key]
         game_stat_line['opp_score'] = game["%s_score" % opp_key]
         game_stat_line['opp_goals'] = game["%s_score" % opp_key]
+        # optionally correcting game scores
+        if game_id in game_score_corrections:
+            for team_abbr in game_score_corrections[game_id]:
+                if game_stat_line['team'] == team_abbr:
+                    game_stat_line['score'] = game_score_corrections[game_id][team_abbr]
+                if game_stat_line['opp_team'] == team_abbr:
+                    game_stat_line['opp_score'] = game_score_corrections[game_id][team_abbr]
         if game['shootout_game']:
             game_stat_line['game_type'] = 'SO'
         elif game['overtime_game']:

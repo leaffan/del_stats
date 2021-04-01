@@ -96,6 +96,7 @@ name_corrections = {
     '1691_WOB': 'Pat Cortina',
     '1794_RBM': 'Don Jackson',
     '1798_KEV': 'Glen Hanlon',
+    '2020_EBB': 'Serge Aubin',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
@@ -117,6 +118,11 @@ player_name_corrections = {
         'first_name': 'Mitch',
         'full_name': 'Mitch Wahl'
     }
+}
+
+# defining game score corrections
+game_score_corrections = {
+    2034: {'KEV': 0, 'ING': 5}
 }
 
 capacities = {
