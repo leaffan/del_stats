@@ -9,6 +9,7 @@ import yaml
 import requests
 import argparse
 
+from datetime import datetime
 from collections import defaultdict
 from concurrent.futures import ThreadPoolExecutor, as_completed
 
@@ -71,7 +72,7 @@ def get_game_ids_dates_and_teams(schedule_dir, season='', game_type='', team='')
     return game_ids_team_ids, game_dates
 
 
-def download_task(tgt_url, tgt_path, last_modified_dict):
+def download_task(tgt_url, alt_url, tgt_path, last_modified_dict):
     '''
     Represents single task to download data from speficied target url to
     specified target path using information from dictionary of last
@@ -94,13 +95,30 @@ def download_task(tgt_url, tgt_path, last_modified_dict):
         elif r.status_code == 304:
             sys.stdout.write('.')
             sys.stdout.flush()
-            return
+            return tgt_url, None
         # data not available, i.e. playoff stats for
         # non-playoff teams
         elif r.status_code == 404:
-            sys.stdout.write('X')
-            sys.stdout.flush()
-            return
+            if alt_url:
+                time.sleep(0.2)
+                rr = requests.get(alt_url, headers=req_header)
+                if rr.status_code == 200:
+                    data = rr.json()
+                    sys.stdout.write('+')
+                    sys.stdout.flush()
+                # data has not been modified since last visit
+                elif rr.status_code == 304:
+                    sys.stdout.write('.')
+                    sys.stdout.flush()
+                    return alt_url, None
+                elif rr.status_code == 404:
+                    sys.stdout.write('O')
+                    sys.stdout.flush()
+                    return alt_url, None
+            else:
+                sys.stdout.write('X')
+                sys.stdout.flush()
+                return tgt_url, None
     except json.decoder.JSONDecodeError:
         print("Unable to retrieve JSON data from %s" % tgt_url)
         return
@@ -108,7 +126,10 @@ def download_task(tgt_url, tgt_path, last_modified_dict):
     open(tgt_path, 'w').write(json.dumps(data, indent=2))
 
     # retrieving date of last modification
-    last_modified = r.headers['Last-Modified']
+    if r.status_code == 200:
+        last_modified = r.headers.get('Last-Modified')
+    else:
+        last_modified = rr.headers.get('Last-Modified')
 
     time.sleep(0.2)
 
@@ -183,34 +204,56 @@ if __name__ == '__main__':
                 # game player stats are divided in two files for each of the
                 # involved teams
                 if args.category in ['game_player_stats', 'game_team_stats']:
+                    current_team = 'home'
                     for team_id in games_and_teams[game_id]:
                         # setting up target url
                         if args.category == 'game_player_stats':
                             target_url = R"/".join((
                                 base_url, 'matches', str(game_id),
                                 target_url_component, "%s.json" % team_id))
+                            alt_url = ''
                         elif args.category == 'game_team_stats':
                             target_url = R"/".join((
                                 base_url, 'match-detail', target_url_component,
                                 str(game_id), "%s.json" % team_id))
+                            alt_url = R"/".join((
+                                del_base_url, 'live-ticker', 'matches',
+                                str(game_id), "team-stats-%s.json" % current_team))
+                        current_team = 'guest'
 
                         tgt_path = os.path.join(tgt_dir, "%d_%d.json" % (game_id, team_id))
-                        download_tasks.append((target_url, tgt_path))
+                        download_tasks.append((target_url, alt_url, tgt_path))
                 # regular game stats are stored in a single file for each game
                 else:
-                    if args.category in ['shots']:
+                    if args.category in ['shifts']:
+                        # shift data files after a certain cutoff date need special treatment
+                        game_date = datetime.strptime(game_dates[game_id], '%Y-%m-%d %H:%M:%S').date()
+                        suffix_valid_from_date = datetime.strptime(config['url_suffix_valid_from'], '%Y-%m-%d').date()
+                        if game_date >= suffix_valid_from_date:
+                            target_url = R"/".join((
+                                base_url, 'matches', str(game_id),
+                                "%s%s.json" % (target_url_component, config['url_suffix'])))
+                        else:
+                            target_url = R"/".join((
+                                base_url, 'matches', str(game_id), "%s.json" % target_url_component))
+                        alt_url = ''
+                    elif args.category in ['shots']:
                         # setting up target url
-                        target_url = R"/".join((
-                            del_base_url, target_url_component,
-                            "%d.json" % game_id))
+                        target_url = R"/".join((base_url, 'visualization', 'shots', "%d.json" % game_id))
+                        alt_url = R"/".join((del_base_url, target_url_component, "%d.json" % game_id))
                     else:
                         # setting up target url
                         target_url = R"/".join((
                             base_url, 'matches', str(game_id),
                             "%s.json" % target_url_component))
+                        if args.category in ['game_goalies', 'faceoffs']:
+                            alt_url = ''
+                        else:
+                            alt_url = R"/".join((
+                                del_base_url, 'live-ticker', 'matches', str(game_id), "%s.json" % target_url_component))
 
                     tgt_path = os.path.join(tgt_dir, "%d.json" % game_id)
-                    download_tasks.append((target_url, tgt_path))
+                    download_tasks.append((target_url, alt_url, tgt_path))
 
             # creating target directory (if necessary)
             if download_tasks:
@@ -221,15 +264,16 @@ if __name__ == '__main__':
             with ThreadPoolExecutor(max_workers=4) as threads:
                 tasks = {
                     threads.submit(
-                        download_task, tgt_url, tgt_path, last_modified_dict
+                        download_task, tgt_url, alt_url, tgt_path, last_modified_dict
                     ): (
-                        tgt_url, tgt_path
-                    ) for tgt_url, tgt_path in download_tasks
+                        tgt_url, alt_url, tgt_path
+                    ) for tgt_url, alt_url, tgt_path in download_tasks[:]
                 }
                 for completed_task in as_completed(tasks):
                     if completed_task.result():
                         tgt_url, last_modified = completed_task.result()
-                        last_modified_dict[tgt_url] = last_modified
+                        if last_modified:
+                            last_modified_dict[tgt_url] = last_modified
             print()
 
     open(last_modified_path, 'w').write(json.dumps(last_modified_dict, indent=2))
