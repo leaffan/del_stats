@@ -400,10 +400,12 @@ def get_single_game_team_data(game, grouped_shot_data, pp_sit_data):
             elif item in shot_situations_to_retain:
                 game_stat_line["opp_%s" % item] = shot_against_data[item]
 
-        game_stat_line['ev_cf_pctg'] = round(
-            game_stat_line['shots_ev'] / (
-                game_stat_line['shots_ev'] + game_stat_line['opp_shots_ev']
-            ) * 100, 2)
+        try:
+            game_stat_line['ev_cf_pctg'] = round(
+                game_stat_line['shots_ev'] / (game_stat_line['shots_ev'] + game_stat_line['opp_shots_ev']) * 100, 2)
+        except KeyError:
+            print("\t+Unable to calculate even strength shots for percentage")
+            game_stat_line['ev_cf_pctg'] = None
 
         for penalty_duration in [2, 5, 10, 20]:
             if penalty_counts[key] and penalty_duration in penalty_counts[key]:
@@ -816,7 +818,7 @@ if __name__ == '__main__':
             continue
         print("+ Retrieving team stats for game %s" % get_game_info(game))
         single_team_game_stats = get_single_game_team_data(
-            game, grouped_shot_data, pp_sit_data[str(game['game_id'])])
+            game, grouped_shot_data, pp_sit_data.get(str(game['game_id']), dict()))
         team_game_stats.extend(single_team_game_stats)
 
         if limit and cnt >= limit:
