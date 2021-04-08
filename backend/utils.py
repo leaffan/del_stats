@@ -21,6 +21,7 @@ coaches = [
     'Christoph Kreutzer', 'Manuel Kofler', 'Pierre Beaulieu', 'Steve Walker',
     'Niklas Sundblad', 'Glen Hanlon', 'Thomas Dolak', 'Mihails Svarinskis',
     'Boris Blank', 'Frank Fischöder', 'Clark Donatelli', 'Brad Tapper',
+    'Ville Vaija',
 ]
 
 
@@ -69,6 +70,8 @@ name_corrections = {
     'Shedden Doug': 'Doug Shedden',
     'Mark Draisaitl': 'Peter Draisaitl',
     'Kreutzer Christoph': 'Christoph Kreutzer',
+    'Kreutzer Christof': 'Christoph Kreutzer',
+    'Christof Kreutzer': 'Christoph Kreutzer',
     'Pasanen Jari': 'Jari Pasanen',
     'Franz Fritzmeier': 'Franz-David Fritzmeier',
     'Fritzmeier': 'Franz-David Fritzmeier',
@@ -97,9 +100,19 @@ name_corrections = {
     '1794_RBM': 'Don Jackson',
     '1798_KEV': 'Glen Hanlon',
     '2020_EBB': 'Serge Aubin',
+    '515_NIT': 'Rob Wilson',
+    '515_AEV': 'Mike Stewart',
+    '772_BHV': 'Thomas Popiesch',
+    '772_EBB': 'Uwe Krupp',
+    '849_SWW': 'Pat Cortina',
     # Arenas
     'Curt Frenzel Stadium': 'Curt-Frenzel-Stadion',
     'Arena NBG Versicheru': 'Arena Nürnberger Versicherung',
+    'Arena NBG Versicherung': 'Arena Nürnberger Versicherung',
+    'Saturnarena': 'Saturn Arena',
+    'Mercedes-Benz-Arena': 'Mercedes-Benz Arena',
+    'Mba': 'Mercedes-Benz Arena',
+    'Iserlohn': 'Eissporthalle Iserlohn',
     # Referees
     'Andre Schrader': 'André Schrader',
 }
