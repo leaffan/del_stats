@@ -149,6 +149,8 @@ def get_shootout_stats(goalie_dict, game):
 
     if 'shootout' in game_events:
         shootout = game_events['shootout']
+    else:
+        shootout = list()
 
     # retrieving shootout attempts directed towards current goalie
     per_goalie_shootout_attempts = list(filter(
