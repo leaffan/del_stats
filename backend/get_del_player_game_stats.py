@@ -739,10 +739,10 @@ def retrieve_single_player_game_stats(data_dict, game, key):
     else:
         single_player_game['faceoff_pctg'] = 0
     single_player_game['blocked_shots'] = stat_dict['blockedShotsByPlayer']
-    single_player_game['time_on_ice'] = stat_dict['timeOnIce']
-    single_player_game['time_on_ice_pp'] = stat_dict['timeOnIcePP']
-    single_player_game['time_on_ice_sh'] = stat_dict['timeOnIceSH']
-    single_player_game['shifts'] = stat_dict['shifts']
+    single_player_game['time_on_ice'] = stat_dict.get('timeOnIce')
+    single_player_game['time_on_ice_pp'] = stat_dict.get('timeOnIcePP')
+    single_player_game['time_on_ice_sh'] = stat_dict.get('timeOnIceSH')
+    single_player_game['shifts'] = stat_dict.get('shifts')
     if single_player_game['shifts']:
         single_player_game['toi_per_shift'] = round(
             single_player_game['time_on_ice'] / single_player_game['shifts'], 2
