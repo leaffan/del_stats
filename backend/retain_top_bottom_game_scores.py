@@ -86,8 +86,11 @@ def strip_game_scores(orig_game_scores, personal_data, rename_game_score='single
         stripped_gs[rename_game_score] = stripped_gs['game_score']
         del stripped_gs['game_score']
 
-        stripped_gs["game_score_per_60"] = round(
-            stripped_gs[rename_game_score] / (stripped_gs['time_on_ice'] / 60) * 60, 4)
+        if stripped_gs['time_on_ice']:
+            stripped_gs["game_score_per_60"] = round(
+                stripped_gs[rename_game_score] / (stripped_gs['time_on_ice'] / 60) * 60, 4)
+        else:
+            stripped_gs["game_score_per_60"] = None
 
         stripped_game_scores.append(stripped_gs)
 
