@@ -759,6 +759,30 @@ def get_shootout_stats(game, key, opp_key):
     return team_shootout_stats
 
 
+def identify_days_rest_b2b_games(team_game_stats, single_team_game_stats):
+    """
+    Calculates days of rest between current and previous team games, identifies back-to-back situations.
+    """
+    for sg in single_team_game_stats:
+        for rest_item in ['rest_0', 'rest_1', 'rest_2', 'rest_3']:
+            sg[rest_item] = False
+        sg['b2b'] = False
+
+        previous_team_games = list(filter(lambda tg: tg['team'] == sg['team'], team_game_stats))
+        if previous_team_games:
+            previous_team_game = previous_team_games[-1]
+            rest = (parse(sg['game_date']).date() - parse(previous_team_game['game_date']).date()).days - 1
+            if rest > 3:
+                sg['rest_3'] = True
+            else:
+                sg["rest_%d" % rest] = True
+            if rest == 0:
+                sg['b2b'] = True
+                previous_team_game['b2b'] = True
+        else:
+            sg['rest_3'] = True
+
+
 if __name__ == '__main__':
 
     # retrieving arguments specified on command line
@@ -795,6 +819,8 @@ if __name__ == '__main__':
 
     # loading games and shots
     games = json.loads(open(src_path).read())
+    # making sure that games are sorted by game date
+    games = sorted(games, key=lambda g: g['date'])
     shots = json.loads(open(shots_src_path).read())
     # grouping shot data by game and team
     grouped_shot_data = group_shot_data_by_game_team(shots)
@@ -819,6 +845,10 @@ if __name__ == '__main__':
         print("+ Retrieving team stats for game %s" % get_game_info(game))
         single_team_game_stats = get_single_game_team_data(
             game, grouped_shot_data, pp_sit_data.get(str(game['game_id']), dict()))
+
+        # calculating days of rest between current and previous game for each team involved
+        identify_days_rest_b2b_games(team_game_stats, single_team_game_stats)
+
         team_game_stats.extend(single_team_game_stats)
 
         if limit and cnt >= limit:
