@@ -130,6 +130,11 @@ player_name_corrections = {
     1569: {
         'first_name': 'Mitch',
         'full_name': 'Mitch Wahl'
+    },
+    1209: {
+        'first_name': 'Tim',
+        'last_name': 'Stapleton',
+        'full_name': 'Tim Stapleton'
     }
 }
 
