@@ -295,11 +295,17 @@ if __name__ == '__main__':
             player_data[player_team_key][attr].add(game_stat_line[attr])
         # aggregating integer attributes
         for attr in TO_AGGREGATE_INTS:
-            aggregated_stats[player_team_key][attr] += game_stat_line[attr]
+            try:
+                aggregated_stats[player_team_key][attr] += game_stat_line[attr]
+            except TypeError:
+                print("\t+ Unable to aggregate '%s' using current game's stat line" % attr)
         # aggregating timedelta attributes
         for attr in TO_AGGREGATE_TIMES:
-            aggregate_time_stats[player_team_key][attr] += timedelta(
-                seconds=game_stat_line[attr])
+            try:
+                aggregate_time_stats[player_team_key][attr] += timedelta(
+                    seconds=game_stat_line[attr])
+            except TypeError:
+                print("\t+ Unable to aggregate time parameter '%s' using current game's stat line" % attr)
     else:
         print("+ %d player-in-game items after filtering" % filtered_cnt)
         # re-setting games played counter for goaltenders
