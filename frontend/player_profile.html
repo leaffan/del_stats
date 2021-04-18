@@ -192,10 +192,10 @@
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="basic_game_by_game">Basisstatistiken</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="toi_special_teams">Eiszeiten/Special Teams</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="additional_game_by_game">Zusatzstatistiken</option>
-                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats">On-Ice-Schussdaten (alle Situationen)</option>
-                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussdaten (5-gegen-5)</option>
-                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussdaten (alle Situationen)</option>
-                        <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK' && season != 2017" data-ng-option value="on_ice_shot_stats">On-Ice-Schussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK' && season != 2017" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussdaten (5-gegen-5)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK' && season != 2017" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussdaten (alle Situationen)</option>
+                        <option data-ng-if="player_stats[0].position != 'GK' && season != 2017" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussdaten (5-gegen-5)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
                         <option data-ng-if="player_stats[0].position != 'GK'" data-ng-option value="goal_categories">Torkategorien</option>
@@ -283,11 +283,11 @@
                 <td class="w-08 text-center"><a href="https://www.del.org/spielplan/{{stat.game_date}}#schedule">{{ stat.game_date }}</a></td>
                 <td class="w-07 text-right">{{ stat.round }}</td>
                 <td class="w-11 {{ svc.setTextColor(stat.score, stat.opp_score) }}"><b>{{ stat.score }}:{{stat.opp_score}} </b><a href="https://www.del.org/event/{{stat.home_road === 'home'? team_lookup[stat.team] : team_lookup[stat.opp_team]}}-{{stat.home_road === 'home'? team_lookup[stat.opp_team] : team_lookup[stat.team]}}/{{stat.schedule_game_id}}">{{stat.home_road === 'home'? 'vs.' : '@'}} {{ stat.opp_team }} {{stat.game_type === 'SO' ? '(SO)' : stat.game_type === 'OT' ? '(VL)' : ''}}</a></td>
-                <td class="w-10 text-right">{{ svc.formatTime(stat.time_on_ice) }}</td>
-                <td class="w-10 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
-                <td class="w-10 text-right">{{ svc.formatTime(stat.time_on_ice_sh) }}</td>
-                <td class="w-08 text-right">{{ stat.shifts }}</td>
-                <td class="w-08 text-right">{{ svc.formatTime(stat.toi_per_shift) }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? svc.formatTime(stat.time_on_ice) : '' }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? svc.formatTime(stat.time_on_ice_pp) : '' }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? svc.formatTime(stat.time_on_ice_sh) : '' }}</td>
+                <td class="w-08 text-right">{{ season != 2017 ? stat.shifts : '' }}</td>
+                <td class="w-08 text-right">{{ season != 2017 ? svc.formatTime(stat.toi_per_shift) : '' }}</td>
                 <td class="w-07 text-right">{{ stat.pp_goals }}</td>
                 <td class="w-07 text-right">{{ stat.pp_assists }}</td>
                 <td class="w-07 text-right">{{ stat.sh_goals }}</td>
