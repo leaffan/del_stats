@@ -184,19 +184,30 @@ app.factory('svc', function() {
         isNumeric: function(num) {
             return !isNaN(num);
         },
-        replaceRoundNames: function(roundName) {
+        replaceRoundNames: function(roundName, short) {
             if (roundName === undefined)
                 return;
             if (!isNaN(roundName))
                 return roundName;
-            return roundName.replace(
-                "first_round_", "1. Playoff-Runde "
-            ).replace(
-                "quarter_finals_", "Viertelfinale "
-            ).replace(
-                "semi_finals_", "Halbfinale "
-            ).replace(
-                "finals_", "Finale ");
+            if (short) {
+                return roundName.replace(
+                    "first_round_", "1. PR "
+                ).replace(
+                    "quarter_finals_", "VF "
+                ).replace(
+                    "semi_finals_", "HF "
+                ).replace(
+                    "finals_", "F ");
+            } else {
+                return roundName.replace(
+                    "first_round_", "1. Playoff-Runde "
+                ).replace(
+                    "quarter_finals_", "Viertelfinale "
+                ).replace(
+                    "semi_finals_", "Halbfinale "
+                ).replace(
+                    "finals_", "Finale ");
+            }
         },     
         setTextColor: function(score, opp_score) {
             if (score > opp_score) {
