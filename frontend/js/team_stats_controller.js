@@ -9,8 +9,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     // initially setting indicators which view we're currently in
     $scope.isStandingsView = true;
     $scope.sortConfig = {
-        'sortKey': 'pt_pctg',
-        'sortCriteria': ['pt_pctg', 'points', 'score_diff', 'score'],
+        'sortKey': 'pts_per_game',
+        'sortCriteria': ['pts_per_game', 'pt_pctg', 'points', 'score_diff', 'score'],
         'sortDescending': true
     }
     $scope.fromRoundSelect = '1';
@@ -29,6 +29,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     promises.push(getDatesAttendances());
     $q.all(promises).then(function (results) {
         $scope.dcup_date = moment(results[0].data['dates']['dcup_date']);
+        $scope.reunification_date = moment(results[0].data['dates']['reunification_date']);
         $scope.avg_attendance_last_season = results[0].data['avg_attendance_last_season'];
     });
     function getDatesAttendances() {
@@ -549,6 +550,12 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             ctrl.fromDate = $scope.dcup_date;
             var nextSeason = parseFloat($scope.season) + 1;
             ctrl.toDate = moment(nextSeason + '-05-01');
+        } else if ($scope.timespanSelect == 'pre_reunification') {
+            ctrl.fromDate = moment($scope.season + '-12-16');
+            ctrl.toDate = $scope.reunification_date;
+        } else if ($scope.timespanSelect == 'post_reunification') {
+            ctrl.fromDate = $scope.reunification_date;
+            ctrl.toDate = moment('2021-04-20');
         } else {
             timespanSelect = parseInt($scope.timespanSelect) + 1;
             if (timespanSelect < 9) {

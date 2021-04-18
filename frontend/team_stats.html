@@ -76,6 +76,11 @@
                     <option data-ng-option value="two_goal">Zwei Tore Unterschied</option>
                     <option data-ng-option value="three_goal">Drei Tore Unterschied</option>
                     <option data-ng-option value="four_goal">Vier und mehr Tore Unterschied</option>
+                    <option data-ng-option value="rest_0">Spiele ohne einen Tag Pause</option>
+                    <option data-ng-option value="rest_1">Spiele nach einem Tag Pause</option>
+                    <option data-ng-option value="rest_2">Spiele nach zwei Tagen Pause</option>
+                    <option data-ng-option value="rest_3">Spiele nach drei oder mehr Tagen Pause</option>
+                    <option data-ng-option value="b2b">In Back-to-Back Spielen</option>
                 </select>   
             </div>
         </div>
@@ -84,9 +89,11 @@
                 <select class="form-control" id="time_span_select" data-ng-model="timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
-                    <option data-ng-if="season != 2020" data-ng-option>-----------</option>
+                    <option data-ng-option>-----------</option>
                     <option data-ng-if="season != 2020" data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
                     <option data-ng-if="season != 2020" data-ng-option value="post_dcup">Nach Deutschland Cup</option>
+                    <option data-ng-if="season == 2020" data-ng-option value="pre_reunification">Vor Wiedervereinigung</option>
+                    <option data-ng-if="season == 2020" data-ng-option value="post_reunification">Nach Wiedervereinigung</option>
                 </select>
             </div>
             <div class="input-group col-2 pl-0">
