@@ -56,6 +56,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     // retrieving significant dates and previous year's attendance from external file
     $http.get('./data/' + $scope.season + '/dates_attendance.json').then(function (res) {
         $scope.dcup_date = moment(res.data['dates']['dcup_date']);
+        $scope.reunification_date = moment(res.data['dates']['reunification_date']);
     });
 
     // retrieving teams
@@ -937,6 +938,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
     // filter definitions
     $scope.greaterThanFilter = function (prop, val) {
+        if ($scope.season == 2017 && prop.includes('on_ice')) {
+            return true;
+        }
         return function (item) {
             return item[prop] > val;
         }
@@ -1037,6 +1041,12 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             ctrl.fromDate = $scope.dcup_date;
             var nextSeason = parseFloat($scope.season) + 1;
             ctrl.toDate = moment(nextSeason + '-05-01');
+        } else if ($scope.timespanSelect == 'pre_reunification') {
+            ctrl.fromDate = moment($scope.season + '-12-16');
+            ctrl.toDate = $scope.reunification_date;
+        } else if ($scope.timespanSelect == 'post_reunification') {
+            ctrl.fromDate = $scope.reunification_date;
+            ctrl.toDate = moment('2021-04-20');
         } else {
             timespanSelect = parseInt($scope.timespanSelect) + 1;
             if (timespanSelect < 9) {

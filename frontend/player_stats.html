@@ -40,8 +40,8 @@
                     <option data-ng-option value="basic_stats">Basisstatistiken</option>
                     <option data-ng-option value="basic_stats_5v5">Basisstatistiken (5-gegen-5)</option>
                     <option data-ng-option value="per_game_stats">Spielbezogene Statistiken</option>
-                    <option data-ng-option value="time_on_ice_shift_stats">Eiszeiten / Wechsel</option>
-                    <option data-ng-option value="per_60_stats">Eiszeitbezogene Statistiken</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="time_on_ice_shift_stats">Eiszeiten / Wechsel</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="per_60_stats">Eiszeitbezogene Statistiken</option>
                     <option data-ng-option value="power_play_stats">Überzahl-Statistiken</option>
                     <option data-ng-option value="penalty_stats">Strafzeit-Statistiken</option>
                     <option data-ng-option value="shot_stats">Schussstatistiken</option>
@@ -55,10 +55,10 @@
                     <option data-ng-option value="shootout_stats">Statistiken im Penaltyschießen</option>
                     <option data-ng-option value="goal_categories">Torkategorien</option>
                     <option data-ng-option value="on_ice_stats">On-Ice-Statistiken</option>
-                    <option data-ng-option value="on_ice_shot_stats">On-Ice-Schussstatistiken (alle Situationen)</option>
-                    <option data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussstatistiken (5-gegen-5)</option>
-                    <option data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussstatistiken (alle Situationen)</option>
-                    <option data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussstatistiken (5-gegen-5)</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="on_ice_shot_stats">On-Ice-Schussstatistiken (alle Situationen)</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="on_ice_shot_stats_5v5">On-Ice-Schussstatistiken (5-gegen-5)</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="on_ice_shot_on_goal_stats">On-Ice-Torschussstatistiken (alle Situationen)</option>
+                    <option data-ng-if="season != 2017" data-ng-option value="on_ice_shot_on_goal_stats_5v5">On-Ice-Torschussstatistiken (5-gegen-5)</option>
                     <option data-ng-option value="faceoff_stats">Bullystatistiken (allgemein)</option>
                     <option data-ng-option value="faceoff_by_zone_stats">Bullystatistiken (nach Zone)</option>
                     <option data-ng-option value="faceoff_by_side_stats">Bullystatistiken (nach Seite)</option>
@@ -147,9 +147,11 @@
                 <select class="form-control" data-ng-model="$parent.timespanSelect" data-ng-change="changeTimespan()">
                     <option data-ng-option value selected="selected">alle Zeiträume</option>
                     <option data-ng-option data-ng-repeat="month in monthsPlayed" value="{{month}}">{{svc.germanMonths()[month]}}</option>
-                    <option data-ng-if="season != 2020" data-ng-option>-----------</option>
+                    <option data-ng-option>-----------</option>
                     <option data-ng-if="season != 2020" data-ng-option value="pre_dcup">Vor Deutschland Cup</option>
                     <option data-ng-if="season != 2020" data-ng-option value="post_dcup">Nach Deutschland Cup</option>
+                    <option data-ng-if="season == 2020" data-ng-option value="pre_reunification">Vor Wiedervereinigung</option>
+                    <option data-ng-if="season == 2020" data-ng-option value="post_reunification">Nach Wiedervereinigung</option>
                 </select>
             </div>
 
@@ -235,7 +237,7 @@
             </div>
 
             <!-- <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats' && tableSelect != 'basic_stats_5v5' && tableSelect != 'on_ice_shot_stats_5v5' && tableSelect != 'on_ice_shot_on_goal_stats_5v5'"> -->
-            <div class="input-group col-6 pl-0" data-ng-if="tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
+            <div class="input-group col-6 pl-0" data-ng-if="season != 2017 && tableSelect != 'goalie_stats' && tableSelect != 'goalie_against_avg_stats' && tableSelect != 'goalie_stats_ev' && tableSelect != 'goalie_stats_pp' && tableSelect != 'goalie_stats_sh' && tableSelect != 'goalie_zone_stats_far' && tableSelect != 'goalie_zone_stats_near' && tableSelect != 'goalie_shootout_stats'">
                     <div class="input-group-prepend w-65">
                     <label class="input-group-text w-100 justify-content-center">Mindestens gespielte Eiszeit:</label>
                 </div>
@@ -407,7 +409,7 @@
                 <td class="w-10 text-right">{{ stat.games_played }}</td>
                 <td class="w-10 text-right">{{ stat.faceoffs }}</td>
                 <td class="w-10 text-right">{{ stat.faceoffs_per_game.toFixed(1) }}</td>
-                <td class="w-10 text-right">{{ stat.faceoffs_per_60.toFixed(1) }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? stat.faceoffs_per_60.toFixed(1) : '' }}</td>
                 <td class="w-10 text-right">{{ stat.faceoffs_won }}</td>
                 <td class="w-10 text-right">{{ stat.faceoffs_lost }}</td>
                 <td class="w-10 text-right">{{ stat.faceoff_pctg.toFixed(2) }} %</td>
@@ -815,16 +817,16 @@
                     <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
-                <td class="w-07 text-right">{{ svc.formatTime(stat.time_on_ice_pp) }}</td>
+                <td class="w-07 text-right">{{ season != 2017 ? svc.formatTime(stat.time_on_ice_pp) : '' }}</td>
                 <td class="w-07 text-right">{{ stat.goals }}</td>
                 <td class="w-07 text-right">{{ stat.pp_goals }}</td>
-                <td class="w-07 text-right">{{ stat.pp_goals_per_60.toFixed(2) }}</td>
+                <td class="w-07 text-right">{{ season != 2017 ? stat.pp_goals_per_60.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ stat.assists }}</td>
                 <td class="w-07 text-right">{{ stat.pp_assists }}</td>
-                <td class="w-07 text-right">{{ stat.pp_assists_per_60.toFixed(2) }}</td>
+                <td class="w-07 text-right">{{ season != 2017 ? stat.pp_assists_per_60.toFixed(2) : '' }}</td>
                 <td class="w-07 text-right">{{ stat.points }}</td>
                 <td class="w-07 text-right">{{ stat.pp_points }}</td>
-                <td class="w-07 text-right">{{ stat.pp_points_per_60.toFixed(2) }}</td>
+                <td class="w-07 text-right">{{ season != 2017 ? stat.pp_points_per_60.toFixed(2) : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -844,7 +846,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:teamFilter | filter:{position: '!GK'} | filter:greaterThanFilter('time_on_ice_pp', 0) | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:greaterThanFilter('games_played', 0)">
+            <tr data-ng-repeat="stat in filtered_player_stats | orderBy:sortConfig['sortCriteria']:sortConfig['sortDescending'] | filter:{full_name: nameFilter} | filter:playerStatusFilter | filter:teamFilter | filter:{position: '!GK'} | filter:minimumAgeFilter | filter:maximumAgeFilter | filter:{iso_country: countryFilter} | filter:{position: positionFilter} | filter:greaterThanFilter('games_played', 0)">
                 <td class="w-04 text-right">{{ $index + 1 }}</td>
                 <td class="w-21">
                     <a data-ng-if="stat.single_team" href="#!/player_profile/{{season}}/{{stat.team}}/{{stat.player_id}}">{{ stat.full_name }}</a>
@@ -863,7 +865,7 @@
                 <td class="w-08 text-right">{{ stat.on_ice_goals_diff }}</td>
                 <td class="w-07 text-right">{{ stat.game_score.toFixed(2) }}</td>
                 <td class="w-07 text-right">{{ stat.game_score_per_game.toFixed(2) }}</td>
-                <td class="w-07 text-right">{{ stat.game_score_per_60.toFixed(2) }}</td>
+                <td class="w-07 text-right">{{ season != 2017 ? stat.game_score_per_60.toFixed(2) : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -896,8 +898,8 @@
                 <td class="w-10 text-right">{{ game_score.round }}</td>
                 <td class="w-10 {{ svc.setTextColor(game_score.score, game_score.opp_score) }}"><b>{{game_score.score}}:{{game_score.opp_score}} </b>{{game_score.home_road === 'home'? 'vs.' : '@'}} {{ game_score.opp_team }} {{game_score.game_type === 'SO' ? '(SO)' : game_score.game_type === 'OT' ? '(VL)' : ''}}</td>
                 <td class="w-10 text-right">{{ game_score.single_game_score.toFixed(2) }}</td>
-                <td class="w-10 text-right">{{ svc.formatTime(game_score.time_on_ice) }}</td>
-                <td class="w-10 text-right">{{ game_score.game_score_per_60.toFixed(2) }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? svc.formatTime(game_score.time_on_ice) : '' }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? game_score.game_score_per_60.toFixed(2) : '' }}</td>
             </tr>
         </tbody>
     </table>
@@ -930,8 +932,8 @@
                 <td class="w-10 text-right">{{ game_score.round }}</td>
                 <td class="w-10 {{ svc.setTextColor(game_score.score, game_score.opp_score) }}"><b>{{game_score.score}}:{{game_score.opp_score}} </b>{{game_score.home_road === 'home'? 'vs.' : '@'}} {{ game_score.opp_team }} {{game_score.game_type === 'SO' ? '(SO)' : game_score.game_type === 'OT' ? '(VL)' : ''}}</td>
                 <td class="w-10 text-right">{{ game_score.b_single_game_score.toFixed(2) }}</td>
-                <td class="w-10 text-right">{{ svc.formatTime(game_score.time_on_ice) }}</td>
-                <td class="w-10 text-right">{{ game_score.game_score_per_60.toFixed(2) }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? svc.formatTime(game_score.time_on_ice) : '' }}</td>
+                <td class="w-10 text-right">{{ season != 2017 ? game_score.game_score_per_60.toFixed(2) : '' }}</td>
             </tr>
         </tbody>
     </table>
