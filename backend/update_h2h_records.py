@@ -56,6 +56,8 @@ if __name__ == '__main__':
             curr_record['po_games_played'] += games_played
             curr_record['po_wins'] += team_game['w']
             curr_record['po_losses'] += team_game['l']
+            curr_record['goals_for_po'] += team_game['score']
+            curr_record['goals_against_po'] += team_game['opp_score']
         if team_game['game_type'] == 'OT' and team_game['season_type'] == 'PO':
             curr_record['po_ot_games_played'] += games_played
             curr_record['po_ot_wins'] += team_game['w']
@@ -78,38 +80,51 @@ if __name__ == '__main__':
             curr_record["%s_po_games_played" % home_road] += games_played
             curr_record["%s_po_wins" % home_road] += team_game['w']
             curr_record["%s_po_losses" % home_road] += team_game['l']
+            curr_record['%s_goals_for_po' % home_road] += team_game['score']
+            curr_record['%s_goals_against_po' % home_road] += team_game['opp_score']
         if team_game['game_type'] == 'OT' and team_game['season_type'] == 'PO':
             curr_record["%s_po_ot_games_played" % home_road] += games_played
             curr_record["%s_po_ot_wins" % home_road] += team_game['w']
             curr_record["%s_po_ot_losses" % home_road] += team_game['l']
 
+    final_keys = [
+        # general parameters
+        'games_played', 'wins', 'losses', 'goals_for', 'goals_against',
+        # overtime parameters
+        'ot_games_played', 'ot_wins', 'ot_losses', 'ot_ties',
+        # shootout parameters
+        'so_games_played', 'so_wins', 'so_losses',
+        # general playoff parameters
+        'po_games_played', 'po_wins', 'po_losses', 'goals_for_po', 'goals_against_po',
+        # playoff overtime parameters
+        'po_ot_games_played', 'po_ot_wins', 'po_ot_losses',
+        # general home parameters
+        'home_games_played', 'home_wins', 'home_losses', 'home_goals_for', 'home_goals_against',
+        # home overtime parameters
+        'home_ot_games_played', 'home_ot_wins', 'home_ot_losses', 'home_ot_ties',
+        # home shootout parameters
+        'home_so_games_played', 'home_so_wins', 'home_so_losses',
+        # general home playoff parameters
+        'home_po_games_played', 'home_po_wins', 'home_po_losses', 'home_goals_for_po', 'home_goals_against_po',
+        # home playoff overtime parameters
+        'home_po_ot_games_played', 'home_po_ot_wins', 'home_po_ot_losses',
+        # general road parameters
+        'road_games_played', 'road_wins', 'road_losses', 'road_goals_for', 'road_goals_against',
+        # road overtime parameters
+        'road_ot_games_played', 'road_ot_wins', 'road_ot_losses', 'road_ot_ties',
+        # road shootout parameters
+        'road_so_games_played', 'road_so_wins', 'road_so_losses',
+        # general road playoff parameters
+        'road_po_games_played', 'road_po_wins', 'road_po_losses', 'road_goals_for_po', 'road_goals_against_po',
+        # road playoff overtime parameters
+        'road_po_ot_games_played', 'road_po_ot_wins', 'road_po_ot_losses',
+    ]
+
     for team in h2h_all_time:
         for opp_team in h2h_all_time[team]:
             if opp_team in h2h_records[team]:
-                for key in [
-                    'games_played', 'wins', 'losses',
-                    'goals_for', 'goals_against',
-                    'goals_for_po', 'goals_against_po',
-                    'ot_games_played', 'ot_wins', 'ot_losses', 'ot_ties',
-                    'so_games_played', 'so_wins', 'so_losses',
-                    'po_games_played', 'po_wins', 'po_losses',
-                    'home_games_played', 'home_wins', 'home_losses',
-                    'home_goals_for', 'home_goals_against',
-                    'home_ot_games_played', 'home_ot_wins', 'home_ot_losses',
-                    'home_so_games_played', 'home_so_wins', 'home_so_losses',
-                    'home_po_games_played', 'home_po_wins', 'home_po_losses',
-                    'home_po_ot_games_played', 'home_po_ot_wins',
-                    'home_po_ot_losses',
-                    'road_games_played', 'road_wins', 'road_losses',
-                    'road_goals_for', 'road_goals_against',
-                    'road_ot_games_played', 'road_ot_wins', 'road_ot_losses',
-                    'road_so_games_played', 'road_so_wins', 'road_so_losses',
-                    'road_po_games_played', 'road_po_wins', 'road_po_losses',
-                    'road_po_ot_games_played', 'road_po_ot_wins',
-                    'road_po_ot_losses',
-                ]:
-                    h2h_all_time[team][opp_team][key] += (
-                        h2h_records[team][opp_team][key])
+                for key in final_keys:
+                    h2h_all_time[team][opp_team][key] += h2h_records[team][opp_team][key]
                 if h2h_all_time[team][opp_team]['games_played']:
                     h2h_all_time[team][opp_team]['win_pctg'] = round(
                         h2h_all_time[team][opp_team]['wins'] /
