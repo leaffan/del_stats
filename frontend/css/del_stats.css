@@ -35,6 +35,8 @@ label { padding-left: 5px;}
 
 div.main-bg { background-color: rgb(216, 250, 250); }
 
+div.po-main-bg { background-color: rgb(255, 201, 202); }
+
 .marker { background: orange !important; font-weight: bold;}
 
 .container-md { padding: 0; }
