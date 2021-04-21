@@ -9,7 +9,8 @@
         {
             "2017": false,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": false
         },
         "division":
         {
@@ -34,7 +35,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -60,7 +62,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -86,7 +89,8 @@
         {
             "2017": false,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": false
         },
         "division":
         {
@@ -112,7 +116,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -137,7 +142,8 @@
         {
             "2017": true,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": true
         },
         "division":
         {
@@ -162,7 +168,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "division":
         {
@@ -187,7 +194,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "division":
         {
@@ -213,7 +221,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -239,7 +248,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -265,7 +275,8 @@
         {
             "2017": true,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": false
         },
         "division":
         {
@@ -290,7 +301,8 @@
         {
             "2017": true,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "division":
         {
@@ -316,7 +328,8 @@
         {
             "2017": false,
             "2018": true,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -341,7 +354,8 @@
         {
             "2017": true,
             "2018": false,
-            "2019": true
+            "2019": true,
+            "2020": true
         },
         "division":
         {
@@ -368,7 +382,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
@@ -385,7 +400,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
@@ -402,7 +418,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
@@ -419,7 +436,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
@@ -436,7 +454,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
@@ -453,7 +472,8 @@
         {
             "2017": false,
             "2018": false,
-            "2019": false
+            "2019": false,
+            "2020": false
         },
         "valid_from": 1994,
         "valid_to": 2016
