@@ -5,7 +5,11 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
     $scope.season = $routeParams.season;
     // setting default table selection and sort keys and criteria/order
     $scope.tableSelect = 'standings';
-    $scope.seasonTypeSelect = 'RS';
+    if ($scope.season == 2020) {
+        $scope.seasonTypeSelect = 'PO';
+    } else {
+        $scope.seasonTypeSelect = 'RS';
+    }
     // initially setting indicators which view we're currently in
     $scope.isStandingsView = true;
     $scope.sortConfig = {

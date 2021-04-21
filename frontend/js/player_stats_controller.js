@@ -5,7 +5,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     $scope.season = $routeParams.season;
     // default table selection and sort criterion for skater page
     $scope.tableSelect = 'basic_stats';
-    $scope.seasonTypeSelect = 'RS';
+    if ($scope.season == 2020) {
+        $scope.seasonTypeSelect = 'PO';
+    } else {
+        $scope.seasonTypeSelect = 'RS';
+    }
     $scope.scoringStreakTypeFilter = 'points';
     $scope.minGamesPlayed = 1;
     $scope.minTimeOnIce = 0;
