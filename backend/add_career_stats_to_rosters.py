@@ -173,6 +173,9 @@ if __name__ == '__main__':
             # retaining career stats
             if curr_player_career_stats and 'all' in curr_player_career_stats['career']:
                 plr['career'] = curr_player_career_stats['career']['all']
+            # retaining career playoff stats
+            if curr_player_career_stats and 'PO' in curr_player_career_stats['career']:
+                plr['career_po'] = curr_player_career_stats['career']['PO']
 
             # retrieving stats against other teams
             opp_team_stats = dict()
