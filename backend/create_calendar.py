@@ -35,6 +35,8 @@ if __name__ == '__main__':
 
     for fixture in schedules[:]:
         e = Event()
+        if fixture['start_date'] == "0000-00-00 00:00:00":
+            continue
         # identifying actual start date and time
         begin = parse(fixture['start_date'])
         begin = pendulum.datetime(
