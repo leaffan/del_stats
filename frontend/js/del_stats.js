@@ -311,6 +311,33 @@ app.factory('svc', function() {
             }
             var names = full_name.split(' ');
             return names[0][0] + '. ' + names.slice(-1)[0];
+        },
+        calculateRate: function(value_to_rate, rating_parameter) {
+            if (rating_parameter) {
+                return value_to_rate / rating_parameter;
+            } else {
+                return 0;
+            }
+        },
+        calculatePercentage: function(part_value, base_value, factor, return_null) {
+            if (factor === undefined)
+                factor = 1
+            if (base_value) {
+                return (part_value / (base_value * factor)) * 100
+            } else {
+                if (return_null) {
+                    return null;
+                } else {
+                    return 0;
+                }
+            }
+        },
+        calculatePer60: function(value, toi_seconds) {
+            if (toi_seconds) {
+                return value / (toi_seconds / 60) * 60;
+            } else {
+                return 0;
+            }
         }
     }
 });
