@@ -51,7 +51,7 @@
                     <option data-ng-if="season == 2020" data-ng-option value="MSC">MagentaSport Cup</option>
                     <option data-ng-option value="RS">Hauptrunde</option>
                     <option data-ng-option value="PO">Playoffs</option>
-                    <option data-ng-if="season != 2020" data-ng-option value="">Hauptrunde und Playoffs</option>
+                    <option data-ng-option value="">Hauptrunde und Playoffs</option>
                 </select>
             </div>
             <div class="input-group col-3 pl-0">
@@ -668,10 +668,10 @@
                 <td class="w-25"><a href="#!/team_profile/{{season}}/{{stat.team}}">{{ team_location_lookup[stat.team] }}</a></td>
                 <td class="w-12 text-right">{{ stat.games_played }}</td>
                 <td class="w-12 text-right">{{ stat.attendance }}</td>
-                <td class="w-12 text-right">{{ stat.avg_attendance }}</td>
+                <td class="w-12 text-right">{{ stat.avg_attendance.toFixed(0) }}</td>
                 <td class="w-12 text-right">{{ stat.util_capacity_pctg.toFixed(1) }} %</td>
                 <td class="w-12 text-right">{{ homeAwaySelect == 'home' ? stat.avg_attendance_last_season : ''}}</td>
-                <td class="w-12 text-right">{{ homeAwaySelect == 'home' ? stat.avg_attendance_delta : '' }}</td>
+                <td class="w-12 text-right">{{ homeAwaySelect == 'home' ? stat.avg_attendance_delta.toFixed(0) : '' }}</td>
             </tr>
         </tbody>
     </table>

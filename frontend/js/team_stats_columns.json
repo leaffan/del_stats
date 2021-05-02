@@ -11,8 +11,8 @@
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
         {"data_key": "pts_per_game", "col_header": "Pts/G", "expl_de": "Punkquotient", "expl_en": "Punkte pro Spiel"},
         {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
-        {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
-        {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
+        {"data_key": "score", "col_header": "GF", "expl_de": "Erzielte Tore", "expl_en": "Goals For"},
+        {"data_key": "opp_score", "col_header": "GA", "expl_de": "Zugelassene Tore", "expl_en": "Goals Against"}
     ],
     "special_team_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
@@ -26,7 +26,7 @@
         {"data_key": "pk_pctg", "col_header": "PK%", "expl_de": "Unterzahlquote", "expl_en": "Penalty Killing Percentage"},
         {"data_key": "sh_goals", "col_header": "SHGF", "expl_de": "Tore in Unterzahl", "expl_en": "Shorthanded Goals For"},
         {"data_key": "pp_pk_gdiff", "col_header": "GDiff", "expl_de": "Tordifferenz in Über- und Unterzahl", "expl_en": "Special Teams Goal Differential"},
-        {"data_key": "pp_pk_comb_pctg", "col_header": "PP+PK%", "expl_de": "kombinierte Über- und Unterzahlquote", "expl_en": "Combined Percentages"}
+        {"data_key": "pp_pk_comb_pctg", "col_header": "PP+PK%", "expl_de": "Kombinierte Über- und Unterzahlquote", "expl_en": "Combined Percentages"}
     ],
     "goal_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
@@ -204,8 +204,8 @@
         {"data_key": "points", "col_header": "PTS", "expl_de": "Punkte", "expl_en": "Points"},
         {"data_key": "pts_per_game", "col_header": "Pts/G", "expl_de": "Punkquotient", "expl_en": "Punkte pro Spiel"},
         {"data_key": "pt_pctg", "col_header": "Pt%", "expl_de": "Anteil an den maximal erzielbaren Punkten", "expl_en": "Points Percentage"},
-        {"data_key": "score", "col_header": "GF", "expl_de": "erzielte Tore", "expl_en": "Goals For"},
-        {"data_key": "opp_score", "col_header": "GA", "expl_de": "zugelassene Tore", "expl_en": "Goals Against"}
+        {"data_key": "score", "col_header": "GF", "expl_de": "Erzielte Tore", "expl_en": "Goals For"},
+        {"data_key": "opp_score", "col_header": "GA", "expl_de": "Zugelassene Tore", "expl_en": "Goals Against"}
     ],
     "shootout_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},

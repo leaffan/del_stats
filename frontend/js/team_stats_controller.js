@@ -98,8 +98,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
                 }
                 filtered_team_stats[abbr] = {};
                 filtered_team_stats[abbr]['team'] = abbr;
-                if ($scope.season == 2020)
-                    filtered_team_stats[abbr]['division'] = team['division'][$scope.season][$scope.seasonTypeSelect];
+                // retrieving divisions from team definitions for special season 2020/21
+                if ($scope.season == 2020) {
+                    // MSC had separate divisions
+                    if ($scope.seasonTypeSelect == 'MSC') {
+                        seasonType = 'MSC'
+                    } else {
+                        seasonType = 'RS';
+                    }
+                    filtered_team_stats[abbr]['division'] = team['division'][$scope.season][seasonType];
+                }
                 $scope.svc.stats_to_aggregate().forEach(category => {
                     filtered_team_stats[abbr][category] = 0;
                 });
@@ -148,7 +156,9 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
                 if ($scope.seasonTypeSelect === element.season_type)
                     is_selected_season_type = true;
             } else {
-                is_selected_season_type = true;
+                // if seasonTypeSelect is set to "Hauptrunde und Playoffs" we just want that but no pre-season games
+                if (element['season_type'] != 'MSC')
+                    is_selected_season_type = true;
             }
             if ($scope.weekdaySelect) {
                 if ($scope.weekdaySelect == element.weekday)
@@ -195,202 +205,88 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             element['goals_diff_1'] = element['goals_1'] - element['opp_goals_1'];
             element['goals_diff_2'] = element['goals_2'] - element['opp_goals_2'];
             element['goals_diff_3'] = element['goals_3'] - element['opp_goals_3'];
-            // calculating points percentage
-            if (element['games_played']) {
-                element['pt_pctg'] = parseFloat((element['points'] / (element['games_played'] * 3.) * 100).toFixed(2));
-                element['pts_per_game'] = element['points'] / element['games_played'];
-            } else {
-                element['pt_pctg'] = 0;
-                element['pts_per_game'] = 0;
-            }
+            // calculating points per game and points percentage
+            element['pts_per_game'] = svc.calculateRate(element['points'], element['games_played']);
+            element['pt_pctg'] = svc.calculatePercentage(element['points'], element['games_played'], 3);
             // calculating shot zone percentages
-            if (element['shots']) {
-                element['sl_p'] = parseFloat(((element['sl_sh'] / element['shots']) * 100).toFixed(2));
-                element['lf_p'] = parseFloat(((element['lf_sh'] / element['shots']) * 100).toFixed(2));
-                element['rg_p'] = parseFloat(((element['rg_sh'] / element['shots']) * 100).toFixed(2));
-                element['bl_p'] = parseFloat(((element['bl_sh'] / element['shots']) * 100).toFixed(2));
-            } else {
-                element['sl_p'] = parseFloat((0).toFixed(2));
-                element['lf_p'] = parseFloat((0).toFixed(2));
-                element['rg_p'] = parseFloat((0).toFixed(2));
-                element['bl_p'] = parseFloat((0).toFixed(2));
-            }
+            element['sl_p'] = svc.calculatePercentage(element['sl_sh'], element['shots']);
+            element['lf_p'] = svc.calculatePercentage(element['lf_sh'], element['shots']);
+            element['rg_p'] = svc.calculatePercentage(element['rg_sh'], element['shots']);
+            element['bl_p'] = svc.calculatePercentage(element['bl_sh'], element['shots']);
             // calculating zone percentages for shots against
-            if (element['opp_shots']) {
-                element['sl_p_a'] = parseFloat(((element['sl_sh_a'] / element['opp_shots']) * 100).toFixed(2));
-                element['lf_p_a'] = parseFloat(((element['lf_sh_a'] / element['opp_shots']) * 100).toFixed(2));
-                element['rg_p_a'] = parseFloat(((element['rg_sh_a'] / element['opp_shots']) * 100).toFixed(2));
-                element['bl_p_a'] = parseFloat(((element['bl_sh_a'] / element['opp_shots']) * 100).toFixed(2));
-            } else {
-                element['sl_p_a'] = parseFloat((0).toFixed(2));
-                element['lf_p_a'] = parseFloat((0).toFixed(2));
-                element['rg_p_a'] = parseFloat((0).toFixed(2));
-                element['bl_p_a'] = parseFloat((0).toFixed(2));
-            }
+            element['sl_p_a'] = svc.calculatePercentage(element['sl_sh_a'], element['opp_shots']);
+            element['lf_p_a'] = svc.calculatePercentage(element['lf_sh_a'], element['opp_shots']);
+            element['rg_p_a'] = svc.calculatePercentage(element['rg_sh_a'], element['opp_shots']);
+            element['bl_p_a'] = svc.calculatePercentage(element['bl_sh_a'], element['opp_shots']);
             // calculating shooting, save and zone percentages for shots on goal
-            if (element['shots_on_goal']) {
-                element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
-                element['opp_save_pctg'] = parseFloat(((element['opp_saves'] / element['shots_on_goal']) * 100).toFixed(2));
-                element['sl_og_p'] = parseFloat(((element['sl_og'] / element['shots_on_goal']) * 100).toFixed(2));
-                element['lf_og_p'] = parseFloat(((element['lf_og'] / element['shots_on_goal']) * 100).toFixed(2));
-                element['rg_og_p'] = parseFloat(((element['rg_og'] / element['shots_on_goal']) * 100).toFixed(2));
-                element['bl_og_p'] = parseFloat(((element['bl_og'] / element['shots_on_goal']) * 100).toFixed(2));
-            } else {
-                element['shot_pct'] = parseFloat((0).toFixed(2));
-                element['opp_save_pct'] = parseFloat((0).toFixed(2));
-                element['sl_og_p'] = parseFloat((0).toFixed(2));
-                element['lf_og_p'] = parseFloat((0).toFixed(2));
-                element['rg_og_p'] = parseFloat((0).toFixed(2));
-                element['bl_og_p'] = parseFloat((0).toFixed(2));
-            }
+            element['shot_pctg'] = svc.calculatePercentage(element['goals'], element['shots_on_goal']);
+            element['opp_save_pctg'] = svc.calculatePercentage(element['opp_saves'], element['shots_on_goal']);
+            element['sl_og_p'] = svc.calculatePercentage(element['sl_og'], element['shots_on_goal']);
+            element['lf_og_p'] = svc.calculatePercentage(element['lf_og'], element['shots_on_goal']);
+            element['rg_og_p'] = svc.calculatePercentage(element['rg_og'], element['shots_on_goal']);
+            element['bl_og_p'] = svc.calculatePercentage(element['bl_og'], element['shots_on_goal']);
             // calculating shooting and save percentages for shots on goal in 5-on-5 play
-            if (element['shots_on_goal_5v5']) {
-                element['shot_pctg_5v5'] = parseFloat(((element['goals_5v5'] / element['shots_on_goal_5v5']) * 100).toFixed(2));
-                element['opp_save_pctg_5v5'] = parseFloat((((element['shots_on_goal_5v5'] - element['goals_5v5']) / element['shots_on_goal_5v5']) * 100).toFixed(2));
-            } else {
-                element['shot_pct_5v5'] = parseFloat((0).toFixed(2));
-                element['opp_save_pct_5v5'] = parseFloat((0).toFixed(2));
-            }
+            element['shot_pctg_5v5'] = svc.calculatePercentage(element['goals_5v5'], element['shots_on_goal_5v5']);
+            element['opp_save_pctg_5v5'] = svc.calculatePercentage(element['shots_on_goal_5v5'] - element['goals_5v5'], element['shots_on_goal_5v5']);
             // calculating opponent shooting, save and zone percentages for shots on goal against
-            if (element['opp_shots_on_goal']) {
-                element['opp_shot_pctg'] = parseFloat(((element['opp_goals'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['save_pctg'] = parseFloat(((element['saves'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['sl_og_p_a'] = parseFloat(((element['sl_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['lf_og_p_a'] = parseFloat(((element['lf_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['rg_og_p_a'] = parseFloat(((element['rg_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['bl_og_p_a'] = parseFloat(((element['bl_og_a'] / element['opp_shots_on_goal']) * 100).toFixed(2));
-            } else {
-                element['opp_shot_pct'] = parseFloat((0).toFixed(2));
-                element['save_pct'] = parseFloat((0).toFixed(2));
-                element['sl_og_p_a'] = parseFloat((0).toFixed(2));
-                element['lf_og_p_a'] = parseFloat((0).toFixed(2));
-                element['rg_og_p_a'] = parseFloat((0).toFixed(2));
-                element['bl_og_p_a'] = parseFloat((0).toFixed(2));
-            }
+            element['opp_shot_pctg'] = svc.calculatePercentage(element['opp_goals'], element['opp_shots_on_goal']);
+            element['save_pctg'] = svc.calculatePercentage(element['saves'], element['opp_shots_on_goal']);
+            element['sl_og_p_a'] = svc.calculatePercentage(element['sl_og_a'], element['opp_shots_on_goal']);
+            element['lf_og_p_a'] = svc.calculatePercentage(element['lf_og_a'], element['opp_shots_on_goal']);
+            element['rg_og_p_a'] = svc.calculatePercentage(element['rg_og_a'], element['opp_shots_on_goal']);
+            element['bl_og_p_a'] = svc.calculatePercentage(element['bl_og_a'], element['opp_shots_on_goal']);
             // calculating opponent shooting and save percentages for shots on goal against in 5-on-5 play
-            if (element['opp_shots_on_goal_5v5']) {
-                element['opp_shot_pctg_5v5'] = parseFloat(((element['opp_goals_5v5'] / element['opp_shots_on_goal_5v5']) * 100).toFixed(2));
-                element['save_pctg_5v5'] = parseFloat((((element['opp_shots_on_goal_5v5'] - element['opp_goals_5v5']) / element['opp_shots_on_goal_5v5']) * 100).toFixed(2));
-            } else {
-                element['opp_shot_pct_5v5'] = parseFloat((0).toFixed(2));
-                element['save_pct_5v5'] = parseFloat((0).toFixed(2));
-            }
-            // calculating team shootout shooting percentages
-            if (element['so_a']) {
-                element['so_pctg'] = parseFloat(((element['so_g'] / element['so_a']) * 100).toFixed(2));
-            } else {
-                element['so_pctg'] = 0;
-            }
-            // calculating team shootout save percentages
-            if (element['opp_so_a']) {
-                element['opp_so_pctg'] = parseFloat(((element['opp_so_g'] / element['opp_so_a']) * 100).toFixed(2));
-                element['so_sv_pctg'] = parseFloat(((  (element['opp_so_a'] - element['opp_so_g']) / element['opp_so_a']) * 100).toFixed(2));
-            } else {
-                element['opp_so_pctg'] = 0;
-                element['so_sv_pctg'] = 0;
-            }
+            element['opp_shot_pctg_5v5'] = svc.calculatePercentage(element['opp_goals_5v5'], element['opp_shots_on_goal_5v5']);
+            element['save_pctg_5v5'] = svc.calculatePercentage(element['opp_shots_on_goal_5v5'] - element['opp_goals_5v5'], element['opp_shots_on_goal_5v5']);
             // calculating number of shootout games played
             element['so_games_played'] = element['sw'] + element['sl'];
+            // calculating team shootout shooting percentages
+            element['so_pctg'] = svc.calculatePercentage(element['so_g'], element['so_a']);
+            element['opp_so_pctg'] = svc.calculatePercentage(element['opp_so_g'], element['opp_so_a']);
+            element['so_sv_pctg'] = svc.calculatePercentage(element['opp_so_a'] - element['opp_so_g'], element['opp_so_a']);
             // calculating PDO
-            element['pdo'] = parseFloat((parseFloat(element['shot_pctg']) + parseFloat(element['save_pctg'])).toFixed(2));
-            element['opp_pdo'] = parseFloat((parseFloat(element['opp_shot_pctg']) + parseFloat(element['opp_save_pctg'])).toFixed(2));
+            element['pdo'] = element['shot_pctg'] + element['save_pctg'];
+            element['opp_pdo'] = element['opp_shot_pctg'] + element['opp_save_pctg'];
             // calculating PDO in 5-on-5 play
-            element['pdo_5v5'] = parseFloat((parseFloat(element['shot_pctg_5v5']) + parseFloat(element['save_pctg_5v5'])).toFixed(2));
-            element['opp_pdo_5v5'] = parseFloat((parseFloat(element['opp_shot_pctg_5v5']) + parseFloat(element['opp_save_pctg_5v5'])).toFixed(2));
+            element['pdo_5v5'] = element['shot_pctg_5v5'] + element['save_pctg_5v5'];
+            element['opp_pdo_5v5'] = element['opp_shot_pctg_5v5'] + element['opp_save_pctg_5v5'];
             // calculating shots on goal for percentage
-            if (element['shots_on_goal'] + element['opp_shots_on_goal']) {
-                element['shot_for_pctg'] = parseFloat((element['shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
-                element['opp_shot_for_pctg'] = parseFloat((element['opp_shots_on_goal'] / (element['shots_on_goal'] + element['opp_shots_on_goal']) * 100).toFixed(2));
-            } else {
-                element['shot_for_pctg'] = parseFloat((0).toFixed(2));
-                element['opp_shot_for_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['shot_for_pctg'] = svc.calculatePercentage(element['shots_on_goal'], element['shots_on_goal'] + element['opp_shots_on_goal']);
+            element['opp_shot_for_pctg'] = svc.calculatePercentage(element['opp_shots_on_goal'], element['shots_on_goal'] + element['opp_shots_on_goal']);
             // calculating unblocked shots (i.e. Fenwick) for percentage
             element['fenwick_events'] = element['shots_on_goal'] + element['shots_missed']; 
             element['opp_fenwick_events'] = element['opp_shots_on_goal'] + element['opp_shots_missed']; 
-            if (element['fenwick_events'] + element['opp_fenwick_events']) {
-                element['fenwick_for_pctg'] = parseFloat(((element['fenwick_events']) / (element['fenwick_events' ]+ element['opp_fenwick_events']) * 100).toFixed(2));
-                element['opp_fenwick_for_pctg'] = parseFloat(((element['opp_fenwick_events']) / (element['fenwick_events' ]+ element['opp_fenwick_events']) * 100).toFixed(2));
-            } else {
-                element['fenwick_for_pctg'] = parseFloat((0).toFixed(2));
-                element['opp_fenwick_for_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['fenwick_for_pctg'] = svc.calculatePercentage(element['fenwick_events'], element['fenwick_events'] + element['opp_fenwick_events']);
+            element['opp_fenwick_for_pctg'] = svc.calculatePercentage(element['opp_fenwick_events'], element['fenwick_events']+ element['opp_fenwick_events']);
             // calculating shots (i.e. Corsi) for percentage
-            if (element['shots'] + element['opp_shots']) {
-                element['corsi_for_pctg'] = parseFloat((element['shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
-                element['opp_corsi_for_pctg'] = parseFloat((element['opp_shots'] / (element['shots'] + element['opp_shots']) * 100).toFixed(2));
-            } else {
-                element['corsi_for_pctg'] = parseFloat((0).toFixed(2));
-                element['opp_corsi_for_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['corsi_for_pctg'] = svc.calculatePercentage(element['shots'], element['shots'] + element['opp_shots']);
+            element['opp_corsi_for_pctg'] = svc.calculatePercentage(element['opp_shots'], element['shots'] + element['opp_shots']);
             // calculating power play percentage
-            if (element['pp_opps']) {
-                element['pp_pctg'] = parseFloat(((element['pp_goals'] / element['pp_opps']) * 100).toFixed(2));
-            } else {
-                element['pp_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['pp_pctg'] = svc.calculatePercentage(element['pp_goals'], element['pp_opps']);
             // calculating penalty killing percentage
-            if (element['sh_opps']) {
-                element['pk_pctg'] = parseFloat((100 - (element['opp_pp_goals'] / element['sh_opps']) * 100).toFixed(2));
-            } else {
-                element['pk_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['pk_pctg'] = 100 - svc.calculatePercentage(element['opp_pp_goals'], element['sh_opps']);
             // calculating special teams goal differential and combined special team percentages
             element['pp_pk_gdiff'] = element['pp_goals'] + element['sh_goals'] - element['opp_pp_goals'] - element['opp_sh_goals'];
             element['pp_pk_comb_pctg'] = element['pp_pctg'] + element['pk_pctg'];
             // calculating team faceoff percentage
-            if (element['faceoffs']) {
-                element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
-            } else {
-                element['faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['faceoff_pctg'] = svc.calculatePercentage(element['faceoffs_won'], element['faceoffs']);
             // calculating team penalty minutes per game
-            if (element['games_played']) {
-                element['pim_per_game'] = parseFloat((element['pim'] / element['games_played']).toFixed(2));
-            } else {
-                element['pim_per_game'] = parseFloat((0).toFixed(2));
-            }
+            element['pim_per_game'] =  svc.calculateRate(element['pim'], element['games_played']);
             // calculating average attendance
-            if (element['games_played']) {
-                element['avg_attendance'] = parseFloat((element['attendance'] / element['games_played']).toFixed(0));
-            } else {
-                element['avg_attendance'] = 0;
-            }
+            element['avg_attendance'] = svc.calculateRate(element['attendance'], element['games_played']);
             // retrieving last year's average attendance
             element['avg_attendance_last_season'] = $scope.avg_attendance_last_season[element['team']];
             element['avg_attendance_delta'] = element['avg_attendance'] - element['avg_attendance_last_season']; 
             // calculating utilized attendance capacity
-            if (element['capacity']) {
-                element['util_capacity_pctg'] = parseFloat(((element['attendance'] / element['capacity']) * 100).toFixed(2));
-            } else {
-                element['util_capacity_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['util_capacity_pctg'] = svc.calculatePercentage(element['attendance'], element['capacity']);
             // calculating score state percentages
-            if (element['time_played']) {
-                element['leading_pctg'] = parseFloat(((element['leading'] / element['time_played']) * 100).toFixed(2));
-                element['trailing_pctg'] = parseFloat(((element['trailing'] / element['time_played']) * 100).toFixed(2));
-                element['tied_pctg'] = parseFloat(((element['tied'] / element['time_played']) * 100).toFixed(2));
-            } else {
-                element['leading_pctg'] = parseFloat((0).toFixed(2));
-                element['trailing_pctg'] = parseFloat((0).toFixed(2));
-                element['tied_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['leading_pctg'] = svc.calculatePercentage(element['leading'], element['time_played']);
+            element['trailing_pctg'] = svc.calculatePercentage(element['trailing'], element['time_played']);
+            element['tied_pctg'] = svc.calculatePercentage(element['tied'], element['time_played']);
             // calculating 5-on-5 shot share percentages
-            if (element['shots_5v5'] + element['opp_shots_5v5']) {
-                element['shots_5v5_pctg'] = parseFloat(((element['shots_5v5'] / (element['shots_5v5'] + element['opp_shots_5v5'])) * 100).toFixed(2));
-            } else {
-                element['shots_5v5_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5']) {
-                element['shots_unblocked_5v5_pctg'] = parseFloat(((element['shots_unblocked_5v5'] / (element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5'])) * 100).toFixed(2));
-            } else {
-                element['shots_unblocked_5v5_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5']) {
-                element['shots_on_goal_5v5_pctg'] = parseFloat(((element['shots_on_goal_5v5'] / (element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5'])) * 100).toFixed(2));
-            } else {
-                element['shots_on_goal_5v5_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['shots_5v5_pctg'] = svc.calculatePercentage(element['shots_5v5'], element['shots_5v5'] + element['opp_shots_5v5']);
+            element['shots_unblocked_5v5_pctg'] = svc.calculatePercentage(element['shots_unblocked_5v5'], element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5']);
+            element['shots_on_goal_5v5_pctg'] = svc.calculatePercentage(element['shots_on_goal_5v5'], element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5']);
         });
         
         return filtered_team_stats;
@@ -456,7 +352,8 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         "goals_diff": ['goals_diff', 'goals', '-games_played'],
         "pt_pctg": ['pt_pctg', 'points', 'goals_diff', '-games_played', 'score'],
         "pim_per_game": ['pim_per_game', 'penalties'],
-        "util_capacity_pctg": ['util_capacity_pctg', 'attendance']
+        "util_capacity_pctg": ['util_capacity_pctg', 'attendance'],
+        "leading_pctg": ['leading_pctg', 'leading']
     };
 
     // colums that by default are sorted in ascending order
