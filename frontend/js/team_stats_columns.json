@@ -28,6 +28,46 @@
         {"data_key": "pp_pk_gdiff", "col_header": "GDiff", "expl_de": "Tordifferenz in Über- und Unterzahl", "expl_en": "Special Teams Goal Differential"},
         {"data_key": "pp_pk_comb_pctg", "col_header": "PP+PK%", "expl_de": "Kombinierte Über- und Unterzahlquote", "expl_en": "Combined Percentages"}
     ],
+    "special_team_times": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "pp_time", "col_header": "PP Time", "expl_de": "Zeit in Überzahl", "expl_en": "Powerplay Time"},
+        {"data_key": "pp_time_per_game", "col_header": "PP Time/GP", "expl_de": "Überzahlzeit pro Spiel", "expl_en": "Powerplay Time per Game"},
+        {"data_key": "pp_goals", "col_header": "PPG", "expl_de": "Überzahltore", "expl_en": "Powerplay Goals"},
+        {"data_key": "pp_time_per_pp_goal", "col_header": "PP Time/PPG", "expl_de": "Überzahlzeit pro Überzahltor", "expl_en": "Powerplay Time per Powerplay Goal"},
+        {"data_key": "full_pps_per_pp_goal", "col_header": "PPO/PPG", "expl_de": "Volle Powerplays pro Überzahltor", "expl_en": "Full Powerplays per Powerplay Goal"},
+        {"data_key": "opp_pp_time", "col_header": "PK Time", "expl_de": "Zeit in Unterzahl", "expl_en": "Penalty Killing Time"},
+        {"data_key": "pk_time_per_game", "col_header": "PK Time/GP", "expl_de": "Unterzahlzeit pro Spiel", "expl_en": "Shorthanded Time per Game"},
+        {"data_key": "opp_pp_goals", "col_header": "PPGA", "expl_de": "zugelassene Überzahltore", "expl_en": "Powerplay Goals Against"},
+        {"data_key": "pk_time_per_opp_pp_goal", "col_header": "PK Time/PPGA", "expl_de": "Unterzahlzeit pro Gegentor in Unterzahl", "expl_en": "Shorthanded Time per Powerplay Goal Against"},
+        {"data_key": "full_pks_per_opp_pp_goal", "col_header": "PKS/PPGA", "expl_de": "Volle Powerplays pro gegnerischem Überzahltor", "expl_en": "Full Powerplays per Powerplay Goal Against"}
+    ],
+    "power_play_details": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "pp_5v4", "col_header": "PPO5v4", "expl_de": "Überzahlsituationen im 5-gegen-4", "expl_en": "5v4 Powerplay Opportunities"},
+        {"data_key": "ppg_5v4", "col_header": "PPG5v4", "expl_de": "Überzahltore im 5-gegen-4", "expl_en": "5v4 Powerplay Goals"},
+        {"data_key": "pp_5v4_pctg", "col_header": "PP%5v4", "expl_de": "Überzahlquote im 5-gegen-4", "expl_en": "5v4 Powerplay Percentage"},
+        {"data_key": "pp_5v3", "col_header": "PPO5v3", "expl_de": "Überzahlsituationen im 5-gegen-3", "expl_en": "5v3 Powerplay Opportunities"},
+        {"data_key": "ppg_5v3", "col_header": "PPG5v3", "expl_de": "Überzahltore im 5-gegen-3", "expl_en": "5v3 Powerplay Goals"},
+        {"data_key": "pp_5v3_pctg", "col_header": "PP%5v3", "expl_de": "Überzahlquote im 5-gegen-3", "expl_en": "5v3 Powerplay Percentage"},
+        {"data_key": "pp_4v3", "col_header": "PPO4v3", "expl_de": "Überzahlsituationen im 4-gegen-3", "expl_en": "4v3 Powerplay Opportunities"},
+        {"data_key": "ppg_4v3", "col_header": "PPG4v3", "expl_de": "Überzahltore im 4-gegen-3", "expl_en": "4v3 Powerplay Goals"},
+        {"data_key": "pp_4v3_pctg", "col_header": "PP%4v3", "expl_de": "Überzahlquote im 4-gegen-3", "expl_en": "4v3 Powerplay Percentage"}
+    ],
+    "penalty_kill_details": [
+        {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
+        {"data_key": "games_played", "col_header": "GP", "expl_de": "Absolvierte Spiele", "expl_en": "Games Played"},
+        {"data_key": "opp_pp_5v4", "col_header": "TSH4v5", "expl_de": "Unterzahlsituationen im 4-gegen-5", "expl_en": "Times Shorthanded 4v5"},
+        {"data_key": "opp_ppg_5v4", "col_header": "PPGA4v5", "expl_de": "zugelassene Überzahltore im 4-gegen-5", "expl_en": "4v5 Powerplay Goals Against"},
+        {"data_key": "pk_4v5_pctg", "col_header": "PK%4v5", "expl_de": "Unterzahlquote im 4-gegen-5", "expl_en": "4v5 Penalty Killing Percentage"},
+        {"data_key": "opp_pp_5v3", "col_header": "TSH3v5", "expl_de": "Unterzahlsituationen im 3-gegen-5", "expl_en": "Times Shorthanded 3v5"},
+        {"data_key": "opp_ppg_5v3", "col_header": "PPGA3v5", "expl_de": "zugelassene Überzahltore im 3-gegen-5", "expl_en": "3v5 Powerplay Goals Against"},
+        {"data_key": "pk_3v5_pctg", "col_header": "PK%3v5", "expl_de": "Unterzahlquote im 3-gegen-5", "expl_en": "3v5 Penalty Killing Percentage"},
+        {"data_key": "opp_pp_4v3", "col_header": "TSH3v4", "expl_de": "Unterzahlsituationen im 3-gegen-4", "expl_en": "Times Shorthanded 3v4"},
+        {"data_key": "opp_ppg_4v3", "col_header": "PPGA3v4", "expl_de": "zugelassene Überzahltore im 3-gegen-4", "expl_en": "3v4 Powerplay Goals Against"},
+        {"data_key": "pk_3v4_pctg", "col_header": "PK%3v4", "expl_de": "Unterzahlquote im 3-gegen-4", "expl_en": "3v4 Penalty Killing Percentage"}
+    ],
     "goal_stats": [
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "goals_diff", "col_header": "GDiff", "expl_de": "Tordifferenz in regulärer Spielzeit", "expl_en": "Goal Differential"},

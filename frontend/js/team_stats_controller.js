@@ -287,6 +287,22 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             element['shots_5v5_pctg'] = svc.calculatePercentage(element['shots_5v5'], element['shots_5v5'] + element['opp_shots_5v5']);
             element['shots_unblocked_5v5_pctg'] = svc.calculatePercentage(element['shots_unblocked_5v5'], element['shots_unblocked_5v5'] + element['opp_shots_unblocked_5v5']);
             element['shots_on_goal_5v5_pctg'] = svc.calculatePercentage(element['shots_on_goal_5v5'], element['shots_on_goal_5v5'] + element['opp_shots_on_goal_5v5']);
+            // calculating detailed power play and penalty killing percentages
+            element['pp_5v4_pctg'] = svc.calculatePercentage(element['ppg_5v4'], element['pp_5v4'], 1, true);
+            element['pp_5v3_pctg'] = svc.calculatePercentage(element['ppg_5v3'], element['pp_5v3'], 1, true);
+            element['pp_4v3_pctg'] = svc.calculatePercentage(element['ppg_4v3'], element['pp_4v3'], 1, true);
+            element['pk_4v5_pctg'] = svc.calculateFrom100Percentage(element['opp_ppg_5v4'], element['opp_pp_5v4']);
+            element['pk_3v5_pctg'] = svc.calculateFrom100Percentage(element['opp_ppg_5v3'], element['opp_pp_5v3']);
+            element['pk_3v4_pctg'] = svc.calculateFrom100Percentage(element['opp_ppg_4v3'], element['opp_pp_4v3']);
+            // calculating powerplay/penalty killing times per game
+            element['pp_time_per_game'] = svc.calculateRate(element['pp_time'], element['games_played']);
+            element['pk_time_per_game'] = svc.calculateRate(element['opp_pp_time'], element['games_played']);
+            // calculating powerplay time per powerplay goal
+            element['pp_time_per_pp_goal'] = svc.calculateRate(element['pp_time'], element['pp_goals']);
+            element['pk_time_per_opp_pp_goal'] = svc.calculateRate(element['opp_pp_time'], element['opp_pp_goals']);
+            // calculating powerplays per powerplay goal
+            element['full_pps_per_pp_goal'] = svc.calculateRate(element['pp_time_per_pp_goal'], 120);
+            element['full_pks_per_opp_pp_goal'] = svc.calculateRate(element['pk_time_per_opp_pp_goal'], 120);
         });
         
         return filtered_team_stats;
@@ -311,7 +327,10 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         'shootout_stats': 'so_pctg',
         'penalty_stats': 'pim_per_game',
         'score_state_stats': 'leading_pctg',
-        'attendance_stats': 'util_capacity_pctg'
+        'attendance_stats': 'util_capacity_pctg',
+        'power_play_details': 'pp_5v4_pctg',
+        'penalty_kill_details': 'pk_4v5_pctg',
+        'special_team_times': 'pp_time_per_pp_goal'
     }
 
     // hierarchical sorting criteria for specified sort key
@@ -353,12 +372,16 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
         "pt_pctg": ['pt_pctg', 'points', 'goals_diff', '-games_played', 'score'],
         "pim_per_game": ['pim_per_game', 'penalties'],
         "util_capacity_pctg": ['util_capacity_pctg', 'attendance'],
-        "leading_pctg": ['leading_pctg', 'leading']
+        "leading_pctg": ['leading_pctg', 'leading'],
+        'pp_time_per_pp_goal': ['pp_time_per_pp_goal', 'pp_goals'],
+        'pp_5v4_pctg': ['pp_5v4_pctg', 'pp_goals'],
+        'pk_4v5_pctg': ['pk_4v5_pctg', '-opp_pp_goals']
     };
 
     // colums that by default are sorted in ascending order
     $scope.ascendingAttrs = [
-        'team', 'opp_score', 'pim_per_game', 'opp_shots', 'opp_shots_on_goal'
+        'team', 'opp_score', 'pim_per_game', 'opp_shots', 'opp_shots_on_goal',
+        'pp_time_per_pp_goal', 'full_pps_per_pp_goal'
     ];
 
 
@@ -456,7 +479,7 @@ app.controller('teamStatsController', function($scope, $http, $routeParams, $q, 
             ctrl.toDate = $scope.reunification_date;
         } else if ($scope.timespanSelect == 'post_reunification') {
             ctrl.fromDate = $scope.reunification_date;
-            ctrl.toDate = moment('2021-04-20');
+            ctrl.toDate = moment('2021-04-19');
         } else {
             timespanSelect = parseInt($scope.timespanSelect) + 1;
             if (timespanSelect < 9) {
