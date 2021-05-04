@@ -267,15 +267,11 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
         filtered_goalie_stats.forEach(element => {
             // calculating standard save percentage
-            if (element['shots_against']) {
-                element['save_pctg'] = (1 - element['goals_against'] / element['shots_against']) * 100.;
-            } else {
-                element['save_pctg'] = parseFloat(0);
-            }
+            element['save_pctg'] = 100 - svc.calculatePercentage(element['goals_against'], element['shots_against']);
             if (element['toi']) {
                 element['gaa'] = (element['goals_against'] * 3600.) / element['toi'];
             } else {
-                element['gaa'] = parseFloat(0);
+                element['gaa'] = 0;
             }
             // calculating grouped save percentages in even strength
             if (element['sa_5v5']) {
@@ -355,9 +351,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             if (element['so_attempts_a']) {
                 element['so_sv_pctg'] = (1 - element['so_goals_a'] / element['so_attempts_a']) * 100.; 
             } else {
-                element['so_sv_pctg'] = 0; 
+                element['so_sv_pctg'] = null; 
             }
-
         });
 
         $scope.maxGoalieGamesPlayed = Math.max.apply(Math, filtered_goalie_stats.map(function(o) { return o.games_played; }));
@@ -512,15 +507,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         });
     }
 
-    $scope.calculateShareOfSum = function(element, for_component, against_component) {
-        sum = element[for_component] + element[against_component];
-        if (sum) {
-            return (element[for_component] / sum) * 100.;
-        } else {
-            return 0.;
-        }
-    };
-
     $scope.filterStats = function(stats) {
         filtered_player_stats = {};
         player_teams = {};
@@ -579,211 +565,92 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
         filtered_player_stats.forEach(element => {
             // calculating points per game
-            if (element['games_played']) {
-                element['points_per_game'] = parseFloat((element['points'] / (element['games_played'])).toFixed(2));
-                element['points_per_game_5v5'] = parseFloat((element['points_5v5'] / (element['games_played'])).toFixed(2));
-            } else {
-                element['points_per_game'] = parseFloat((0).toFixed(2));
-                element['points_per_game_5v5'] = parseFloat((0).toFixed(2));
-            }
-            // calculating shooting percentage
-            if (element['shots_on_goal']) {
-                element['shot_pctg'] = parseFloat(((element['goals'] / element['shots_on_goal']) * 100).toFixed(2));
-            } else {
-                element['shot_pctg'] = parseFloat((0).toFixed(2));
-            }
-            // calculating 5v5 shooting percentage
-            if (element['shots_on_goal_5v5']) {
-                element['shot_pctg_5v5'] = parseFloat(((element['goals_5v5'] / element['shots_on_goal_5v5']) * 100).toFixed(2));
-            } else {
-                element['shot_pctg_5v5'] = parseFloat((0).toFixed(2));
-            }
+            element['points_per_game'] = svc.calculateRate(element['points'], element['games_played']);
+            element['points_per_game_5v5'] = svc.calculateRate(element['points_5v5'], element['games_played']);
+            // calculating shooting percentages
+            element['shot_pctg'] = svc.calculatePercentage(element['goals'], element['shots_on_goal']);
+            element['shot_pctg_5v5'] = svc.calculatePercentage(element['goals_5v5'], element['shots_on_goal_5v5']);
             // calculating faceoffs per game
-            if (element['games_played']) {
-                element['faceoffs_per_game'] = element['faceoffs'] / element['games_played'];
-            } else {
-                element['faceoffs_per_game'] = 0;
-            }
-            // calculating faceoff percentage
-            if (element['faceoffs']) {
-                element['faceoff_pctg'] = parseFloat(((element['faceoffs_won'] / element['faceoffs']) * 100).toFixed(2));
-            } else {
-                element['faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
-            // calculating faceoff percentages by zone
-            if (element['nzone_faceoffs']) {
-                element['nzone_faceoff_pctg'] = parseFloat(((element['nzone_faceoffs_won'] / element['nzone_faceoffs']) * 100).toFixed(2));
-            } else {
-                element['nzone_faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['ozone_faceoffs']) {
-                element['ozone_faceoff_pctg'] = parseFloat(((element['ozone_faceoffs_won'] / element['ozone_faceoffs']) * 100).toFixed(2));
-            } else {
-                element['ozone_faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['dzone_faceoffs']) {
-                element['dzone_faceoff_pctg'] = parseFloat(((element['dzone_faceoffs_won'] / element['dzone_faceoffs']) * 100).toFixed(2));
-            } else {
-                element['dzone_faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['faceoffs_per_game'] = svc.calculateRate(element['faceoffs'], element['games_played']);
+            // calculating faceoff percentages
+            element['faceoff_pctg'] = svc.calculatePercentage(element['faceoffs_won'], element['faceoffs']);
+            element['nzone_faceoff_pctg'] = svc.calculatePercentage(element['nzone_faceoffs_won'], element['nzone_faceoffs']);
+            element['ozone_faceoff_pctg'] = svc.calculatePercentage(element['ozone_faceoffs_won'], element['ozone_faceoffs']);
+            element['dzone_faceoff_pctg'] = svc.calculatePercentage(element['dzone_faceoffs_won'], element['dzone_faceoffs']);
             // calculating faceoff percentages by side
-            if (element['left_side_faceoffs']) {
-                element['left_side_faceoff_pctg'] = parseFloat(((element['left_side_faceoffs_won'] / element['left_side_faceoffs']) * 100).toFixed(2));
-            } else {
-                element['left_side_faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
-            if (element['right_side_faceoffs']) {
-                element['right_side_faceoff_pctg'] = parseFloat(((element['right_side_faceoffs_won'] / element['right_side_faceoffs']) * 100).toFixed(2));
-            } else {
-                element['right_side_faceoff_pctg'] = parseFloat((0).toFixed(2));
-            }
+            element['left_side_faceoff_pctg'] = svc.calculatePercentage(element['left_side_faceoffs_won'], element['left_side_faceoffs']);
+            element['right_side_faceoff_pctg'] = svc.calculatePercentage(element['right_side_faceoffs_won'], element['right_side_faceoffs']);
             // calculating power play points per 60
-            if (element['time_on_ice_pp']) {
-                element['pp_goals_per_60'] = element['pp_goals'] / (element['time_on_ice_pp'] / 60) * 60;
-                element['pp_assists_per_60'] = element['pp_assists'] / (element['time_on_ice_pp'] / 60) * 60;
-                element['pp_points_per_60'] = element['pp_points'] / (element['time_on_ice_pp'] / 60) * 60;
-            } else {
-                element['pp_goals_per_60'] = parseFloat((0).toFixed(2));
-                element['pp_assists_per_60'] = parseFloat((0).toFixed(2));
-                element['pp_points_per_60'] = parseFloat((0).toFixed(2));
-            }
-            // calculating time on ice and shifts per game
-            if (element['games_played']) {
-                element['time_on_ice_per_game'] = (element['time_on_ice'] / element['games_played']);
-                element['time_on_ice_pp_per_game'] = (element['time_on_ice_pp'] / element['games_played']);
-                element['time_on_ice_sh_per_game'] = (element['time_on_ice_sh'] / element['games_played']);
-                element['shifts_per_game'] = element['shifts'] / element['games_played'];
-                element['game_score_per_game'] = element['game_score'] / element['games_played'];
-            } else {
-                element['time_on_ice_per_game'] = parseFloat((0).toFixed(2));
-                element['time_on_ice_pp_per_game'] = parseFloat((0).toFixed(2));
-                element['time_on_ice_sh_per_game'] = parseFloat((0).toFixed(2));
-                element['shifts_per_game'] = parseFloat((0).toFixed(2));
-                element['game_score_per_game'] = 0.;
-            }
+            element['pp_goals_per_60'] = svc.calculatePer60(element['pp_goals'], element['time_on_ice_pp']);
+            element['pp_assists_per_60'] = svc.calculatePer60(element['pp_assists'], element['time_on_ice_pp']);
+            element['pp_points_per_60'] = svc.calculatePer60(element['pp_points'], element['time_on_ice_pp']);
+            // calculating several per-game values
+            element['time_on_ice_per_game'] = svc.calculateRate(element['time_on_ice'], element['games_played']);
+            element['time_on_ice_pp_per_game'] = svc.calculateRate(element['time_on_ice_pp'], element['games_played']);
+            element['time_on_ice_sh_per_game'] = svc.calculateRate(element['time_on_ice_sh'], element['games_played']);
+            element['shifts_per_game'] = svc.calculateRate(element['shifts'], element['games_played']);
+            element['game_score_per_game'] = svc.calculateRate(element['game_score'], element['games_played']);
             // calculating goals, assists, points, shots, shots on goal per 60 minutes of time on ice
-            if (element['time_on_ice']) {
-                element['goals_per_60'] = element['goals'] / (element['time_on_ice'] / 60) * 60;
-                element['assists_per_60'] = element['assists'] / (element['time_on_ice'] / 60) * 60;
-                element['primary_assists_per_60'] = element['primary_assists'] / (element['time_on_ice'] / 60) * 60;
-                element['secondary_assists_per_60'] = element['secondary_assists'] / (element['time_on_ice'] / 60) * 60;
-                element['points_per_60'] = element['points'] / (element['time_on_ice'] / 60) * 60;
-                element['primary_points_per_60'] = element['primary_points'] / (element['time_on_ice'] / 60) * 60;
-                element['shots_per_60'] = element['shots'] / (element['time_on_ice'] / 60) * 60;
-                element['shots_on_goal_per_60'] = element['shots_on_goal'] / (element['time_on_ice'] / 60) * 60;
-                element['game_score_per_60'] = element['game_score'] / (element['time_on_ice'] / 60) * 60;
-                element['faceoffs_per_60'] = element['faceoffs'] / (element['time_on_ice'] / 60) * 60;
-            } else {
-                element['goals_per_60'] = parseFloat((0).toFixed(2));
-                element['assists_per_60'] = parseFloat((0).toFixed(2));
-                element['primary_assists_per_60'] = parseFloat((0).toFixed(2));
-                element['secondary_assists_per_60'] = parseFloat((0).toFixed(2));
-                element['points_per_60'] = parseFloat((0).toFixed(2));
-                element['primary_points_per_60'] = parseFloat((0).toFixed(2));
-                element['shots_per_60'] = parseFloat((0).toFixed(2));
-                element['shots_on_goal_per_60'] = parseFloat((0).toFixed(2));
-                element['game_score_per_60'] = 0.;
-                element['faceoffs_per_60'] = 0.;
-            }
+            element['goals_per_60'] = svc.calculatePer60(element['goals'], element['time_on_ice']);
+            element['assists_per_60'] = svc.calculatePer60(element['assists'], element['time_on_ice']);
+            element['primary_assists_per_60'] = svc.calculatePer60(element['primary_assists'], element['time_on_ice']);
+            element['secondary_assists_per_60'] = svc.calculatePer60(element['secondary_assists'], element['time_on_ice']);
+            element['points_per_60'] = svc.calculatePer60(element['points'], element['time_on_ice']);
+            element['primary_points_per_60'] = svc.calculatePer60(element['primary_points'], element['time_on_ice']);
+            element['shots_per_60'] = svc.calculatePer60(element['shots'], element['time_on_ice']);
+            element['shots_on_goal_per_60'] = svc.calculatePer60(element['shots_on_goal'], element['time_on_ice']);
+            element['game_score_per_60'] = svc.calculatePer60(element['game_score'], element['time_on_ice']);
+            element['faceoffs_per_60'] = svc.calculatePer60(element['faceoffs'], element['time_on_ice']);
             // calculating goals, assists, points, shots, shots on goal, pim per game
-            if (element['games_played']) {
-                element['goals_per_game'] = element['goals'] / element['games_played'];
-                element['assists_per_game'] = element['assists'] / element['games_played'];
-                element['primary_assists_per_game'] = element['primary_assists'] / element['games_played'];
-                element['secondary_assists_per_game'] = element['secondary_assists'] / element['games_played'];
-                element['points_per_game'] = element['points'] / element['games_played'];
-                element['primary_points_per_game'] = element['primary_points'] / element['games_played'];
-                element['shots_per_game'] = element['shots'] / element['games_played'];
-                element['shots_on_goal_per_game'] = element['shots_on_goal'] / element['games_played'];
-                element['pim_per_game'] = element['pim_from_events'] / element['games_played'];
-            } else {
-                element['goals_per_game'] = parseFloat((0).toFixed(2));
-                element['assists_per_game'] = parseFloat((0).toFixed(2));
-                element['primary_assists_per_game'] = parseFloat((0).toFixed(2));
-                element['secondary_assists_per_game'] = parseFloat((0).toFixed(2));
-                element['points_per_game'] = parseFloat((0).toFixed(2));
-                element['primary_points_per_game'] = parseFloat((0).toFixed(2));
-                element['shots_per_game'] = parseFloat((0).toFixed(2));
-                element['shots_on_goal_per_game'] = parseFloat((0).toFixed(2));
-                element['pim_per_game'] = 0;
-            }
+            element['goals_per_game'] = svc.calculateRate(element['goals'], element['games_played']);
+            element['assists_per_game'] = svc.calculateRate(element['assists'], element['games_played']);
+            element['primary_assists_per_game'] = svc.calculateRate(element['primary_assists'], element['games_played']);
+            element['secondary_assists_per_game'] = svc.calculateRate(element['secondary_assists'], element['games_played']);
+            element['points_per_game'] = svc.calculateRate(element['points'], element['games_played']);
+            element['primary_points_per_game'] = svc.calculateRate(element['primary_points'], element['games_played']);
+            element['shots_per_game'] = svc.calculateRate(element['shots'], element['games_played']);
+            element['shots_on_goal_per_game'] = svc.calculateRate(element['shots_on_goal'], element['games_played']);
+            element['pim_per_game'] = svc.calculateRate(element['pim_from_events'], element['games_played']);
             // calculating shot zone percentages
-            if (element['shots']) {
-                element['slot_pctg'] = (element['slot_shots'] / element['shots']) * 100.; 
-                element['left_pctg'] = (element['left_shots'] / element['shots']) * 100.; 
-                element['right_pctg'] = (element['right_shots'] / element['shots']) * 100.; 
-                element['blue_line_pctg'] = (element['blue_line_shots'] / element['shots']) * 100.; 
-                element['neutral_zone_pctg'] = (element['neutral_zone_shots'] / element['shots']) * 100.; 
-            } else {
-                element['slot_pctg'] = parseFloat((0).toFixed(2)); 
-                element['left_pctg'] = parseFloat((0).toFixed(2)); 
-                element['right_pctg'] = parseFloat((0).toFixed(2)); 
-                element['blue_line_pctg'] = parseFloat((0).toFixed(2)); 
-                element['neutral_zone_pctg'] = parseFloat((0).toFixed(2)); 
-            }
+            element['slot_pctg'] = svc.calculatePercentage(element['slot_shots'], element['shots']); 
+            element['left_pctg'] = svc.calculatePercentage(element['left_shots'], element['shots']); 
+            element['right_pctg'] = svc.calculatePercentage(element['right_shots'], element['shots']); 
+            element['blue_line_pctg'] = svc.calculatePercentage(element['blue_line_shots'], element['shots']); 
+            element['neutral_zone_pctg'] = svc.calculatePercentage(element['neutral_zone_shots'], element['shots']); 
             // calculating shot-on-goal zone percentages
-            if (element['shots_on_goal']) {
-                element['slot_on_goal_pctg'] = (element['slot_on_goal'] / element['shots_on_goal']) * 100.; 
-                element['left_on_goal_pctg'] = (element['left_on_goal'] / element['shots_on_goal']) * 100.; 
-                element['right_on_goal_pctg'] = (element['right_on_goal'] / element['shots_on_goal']) * 100.; 
-                element['blue_line_on_goal_pctg'] = (element['blue_line_on_goal'] / element['shots_on_goal']) * 100.; 
-                element['neutral_zone_on_goal_pctg'] = (element['neutral_zone_on_goal'] / element['shots_on_goal']) * 100.; 
-            } else {
-                element['slot_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
-                element['left_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
-                element['right_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
-                element['blue_line_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
-                element['neutral_zone_on_goal_pctg'] = parseFloat((0).toFixed(2)); 
-            }
+            element['slot_on_goal_pctg'] = svc.calculatePercentage(element['slot_on_goal'], element['shots_on_goal']); 
+            element['left_on_goal_pctg'] = svc.calculatePercentage(element['left_on_goal'], element['shots_on_goal']); 
+            element['right_on_goal_pctg'] = svc.calculatePercentage(element['right_on_goal'], element['shots_on_goal']); 
+            element['blue_line_on_goal_pctg'] = svc.calculatePercentage(element['blue_line_on_goal'], element['shots_on_goal']); 
+            element['neutral_zone_on_goal_pctg'] = svc.calculatePercentage(element['neutral_zone_on_goal'], element['shots_on_goal']); 
             // calculating time on ice per shift
-            if (element['shifts']) {
-                element['time_on_ice_per_shift'] = element['time_on_ice'] / element['shifts']
-            } else {
-                element['time_on_ice_per_shift'] = parseFloat((0).toFixed(2));
-            }
+            element['time_on_ice_per_shift'] = svc.calculateRate(element['time_on_ice'], element['shifts']);
             // calculating shot shares
-            element['on_ice_sh_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_sh_f', 'on_ice_sh_a')
-            element['on_ice_unblocked_sh_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_unblocked_sh_f', 'on_ice_unblocked_sh_a')
-            element['on_ice_sog_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_sog_f', 'on_ice_sog_a')
-            element['on_ice_goals_pctg'] = $scope.calculateShareOfSum(element, 'on_ice_goals_f', 'on_ice_goals_a')
-            element['on_ice_sh_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_sh_f_5v5', 'on_ice_sh_a_5v5')
-            element['on_ice_unblocked_sh_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_unblocked_sh_f_5v5', 'on_ice_unblocked_sh_a_5v5')
-            element['on_ice_sog_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_sog_f_5v5', 'on_ice_sog_a_5v5')
-            element['on_ice_goals_pctg_5v5'] = $scope.calculateShareOfSum(element, 'on_ice_goals_f_5v5', 'on_ice_goals_a_5v5')
+            element['on_ice_sh_pctg'] = svc.calculatePercentage(element['on_ice_sh_f'], element['on_ice_sh_f'] + element['on_ice_sh_a']);
+            element['on_ice_unblocked_sh_pctg'] = svc.calculatePercentage(element['on_ice_unblocked_sh_f'], element['on_ice_unblocked_sh_f'] + element['on_ice_unblocked_sh_a']);
+            element['on_ice_sog_pctg'] = svc.calculatePercentage(element['on_ice_sog_f'], element['on_ice_sog_f'] + element['on_ice_sog_a']);
+            element['on_ice_goals_pctg'] = svc.calculatePercentage(element['on_ice_goals_f'], element['on_ice_goals_f'] + element['on_ice_goals_a']);
+            element['on_ice_sh_pctg_5v5'] = svc.calculatePercentage(element['on_ice_sh_f_5v5'], element['on_ice_sh_f_5v5'] + element['on_ice_sh_a_5v5']);
+            element['on_ice_unblocked_sh_pctg_5v5'] = svc.calculatePercentage(element['on_ice_unblocked_sh_f_5v5'], element['on_ice_unblocked_sh_f_5v5'] + element['on_ice_unblocked_sh_a_5v5']);
+            element['on_ice_sog_pctg_5v5'] = svc.calculatePercentage(element['on_ice_sog_f_5v5'], element['on_ice_sog_f_5v5'] + element['on_ice_sog_a_5v5']);
+            element['on_ice_goals_pctg_5v5'] = svc.calculatePercentage(element['on_ice_goals_f_5v5'], element['on_ice_goals_f_5v5'] + element['on_ice_goals_a_5v5']);
             // calculating on-ice shooting and save percentages
-            if (element['on_ice_sog_f']) {
-                element['on_ice_shooting_pctg'] = (element['on_ice_goals_f'] / element['on_ice_sog_f']) * 100;
-            } else {
-                element['on_ice_shooting_pctg'] = 0.0;
-            }
-            if (element['on_ice_sog_a']) {
-                element['on_ice_save_pctg'] = (1 - element['on_ice_goals_a'] / element['on_ice_sog_a']) * 100;
-            } else {
-                element['on_ice_save_pctg'] = 0.0;
-            }
+            element['on_ice_shooting_pctg'] = svc.calculatePercentage(element['on_ice_goals_f'], element['on_ice_sog_f']);
+            element['on_ice_save_pctg'] = 100 - svc.calculatePercentage(element['on_ice_goals_a'], element['on_ice_sog_a']);
             element['on_ice_pdo'] = element['on_ice_shooting_pctg'] + element['on_ice_save_pctg']; 
-            if (element['on_ice_sog_f_5v5']) {
-                element['on_ice_shooting_pctg_5v5'] = (element['on_ice_goals_f_5v5'] / element['on_ice_sog_f_5v5']) * 100;
-            } else {
-                element['on_ice_shooting_pctg_5v5'] = 0.0;
-            }
-            if (element['on_ice_sog_a_5v5']) {
-                element['on_ice_save_pctg_5v5'] = (1 - element['on_ice_goals_a_5v5'] / element['on_ice_sog_a_5v5']) * 100;
-            } else {
-                element['on_ice_save_pctg_5v5'] = 0.0;
-            }
+            element['on_ice_shooting_pctg_5v5'] = svc.calculatePercentage(element['on_ice_goals_f_5v5'], element['on_ice_sog_f_5v5']);
+            element['on_ice_save_pctg_5v5'] = 100 - svc.calculatePercentage(element['on_ice_goals_a_5v5'], element['on_ice_sog_a_5v5']);
             element['on_ice_pdo_5v5'] = element['on_ice_shooting_pctg_5v5'] + element['on_ice_save_pctg_5v5'];
             // calculating differentials for display of game score stats
             element['faceoffs_diff'] = element['faceoffs_won'] - element['faceoffs_lost'];
             element['on_ice_sh_diff'] = element['on_ice_sh_f'] - element['on_ice_sh_a'];
             element['on_ice_goals_diff'] = element['on_ice_goals_f'] - element['on_ice_goals_a'];
             // calculating shooting percentage in shootouts
-            if (element['so_attempts']) {
-                element['so_pctg'] = (element['so_goals'] / element['so_attempts']) * 100.; 
-            } else {
-                element['so_pctg'] = 0; 
-            }
-
+            element['so_pctg'] = svc.calculatePercentage(element['so_goals'], element['so_attempts']);
+            // calculating shot type percentages
+            element['sog_pctg'] = svc.calculatePercentage(element['shots_on_goal'], element['shots']);
+            element['ms_pctg'] = svc.calculatePercentage(element['shots_missed'], element['shots']);
+            element['bs_pctg'] = svc.calculatePercentage(element['shots_blocked'], element['shots']);
         });
 
         // retrieving maximum number of games played from filtered player stats
@@ -1050,7 +917,7 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             ctrl.toDate = $scope.reunification_date;
         } else if ($scope.timespanSelect == 'post_reunification') {
             ctrl.fromDate = $scope.reunification_date;
-            ctrl.toDate = moment('2021-04-20');
+            ctrl.toDate = moment('2021-04-19');
         } else {
             timespanSelect = parseInt($scope.timespanSelect) + 1;
             if (timespanSelect < 9) {
