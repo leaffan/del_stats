@@ -370,13 +370,16 @@
                     <a data-ng-if="stat.single_team" href="#!/team_profile/{{season}}/{{ stat.team }}">{{ stat.team }}</a>
                     <span data-ng-if="!stat.single_team">{{ stat.team }}</span>
                 </td>
-                <td class="w-10 text-right">{{ stat.shots }}</td>
-                <td class="w-10 text-right">{{ stat.shots_on_goal }}</td>
-                <td class="w-10 text-right">{{ stat.shots_missed }}</td>
-                <td class="w-10 text-right">{{ stat.shots_blocked }}</td>
-                <td class="w-10 text-right">{{ stat.hit_post }}</td>
-                <td class="w-10 text-right">{{ stat.goals }}</td>
-                <td class="w-10 text-right">{{ stat.blocked_shots }}</td>
+                <td class="w-07 text-right">{{ stat.shots }}</td>
+                <td class="w-07 text-right">{{ stat.shots_on_goal }}</td>
+                <td class="w-07 text-right">{{ stat.sog_pctg.toFixed(2) }} %</td>
+                <td class="w-07 text-right">{{ stat.shots_missed }}</td>
+                <td class="w-07 text-right">{{ stat.ms_pctg.toFixed(2) }} %</td>
+                <td class="w-07 text-right">{{ stat.shots_blocked }}</td>
+                <td class="w-07 text-right">{{ stat.bs_pctg.toFixed(2) }} %</td>
+                <td class="w-07 text-right">{{ stat.hit_post }}</td>
+                <td class="w-07 text-right">{{ stat.goals }}</td>
+                <td class="w-07 text-right">{{ stat.blocked_shots }}</td>
             </tr>
         </tbody>
     </table>

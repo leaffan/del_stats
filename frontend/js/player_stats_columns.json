@@ -130,8 +130,11 @@
         {"data_key": "team", "col_header": "Team", "expl_de": null, "expl_en": null},
         {"data_key": "shots", "col_header": "S", "expl_de": "Schüsse (auf das Tor, daneben, geblockt)", "expl_en": "Shots"},
         {"data_key": "shots_on_goal", "col_header": "SOG", "expl_de": "Torschüsse", "expl_en": "Shots on Goal"},
+        {"data_key": "sog_pctg", "col_header": "SOG%", "expl_de": "Anteil der Torschüsse an allen Schüssen", "expl_en": "Percentage of Shots resulting in Shots On Goal"},
         {"data_key": "shots_missed", "col_header": "MS", "expl_de": "Schüsse neben das Tor", "expl_en": "Missed Shots"},
+        {"data_key": "ms_pctg", "col_header": "MS%", "expl_de": "Anteil der Schüsse neben das Tor an allen Schüssen", "expl_en": "Percentage of Shots resulting in Missed Shots"},
         {"data_key": "shots_blocked", "col_header": "BS", "expl_de": "Schüsse, geblockt durch den Gegner", "expl_en": "Blocked Shots"},
+        {"data_key": "bs_pctg", "col_header": "BS%", "expl_de": "Anteil der durch den Gegner geblockten Schüssen an allen Schüssen", "expl_en": "Percentage of Shots resulting in Blocked Shots"},
         {"data_key": "hit_post", "col_header": "PT/CB", "expl_de": "Schüsse an Pfosten oder Latte", "expl_en": "Shots Hitting Post or Crossbar"},
         {"data_key": "goals", "col_header": "G", "expl_de": "Tore", "expl_en": "Goals"},
         {"data_key": "blocked_shots", "col_header": "BLS", "expl_de": "Aktiv geblockte Schüsse", "expl_en": "Shots Blocked"}
