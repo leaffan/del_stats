@@ -246,7 +246,9 @@ app.factory('svc', function() {
                 'shots_on_goal_5v5', 'goals_5v5', 'opp_shots_on_goal_5v5', 'opp_goals_5v5',
                 'capacity', 'sl_g', 'tied', 'leading', 'trailing', 'time_played',
                 'shots_5v5', 'opp_shots_5v5', 'shots_unblocked_5v5', 'opp_shots_unblocked_5v5',
-                'so_rounds', 'so_a', 'so_g', 'opp_so_a', 'opp_so_g', 'hit_post', 'opp_hit_post'
+                'so_rounds', 'so_a', 'so_g', 'opp_so_a', 'opp_so_g', 'hit_post', 'opp_hit_post',
+                'pp_5v4', 'ppg_5v4', 'pp_5v3', 'ppg_5v3', 'pp_4v3', 'ppg_4v3',
+                'opp_pp_5v4', 'opp_ppg_5v4', 'opp_pp_5v3', 'opp_ppg_5v3', 'opp_pp_4v3', 'opp_ppg_4v3'
             ];    
         },
         player_stats_to_aggregate: function() {
@@ -330,6 +332,15 @@ app.factory('svc', function() {
                 } else {
                     return 0;
                 }
+            }
+        },
+        calculateFrom100Percentage: function(part_value, base_value, factor) {
+            if (factor === undefined)
+                factor = 1
+            if (base_value) {
+                return 100 - (part_value / (base_value * factor)) * 100
+            } else {
+                return null;
             }
         },
         calculatePer60: function(value, toi_seconds) {
