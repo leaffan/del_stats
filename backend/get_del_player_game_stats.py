@@ -63,9 +63,8 @@ ROOKIE_PLAYER_IDS = list()
 NO_ROOKIE_PLAYER_IDS = list()
 
 OUT_FIELDS = [
-    "game_id", "player_id", "no", "position", "first_name", "last_name",
-    "country", "shoots", "weight", "height", "date_of_birth", "status",
-    "u23", "home_road", "game_date", "season", "season_type", "round",
+    "game_id", "player_id", "no", "position", "last_name", "status",
+    "home_road", "game_date", "season", "season_type", "round",
     "team", "score", "opp_team", "opp_score", "game_type",
     "games_played", "goals", "assists", "primary_assists",
     "secondary_assists", "points", "primary_points", "pim", "plus",
