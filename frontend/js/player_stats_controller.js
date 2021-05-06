@@ -92,9 +92,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
     // starting to watch filter selection lists
     $scope.$watchGroup([
-        'homeAwaySelect', 'seasonTypeSelect',
-        'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
-    ], function () {
+        'homeAwaySelect', 'seasonTypeSelect', 'fromRoundSelect', 'toRoundSelect', 'weekdaySelect'
+    ], function (newValue, oldValue) {
         if ($scope.player_games && !$scope.tableSelect.includes('goalie')) {
             $scope.filtered_player_stats = $scope.filterStats($scope.player_games);
         }
@@ -199,7 +198,38 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
         $scope.monthsPlayed = [...new Set($scope.player_games.map(item => moment(item.game_date).month()))];
         // setting to round selection to maximum round played
         $scope.toRoundSelect = $scope.maxRoundPlayed;
-        $scope.filtered_player_stats = $scope.filterStats($scope.player_games);
+
+        // preparing player games for later filtering, i.e. retrieving personal data etc.
+        $scope.prep_player_games = {};
+
+        $scope.player_games.forEach(element => {
+            plr_id = element['player_id'];
+            team = element['team'];
+            key = [plr_id, team]
+            if (!$scope.prep_player_games[key]) {
+                $scope.prep_player_games[key] = {};
+                $scope.prep_player_games[key]['player_id'] = plr_id;
+                $scope.prep_player_games[key]['first_name'] = $scope.all_players[plr_id]['first_name'];
+                $scope.prep_player_games[key]['last_name'] = $scope.all_players[plr_id]['last_name'];
+                $scope.prep_player_games[key]['full_name'] = $scope.all_players[plr_id]['first_name'] + ' ' + $scope.all_players[plr_id]['last_name'];
+                $scope.prep_player_games[key]['age'] = $scope.all_players[plr_id]['age'];
+                // setting player statuses from combined player status
+                $scope.prep_player_games[key] = $scope.setPlayerStatus(element['status'], $scope.prep_player_games[key])
+                $scope.prep_player_games[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
+                $scope.prep_player_games[key]['position'] = $scope.all_players[plr_id]['position'];
+                $scope.prep_player_games[key]['shoots'] = $scope.all_players[plr_id]['hand'];
+                $scope.prep_player_games[key]['team'] = element['team'];
+                $scope.prep_player_games[key]['single_team'] = true;
+                $scope.svc.player_stats_to_aggregate().forEach(category => {
+                    $scope.prep_player_games[key][category] = 0;
+                });
+                svc.player_float_stats_to_aggregate().forEach(category => {
+                    $scope.prep_player_games[key][category] = 0.0;
+                });
+            };
+        });
+        // deactivated since initial filtering will be triggered after change of maximum round played
+        // $scope.filtered_player_stats = $scope.filterStats();
 	};
 
     $scope.readCSV();
@@ -414,7 +444,9 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             if ($scope.seasonTypeSelect === element.season_type)
                 is_selected_season_type = true;
         } else {
-            is_selected_season_type = true;
+            // if seasonTypeSelect is set to "Hauptrunde und Playoffs" we just want that but no pre-season games
+            if (element['season_type'] != 'MSC')
+                is_selected_season_type = true;
         }
         // testing selected weekday
         if ($scope.weekdaySelect) {
@@ -508,7 +540,8 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
     }
 
     $scope.filterStats = function(stats) {
-        filtered_player_stats = {};
+        // copying template for filtered stats from prepared player games
+        filtered_player_stats = angular.copy($scope.prep_player_games);
         player_teams = {};
         if ($scope.player_games === undefined)
             return filtered_player_stats;
@@ -516,27 +549,6 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
             plr_id = element['player_id'];
             team = element['team'];
             key = [plr_id, team]
-            if (!filtered_player_stats[key]) {
-                filtered_player_stats[key] = {};
-                filtered_player_stats[key]['player_id'] = plr_id;
-                filtered_player_stats[key]['first_name'] = element['first_name'];
-                filtered_player_stats[key]['last_name'] = element['last_name'];
-                filtered_player_stats[key]['full_name'] = element['first_name'] + ' ' + element['last_name'];
-                filtered_player_stats[key]['age'] = $scope.all_players[plr_id]['age'];
-                // setting player statuses from combined player status
-                filtered_player_stats[key] = $scope.setPlayerStatus(element['status'], filtered_player_stats[key])
-                filtered_player_stats[key]['iso_country'] = $scope.all_players[plr_id]['iso_country'];
-                filtered_player_stats[key]['position'] = $scope.all_players[plr_id]['position'];
-                filtered_player_stats[key]['shoots'] = element['shoots'];
-                filtered_player_stats[key]['team'] = element['team'];
-                filtered_player_stats[key]['single_team'] = true;
-                $scope.svc.player_stats_to_aggregate().forEach(category => {
-                    filtered_player_stats[key][category] = 0;
-                });
-                svc.player_float_stats_to_aggregate().forEach(category => {
-                    filtered_player_stats[key][category] = 0.0;
-                });
-            }
             // checking whether current element passes all filters
             if ($scope.elementPassedFilters(element))
             {
@@ -785,15 +797,17 @@ app.controller('plrStatsController', function ($scope, $http, $routeParams, $q, 
 
     // changing sorting criteria according to table selected for display
     $scope.changeTable = function() {
+        // retrieving sort key for current table from list of default table
+        // sort criteria
         sortKey = $scope.tableSortCriteria[$scope.tableSelect];
-        if ($scope._5v5Check && $scope.tableSelect == 'basic_stats')
-            sortKey = $scope.tableSortCriteria['basic_stats_5v5'];
-        // console.log(sortKey);
+        // checking whether current sort key indicates default ascending
+        // sort order
         if ($scope.ascendingAttrs.indexOf(sortKey) !== -1) {
             sortDescending = false;
         } else {
             sortDescending = true;
         }
+        // setting global sort configuration according to findings
         $scope.sortConfig = {
             'sortKey': sortKey,
             'sortCriteria': $scope.sortCriteria[sortKey],
