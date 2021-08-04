@@ -6,6 +6,7 @@ import json
 import yaml
 import argparse
 
+# loading external configuration
 CONFIG = yaml.safe_load(open(os.path.join(os.path.dirname(os.path.realpath(__file__)), 'config.yml')))
 
 ROUND_MAPPING = {
@@ -24,9 +25,9 @@ if __name__ == '__main__':
     # retrieving arguments specified on command line
     parser = argparse.ArgumentParser(description='Order DEL team schedules.')
     parser.add_argument(
-        '-s', '--season', dest='season', required=False, type=int,
-        metavar='season to order schedules for', help="The season for which team schedules will be ordered",
-        default=2020, choices=[2016, 2017, 2018, 2019, 2020])
+        '-s', '--season', dest='season', required=False, type=int, metavar='season to order schedules for',
+        default=CONFIG['default_season'], choices=CONFIG['seasons'],
+        help="The season for which team schedules will be ordered")
 
     args = parser.parse_args()
     seasons = [args.season]
