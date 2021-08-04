@@ -1,0 +1,65 @@
+# del_stats configuration file
+
+# base url for DEL JSON API
+base_url: [...]
+# base url for official DEL website
+del_base_url: https://www.del.org
+# target directory for data download
+tgt_base_dir: [...]
+# source directory for data processing
+# (usually the same as the one above)
+base_data_dir: [...]
+# target directory for data processing
+tgt_processing_dir: [...]
+
+# default season for data processing
+default_season: 2021
+# mappping of target sub directories for data download with API url components
+url_components:
+  schedules: league-team-matches
+  roster_stats: league-team-stats
+  team_stats: league-all-team-stats
+  game_info: game-header
+  game_roster: roster
+  game_events: period-events
+  game_player_stats: team-stats
+  game_team_stats: team-stats
+  game_goalies: top-goalies
+  shifts: shifts
+  faceoffs: faceoffs
+  shots: live-ticker/visualization/shots
+  team_profile: teamprofil
+
+# valid game type ids and their meaning
+game_types:
+  1: RS
+  3: PO
+  4: MSC
+
+# valid seasons
+seasons:
+  - 2016
+  - 2017
+  - 2018
+  - 2019
+  - 2020
+  - 2021
+
+# team ids and the corresponding abbreviations
+teams:
+  1: ING
+  2: MAN
+  3: EBB
+  4: DEG
+  5: KEV
+  6: STR
+  7: IEC
+  8: WOB
+  9: BHV
+  11: KEC
+  12: RBM
+  13: AEV
+  14: NIT
+  15: SWW
+  22: SCB
+
